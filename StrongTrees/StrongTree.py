@@ -6,31 +6,40 @@ from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
 from sklearn.metrics import euclidean_distances
+# Include Tree.py and FlowOCT.py in StrongTrees folder
+from Tree import Tree
+from FlowOCT import FlowOCT
 
 
-class TemplateEstimator(BaseEstimator):
-    """ A template estimator to be used as a reference implementation.
+class StrongTreeEstimator(BaseEstimator):
+    """ Description of this estimator here
 
-    For more information regarding how to build your own estimator, read more
-    in the :ref:`User Guide <user_guide>`.
 
     Parameters
     ----------
-    demo_param : str, default='demo_param'
-        A parameter used for demonstation of how to pass and store paramters.
+    depth : int, default=1
+        A parameter specifying the depth of the tree
+    time_limit : int
+        Add description here
+    _lambda : int
+        Add description here
 
     Examples
     --------
-    >>> from skltemplate import TemplateEstimator
+    >>> from skltemplate import StrongTreeEstimator
     >>> import numpy as np
     >>> X = np.arange(100).reshape(100, 1)
     >>> y = np.zeros((100, ))
-    >>> estimator = TemplateEstimator()
+    >>> estimator = StrongTreeEstimator(depth, time_limit, _lambda)
     >>> estimator.fit(X, y)
-    TemplateEstimator()
+    StrongTreeEstimator()
     """
-    def __init__(self, demo_param='demo_param'):
-        self.demo_param = demo_param
+    def __init__(self, depth, time_limit, _lambda):
+        # this is where we will initialize the values we want users to provide
+        self.depth = depth
+        self.time_limit = time_limit,
+        self._lambda = _lambda
+
 
     def fit(self, X, y):
         """A reference implementation of a fitting function.
@@ -50,6 +59,25 @@ class TemplateEstimator(BaseEstimator):
         """
         X, y = check_X_y(X, y, accept_sparse=True)
         self.is_fitted_ = True
+
+        # Instantiate tree object here
+        # tree = Tree(self.depth)    
+
+        # Code for setting up and running the MIP goes here.
+        # Note that we are taking X and y as array-like objects
+        # primal = FlowOCT(data_train, label, tree, _lambda, time_limit, mode)
+        # primal.create_primal_problem()
+        # primal.model.update()
+        # primal.model.optimize()
+        # end_time = time.time()
+        # solving_time or other potential parameters of interest can be stored within the class: self.solving_time
+        # solving_time = end_time - start_time
+
+        # Here we will want to store these values and any other variables needed for making predictions later
+        # b_value = primal.model.getAttr("X", primal.b)
+        # beta_value = primal.model.getAttr("X", primal.beta)
+        # p_value = primal.model.getAttr("X", primal.p)
+
         # `fit` should always return `self`
         return self
 
@@ -68,7 +96,15 @@ class TemplateEstimator(BaseEstimator):
         """
         X = check_array(X, accept_sparse=True)
         check_is_fitted(self, 'is_fitted_')
-        return np.ones(X.shape[0], dtype=np.int64)
+
+        # Here we would get the predicted values using the `get_predicted_value` function
+        # https://github.com/pashew94/StrongTree/blob/4541fe5b556d15bcd2814b76a9075b943508fb83/Code/StrongTree/utils.py#L77
+
+        # users can either calculate accuracy/mse themselves or we can expose a method based on sklearn.metrics.accuracy_score or some other metric
+        # see https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html for an example
+
+        prediction = None
+        return prediction
 
 
 class TemplateClassifier(ClassifierMixin, BaseEstimator):
