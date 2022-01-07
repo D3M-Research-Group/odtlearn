@@ -107,7 +107,7 @@ class StrongTreeEstimator(BaseEstimator):
         return prediction
 
 
-class TemplateClassifier(ClassifierMixin, BaseEstimator):
+class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
     """ An example classifier which implements a 1-NN algorithm.
 
     For more information regarding how to build your own classifier, read more
@@ -179,7 +179,7 @@ class TemplateClassifier(ClassifierMixin, BaseEstimator):
         return self.y_[closest]
 
 
-class TemplateTransformer(TransformerMixin, BaseEstimator):
+class StrongTreeTransformer(TransformerMixin, BaseEstimator):
     """ An example transformer that returns the element-wise square root.
 
     For more information regarding how to build your own transformer, read more
