@@ -17,7 +17,7 @@
 .. |ReadTheDocs| image:: https://readthedocs.org/projects/sklearn-template/badge/?version=latest
 .. _ReadTheDocs: https://sklearn-template.readthedocs.io/en/latest/?badge=latest
 
-project-template - A template for scikit-learn contributions
+Decision Tree Estimators
 ============================================================
 
 .. _scikit-learn: https://scikit-learn.org
