@@ -65,3 +65,7 @@ doc/generated/
 
 # PyBuilder
 target/
+
+# vscode, pycharm
+.vscode/
+.idea/
