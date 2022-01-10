@@ -4,5 +4,5 @@ from .StrongTree import StrongTreeTransformer
 
 from ._version import __version__
 
-__all__ = ['StrongTreeEstimator', 'StrongTreeClassifier', 'StrongTreeTransformer',
-           '__version__']
+__all__ = ['StrongTreeEstimator', 'StrongTreeClassifier',
+           'StrongTreeTransformer', '__version__']

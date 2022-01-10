@@ -5,17 +5,18 @@ from sklearn.datasets import load_iris
 from numpy.testing import assert_array_equal
 from numpy.testing import assert_allclose
 
-from StrongTrees import TemplateEstimator
-from StrongTrees import TemplateTransformer
-from StrongTrees import TemplateClassifier
+from StrongTrees import StrongTreeEstimator
+from StrongTrees import StrongTreeTransformer
+from StrongTrees import StrongTreeClassifier
 
 
 @pytest.fixture
 def data():
     return load_iris(return_X_y=True)
 
-def test_template_estimator(data):
-    est = TemplateEstimator()
+
+def test_StrongTree_estimator(data):
+    est = StrongTreeEstimator()
     assert est.demo_param == 'demo_param'
 
     est.fit(*data)
@@ -26,18 +27,18 @@ def test_template_estimator(data):
     assert_array_equal(y_pred, np.ones(X.shape[0], dtype=np.int64))
 
 
-def test_template_transformer_error(data):
+def test_StrongTree_transformer_error(data):
     X, y = data
-    trans = TemplateTransformer()
+    trans = StrongTreeTransformer()
     trans.fit(X)
     with pytest.raises(ValueError, match="Shape of input is different"):
         X_diff_size = np.ones((10, X.shape[1] + 1))
         trans.transform(X_diff_size)
 
 
-def test_template_transformer(data):
+def test_StrongTree_transformer(data):
     X, y = data
-    trans = TemplateTransformer()
+    trans = StrongTreeTransformer()
     assert trans.demo_param == 'demo'
 
     trans.fit(X)
@@ -50,9 +51,9 @@ def test_template_transformer(data):
     assert_allclose(X_trans, np.sqrt(X))
 
 
-def test_template_classifier(data):
+def test_StrongTree_classifier(data):
     X, y = data
-    clf = TemplateClassifier()
+    clf = StrongTreeClassifier()
     assert clf.demo_param == 'demo'
 
     clf.fit(X, y)

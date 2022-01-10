@@ -1,6 +1,3 @@
-"""
-This is a module to be used as a reference for building other modules
-"""
 import numpy as np
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
@@ -26,7 +23,7 @@ class StrongTreeEstimator(BaseEstimator):
 
     Examples
     --------
-    >>> from skltemplate import StrongTreeEstimator
+    >>> from StrongTree import StrongTreeEstimator
     >>> import numpy as np
     >>> X = np.arange(100).reshape(100, 1)
     >>> y = np.zeros((100, ))
@@ -34,12 +31,12 @@ class StrongTreeEstimator(BaseEstimator):
     >>> estimator.fit(X, y)
     StrongTreeEstimator()
     """
+
     def __init__(self, depth, time_limit, _lambda):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit,
         self._lambda = _lambda
-
 
     def fit(self, X, y):
         """A reference implementation of a fitting function.
@@ -61,7 +58,7 @@ class StrongTreeEstimator(BaseEstimator):
         self.is_fitted_ = True
 
         # Instantiate tree object here
-        # tree = Tree(self.depth)    
+        # tree = Tree(self.depth)
 
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
@@ -127,6 +124,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
     classes_ : ndarray, shape (n_classes,)
         The classes seen at :meth:`fit`.
     """
+
     def __init__(self, demo_param='demo'):
         self.demo_param = demo_param
 
@@ -195,6 +193,7 @@ class StrongTreeTransformer(TransformerMixin, BaseEstimator):
     n_features_ : int
         The number of features of the data passed to :meth:`fit`.
     """
+
     def __init__(self, demo_param='demo'):
         self.demo_param = demo_param
 
