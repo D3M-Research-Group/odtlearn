@@ -19,9 +19,9 @@ class StrongTreeEstimator(BaseEstimator):
     depth : int, default=1
         A parameter specifying the depth of the tree
     time_limit : int
-        Add description here
+        The given time limit for solving the MIP in seconds
     _lambda : int
-        Add description here
+        The regularization parameter in the objective
 
     Examples
     --------
@@ -114,13 +114,14 @@ class StrongTreeEstimator(BaseEstimator):
 class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
     """ An example classifier which implements a 1-NN algorithm.
 
-    For more information regarding how to build your own classifier, read more
-    in the :ref:`User Guide <user_guide>`.
-
     Parameters
     ----------
-    demo_param : str, default='demo'
-        A parameter used for demonstation of how to pass and store paramters.
+    depth : int, default=1
+        A parameter specifying the depth of the tree
+    time_limit : int
+        The given time limit for solving the MIP in seconds
+    _lambda : int
+        The regularization parameter in the objective
 
     Attributes
     ----------
@@ -132,8 +133,12 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The classes seen at :meth:`fit`.
     """
 
-    def __init__(self, demo_param='demo'):
-        self.demo_param = demo_param
+    def __init__(self, depth, time_limit, _lambda):
+        # this is where we will initialize the values we want users to provide
+        self.depth = depth
+        self.time_limit = time_limit,
+        self._lambda = _lambda
+        self.mode = "classification"
 
     def fit(self, X, y):
         """A reference implementation of a fitting function for a classifier.
@@ -157,6 +162,28 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
         self.X_ = X
         self.y_ = y
+
+        # Instantiate tree object here
+        tree = Tree(self.depth)
+
+        # Code for setting up and running the MIP goes here.
+        # Note that we are taking X and y as array-like objects
+        self.start_time = time.time()
+        self.primal = FlowOCT(X, y, tree, self._lambda,
+                              self.time_limit, self.mode)
+        self.primal.create_primal_problem()
+        self.primal.model.update()
+        self.primal.model.optimize()
+        self.end_time = time.time()
+        # solving_time or other potential parameters of interest can be stored
+        # within the class: self.solving_time
+        self.solving_time = self.end_time - self.start_time
+
+        # Here we will want to store these values and any other variables
+        # needed for making predictions later
+        self.b_value = self.primal.model.getAttr("X", self.primal.b)
+        self.beta_value = self.primal.model.getAttr("X", self.primal.beta)
+        self.p_value = self.primal.model.getAttr("X", self.primal.p)
         # Return the classifier
         return self
 
@@ -180,8 +207,9 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         # Input validation
         X = check_array(X)
 
-        closest = np.argmin(euclidean_distances(X, self.X_), axis=1)
-        return self.y_[closest]
+        prediction = get_predicted_value(
+            self.model, X, self.b, self.beta_value, self.p)
+        return prediction
 
 
 class StrongTreeTransformer(TransformerMixin, BaseEstimator):
