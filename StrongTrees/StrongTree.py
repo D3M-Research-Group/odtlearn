@@ -3,9 +3,11 @@ from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
 from sklearn.metrics import euclidean_distances
+import time
 # Include Tree.py and FlowOCT.py in StrongTrees folder
 from Tree import Tree
 from FlowOCT import FlowOCT
+from StrongTreeUtils import get_predicted_value
 
 
 class StrongTreeEstimator(BaseEstimator):
@@ -37,6 +39,7 @@ class StrongTreeEstimator(BaseEstimator):
         self.depth = depth
         self.time_limit = time_limit,
         self._lambda = _lambda
+        self.mode = "regression"
 
     def fit(self, X, y):
         """A reference implementation of a fitting function.
@@ -58,22 +61,26 @@ class StrongTreeEstimator(BaseEstimator):
         self.is_fitted_ = True
 
         # Instantiate tree object here
-        # tree = Tree(self.depth)
+        tree = Tree(self.depth)
 
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
-        # primal = FlowOCT(data_train, label, tree, _lambda, time_limit, mode)
-        # primal.create_primal_problem()
-        # primal.model.update()
-        # primal.model.optimize()
-        # end_time = time.time()
-        # solving_time or other potential parameters of interest can be stored within the class: self.solving_time
-        # solving_time = end_time - start_time
+        self.start_time = time.time()
+        self.primal = FlowOCT(X, y, tree, self._lambda,
+                              self.time_limit, self.mode)
+        self.primal.create_primal_problem()
+        self.primal.model.update()
+        self.primal.model.optimize()
+        self.end_time = time.time()
+        # solving_time or other potential parameters of interest can be stored
+        # within the class: self.solving_time
+        self.solving_time = self.end_time - self.start_time
 
-        # Here we will want to store these values and any other variables needed for making predictions later
-        # b_value = primal.model.getAttr("X", primal.b)
-        # beta_value = primal.model.getAttr("X", primal.beta)
-        # p_value = primal.model.getAttr("X", primal.p)
+        # Here we will want to store these values and any other variables
+        # needed for making predictions later
+        self.b_value = self.primal.model.getAttr("X", self.primal.b)
+        self.beta_value = self.primal.model.getAttr("X", self.primal.beta)
+        self.p_value = self.primal.model.getAttr("X", self.primal.p)
 
         # `fit` should always return `self`
         return self
@@ -96,11 +103,11 @@ class StrongTreeEstimator(BaseEstimator):
 
         # Here we would get the predicted values using the `get_predicted_value` function
         # https://github.com/pashew94/StrongTree/blob/4541fe5b556d15bcd2814b76a9075b943508fb83/Code/StrongTree/utils.py#L77
-
+        prediction = get_predicted_value(
+            self.model, X, self.b, self.beta_value, self.p)
         # users can either calculate accuracy/mse themselves or we can expose a method based on sklearn.metrics.accuracy_score or some other metric
         # see https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html for an example
 
-        prediction = None
         return prediction
 
 
