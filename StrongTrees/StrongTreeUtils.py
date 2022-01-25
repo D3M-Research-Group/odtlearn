@@ -2,6 +2,15 @@
 import numpy as np
 
 
+def check_binary(df):
+    non_binary_columns = [col for col in df
+                          if not np.isin(df[col].dropna().unique(),
+                                         [0, 1]).all()]
+    if len(non_binary_columns) > 0:
+        raise ValueError(
+            f"Found columns ({non_binary_columns}) that contain values other than 0 or 1.")
+
+
 def get_node_status(grb_model, b, beta, p, n):
     '''
     This function give the status of a given node in a tree. By status we mean whether the node

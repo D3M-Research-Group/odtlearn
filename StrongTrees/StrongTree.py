@@ -7,7 +7,7 @@ import time
 # Include Tree.py and FlowOCT.py in StrongTrees folder
 from Tree import Tree
 from FlowOCT import FlowOCT
-from StrongTreeUtils import get_predicted_value
+from StrongTreeUtils import get_predicted_value, check_binary
 
 
 class StrongTreeEstimator(BaseEstimator):
@@ -157,9 +157,12 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         """
         # Check that X and y have correct shape
         X, y = check_X_y(X, y)
+        # Raises ValueError if there is a column that has values other than 0 or 1
+        check_binary(X)
         # Store the classes seen during fit
         self.classes_ = unique_labels(y)
 
+        # keep original data, we only modify the data in FlowOCT
         self.X_ = X
         self.y_ = y
 
