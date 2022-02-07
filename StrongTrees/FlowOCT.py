@@ -3,11 +3,11 @@ This module formulate the FlowOCT problem in gurobipy.
 '''
 from gurobipy import Model, GRB, quicksum, LinExpr
 import numpy as np
-import pandas as pd
 
 
 class FlowOCT:
-    def __init__(self, X, y, tree, _lambda, time_limit, mode):
+    def __init__(self, X, y, tree, X_col_labels, labels,
+                 _lambda, time_limit, mode, num_threads):
         '''
         :param data: The training data as a Pandas df
         :param X: numpy matrix or pandas dataframe of covariates
@@ -16,24 +16,15 @@ class FlowOCT:
         :param _lambda: The regularization parameter in the objective
         :param time_limit: The given time limit for solving the MIP
         :param mode: Regression vs Classification
+        :param num_threads: Number of threads for the solver to use
         '''
         self.mode = mode
-        # if our data is given as a data frame, keep the feature labels
-        # otherwise, just give numeric variable names
-        # Make X matrix a pd dataframe, but keep y as an array
-        if isinstance(X, pd.Dataframe):
-            self.X_col_labels = X.columns
-            self.X = X
-        else:
-            self.X_col_labels = np.arange(0, self.X.shape[1])
-            self.X = pd.Dataframe(X, columns=self.X_col_labels)
+        self.num_threads = num_threads
+        self.X = X
+        self.y = y
 
-        if isinstance(self.y, [pd.Series, pd.DataFrame]):
-            self.y = y.values
-            self.labels = np.unique(self.y)
-        else:
-            self.y = y
-            self.labels = np.unique(self.y)
+        self.X_col_labels = X_col_labels
+        self.labels = labels
         # datapoints contains the indicies of our training data
         self.datapoints = np.arange(0, self.X.shape[0])
 
@@ -42,7 +33,6 @@ class FlowOCT:
         reg_features is the set of all features used for the linear regression
          prediction model in the leaves.
         '''
-        # self.cat_features = self.data.columns[self.data.columns != self.label]
 
         self.tree = tree
         self._lambda = _lambda
@@ -66,16 +56,12 @@ class FlowOCT:
 
         # Gurobi model
         self.model = Model('FlowOCT')
-        '''
-        To compare all approaches in a fair setting we limit the solver to use only one thread to merely evaluate 
-        the strength of the formulation.
-        '''
-        # should we allow users to specify the number of threads they would like to use?
-        self.model.params.Threads = 1
+        self.model.params.Threads = self.num_threads
         self.model.params.TimeLimit = time_limit
 
         '''
-        The following variables are used for the Benders problem to keep track of the times we call the callback.
+        The following variables are used for the Benders problem to keep track
+        of the times we call the callback.
         They are not used for this formulation.
         '''
         self.model._total_callback_time_integer = 0
@@ -95,7 +81,8 @@ class FlowOCT:
     ###########################################################
     def create_primal_problem(self):
         '''
-        This function create and return a gurobi model formulating the FlowOCT problem
+        This function create and return a gurobi model formulating
+        the FlowOCT problem
         :return:  gurobi model object with the FlowOCT formulation
         '''
         # define variables
@@ -140,13 +127,13 @@ class FlowOCT:
         # equals zero
         for i in self.datapoints:
             self.model.addConstrs((self.z[i, int(self.tree.get_left_children(n))] <= self.m[i] * quicksum(
-                self.b[n, f] for f in self.X_col_labels if self.X.at[i, f] == 0)) for n in self.tree.Nodes)
+                self.b[n, f] for f in self.X_col_labels if self.X[i, f] == 0)) for n in self.tree.Nodes)
 
         # z[i,r(n)] <= m[i] * sum(b[n,f], f if x[i,f]=1)
         # forall i, n in Nodes
         for i in self.datapoints:
             self.model.addConstrs((self.z[i, int(self.tree.get_right_children(n))] <= self.m[i] * quicksum(
-                self.b[n, f] for f in self.X_col_labels if self.X.at[i, f] == 1)) for n in self.tree.Nodes)
+                self.b[n, f] for f in self.X_col_labels if self.X[i, f] == 1)) for n in self.tree.Nodes)
 
         # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
         self.model.addConstrs(
