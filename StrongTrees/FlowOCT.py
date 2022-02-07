@@ -9,7 +9,6 @@ class FlowOCT:
     def __init__(self, X, y, tree, X_col_labels, labels,
                  _lambda, time_limit, mode, num_threads):
         '''
-        :param data: The training data as a Pandas df
         :param X: numpy matrix or pandas dataframe of covariates
         :param y: numpy array or pandas series/dataframe of class labels
         :param tree: Tree object
@@ -19,7 +18,6 @@ class FlowOCT:
         :param num_threads: Number of threads for the solver to use
         '''
         self.mode = mode
-        self.num_threads = num_threads
         self.X = X
         self.y = y
 
@@ -56,7 +54,7 @@ class FlowOCT:
 
         # Gurobi model
         self.model = Model('FlowOCT')
-        self.model.params.Threads = self.num_threads
+        self.model.params.Threads = num_threads
         self.model.params.TimeLimit = time_limit
 
         '''
