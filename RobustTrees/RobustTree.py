@@ -4,101 +4,106 @@ from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
 from sklearn.metrics import euclidean_distances
 # Include Necessary imports in the same folder
+from gurobipy import *
+import pandas as pd
+from Tree import Tree
+from RobustOCT import RobustOCT
+from RobustTreeUtils import *
 
 
-class RobustTreeEstimator(BaseEstimator):
-    """ Description of this estimator here
+# class RobustTreeEstimator(BaseEstimator):
+#     """ Description of this estimator here
 
 
-    Parameters
-    ----------
-    depth : int, default=1
-        A parameter specifying the depth of the tree
-    time_limit : int
-        Add description here
-    _lambda : int
-        Add description here
+#     Parameters
+#     ----------
+#     depth : int, default=1
+#         A parameter specifying the depth of the tree
+#     time_limit : int
+#         Add description here
+#     _lambda : int
+#         Add description here
 
-    Examples
-    --------
-    >>> from RobustTree import RobustTreeEstimator
-    >>> import numpy as np
-    >>> X = np.arange(100).reshape(100, 1)
-    >>> y = np.zeros((100, ))
-    >>> estimator = RobustTreeEstimator(depth, time_limit, _lambda)
-    >>> estimator.fit(X, y)
-    RobustTreeEstimator()
-    """
+#     Examples
+#     --------
+#     >>> from RobustTree import RobustTreeEstimator
+#     >>> import numpy as np
+#     >>> X = np.arange(100).reshape(100, 1)
+#     >>> y = np.zeros((100, ))
+#     >>> estimator = RobustTreeEstimator(depth, time_limit, _lambda)
+#     >>> estimator.fit(X, y)
+#     RobustTreeEstimator()
+#     """
 
-    def __init__(self, depth, time_limit, _lambda):
-        # this is where we will initialize the values we want users to provide
-        self.depth = depth
-        self.time_limit = time_limit,
-        self._lambda = _lambda
+#     def __init__(self, depth, time_limit, _lambda):
+#         # this is where we will initialize the values we want users to provide
+#         self.depth = depth
+#         self.time_limit = time_limit,
+#         self._lambda = _lambda
 
-    def fit(self, X, y):
-        """A reference implementation of a fitting function.
+#     def fit(self, X, y):
+#         """A reference implementation of a fitting function.
 
-        Parameters
-        ----------
-        X : {array-like, sparse matrix}, shape (n_samples, n_features)
-            The training input samples.
-        y : array-like, shape (n_samples,) or (n_samples, n_outputs)
-            The target values (class labels in classification, real numbers in
-            regression).
+#         Parameters
+#         ----------
+#         X : {array-like, sparse matrix}, shape (n_samples, n_features)
+#             The training input samples.
+#         y : array-like, shape (n_samples,) or (n_samples, n_outputs)
+#             The target values (class labels in classification, real numbers in
+#             regression).
 
-        Returns
-        -------
-        self : object
-            Returns self.
-        """
-        X, y = check_X_y(X, y, accept_sparse=True)
-        self.is_fitted_ = True
+#         Returns
+#         -------
+#         self : object
+#             Returns self.
+#         """
+#         X, y = check_X_y(X, y, accept_sparse=True)
+#         self.is_fitted_ = True
 
-        # Instantiate tree object here
-        # tree = Tree(self.depth)
+#         # Instantiate tree object here
+#         # tree = Tree(self.depth)
 
-        # Code for setting up and running the MIP goes here.
-        # Note that we are taking X and y as array-like objects
-        # primal = FlowOCT(data_train, label, tree, _lambda, time_limit, mode)
-        # primal.create_primal_problem()
-        # primal.model.update()
-        # primal.model.optimize()
-        # end_time = time.time()
-        # solving_time or other potential parameters of interest can be stored within the class: self.solving_time
-        # solving_time = end_time - start_time
+#         # Code for setting up and running the MIP goes here.
+#         # Note that we are taking X and y as array-like objects
+#         # primal = FlowOCT(data_train, label, tree, _lambda, time_limit, mode)
+#         # primal.create_primal_problem()
+#         # primal.model.update()
+#         # primal.model.optimize()
+#         # end_time = time.time()
+#         # solving_time or other potential parameters of interest can be stored within the class: self.solving_time
+#         # solving_time = end_time - start_time
 
-        # Here we will want to store these values and any other variables needed for making predictions later
-        # b_value = primal.model.getAttr("X", primal.b)
-        # beta_value = primal.model.getAttr("X", primal.beta)
-        # p_value = primal.model.getAttr("X", primal.p)
+#         # Here we will want to store these values and any other variables needed for making predictions later
+#         # b_value = primal.model.getAttr("X", primal.b)
+#         # beta_value = primal.model.getAttr("X", primal.beta)
+#         # p_value = primal.model.getAttr("X", primal.p)
 
-        # `fit` should always return `self`
-        return self
+#         # `fit` should always return `self`
+#         return self
 
-    def predict(self, X):
-        """ A reference implementation of a predicting function.
+#     def predict(self, X):
+#         """ A reference implementation of a predicting function.
 
-        Parameters
-        ----------
-        X : {array-like, sparse matrix}, shape (n_samples, n_features)
-            The training input samples.
+#         Parameters
+#         ----------
+#         X : {array-like, sparse matrix}, shape (n_samples, n_features)
+#             The training input samples.
 
-        Returns
-        -------
-        y : ndarray, shape (n_samples,)
-            Returns an array of ones.
-        """
-        X = check_array(X, accept_sparse=True)
-        check_is_fitted(self, 'is_fitted_')
+#         Returns
+#         -------
+#         y : ndarray, shape (n_samples,)
+#             Returns an array of ones.
+#         """
+#         X = check_array(X, accept_sparse=True)
+#         check_is_fitted(self, 'is_fitted_')
 
-        # Here we would get the predicted values using the `get_predicted_value` function
-        # https://github.com/pashew94/StrongTree/blob/4541fe5b556d15bcd2814b76a9075b943508fb83/Code/StrongTree/utils.py#L77
+#         # Here we would get the predicted values using the `get_predicted_value` function
+#         # https://github.com/pashew94/StrongTree/blob/4541fe5b556d15bcd2814b76a9075b943508fb83/Code/StrongTree/utils.py#L77
 
-        # users can either calculate accuracy/mse themselves or we can expose a method based on sklearn.metrics.accuracy_score or some other metric
+#         # users can either calculate accuracy/mse themselves or we can expose a method based on sklearn.metrics.accuracy_score or some other metric
 
-        prediction = None
-        return prediction
+#         prediction = None
+#         return prediction
 
 
 class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
@@ -109,8 +114,20 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
 
     Parameters
     ----------
-    demo_param : str, default='demo'
-        A parameter used for demonstation of how to pass and store paramters.
+    depth : int, default=1
+        A parameter specifying the depth of the tree
+    time_limit : int, default=1800
+        The given time limit for solving the MIP in seconds
+    q : float, default=1.0
+        Mean of probability of feature certainty
+    s : float, default=0.0
+        Standard deviation of probability of feature certainty
+    p : float, default=1.0
+        Probability of label certainty
+    l : float, default=1.0
+        Probability testing threshold
+    seed : int
+        Seed for uncertainty set parameter generation
 
     Attributes
     ----------
@@ -122,8 +139,14 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         The classes seen at :meth:`fit`.
     """
 
-    def __init__(self, demo_param='demo'):
-        self.demo_param = demo_param
+    def __init__(self, depth=1, time_limit=1800, q=1.0, s=0.0, p=1.0, l=1.0, seed=None):
+        self.depth = depth
+        self.time_limit = time_limit
+        self.q = q
+        self.s = s
+        self.p = p
+        self.l = l
+        self.seed = seed
 
     def fit(self, X, y):
         """A reference implementation of a fitting function for a classifier.
@@ -140,14 +163,24 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         self : object
             Returns self.
         """
-        # Check that X and y have correct shape
-        X, y = check_X_y(X, y)
-        # Store the classes seen during fit
-        self.classes_ = unique_labels(y)
+        X, y = check_X_y(X, y, accept_sparse=True)
+        self.is_fitted_ = True
 
-        self.X_ = X
-        self.y_ = y
-        # Return the classifier
+        # Instantiate tree object here
+        tree = Tree(self.depth)
+
+        # Code for setting up and running the MIP goes here.
+        # Note that we are taking X and y as array-like objects
+        master = RobustOCT(X, y, tree, self.time_limit, 
+            self.q, self.s, self.p, self.l, self.seed)
+        master.create_master_problem()
+        master.model.update()
+        master.model.optimize(mycallback)
+
+        # Here we will want to store these values and any other variables needed for making predictions later
+        self.model = master
+
+        # `fit` should always return `self`
         return self
 
     def predict(self, X):
@@ -164,82 +197,83 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             The label for each sample is the label of the closest sample
             seen during fit.
         """
-        # Check is fit had been called
-        check_is_fitted(self, ['X_', 'y_'])
-
-        # Input validation
-        X = check_array(X)
-
-        closest = np.argmin(euclidean_distances(X, self.X_), axis=1)
-        return self.y_[closest]
-
-
-class RobustTreeTransformer(TransformerMixin, BaseEstimator):
-    """ An example transformer that returns the element-wise square root.
-
-    For more information regarding how to build your own transformer, read more
-    in the :ref:`User Guide <user_guide>`.
-
-    Parameters
-    ----------
-    demo_param : str, default='demo'
-        A parameter used for demonstation of how to pass and store paramters.
-
-    Attributes
-    ----------
-    n_features_ : int
-        The number of features of the data passed to :meth:`fit`.
-    """
-
-    def __init__(self, demo_param='demo'):
-        self.demo_param = demo_param
-
-    def fit(self, X, y=None):
-        """A reference implementation of a fitting function for a transformer.
-
-        Parameters
-        ----------
-        X : {array-like, sparse matrix}, shape (n_samples, n_features)
-            The training input samples.
-        y : None
-            There is no need of a target in a transformer, yet the pipeline API
-            requires this parameter.
-
-        Returns
-        -------
-        self : object
-            Returns self.
-        """
         X = check_array(X, accept_sparse=True)
+        check_is_fitted(self, 'is_fitted_')
 
-        self.n_features_ = X.shape[1]
+        # Convert to dataframe
+        data=X
+        if not isinstance(X, pd.Dataframe):
+            data = pd.Dataframe(X, columns=np.arange(0, self.X.shape[1]))
 
-        # Return the transformer
-        return self
+        return get_prediction(self.model, data)
 
-    def transform(self, X):
-        """ A reference implementation of a transform function.
 
-        Parameters
-        ----------
-        X : {array-like, sparse-matrix}, shape (n_samples, n_features)
-            The input samples.
+# class RobustTreeTransformer(TransformerMixin, BaseEstimator):
+#     """ An example transformer that returns the element-wise square root.
 
-        Returns
-        -------
-        X_transformed : array, shape (n_samples, n_features)
-            The array containing the element-wise square roots of the values
-            in ``X``.
-        """
-        # Check is fit had been called
-        check_is_fitted(self, 'n_features_')
+#     For more information regarding how to build your own transformer, read more
+#     in the :ref:`User Guide <user_guide>`.
 
-        # Input validation
-        X = check_array(X, accept_sparse=True)
+#     Parameters
+#     ----------
+#     demo_param : str, default='demo'
+#         A parameter used for demonstation of how to pass and store paramters.
 
-        # Check that the input is of the same shape as the one passed
-        # during fit.
-        if X.shape[1] != self.n_features_:
-            raise ValueError('Shape of input is different from what was seen'
-                             'in `fit`')
-        return np.sqrt(X)
+#     Attributes
+#     ----------
+#     n_features_ : int
+#         The number of features of the data passed to :meth:`fit`.
+#     """
+
+#     def __init__(self, demo_param='demo'):
+#         self.demo_param = demo_param
+
+#     def fit(self, X, y=None):
+#         """A reference implementation of a fitting function for a transformer.
+
+#         Parameters
+#         ----------
+#         X : {array-like, sparse matrix}, shape (n_samples, n_features)
+#             The training input samples.
+#         y : None
+#             There is no need of a target in a transformer, yet the pipeline API
+#             requires this parameter.
+
+#         Returns
+#         -------
+#         self : object
+#             Returns self.
+#         """
+#         X = check_array(X, accept_sparse=True)
+
+#         self.n_features_ = X.shape[1]
+
+#         # Return the transformer
+#         return self
+
+#     def transform(self, X):
+#         """ A reference implementation of a transform function.
+
+#         Parameters
+#         ----------
+#         X : {array-like, sparse-matrix}, shape (n_samples, n_features)
+#             The input samples.
+
+#         Returns
+#         -------
+#         X_transformed : array, shape (n_samples, n_features)
+#             The array containing the element-wise square roots of the values
+#             in ``X``.
+#         """
+#         # Check is fit had been called
+#         check_is_fitted(self, 'n_features_')
+
+#         # Input validation
+#         X = check_array(X, accept_sparse=True)
+
+#         # Check that the input is of the same shape as the one passed
+#         # during fit.
+#         if X.shape[1] != self.n_features_:
+#             raise ValueError('Shape of input is different from what was seen'
+#                              'in `fit`')
+#         return np.sqrt(X)
