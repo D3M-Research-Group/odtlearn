@@ -1,8 +1,28 @@
-
 import numpy as np
+import pandas as pd
+
+
+def check_columns_match(original_columns, new_data):
+    """
+    :param original_columns: List of column names from the data set used to fit the model
+    :param new_data: The numpy matrix or pd dataframe new data set for
+    which we want to make predictions
+
+    :return ValueError if column names do not match, otherwise None
+    """
+
+    if(isinstance(new_data, pd.Dataframe)):
+        new_column_names = new_data.columns
+        # take difference of sets
+        non_matched_columns = set(new_column_names) - set(original_columns)
+        if len(non_matched_columns) > 0:
+            raise ValueError(
+                f"Columns {list(non_matched_columns)} found in prediction data, but not found in fit data"
+            )
 
 
 def check_binary(df):
+    # TO-DO: truncate output if lots of non_binary_columns
     non_binary_columns = [col for col in df
                           if not np.isin(df[col].dropna().unique(),
                                          [0, 1]).all()]
