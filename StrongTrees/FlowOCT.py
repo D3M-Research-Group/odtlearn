@@ -72,7 +72,7 @@ class FlowOCT:
     ###########################################################
     # Create the MIP formulation
     ###########################################################
-    def create_primal_problem(self):
+    def create_master_problem(self):
         """
         This function create and return a gurobi model formulating
         the FlowOCT problem
