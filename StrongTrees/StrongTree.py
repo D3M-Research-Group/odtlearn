@@ -5,7 +5,8 @@ from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
 import time
 from StrongTrees.StrongTreeUtils import check_columns_match
-# Include Tree.py and FlowOCT.py in StrongTrees folder
+
+# Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
 from Tree import Tree
 from FlowOCT import FlowOCT
 from BendersOCT import BendersOCT
@@ -13,7 +14,7 @@ from StrongTreeUtils import get_predicted_value, check_binary, benders_callback
 
 
 class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
-    """ 
+    """
 
     Parameters
     ----------
@@ -36,11 +37,10 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The classes seen at :meth:`fit`.
     """
 
-    def __init__(self, depth, time_limit, _lambda,
-                 benders_oct=False, num_threads=1):
+    def __init__(self, depth, time_limit, _lambda, benders_oct=False, num_threads=1):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
-        self.time_limit = time_limit,
+        self.time_limit = time_limit
         self._lambda = _lambda
         self.num_threads = num_threads
         self.mode = "classification"
@@ -51,25 +51,17 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         self.y_dtypes = None
 
     def extract_metadata(self, X, y):
-        """ A function for extracting metadata from the inputs before converting
+        """A function for extracting metadata from the inputs before converting
         them into numpy arrays to work with the sklearn API
 
         """
         if isinstance(X, pd.Dataframe):
             self.X_col_labels = X.columns
             self.X_col_dtypes = X.dtypes
-            self.X = X
         else:
             self.X_col_labels = np.arange(0, self.X.shape[1])
-            self.X = pd.Dataframe(X, columns=self.X_col_labels)
 
-        if isinstance(self.y, [pd.Series, pd.DataFrame]):
-            self.y = y.values
-            self.y_dtypes = y.dtypes
-            self.labels = np.unique(self.y)
-        else:
-            self.y = y
-            self.labels = np.unique(self.y)
+        self.labels = np.unique(self.y)
 
     def fit(self, X, y):
         """A reference implementation of a fitting function for a classifier.
@@ -106,17 +98,32 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         # Note that we are taking X and y as array-like objects
         self.start_time = time.time()
         if self.benders_oct:
-            self.primal = BendersOCT(X, y, tree, self.X_col_labels,
-                                     self.labels, self._lambda,
-                                     self.time_limit,
-                                     self.mode, self.num_threads)
-            self.primal.create_primal_problem()
+            self.primal = BendersOCT(
+                X,
+                y,
+                tree,
+                self.X_col_labels,
+                self.labels,
+                self._lambda,
+                self.time_limit,
+                self.mode,
+                self.num_threads,
+            )
+            self.primal.create_master_problem()
             self.primal.model.update()
             self.primal.model.optimize(benders_callback)
         else:
-            self.primal = FlowOCT(X, y, tree, self.X_col_labels,
-                                  self.labels, self._lambda,
-                                  self.time_limit, self.mode, self.num_threads)
+            self.primal = FlowOCT(
+                X,
+                y,
+                tree,
+                self.X_col_labels,
+                self.labels,
+                self._lambda,
+                self.time_limit,
+                self.mode,
+                self.num_threads,
+            )
             self.primal.create_master_problem()
             self.primal.model.update()
             self.primal.model.optimize()
@@ -135,7 +142,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         return self
 
     def predict(self, X):
-        """ A reference implementation of a prediction for a classifier.
+        """A reference implementation of a prediction for a classifier.
 
         Parameters
         ----------
@@ -149,15 +156,16 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             seen during fit.
         """
         # Check is fit had been called
-        check_is_fitted(self, ['X_', 'y_'])
-
-        check_columns_match(self.X_col_labels, X)
-        self.X_predict_col_names = X.columns
+        check_is_fitted(self, ["X_", "y_"])
 
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         X = check_array(X)
 
+        check_columns_match(self.X_col_labels, X)
+        self.X_predict_col_names = X.columns
+
         prediction = get_predicted_value(
-            self.model, X, self.X_predict_col_names, self.b, self.beta_value, self.p)
+            self.model, X, self.X_predict_col_names, self.b, self.beta_value, self.p
+        )
         return prediction

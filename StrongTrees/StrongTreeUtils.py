@@ -13,28 +13,35 @@ def check_columns_match(original_columns, new_data):
     :return ValueError if column names do not match, otherwise None
     """
 
-    if(isinstance(new_data, pd.Dataframe)):
+    if isinstance(new_data, pd.Dataframe):
         new_column_names = new_data.columns
         # take difference of sets
         non_matched_columns = set(new_column_names) - set(original_columns)
         if len(non_matched_columns) > 0:
             raise ValueError(
-                f"Columns {list(non_matched_columns)} found in prediction data, but not found in fit data"
+                f"Columns {list(non_matched_columns)} found in prediction data, but not found in fit data."
             )
+    else:
+        # we are assuming the order of columns matches and we will just check that shapes match
+        # assuming here that new_data is a numpy matrix
+        assert (
+            len(original_columns) != new_data.shape[0]
+        ), f"Fit data has {len(original_columns)} columns but new data has {new_data.shape[0]} columns."
 
 
 def check_binary(df):
     # TO-DO: truncate output if lots of non_binary_columns
-    non_binary_columns = [col for col in df
-                          if not np.isin(df[col].dropna().unique(),
-                                         [0, 1]).all()]
+    non_binary_columns = [
+        col for col in df if not np.isin(df[col].dropna().unique(), [0, 1]).all()
+    ]
     if len(non_binary_columns) > 0:
         raise ValueError(
-            f"Found columns ({non_binary_columns}) that contain values other than 0 or 1.")
+            f"Found columns ({non_binary_columns}) that contain values other than 0 or 1."
+        )
 
 
 def get_node_status(grb_model, b, beta, p, n):
-    '''
+    """
     This function give the status of a given node in a tree. By status we mean whether the node
         1- is pruned? i.e., we have made a prediction at one of its ancestors
         2- is a branching node? If yes, what feature do we branch on
@@ -50,7 +57,7 @@ def get_node_status(grb_model, b, beta, p, n):
     selected_feature: The feature that the node branch on
     leaf = 1 iff node n is a leaf in the tree
     value: if node n is a leaf, value represent the prediction at this node
-    '''
+    """
     tree = grb_model.tree
     mode = grb_model.mode
     pruned = False
@@ -84,29 +91,30 @@ def get_node_status(grb_model, b, beta, p, n):
 
 
 def print_tree(grb_model, b, beta, p):
-    '''
+    """
     This function print the derived tree with the branching features and the predictions asserted for each node
     :param grb_model: the gurobi model solved to optimality (or reached to the time limit)
     :param b: The values of branching decision variable b
     :param beta: The values of prediction decision variable beta
     :param p: The values of decision variable p
     :return: print out the tree in the console
-    '''
+    """
     tree = grb_model.tree
     for n in tree.Nodes + tree.Leaves:
         pruned, branching, selected_feature, leaf, value = get_node_status(
-            grb_model, b, beta, p, n)
-        print('#########node ', n)
+            grb_model, b, beta, p, n
+        )
+        print("#########node ", n)
         if pruned:
             print("pruned")
         elif branching:
             print(selected_feature)
         elif leaf:
-            print('leaf {}'.format(value))
+            print("leaf {}".format(value))
 
 
 def get_predicted_value(grb_model, X, labels, b, beta, p):
-    '''
+    """
     This function returns the predicted value for a given datapoint
     :param grb_model: The gurobi model we solved
     :param X: The dataset we want to compute accuracy for
@@ -116,22 +124,24 @@ def get_predicted_value(grb_model, X, labels, b, beta, p):
     :param p: The value of decision variable p
     :param i: Index of the datapoint we are interested in
     :return: The predicted value for datapoint i in dataset X
-    '''
+    """
     tree = grb_model.tree
     predicted_values = np.array()
     for i in range(X.shape[0]):
         current = 1
         while True:
             pruned, branching, selected_feature, leaf, value = get_node_status(
-                grb_model, b, beta, p, current)
+                grb_model, b, beta, p, current
+            )
             if leaf:
                 predicted_values.append(value)
             elif branching:
                 selected_feature_idx = np.where(labels == selected_feature)
                 # Raise assertion error we don't have a column that matches
                 # the selected feature or more than one column that matches
-                assert len(selected_feature_idx) == 1, \
-                    f"Found {len(selected_feature_idx)} columns matching the selected feature {selected_feature}"
+                assert (
+                    len(selected_feature_idx) == 1
+                ), f"Found {len(selected_feature_idx)} columns matching the selected feature {selected_feature}"
                 if X[i, selected_feature_idx] == 1:  # going right on the branch
                     current = tree.get_right_children(current)
                 else:  # going left on the branch
@@ -140,7 +150,7 @@ def get_predicted_value(grb_model, X, labels, b, beta, p):
 
 
 def get_acc(grb_model, local_data, b, beta, p):
-    '''
+    """
     This function returns the accuracy of the prediction for a given dataset
     :param grb_model: The gurobi model we solved
     :param local_data: The dataset we want to compute accuracy for
@@ -148,7 +158,7 @@ def get_acc(grb_model, local_data, b, beta, p):
     :param beta: The value of decision variable beta
     :param p: The value of decision variable p
     :return: The accuracy (fraction of datapoints which are correctly classified)
-    '''
+    """
     label = grb_model.label
     acc = 0
     for i in local_data.index:
@@ -162,7 +172,7 @@ def get_acc(grb_model, local_data, b, beta, p):
 
 
 def get_mae(grb_model, local_data, b, beta, p):
-    '''
+    """
     This function returns the MAE for a given dataset
     :param grb_model: The gurobi model we solved
     :param local_data: The dataset we want to compute accuracy for
@@ -170,7 +180,7 @@ def get_mae(grb_model, local_data, b, beta, p):
     :param beta: The value of decision variable beta
     :param p: The value of decision variable p
     :return: The MAE
-    '''
+    """
     label = grb_model.label
     err = 0
     for i in local_data.index:
@@ -183,7 +193,7 @@ def get_mae(grb_model, local_data, b, beta, p):
 
 
 def get_mse(grb_model, local_data, b, beta, p):
-    '''
+    """
     This function returns the MSE for a given dataset
     :param grb_model: The gurobi model we solved
     :param local_data: The dataset we want to compute accuracy for
@@ -191,7 +201,7 @@ def get_mse(grb_model, local_data, b, beta, p):
     :param beta: The value of decision variable beta
     :param p: The value of decision variable p
     :return: The MSE
-    '''
+    """
     label = grb_model.label
     err = 0
     for i in local_data.index:
@@ -204,7 +214,7 @@ def get_mse(grb_model, local_data, b, beta, p):
 
 
 def get_r_squared(grb_model, local_data, b, beta, p):
-    '''
+    """
     This function returns the R^2 for a given dataset
     :param grb_model: The gurobi model we solved
     :param local_data: The dataset we want to compute accuracy for
@@ -212,7 +222,7 @@ def get_r_squared(grb_model, local_data, b, beta, p):
     :param beta: The value of decision variable beta
     :param p: The value of decision variable p
     :return: The R^2
-    '''
+    """
     label = grb_model.label
     R_squared = 0
     y_bar = local_data[label].mean()
@@ -230,15 +240,21 @@ def get_r_squared(grb_model, local_data, b, beta, p):
 
 
 def get_left_exp_integer(master, b, n, i):
-    lhs = quicksum(-master.m[i] * master.b[n, f]
-                   for f in master.cat_features if master.data.at[i, f] == 0)
+    lhs = quicksum(
+        -master.m[i] * master.b[n, f]
+        for f in master.cat_features
+        if master.data.at[i, f] == 0
+    )
 
     return lhs
 
 
 def get_right_exp_integer(master, b, n, i):
-    lhs = quicksum(-master.m[i] * master.b[n, f]
-                   for f in master.cat_features if master.data.at[i, f] == 1)
+    lhs = quicksum(
+        -master.m[i] * master.b[n, f]
+        for f in master.cat_features
+        if master.data.at[i, f] == 1
+    )
 
     return lhs
 
@@ -250,12 +266,17 @@ def get_target_exp_integer(master, p, beta, n, i):
         lhs = -1 * master.beta[n, label_i]
     elif master.mode == "regression":
         # min (m[i]*p[n] - y[i]*p[n] + beta[n] , m[i]*p[n] + y[i]*p[n] - beta[n])
-        if master.m[i] * p[n] - label_i * p[n] + beta[n, 1] < master.m[i] * p[n] + label_i * p[n] - beta[n, 1]:
-            lhs = -1 * (master.m[i] * master.p[n] -
-                        label_i * master.p[n] + master.beta[n, 1])
+        if (
+            master.m[i] * p[n] - label_i * p[n] + beta[n, 1]
+            < master.m[i] * p[n] + label_i * p[n] - beta[n, 1]
+        ):
+            lhs = -1 * (
+                master.m[i] * master.p[n] - label_i * master.p[n] + master.beta[n, 1]
+            )
         else:
-            lhs = -1 * (master.m[i] * master.p[n] +
-                        label_i * master.p[n] - master.beta[n, 1])
+            lhs = -1 * (
+                master.m[i] * master.p[n] + label_i * master.p[n] - master.beta[n, 1]
+            )
 
     return lhs
 
@@ -287,7 +308,8 @@ def subproblem(master, b, p, beta, i):
 
     while True:
         pruned, branching, selected_feature, terminal, current_value = get_node_status(
-            master, b, beta, p, current)
+            master, b, beta, p, current
+        )
         if terminal:
             target.append(current)
             if current in master.tree.Nodes:
@@ -315,7 +337,7 @@ def subproblem(master, b, p, beta, i):
 # Defining the callback function
 ###########################################################
 def benders_callback(model, where):
-    '''
+    """
     This function is called by gurobi at every node through the branch-&-bound
     tree while we solve the model.Using the argument "where" we can see where
     the callback has been called. We are specifically interested at nodes
@@ -329,7 +351,7 @@ def benders_callback(model, where):
     :param model: the gurobi model we are solving.
     :param where: the node where the callback function is called from
     :return:
-    '''
+    """
     data_train = model._master.data
     mode = model._master.mode
 
@@ -352,16 +374,19 @@ def benders_callback(model, where):
                 g_threshold = 0
             if g[i] > g_threshold:
                 subproblem_value, left, right, target = subproblem(
-                    model._master, b, p, beta, i)
+                    model._master, b, p, beta, i
+                )
                 if mode == "classification" and subproblem_value == 0:
                     added_cut = 1
                     lhs = get_cut_integer(
-                        model._master, b, p, beta, left, right, target, i)
+                        model._master, b, p, beta, left, right, target, i
+                    )
                     model.cbLazy(lhs <= 0)
                 elif mode == "regression" and ((subproblem_value + local_eps) < g[i]):
                     added_cut = 1
                     lhs = get_cut_integer(
-                        model._master, b, p, beta, left, right, target, i)
+                        model._master, b, p, beta, left, right, target, i
+                    )
                     model.cbLazy(lhs <= 0)
 
         func_end_time = time.time()
