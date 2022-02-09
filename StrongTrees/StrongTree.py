@@ -95,7 +95,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         # Store the classes seen during fit
         self.classes_ = unique_labels(y)
 
-        # keep original data, we only modify the data in FlowOCT
+        # keep original data
         self.X_ = X
         self.y_ = y
 
@@ -159,5 +159,5 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         X = check_array(X)
 
         prediction = get_predicted_value(
-            self.model, X, self.b, self.beta_value, self.p)
+            self.model, X, self.X_predict_col_names, self.b, self.beta_value, self.p)
         return prediction

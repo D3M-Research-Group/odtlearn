@@ -105,16 +105,17 @@ def print_tree(grb_model, b, beta, p):
             print('leaf {}'.format(value))
 
 
-def get_predicted_value(grb_model, X, b, beta, p):
+def get_predicted_value(grb_model, X, labels, b, beta, p):
     '''
     This function returns the predicted value for a given datapoint
     :param grb_model: The gurobi model we solved
-    :param local_data: The dataset we want to compute accuracy for
+    :param X: The dataset we want to compute accuracy for
+    :param labels: A list of the column names for the X dataset
     :param b: The value of decision variable b
     :param beta: The value of decision variable beta
     :param p: The value of decision variable p
     :param i: Index of the datapoint we are interested in
-    :return: The predicted value for datapoint i in dataset local_data
+    :return: The predicted value for datapoint i in dataset X
     '''
     tree = grb_model.tree
     predicted_values = np.array()
@@ -126,11 +127,12 @@ def get_predicted_value(grb_model, X, b, beta, p):
             if leaf:
                 predicted_values.append(value)
             elif branching:
-                # here we are assuming that the label will be given as an integer
-                # candidate fix: selected_feature if isinstance(selected_feature, int) else int(selected_features)
-                selected_feature = selected_feature if isinstance(
-                    selected_feature, int) else int(selected_feature)
-                if X[i, selected_feature] == 1:  # going right on the branch
+                selected_feature_idx = np.where(labels == selected_feature)
+                # Raise assertion error we don't have a column that matches
+                # the selected feature or more than one column that matches
+                assert len(selected_feature_idx) == 1, \
+                    f"Found {len(selected_feature_idx)} columns matching the selected feature {selected_feature}"
+                if X[i, selected_feature_idx] == 1:  # going right on the branch
                     current = tree.get_right_children(current)
                 else:  # going left on the branch
                     current = tree.get_left_children(current)
