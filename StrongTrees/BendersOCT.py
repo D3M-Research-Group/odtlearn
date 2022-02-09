@@ -52,17 +52,22 @@ class BendersOCT:
         self.model.params.TimeLimit = time_limit
 
         '''
-        The following variables are used for the Benders problem to keep track of the times we call the callback.
-        
-        - counter_integer tracks number of times we call the callback from an integer node in the branch-&-bound tree
-            - time_integer tracks the associated time spent in the callback for these calls
-        - counter_general tracks number of times we call the callback from a non-integer node in the branch-&-bound tree
-            - time_general tracks the associated time spent in the callback for these calls
-        
-        the ones ending with success are related to success calls. By success we mean ending up adding a lazy constraint 
+        The following variables are used for the Benders problem to keep track
+         of the times we call the callback.
+
+        - counter_integer tracks number of times we call the callback from an
+          integer node in the branch-&-bound tree
+            - time_integer tracks the associated time spent in the
+              callback for these calls
+        - counter_general tracks number of times we call the callback from
+          a non-integer node in the branch-&-bound tree
+            - time_general tracks the associated time spent in the callback for
+            these calls
+
+        the ones ending with success are related to success calls.
+        By success we mean ending up adding a lazy constraint
         to the model
-        
-        
+
         '''
         self.model._total_callback_time_integer = 0
         self.model._total_callback_time_integer_success = 0

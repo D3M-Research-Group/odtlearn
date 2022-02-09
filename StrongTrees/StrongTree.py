@@ -1,15 +1,15 @@
 import numpy as np
 import pandas as pd
-from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
+from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
-from sklearn.metrics import euclidean_distances
 import time
 from StrongTrees.StrongTreeUtils import check_columns_match
 # Include Tree.py and FlowOCT.py in StrongTrees folder
 from Tree import Tree
 from FlowOCT import FlowOCT
-from StrongTreeUtils import get_predicted_value, check_binary
+from BendersOCT import BendersOCT
+from StrongTreeUtils import get_predicted_value, check_binary, benders_callback
 
 
 class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
@@ -36,13 +36,16 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The classes seen at :meth:`fit`.
     """
 
-    def __init__(self, depth, time_limit, _lambda, num_threads=1):
+    def __init__(self, depth, time_limit, _lambda,
+                 benders_oct=False, num_threads=1):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit,
         self._lambda = _lambda
         self.num_threads = num_threads
         self.mode = "classification"
+        self.benders_oct = benders_oct
+
         self.X_col_labels = None
         self.X_col_dtypes = None
         self.y_dtypes = None
@@ -102,11 +105,22 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
         self.start_time = time.time()
-        self.primal = FlowOCT(X, y, tree, self._lambda,
-                              self.time_limit, self.mode, self.num_threads)
-        self.primal.create_primal_problem()
-        self.primal.model.update()
-        self.primal.model.optimize()
+        if self.benders_oct:
+            self.primal = BendersOCT(X, y, tree, self.X_col_labels,
+                                     self.labels, self._lambda,
+                                     self.time_limit,
+                                     self.mode, self.num_threads)
+            self.primal.create_primal_problem()
+            self.primal.model.update()
+            self.primal.model.optimize(benders_callback)
+        else:
+            self.primal = FlowOCT(X, y, tree, self.X_col_labels,
+                                  self.labels, self._lambda,
+                                  self.time_limit, self.mode, self.num_threads)
+            self.primal.create_master_problem()
+            self.primal.model.update()
+            self.primal.model.optimize()
+
         self.end_time = time.time()
         # solving_time or other potential parameters of interest can be stored
         # within the class: self.solving_time
