@@ -6,7 +6,6 @@ from sklearn.utils.multiclass import unique_labels
 import time
 from trees.utils.StrongTreeUtils import (
     check_columns_match,
-    get_predicted_value,
     check_binary,
     benders_callback,
 )
