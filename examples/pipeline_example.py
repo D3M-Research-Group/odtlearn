@@ -26,7 +26,7 @@ X_train = data_enc[['age_cat.1', 'age_cat.2',
        'length_of_stay.1', 'length_of_stay.2', 'length_of_stay.3',
        'length_of_stay.4', 'length_of_stay.5']]
 y_train = data_enc[['target']]
-P = data[['race']]
+P = data[['race', 'sex']]
 L = data[['priors_count','c_charge_degree']]
 
 
