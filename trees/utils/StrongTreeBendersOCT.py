@@ -7,16 +7,14 @@ import numpy as np
 
 class BendersOCT:
     def __init__(self, X, y, tree, X_col_labels, labels,
-                 _lambda, time_limit, mode, num_threads):
+                 _lambda, time_limit, num_threads):
         '''
         :param X: numpy matrix or pandas dataframe of covariates
         :param y: numpy array or pandas series/dataframe of class labels
         :param tree: Tree object
         :param _lambda: The regularization parameter in the objective
         :param time_limit: The given time limit for solving the MIP
-        :param mode: Regression vs Classification
         '''
-        self.mode = mode
         self.X = X
         self.y = y
 
@@ -32,17 +30,8 @@ class BendersOCT:
         self.g = 0
         self.b = 0
         self.p = 0
-        self.beta = 0
+        self.w = 0
 
-        # parameters
-        self.m = {}
-        for i in self.datapoints:
-            self.m[i] = 1
-
-        if self.mode == "regression":
-            for i in self.datapoints:
-                y_i = y[i]
-                self.m[i] = max(y_i, 1 - y_i)
 
         # Gurobi model
         self.model = Model('BendersOCT')
@@ -84,18 +73,20 @@ class BendersOCT:
         # We also pass the following information to the model as we need them in the callback
         self.model._master = self
 
-    ###########################################################
-    # Create the master problem
-    ###########################################################
+
     def create_master_problem(self):
         '''
         This function create and return a gurobi model 
         formulating the BendersOCT problem
         :return:  gurobi model object with the BendersOCT formulation
         '''
-        # define variables
 
-        # g[i] is the objective value for the subproblem[i]
+
+        ###########################################################
+        # Define Variables
+        ###########################################################
+
+        # g[i] is the objective value for the sub-problem[i]
         self.g = self.model.addVars(
             self.datapoints, vtype=GRB.CONTINUOUS, ub=1, name='g')
         # b[n,f] ==1 iff at node n we branch on feature f
@@ -104,22 +95,20 @@ class BendersOCT:
         # p[n] == 1 iff at node n we do not branch and we make a prediction
         self.p = self.model.addVars(
             self.tree.Nodes + self.tree.Leaves, vtype=GRB.BINARY, name='p')
-
-        '''
-        For classification beta[n,k]=1 iff at node n we predict class k
-        For the case regression beta[n,1] is the prediction value for node n
-        '''
-        self.beta = self.model.addVars(self.tree.Nodes + self.tree.Leaves,
+        # w[n,k]=1 iff at node n we predict class k
+        self.w = self.model.addVars(self.tree.Nodes + self.tree.Leaves,
                                        self.labels, vtype=GRB.CONTINUOUS, lb=0,
-                                       name='beta')
+                                       name='w')
 
         # we need these in the callback to have access to the value of the decision variables
         self.model._vars_g = self.g
         self.model._vars_b = self.b
         self.model._vars_p = self.p
-        self.model._vars_beta = self.beta
+        self.model._vars_w = self.w
 
-        # define constraints
+        ###########################################################
+        # Define Constraints
+        ###########################################################
 
         # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
         self.model.addConstrs(
@@ -127,23 +116,11 @@ class BendersOCT:
                 self.p[m] for m in self.tree.get_ancestors(n)) == 1) for n in
             self.tree.Nodes)
 
-        # # sum(sum(b[n,f], f), n) <= branching_limit
-        # self.model.addConstr(
-        #     (quicksum(
-        #         quicksum(self.b[n, f] for f in self.X_col_labels) for n in self.tree.Nodes)) <= self.branching_limit)
 
-        # beta set
-        # zeta[i,n] <= beta[n,y[i]]     forall n in N+L, i
-        if self.mode == "classification":
-            # sum(beta[n,k], k in labels) = p[n]
-            self.model.addConstrs(
-                (quicksum(self.beta[n, k] for k in self.labels) == self.p[n]) for n in
-                self.tree.Nodes + self.tree.Leaves)
-
-        elif self.mode == "regression":
-            self.model.addConstrs(
-                (self.beta[n, 1] <= self.p[n]) for n in
-                self.tree.Nodes + self.tree.Leaves)
+        # sum(w[n,k], k in labels) = p[n]
+        self.model.addConstrs(
+            (quicksum(self.w[n, k] for k in self.labels) == self.p[n]) for n in
+            self.tree.Nodes + self.tree.Leaves)
 
         # p[n] + sum(p[m], m in A(n)) = 1   forall n in Leaves
         self.model.addConstrs(
@@ -151,10 +128,12 @@ class BendersOCT:
                 self.p[m] for m in self.tree.get_ancestors(n)) == 1) for n in
             self.tree.Leaves)
 
-        # define objective function
+        ###########################################################
+        # Define the Objective
+        ###########################################################
         obj = LinExpr(0)
         for i in self.datapoints:
-            obj.add((1 - self._lambda) * (self.g[i] - self.m[i]))
+            obj.add((1 - self._lambda) * (self.g[i] - 1))
 
         for n in self.tree.Nodes:
             for f in self.X_col_labels:
