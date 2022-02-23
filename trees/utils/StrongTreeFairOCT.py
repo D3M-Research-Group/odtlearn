@@ -1,5 +1,5 @@
 '''
-This module formulate the FlowOCT problem in gurobipy.
+This module formulate the FairOCT problem in gurobipy.
 '''
 
 from gurobipy import *
@@ -12,7 +12,7 @@ class FairOCT:
     def __init__(self, X, y, tree, X_col_labels, labels, _lambda, time_limit, num_threads,
                  fairness_type, fairness_bound,
                  positive_class,
-                 P, P_col_labels, L, L_col_labels):
+                 P, P_col_labels, l):
         '''
         :param X: numpy matrix or pandas data-frame of covariates.
                   It's up to the user to include the protected features in X or not.
@@ -29,25 +29,24 @@ class FairOCT:
         :param positive_class:
         :param P: P Is the np.array of the protected features. Its dimension is (n_sample, n_p) where n_p is number of
                   protected feaures.
-        :param L: L Is the np.array of the legitimate features. Its dimension is (n_sample, n_l) where n_l is number
-                  of legitimate features.
+        :param l: numpy array or pandas series/data-frame of legitimate feature
         :param P_col_labels: Names of the protected columns
-        :param L_col_labels: Names of the legitimate columns
         '''
 
         self.X = pd.DataFrame(X, columns=X_col_labels)
         self.y = y
         self.P = P
-        self.L = L
+        self.l = l
 
-        self.X_p = np.concatenate((P, L, y.reshape(-1,1)), axis=1)
-        self.X_p = pd.DataFrame(self.X_p, columns= (P_col_labels.tolist() + L_col_labels.tolist() + ['y']))
+        self.class_name = 'class_label'
+        self.legitimate_name = 'legitimate_feature_name'
+        self.X_p = np.concatenate((P, l.reshape(-1,1), y.reshape(-1,1)), axis=1)
+        self.X_p = pd.DataFrame(self.X_p, columns= (P_col_labels.tolist() + [self.legitimate_name, self.class_name]))
 
         self.X_col_labels = X_col_labels
         self.labels = labels
 
         self.P_col_labels = P_col_labels
-        self.L_col_labels = L_col_labels
 
         # datapoints contains the indicies of our training data
         self.datapoints = np.arange(0, self.X.shape[0])
@@ -69,10 +68,33 @@ class FairOCT:
 
         # Gurobi model
         self.model = Model('FairOCT')
-        self.model.params.Threads = num_threads
+        if num_threads is not None:
+            self.model.params.Threads = num_threads
         self.model.params.TimeLimit = time_limit
 
 
+
+    def add_fairness_constraint(self, p_df, p_prime_df):
+        count_p = p_df.shape[0]
+        count_p_prime = p_prime_df.shape[0]
+        constraint_added = False
+        if count_p != 0 and count_p_prime != 0:
+            constraint_added = True
+            self.model.addConstr(((1/count_p) * quicksum(quicksum(self.zeta[i,n, self.positive_class] for n in
+                                                                        self.tree.Leaves + self.tree.Nodes)
+                                                            for i in p_df.index) -
+                                    ((1/count_p_prime) * quicksum(quicksum(self.zeta[i,n,self.positive_class] for n in
+                                                                        self.tree.Leaves + self.tree.Nodes)
+                                                            for i in p_prime_df.index))) <= self.fairness_bound)
+
+            self.model.addConstr(((1/count_p) * quicksum(quicksum(self.zeta[i,n,self.positive_class] for n in
+                                                                        (self.tree.Leaves + self.tree.Nodes))
+                                                            for i in p_df.index)) - (
+                                    (1/count_p_prime) * quicksum(quicksum(self.zeta[i,n,self.positive_class] for n in
+                                                                        self.tree.Leaves + self.tree.Nodes)
+                                                            for i in p_prime_df.index)) >= -1*self.fairness_bound)
+        
+        return constraint_added
 
 
     def create_primal_problem(self):
@@ -161,111 +183,39 @@ class FairOCT:
         # Fairness Constraints
         ###########################################################
 
-        # Statistical Parity
+        # Loop through all possible combinations of the protected feature
+        for protected_feature in self.P_col_labels:
+            for combo in combinations(self.X_p[protected_feature].unique(), 2):
+                p = combo[0]
+                p_prime = combo[1]
 
-        if self.fairness_type == "SP":
-
-            # Loop through all possible combinations of the protected feature
-            for protected_feature in self.P_col_labels:
-                for combo in combinations(self.X_p[protected_feature].unique(), 2):
-                    p = combo[0]
-                    p_prime = combo[1]
-
-                    # Count how many samples correspond to each protected feature
+                if self.fairness_type == "SP":
                     p_df = self.X_p[self.X_p[protected_feature] == p]
                     p_prime_df = self.X_p[self.X_p[protected_feature] == p_prime]
+                    self.add_fairness_constraint(p_df, p_prime_df)
+                elif self.fairness_type == "PE":
+                    p_df = self.X_p[(self.X_p[protected_feature] == p) & (self.X_p[self.class_name] != self.positive_class)]
+                    p_prime_df = self.X_p[(self.X_p[protected_feature] == p_prime) & (self.X_p[self.class_name] != self.positive_class)]
+                    self.add_fairness_constraint(p_df, p_prime_df)
+                elif self.fairness_type == "EOpp":
+                    p_df = self.X_p[(self.X_p[protected_feature] == p )& (self.X_p[self.class_name] == self.positive_class)]
+                    p_prime_df = self.X_p[(self.X_p[protected_feature] == p_prime) & (self.X_p[self.class_name] == self.positive_class)]
+                    self.add_fairness_constraint(p_df, p_prime_df)
+                elif self.fairness_type == "EOdds": # Need to check with group if this is how we want to enforce this constraint
+                    PE_p_df = self.X_p[(self.X_p[protected_feature] == p) & (self.X_p[self.class_name] != self.positive_class)]
+                    PE_p_prime_df = self.X_p[(self.X_p[protected_feature] == p_prime) & (self.X_p[self.class_name] != self.positive_class)]
 
-                    count_p = p_df.shape[0]
-                    count_p_prime = p_prime_df.shape[0]
+                    EOpp_p_df = self.X_p[(self.X_p[protected_feature] == p )& (self.X_p[self.class_name] == self.positive_class)]
+                    EOpp_p_prime_df = self.X_p[(self.X_p[protected_feature] == p_prime) & (self.X_p[self.class_name] == self.positive_class)]
 
-
-                    if count_p != 0 and count_p_prime != 0:
-                        # Sum(Sum(zeta(i,n,positive_class) for n in nodes) for i in datapoints) * 1 / (Count of Protected)
-                        self.model.addConstr(((1/count_p) * quicksum(quicksum(self.zeta[i,n, self.positive_class] for n in
-                                                                                 self.tree.Leaves + self.tree.Nodes)
-                                                                        for i in p_df.index) -
-                                              ((1/count_p_prime) * quicksum(quicksum(self.zeta[i,n,self.positive_class] for n in
-                                                                                 self.tree.Leaves + self.tree.Nodes)
-                                                                        for i in p_prime_df.index))) <= self.fairness_bound)
-
-                        self.model.addConstr(((1/count_p) * quicksum(quicksum(self.zeta[i,n,self.positive_class] for n in
-                                                                                 (self.tree.Leaves + self.tree.Nodes))
-                                                                        for i in p_df.index)) - (
-                                              (1/count_p_prime) * quicksum(quicksum(self.zeta[i,n,self.positive_class] for n in
-                                                                                 self.tree.Leaves + self.tree.Nodes)
-                                                                        for i in p_prime_df.index)) >= -1*self.fairness_bound)
-
-        if self.fairness_type == "PE":
-
-            # Loop through all possible combinations of the protected feature
-            for protected_feature in self.P_col_labels:
-                for combo in combinations(self.X_p[protected_feature].unique(), 2):
-                    p = combo[0]
-                    p_prime = combo[1]
-
-                #
-                p_df = self.X_p[(self.X_p[protected_feature] == p) & (self.X_p['y'] != self.positive_class)]
-                p_prime_df = self.X_p[(self.X_p[protected_feature] == p_prime) & (self.X_p['y'] != self.positive_class)]
-
-                # Count how many samples correspond to each group
-                count_p = p_df.shape[0]
-                count_p_prime = p_prime_df.shape[0]
-
-                if count_p != 0 and count_p_prime != 0:
-                    # Sum(Sum(zeta(i,n,positive_class) for n in nodes) for i in datapoints) * 1 / (Count of Protected)
-                    self.model.addConstr(
-                        ((1 / count_p) * quicksum(quicksum(self.zeta[i, n, self.positive_class] for n in
-                                                                  self.tree.Leaves + self.tree.Nodes)
-                                                         for i in p_df.index) -
-                         ((1 / count_p_prime) * quicksum(
-                             quicksum(self.zeta[i, n, self.positive_class] for n in
-                                      self.tree.Leaves + self.tree.Nodes)
-                             for i in p_prime_df.index))) <= self.fairness_bound)
-
-                    self.model.addConstr(
-                        ((1 / count_p) * quicksum(quicksum(self.zeta[i, n, self.positive_class] for n in
-                                                                  (self.tree.Leaves + self.tree.Nodes))
-                                                         for i in p_df.index)) - (
-                                (1 / count_p_prime) * quicksum(
-                            quicksum(self.zeta[i, n, self.positive_class] for n in
-                                     self.tree.Leaves + self.tree.Nodes)
-                            for i in p_prime_df.index)) >= -1 * self.fairness_bound)
-
-        if self.fairness_type == "EOpp":
-
-            # Loop through all possible combinations of the protected feature
-            for protected_feature in self.P_col_labels:
-                for combo in combinations(self.X_p[protected_feature].unique(), 2):
-                    p = combo[0]
-                    p_prime = combo[1]
-
-                #
-                p_df = self.X_p[(self.X_p[protected_feature] == p )& (self.X_p['y'] == self.positive_class)]
-                p_prime_df = self.X_p[(self.X_p[protected_feature] == p_prime) & (self.X_p['y'] == self.positive_class)]
-
-                # Count how many samples correspond to each group
-                count_p = p_df.shape[0]
-                count_p_prime = p_prime_df.shape[0]
-
-                if count_p != 0 and count_p_prime != 0:
-                    # Sum(Sum(zeta(i,n,positive_class) for n in nodes) for i in datapoints) * 1 / (Count of Protected)
-                    self.model.addConstr(
-                        ((1 / count_p) * quicksum(quicksum(self.zeta[i, n, self.positive_class] for n in
-                                                                  self.tree.Leaves + self.tree.Nodes)
-                                                         for i in p_df.index) -
-                         ((1 / count_p_prime) * quicksum(
-                             quicksum(self.zeta[i, n, self.positive_class] for n in
-                                      self.tree.Leaves + self.tree.Nodes)
-                             for i in p_prime_df.index))) <= self.fairness_bound)
-
-                    self.model.addConstr(
-                        ((1 / count_p) * quicksum(quicksum(self.zeta[i, n, self.positive_class] for n in
-                                                                  (self.tree.Leaves + self.tree.Nodes))
-                                                         for i in p_df.index)) - (
-                                (1 / count_p_prime) * quicksum(
-                            quicksum(self.zeta[i, n, self.positive_class] for n in
-                                     self.tree.Leaves + self.tree.Nodes)
-                            for i in p_prime_df.index)) >= -1 * self.fairness_bound)
+                    if PE_p_df.shape[0]!=0 and PE_p_prime_df.shape[0]!=0 and EOpp_p_df.shape[0]!=0 and EOpp_p_prime_df.shape[0]!=0:
+                        self.add_fairness_constraint(PE_p_df, PE_p_prime_df)
+                        self.add_fairness_constraint(EOpp_p_df, EOpp_p_prime_df)
+                elif self.fairness_type == "CSP":
+                    for l_value in self.X_p[self.legitimate_name].unique():
+                        p_df = self.X_p[(self.X_p[protected_feature] == p ) & (self.X_p[self.legitimate_name] == l_value)]
+                        p_prime_df = self.X_p[(self.X_p[protected_feature] == p_prime) & (self.X_p[self.legitimate_name] == l_value)]
+                        self.add_fairness_constraint(p_df, p_prime_df)
         ###########################################################
         # Define Objective
         ###########################################################

@@ -20,20 +20,37 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
     Parameters
     ----------
-    depth : int, default=1
+    depth : int, default= 1
         A parameter specifying the depth of the tree
-    time_limit : int
-        Add description here
-    _lambda : int
-        Add description here
+    time_limit : int, default= 30
+        The given time limit (seconds) for solving the MIO in seconds
+    _lambda : int, default= 0
+        The regularization parameter in the objective
+    num_threads: int, default=None
+        The number of threads the solver should use. If None, it will use all avaiable threads
+    positive_class : int
+        The value of the class label which is corresponding to the desired outcome
+    fairness_type: [None, 'SP', 'CSP', 'PE', 'EOpp', 'EOdds'], default=None
+        The type of fairness we want to enforce
+    fairness_bound: float (0,1], default=1
+        The bound of the fairnes constraint. The smaller the value the stricter the fairness constraint and 1 corresponds to no fairness at all
+
 
     Examples
     --------
-
+    >>> from trees.FairTree import FairTreeClassifier
+    >>> import numpy as np
+    >>> X = np.arange(100).reshape(100, 1)
+    >>> y = np.zeros((100, ))
+    >>> P = np.arange(200).reshape(100, 2)
+    >>> l = np.zeros((100, ))
+    >>> fcl = FairTreeClassifier(positive_class = 1, depth = 1, _lambda = 0, time_limit = 10,
+        fairness_type = 'CSP', fairness_bound = 1, num_threads = 1)
+    >>> fcl.fit(X_train, y_train, P, l)
     """
 
-    def __init__(self, depth, time_limit, _lambda, positive_class,
-                 fairness_type = None, fairness_bound = 1, num_threads=1):
+    def __init__(self, positive_class, depth = 1, _lambda = 0, time_limit = 30,
+                 fairness_type = None, fairness_bound = 1, num_threads = None):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit
@@ -50,12 +67,10 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         self.P_col_labels = None
         self.P_col_dtypes = None
-
-        self.L_col_labels = None
-        self.L_col_dtypes = None
+        self.l_col_dtypes = None
 
 
-    def extract_metadata(self, X, y, P, L):
+    def extract_metadata(self, X, y, P, l):
         """A function for extracting metadata from the inputs before converting
         them into numpy arrays to work with the sklearn API
 
@@ -73,33 +88,25 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         else:
             self.P_col_labels = np.array([f'P_{i}' for i in np.arange(0, P.shape[1])])
 
-
-        if isinstance(L, pd.DataFrame):
-            self.L_col_labels = L.columns
-            self.L_col_dtypes = L.dtypes
-        else:
-            self.L_col_labels = np.array([f'L_{i}' for i in np.arange(0, L.shape[1])])
-
-
-
+        self.y_dtypes = y.dtypes
+        self.y_dtypes = l.dtypes
         self.labels = np.unique(y)
 
 
-    def fit(self, X, y, P, L):
+    def fit(self, X, y, P, l):
         """A reference implementation of a fitting function.
 
         Parameters
         ----------
         X : {array-like, sparse matrix}, shape (n_samples, n_features)
             The training input samples.
-        y : array-like, shape (n_samples,) or (n_samples, n_outputs)
-            The target values (class labels in classification, real numbers in
-            regression).
-        P : array-like, shape (n_samples,) or (n_samples, n_p)
-            The protected feature columns (Race, gender, etc)
+        y : array-like, shape (n_samples,)
+            The target values (class labels in classification).
+        P : array-like, shape (n_samples,1) or (n_samples, n_p)
+            The protected feature columns (Race, gender, etc); We could have one or more columns
 
-        L : array-like, shape (n_samples,) or (n_samples, n_l)
-            The legitimate factor columns (e.g., prior number of criminal acts)
+        l : array-like, shape (n_samples,)
+            The legitimate factor column(e.g., prior number of criminal acts)
 
         Returns
         -------
@@ -107,7 +114,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             Returns self.
         """
         # store column information and dtypes if any
-        self.extract_metadata(X, y, P, L)
+        self.extract_metadata(X, y, P, l)
         # this function returns converted X and y but we retain metadata
         X, y = check_X_y(X, y)
         # Raises ValueError if there is a column that has values other than 0 or 1
@@ -117,14 +124,15 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
 
 
-        'Here we need to convert P and L to np.arrays. We need a function.' \
-        'We also need to check that P.shape and L.shape is not (n_sample, )'
-        P = np.array(P)
-        L = np.array(L)
+        'Here we need to convert P and L to np.arrays. We need a function.'
+        'I am worried about the case if the shape is (n_samples, ) '
+        P, l = check_X_y(P, l)
 
         # keep original data
         self.X_ = X
         self.y_ = y
+        self.P_ = P
+        self.l_ = l
 
         # Instantiate tree object here
         self.tree = Tree(self.depth)
@@ -143,8 +151,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             self.positive_class,
             P,
             self.P_col_labels,
-            L,
-            self.L_col_labels
+            l
         )
         self.primal.create_primal_problem()
         self.primal.model.update()
