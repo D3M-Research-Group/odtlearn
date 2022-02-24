@@ -177,7 +177,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         self.y_ = y
 
         # Instantiate tree object here
-        tree = Tree(self.depth)
+        self.tree = Tree(self.depth)
 
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
@@ -186,7 +186,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             self.primal = BendersOCT(
                 X,
                 y,
-                tree,
+                self.tree,
                 self.X_col_labels,
                 self.labels,
                 self._lambda,
@@ -201,7 +201,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             self.primal = FlowOCT(
                 X,
                 y,
-                tree,
+                self.tree,
                 self.X_col_labels,
                 self.labels,
                 self._lambda,
