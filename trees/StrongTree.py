@@ -40,7 +40,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The classes seen at :meth:`fit`.
     """
 
-    def __init__(self, depth, time_limit, _lambda, benders_oct=False, num_threads=1):
+    def __init__(self, depth, time_limit, _lambda, benders_oct=False, num_threads=None):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit

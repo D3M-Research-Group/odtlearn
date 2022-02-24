@@ -38,7 +38,8 @@ class FlowOCT:
 
         # Gurobi model
         self.model = Model("FlowOCT")
-        self.model.params.Threads = num_threads
+        if num_threads is not None:
+            self.model.params.Threads = num_threads
         self.model.params.TimeLimit = time_limit
 
     def create_primal_problem(self):

@@ -37,7 +37,8 @@ class BendersOCT:
         self.model = Model("BendersOCT")
         # The cuts we add in the callback function would be treated as lazy constraints
         self.model.params.LazyConstraints = 1
-        self.model.params.Threads = num_threads
+        if num_threads is not None:
+            self.model.params.Threads = num_threads
         self.model.params.TimeLimit = time_limit
 
         """
