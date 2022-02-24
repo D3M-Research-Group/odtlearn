@@ -1,3 +1,4 @@
 sphinx-gallery
 sphinx-rtd-theme
 numpydoc
+pillow
