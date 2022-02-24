@@ -46,7 +46,6 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         self.time_limit = time_limit
         self._lambda = _lambda
         self.num_threads = num_threads
-        self.mode = "classification"
         self.benders_oct = benders_oct
 
         self.X_col_labels = None
@@ -66,7 +65,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
         self.labels = np.unique(y)
 
-    def get_node_status(self, labels, column_names, b, beta, p, n):
+    def get_node_status(self, labels, column_names, b, w, p, n):
         """
         This function give the status of a given node in a tree. By status we mean whether the node
             1- is pruned? i.e., we have made a prediction at one of its ancestors
@@ -75,7 +74,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         :param labels: the unique values of the response variable y
         :param column_names: the column names of the data set X
         :param b: The values of branching decision variable b
-        :param beta: The values of prediction decision variable beta
+        :param w: The values of prediction decision variable w
         :param p: The values of decision variable p
         :param n: A valid node index in the tree
         :return: pruned, branching, selected_feature, leaf, value
@@ -97,12 +96,10 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             p_sum = p_sum + p[m]
         if p[n] > 0.5:  # leaf
             leaf = True
-            if self.mode == "regression":
-                value = beta[n, 1]
-            elif self.mode == "classification":
-                for k in labels:
-                    if beta[n, k] > 0.5:
-                        value = k
+            for k in labels:
+                if w[n, k] > 0.5:
+                    value = k
+
         elif p_sum == 1:  # Pruned
             pruned = True
 
@@ -115,21 +112,21 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
         return pruned, branching, selected_feature, leaf, value
 
-    def get_predicted_value(self, X, b, beta, p):
+    def get_predicted_value(self, X, b, w, p):
         """
-        This function returns the predicted value for a given datapoint
+        This function returns the predicted value for a given dataset
         :param X: The dataset we want to compute accuracy for
         :param b: The value of decision variable b
-        :param beta: The value of decision variable beta
+        :param w: The value of decision variable w
         :param p: The value of decision variable p
         :return: The predicted value for all datapoints in dataset X
         """
-        predicted_values = np.array([])
+        predicted_values = []
         for i in range(X.shape[0]):
             current = 1
             while True:
                 pruned, branching, selected_feature, leaf, value = self.get_node_status(
-                    self.labels, self.X_predict_col_names, b, beta, p, current
+                    self.labels, self.X_predict_col_names, b, w, p, current
                 )
                 if leaf:
                     predicted_values.append(value)
@@ -146,7 +143,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                         current = self.tree.get_right_children(current)
                     else:  # going left on the branch
                         current = self.tree.get_left_children(current)
-        return predicted_values
+        return np.array(predicted_values)
 
     def fit(self, X, y):
         """A reference implementation of a fitting function for a classifier.
@@ -191,7 +188,6 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.labels,
                 self._lambda,
                 self.time_limit,
-                self.mode,
                 self.num_threads,
             )
             self.primal.create_master_problem()
@@ -206,7 +202,6 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.labels,
                 self._lambda,
                 self.time_limit,
-                self.mode,
                 self.num_threads,
             )
             self.primal.create_master_problem()
@@ -221,7 +216,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         # Here we will want to store these values and any other variables
         # needed for making predictions later
         self.b_value = self.primal.model.getAttr("X", self.primal.b)
-        self.beta_value = self.primal.model.getAttr("X", self.primal.beta)
+        self.w_value = self.primal.model.getAttr("X", self.primal.w)
         self.p_value = self.primal.model.getAttr("X", self.primal.p)
         # Return the classifier
         return self
@@ -253,7 +248,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         prediction = self.get_predicted_value(
             X,
             self.b_value,
-            self.beta_value,
+            self.w_value,
             self.p_value,
         )
         return prediction
