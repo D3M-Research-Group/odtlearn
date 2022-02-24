@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start with the Trees Package &mdash; trees 0.0.1 documentation</title><link rel="stylesheet" href="_static/css/trees.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script type="text/javascript" src="_static/js/copybutton.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="User guide: create your own scikit-learn estimator" href="user_guide.html" />
+    <link rel="prev" title="Welcome to sklearn-template’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> trees
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start with the Trees Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#clone-the-repository">1. Clone the repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-the-package">2. Install the package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edit-the-documentation">3. Edit the documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-the-continuous-integration">4. Setup the continuous integration</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#publish-your-package">Publish your package</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User guide: create your own scikit-learn estimator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Trees API</a></li>
+</ul>
+<p><span class="caption-text">Tutorial - Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">General examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">trees</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Quick Start with the Trees Package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/quick_start.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-start-with-the-trees-package">
+<h1>Quick Start with the Trees Package<a class="headerlink" href="#quick-start-with-the-trees-package" title="Permalink to this headline">¶</a></h1>
+<p>This package contains implementations of several decision tree algorithms including StrongTree, FairTree, RobustTree</p>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<section id="clone-the-repository">
+<h3>1. Clone the repository<a class="headerlink" href="#clone-the-repository" title="Permalink to this headline">¶</a></h3>
+<p>To install the package, you need to clone the <code class="docutils literal notranslate"><span class="pre">trees</span></code> repository:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/patrickvossler18/decision_tree_estimators.git
+</pre></div>
+</div>
+</section>
+<section id="install-the-package">
+<h3>2. Install the package<a class="headerlink" href="#install-the-package" title="Permalink to this headline">¶</a></h3>
+<p>You can modify the source files as you want. However, your custom estimators
+need to pass the <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.utils.estimator_checks.check_estimator.html#sklearn.utils.estimator_checks.check_estimator">check_estimator</a> test to be scikit-learn compatible. You can
+refer to the <a class="reference internal" href="user_guide.html#user-guide"><span class="std std-ref">User Guide</span></a> to help you create a compatible
+scikit-learn estimator.</p>
+<p>In any case, developers should endeavor to adhere to scikit-learn’s
+<a class="reference external" href="http://scikit-learn.org/stable/developers/">Contributor’s Guide</a> which promotes the use of:</p>
+<ul class="simple">
+<li><p>algorithm-specific unit tests, in addition to <code class="docutils literal notranslate"><span class="pre">check_estimator</span></code>’s common
+tests;</p></li>
+<li><p><a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP8</a>-compliant code;</p></li>
+<li><p>a clearly documented API using <a class="reference external" href="https://github.com/numpy/numpydoc">NumpyDoc</a> and <a class="reference external" href="https://www.python.org/dev/peps/pep-0257/">PEP257</a>-compliant docstrings;</p></li>
+<li><p>references to relevant scientific literature in standard citation formats;</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/doctest.html">doctests</a> to provide succinct usage examples;</p></li>
+<li><p>standalone examples to illustrate the usage, model visualisation, and
+benefits/benchmarks of particular algorithms;</p></li>
+<li><p>efficient code when the need for optimization is supported by benchmarks.</p></li>
+</ul>
+</section>
+<section id="edit-the-documentation">
+<h3>3. Edit the documentation<a class="headerlink" href="#edit-the-documentation" title="Permalink to this headline">¶</a></h3>
+<p>The documentation is created using <a class="reference external" href="http://www.sphinx-doc.org/en/stable/">Sphinx</a>. In addition, the examples are
+created using <code class="docutils literal notranslate"><span class="pre">sphinx-gallery</span></code>. Therefore, to generate locally the
+documentation, you are required to install the following packages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install sphinx sphinx-gallery sphinx_rtd_theme matplotlib numpydoc pillow
+</pre></div>
+</div>
+<p>The documentation is made of:</p>
+<ul class="simple">
+<li><p>a home page, <code class="docutils literal notranslate"><span class="pre">doc/index.rst</span></code>;</p></li>
+<li><p>an API documentation, <code class="docutils literal notranslate"><span class="pre">doc/api.rst</span></code> in which you should add all public
+objects for which the docstring should be exposed publicly.</p></li>
+<li><p>a User Guide documentation, <code class="docutils literal notranslate"><span class="pre">doc/user_guide.rst</span></code>, containing the narrative
+documentation of your package, to give as much intuition as possible to your
+users.</p></li>
+<li><p>examples which are created in the <cite>examples/</cite> folder. Each example
+illustrates some usage of the package. the example file name should start by
+<cite>plot_*.py</cite>.</p></li>
+</ul>
+<p>The documentation is built with the following commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd doc
+$ make html
+</pre></div>
+</div>
+</section>
+<section id="setup-the-continuous-integration">
+<h3>4. Setup the continuous integration<a class="headerlink" href="#setup-the-continuous-integration" title="Permalink to this headline">¶</a></h3>
+<p>The project template already contains configuration files of the continuous
+integration system. Basically, the following systems are set:</p>
+<ul class="simple">
+<li><p>Travis CI is used to test the package in Linux. You need to activate Travis
+CI for your own repository. Refer to the Travis CI documentation.</p></li>
+<li><p>AppVeyor is used to test the package in Windows. You need to activate
+AppVeyor for your own repository. Refer to the AppVeyor documentation.</p></li>
+<li><p>Circle CI is used to check if the documentation is generated properly. You
+need to activate Circle CI for your own repository. Refer to the Circle CI
+documentation.</p></li>
+<li><p>ReadTheDocs is used to build and host the documentation. You need to activate
+ReadTheDocs for your own repository. Refer to the ReadTheDocs documentation.</p></li>
+<li><p>CodeCov for tracking the code coverage of the package. You need to activate
+CodeCov for you own repository.</p></li>
+<li><p>PEP8Speaks for automatically checking the PEP8 compliance of your project for
+each Pull Request.</p></li>
+</ul>
+</section>
+</section>
+<section id="publish-your-package">
+<h2>Publish your package<a class="headerlink" href="#publish-your-package" title="Permalink to this headline">¶</a></h2>
+<p>You can make your package available through <a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">PyPi</a> and <a href="#id1"><span class="problematic" id="id2">conda-forge_</span></a>. Refer to
+the associated documentation to be able to upload your packages such that
+it will be installable with <code class="docutils literal notranslate"><span class="pre">pip</span></code> and <code class="docutils literal notranslate"><span class="pre">conda</span></code>. Once published, it will
+be possible to install your package with the following commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install your-scikit-learn-contribution
+$ conda install -c conda-forge your-scikit-learn-contribution
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to sklearn-template’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="user_guide.html" class="btn btn-neutral float-right" title="User guide: create your own scikit-learn estimator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
