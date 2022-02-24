@@ -45,7 +45,7 @@ def check_binary(df):
         ).all(), "Expecting all values of covariate matrix to be either 0 or 1."
 
 
-def get_node_status(tree, mode, labels, column_names, b, beta, p, n):
+def get_node_status(tree, labels, column_names, b, beta, p, n):
     """
     This function give the status of a given node in a tree. By status we mean whether the node
         1- is pruned? i.e., we have made a prediction at one of its ancestors
@@ -75,12 +75,9 @@ def get_node_status(tree, mode, labels, column_names, b, beta, p, n):
         p_sum = p_sum + p[m]
     if p[n] > 0.5:  # leaf
         leaf = True
-        if mode == "regression":
-            value = beta[n, 1]
-        elif mode == "classification":
-            for k in labels:
-                if beta[n, k] > 0.5:
-                    value = k
+        for k in labels:
+            if beta[n, k] > 0.5:
+                value = k
     elif p_sum == 1:  # Pruned
         pruned = True
 
@@ -94,7 +91,7 @@ def get_node_status(tree, mode, labels, column_names, b, beta, p, n):
     return pruned, branching, selected_feature, leaf, value
 
 
-def print_tree(grb_model, b, beta, p):
+def print_tree(tree, labels, column_names, b, beta, p):
     """
     This function print the derived tree with the branching features and the predictions asserted for each node
     :param grb_model: the gurobi model solved to optimality (or reached to the time limit)
@@ -103,10 +100,9 @@ def print_tree(grb_model, b, beta, p):
     :param p: The values of decision variable p
     :return: print out the tree in the console
     """
-    tree = grb_model.tree
     for n in tree.Nodes + tree.Leaves:
         pruned, branching, selected_feature, leaf, value = get_node_status(
-            grb_model, b, beta, p, n
+            tree, labels, column_names, b, beta, p, n
         )
         print("#########node ", n)
         if pruned:
