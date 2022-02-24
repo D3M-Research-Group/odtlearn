@@ -69,3 +69,6 @@ target/
 # vscode, pycharm
 .vscode/
 .idea/
+
+# Mac OS
+.DS_Store
