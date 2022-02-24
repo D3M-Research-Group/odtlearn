@@ -17,7 +17,7 @@ from trees.utils.StrongTreeBendersOCT import BendersOCT
 
 
 class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
-    """
+    """TO-DO: NEED DESCRIPTION OF THE CLASS HERE.
 
     Parameters
     ----------
@@ -146,7 +146,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         return np.array(predicted_values)
 
     def fit(self, X, y):
-        """A reference implementation of a fitting function for a classifier.
+        """TO-DO: NEED DESCRIPTION OF METHOD HERE.
 
         Parameters
         ----------
@@ -180,7 +180,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         # Note that we are taking X and y as array-like objects
         self.start_time = time.time()
         if self.benders_oct:
-            self.primal = BendersOCT(
+            self.grb_model = BendersOCT(
                 X,
                 y,
                 self.tree,
@@ -190,11 +190,11 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.time_limit,
                 self.num_threads,
             )
-            self.primal.create_master_problem()
-            self.primal.model.update()
-            self.primal.model.optimize(benders_callback)
+            self.grb_model.create_main_problem()
+            self.grb_model.model.update()
+            self.grb_model.model.optimize(benders_callback)
         else:
-            self.primal = FlowOCT(
+            self.grb_model = FlowOCT(
                 X,
                 y,
                 self.tree,
@@ -204,9 +204,9 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.time_limit,
                 self.num_threads,
             )
-            self.primal.create_master_problem()
-            self.primal.model.update()
-            self.primal.model.optimize()
+            self.grb_model.create_primal_problem()
+            self.grb_model.model.update()
+            self.grb_model.model.optimize()
 
         self.end_time = time.time()
         # solving_time or other potential parameters of interest can be stored
@@ -215,14 +215,14 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
         # Here we will want to store these values and any other variables
         # needed for making predictions later
-        self.b_value = self.primal.model.getAttr("X", self.primal.b)
-        self.w_value = self.primal.model.getAttr("X", self.primal.w)
-        self.p_value = self.primal.model.getAttr("X", self.primal.p)
+        self.b_value = self.grb_model.model.getAttr("X", self.grb_model.b)
+        self.w_value = self.grb_model.model.getAttr("X", self.grb_model.w)
+        self.p_value = self.grb_model.model.getAttr("X", self.grb_model.p)
         # Return the classifier
         return self
 
     def predict(self, X):
-        """A reference implementation of a prediction for a classifier.
+        """TO-DO: NEED DESCRIPTION OF METHOD HERE.
 
         Parameters
         ----------

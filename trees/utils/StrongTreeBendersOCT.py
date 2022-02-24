@@ -1,20 +1,21 @@
-'''
+"""
 This module formulate the BendersOCT problem in gurobipy.
-'''
+"""
 from gurobipy import Model, GRB, quicksum, LinExpr
 import numpy as np
 
 
 class BendersOCT:
-    def __init__(self, X, y, tree, X_col_labels, labels,
-                 _lambda, time_limit, num_threads):
-        '''
+    def __init__(
+        self, X, y, tree, X_col_labels, labels, _lambda, time_limit, num_threads
+    ):
+        """
         :param X: numpy matrix or pandas dataframe of covariates
         :param y: numpy array or pandas series/dataframe of class labels
         :param tree: Tree object
         :param _lambda: The regularization parameter in the objective
         :param time_limit: The given time limit for solving the MIP
-        '''
+        """
         self.X = X
         self.y = y
 
@@ -32,15 +33,14 @@ class BendersOCT:
         self.p = 0
         self.w = 0
 
-
         # Gurobi model
-        self.model = Model('BendersOCT')
+        self.model = Model("BendersOCT")
         # The cuts we add in the callback function would be treated as lazy constraints
         self.model.params.LazyConstraints = 1
         self.model.params.Threads = num_threads
         self.model.params.TimeLimit = time_limit
 
-        '''
+        """
         The following variables are used for the Benders problem to keep track
          of the times we call the callback.
 
@@ -57,7 +57,7 @@ class BendersOCT:
         By success we mean ending up adding a lazy constraint
         to the model
 
-        '''
+        """
         self.model._total_callback_time_integer = 0
         self.model._total_callback_time_integer_success = 0
 
@@ -73,14 +73,12 @@ class BendersOCT:
         # We also pass the following information to the model as we need them in the callback
         self.model._master = self
 
-
-    def create_master_problem(self):
-        '''
-        This function create and return a gurobi model 
+    def create_main_problem(self):
+        """
+        This function create and return a gurobi model
         formulating the BendersOCT problem
         :return:  gurobi model object with the BendersOCT formulation
-        '''
-
+        """
 
         ###########################################################
         # Define Variables
@@ -88,17 +86,24 @@ class BendersOCT:
 
         # g[i] is the objective value for the sub-problem[i]
         self.g = self.model.addVars(
-            self.datapoints, vtype=GRB.CONTINUOUS, ub=1, name='g')
+            self.datapoints, vtype=GRB.CONTINUOUS, ub=1, name="g"
+        )
         # b[n,f] ==1 iff at node n we branch on feature f
         self.b = self.model.addVars(
-            self.tree.Nodes, self.X_col_labels, vtype=GRB.BINARY, name='b')
+            self.tree.Nodes, self.X_col_labels, vtype=GRB.BINARY, name="b"
+        )
         # p[n] == 1 iff at node n we do not branch and we make a prediction
         self.p = self.model.addVars(
-            self.tree.Nodes + self.tree.Leaves, vtype=GRB.BINARY, name='p')
+            self.tree.Nodes + self.tree.Leaves, vtype=GRB.BINARY, name="p"
+        )
         # w[n,k]=1 iff at node n we predict class k
-        self.w = self.model.addVars(self.tree.Nodes + self.tree.Leaves,
-                                       self.labels, vtype=GRB.CONTINUOUS, lb=0,
-                                       name='w')
+        self.w = self.model.addVars(
+            self.tree.Nodes + self.tree.Leaves,
+            self.labels,
+            vtype=GRB.CONTINUOUS,
+            lb=0,
+            name="w",
+        )
 
         # we need these in the callback to have access to the value of the decision variables
         self.model._vars_g = self.g
@@ -112,21 +117,26 @@ class BendersOCT:
 
         # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
         self.model.addConstrs(
-            (quicksum(self.b[n, f] for f in self.X_col_labels) + self.p[n] + quicksum(
-                self.p[m] for m in self.tree.get_ancestors(n)) == 1) for n in
-            self.tree.Nodes)
-
+            (
+                quicksum(self.b[n, f] for f in self.X_col_labels)
+                + self.p[n]
+                + quicksum(self.p[m] for m in self.tree.get_ancestors(n))
+                == 1
+            )
+            for n in self.tree.Nodes
+        )
 
         # sum(w[n,k], k in labels) = p[n]
         self.model.addConstrs(
-            (quicksum(self.w[n, k] for k in self.labels) == self.p[n]) for n in
-            self.tree.Nodes + self.tree.Leaves)
+            (quicksum(self.w[n, k] for k in self.labels) == self.p[n])
+            for n in self.tree.Nodes + self.tree.Leaves
+        )
 
         # p[n] + sum(p[m], m in A(n)) = 1   forall n in Leaves
         self.model.addConstrs(
-            (self.p[n] + quicksum(
-                self.p[m] for m in self.tree.get_ancestors(n)) == 1) for n in
-            self.tree.Leaves)
+            (self.p[n] + quicksum(self.p[m] for m in self.tree.get_ancestors(n)) == 1)
+            for n in self.tree.Leaves
+        )
 
         ###########################################################
         # Define the Objective

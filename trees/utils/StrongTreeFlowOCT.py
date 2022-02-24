@@ -29,7 +29,6 @@ class FlowOCT:
         self.tree = tree
         self._lambda = _lambda
 
-
         # Decision Variables
         self.b = 0
         self.p = 0
@@ -42,8 +41,7 @@ class FlowOCT:
         self.model.params.Threads = num_threads
         self.model.params.TimeLimit = time_limit
 
-
-    def create_master_problem(self):
+    def create_primal_problem(self):
         """
         This function create and return a gurobi model formulating
         the FlowOCT problem
@@ -63,9 +61,9 @@ class FlowOCT:
         self.p = self.model.addVars(
             self.tree.Nodes + self.tree.Leaves, vtype=GRB.BINARY, name="p"
         )
-        '''
+        """
         For classification w[n,k]=1 iff at node n we predict class k
-        '''
+        """
         self.w = self.model.addVars(
             self.tree.Nodes + self.tree.Leaves,
             self.labels,
@@ -73,10 +71,10 @@ class FlowOCT:
             lb=0,
             name="w",
         )
-        '''
+        """
         zeta[i,n] is the amount of flow through the edge connecting node n
         to sink node t for data-point i
-        '''
+        """
         self.zeta = self.model.addVars(
             self.datapoints,
             self.tree.Nodes + self.tree.Leaves,
@@ -152,7 +150,6 @@ class FlowOCT:
             for n in self.tree.Leaves
         )
 
-
         # zeta[i,n] <= w[n,y[i]]     forall n in N+L, i
         for n in self.tree.Nodes + self.tree.Leaves:
             self.model.addConstrs(
@@ -164,8 +161,6 @@ class FlowOCT:
             (quicksum(self.w[n, k] for k in self.labels) == self.p[n])
             for n in self.tree.Nodes + self.tree.Leaves
         )
-
-
 
         for n in self.tree.Leaves:
             self.model.addConstrs(
