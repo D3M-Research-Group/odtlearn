@@ -1,13 +1,9 @@
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
+from sklearn.utils.validation import check_X_y
 from sklearn.utils.multiclass import unique_labels
-import time
-from trees.utils.StrongTreeUtils import (
-    check_columns_match,
-    check_binary
-)
+from trees.utils.StrongTreeUtils import check_binary
 
 # Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
 from trees.utils.Tree import Tree
@@ -15,7 +11,7 @@ from trees.utils.StrongTreeFairOCT import FairOCT
 
 
 class FairTreeClassifier(ClassifierMixin, BaseEstimator):
-    """ Description of this estimator here
+    """Description of this estimator here
 
 
     Parameters
@@ -49,8 +45,16 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
     >>> fcl.fit(X_train, y_train, P, l)
     """
 
-    def __init__(self, positive_class, depth = 1, _lambda = 0, time_limit = 30,
-                 fairness_type = None, fairness_bound = 1, num_threads = None):
+    def __init__(
+        self,
+        positive_class,
+        depth=1,
+        _lambda=0,
+        time_limit=30,
+        fairness_type=None,
+        fairness_bound=1,
+        num_threads=None,
+    ):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit
@@ -69,7 +73,6 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         self.P_col_dtypes = None
         self.l_col_dtypes = None
 
-
     def extract_metadata(self, X, y, P, l):
         """A function for extracting metadata from the inputs before converting
         them into numpy arrays to work with the sklearn API
@@ -79,19 +82,17 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             self.X_col_labels = X.columns
             self.X_col_dtypes = X.dtypes
         else:
-            self.X_col_labels = np.array([f'X_{i}' for i in np.arange(0, X.shape[1])])
-
+            self.X_col_labels = np.array([f"X_{i}" for i in np.arange(0, X.shape[1])])
 
         if isinstance(P, pd.DataFrame):
             self.P_col_labels = P.columns
             self.P_col_dtypes = P.dtypes
         else:
-            self.P_col_labels = np.array([f'P_{i}' for i in np.arange(0, P.shape[1])])
+            self.P_col_labels = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
 
         self.y_dtypes = y.dtypes
         self.y_dtypes = l.dtypes
         self.labels = np.unique(y)
-
 
     def fit(self, X, y, P, l):
         """A reference implementation of a fitting function.
@@ -122,10 +123,8 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         # Store the classes seen during fit
         self.classes_ = unique_labels(y)
 
-
-
-        'Here we need to convert P and L to np.arrays. We need a function.'
-        'I am worried about the case if the shape is (n_samples, ) '
+        # Here we need to convert P and L to np.arrays. We need a function.
+        # I am worried about the case if the shape is (n_samples, )
         P, l = check_X_y(P, l)
 
         # keep original data
@@ -151,15 +150,10 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             self.positive_class,
             P,
             self.P_col_labels,
-            l
+            l,
         )
         self.primal.create_primal_problem()
         self.primal.model.update()
         self.primal.model.optimize()
 
         return self
-
-
-
-
-
