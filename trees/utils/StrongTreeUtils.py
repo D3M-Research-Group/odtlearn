@@ -45,8 +45,7 @@ def check_binary(df):
         ).all(), "Expecting all values of covariate matrix to be either 0 or 1."
 
 
-
-def get_node_status(tree, labels, column_names, b, beta, p, n):
+def get_node_status(tree, labels, column_names, b, w, p, n):
     """
     This function give the status of a given node in a tree. By status we mean whether the node
         1- is pruned? i.e., we have made a prediction at one of its ancestors
@@ -90,7 +89,6 @@ def get_node_status(tree, labels, column_names, b, beta, p, n):
                     branching = True
 
     return pruned, branching, selected_feature, leaf, value
-
 
 
 def print_tree(tree, labels, column_names, b, w, p):
@@ -171,8 +169,6 @@ def get_acc(grb_model, local_data, b, w, p):
 
     acc = acc / len(local_data.index)
     return acc
-
-
 
 
 def get_left_exp_integer(master, b, n, i):
@@ -304,9 +300,3 @@ def benders_callback(model, where):
         if added_cut == 1:
             model._callback_counter_integer_success += 1
             model._total_callback_time_integer_success += func_time
-
-
-
-
-
-
