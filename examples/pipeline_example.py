@@ -1,3 +1,10 @@
+"""
+============================
+Sklearn Pipeline Example
+============================
+
+An example of using the sklearn train_test_split pipeline with :class:`trees.StrongTree.StrongTreeClassifier`
+"""
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from trees.StrongTree import StrongTreeClassifier

@@ -1,3 +1,10 @@
+"""
+============================
+Tree Plotting Example
+============================
+
+An example of plotting a fit decision tree using :class:`trees.utils.TreePlotter.TreePlotter`
+"""
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from trees.StrongTree import StrongTreeClassifier

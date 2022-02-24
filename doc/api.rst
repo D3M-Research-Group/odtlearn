@@ -1,34 +1,26 @@
 ####################
-project-template API
+Trees API
 ####################
 
 This is an example on how to document the API of your own project.
 
-.. currentmodule:: skltemplate
+.. currentmodule:: trees
 
-Estimator
-=========
-
-.. autosummary::
-   :toctree: generated/
-   :template: class.rst
-
-   TemplateEstimator
-
-Transformer
-===========
+StrongTree
+==========
 
 .. autosummary::
    :toctree: generated/
    :template: class.rst
 
-   TemplateTransformer
+   StrongTree.StrongTreeClassifier
 
-Predictor
-=========
+
+FairTree
+==========
 
 .. autosummary::
    :toctree: generated/
    :template: class.rst
 
-    TemplateClassifier
+   FairTree.FairTreeClassifier

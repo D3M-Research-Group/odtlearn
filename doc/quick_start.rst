@@ -1,46 +1,21 @@
 #####################################
-Quick Start with the project-template
+Quick Start with the Trees Package
 #####################################
 
-This package serves as a skeleton package aiding at developing compatible
-scikit-learn contribution.
+This package contains implementations of several decision tree algorithms including StrongTree, FairTree, RobustTree
 
-Creating your own scikit-learn contribution package
+Getting Started
 ===================================================
 
-1. Download and setup your repository
--------------------------------------
+1. Clone the repository
+------------------------------------------
 
-To create your package, you need to clone the ``project-template`` repository::
+To install the package, you need to clone the ``trees`` repository::
 
-    $ git clone https://github.com/scikit-learn-contrib/project-template.git
+    $ git clone https://github.com/patrickvossler18/decision_tree_estimators.git
 
-Before to reinitialize your git repository, you need to make the following
-changes. Replace all occurrences of ``skltemplate`` and ``sklearn-template``
-with the name of you own contribution. You can find all the occurrences using
-the following command::
 
-    $ git grep skltemplate
-    $ git grep sklearn-template
-
-To remove the history of the template package, you need to remove the `.git`
-directory::
-
-    $ cd project-template
-    $ rm -rf .git
-
-Then, you need to initialize your new git repository::
-
-    $ git init
-    $ git add .
-    $ git commit -m 'Initial commit'
-
-Finally, you create an online repository on GitHub and push your code online::
-
-    $ git remote add origin https://github.com/your_remote/your_contribution.git
-    $ git push origin master
-
-2. Develop your own scikit-learn estimators
+2. Install the package
 -------------------------------------------
 
 .. _check_estimator: http://scikit-learn.org/stable/modules/generated/sklearn.utils.estimator_checks.check_estimator.html#sklearn.utils.estimator_checks.check_estimator
