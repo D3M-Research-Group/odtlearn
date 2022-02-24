@@ -4,7 +4,7 @@ Trees API
 
 This is an example on how to document the API of your own project.
 
-.. currentmodule:: trees
+
 
 StrongTree
 ==========
@@ -13,7 +13,7 @@ StrongTree
    :toctree: generated/
    :template: class.rst
 
-   StrongTree.StrongTreeClassifier
+   trees.StrongTree.StrongTreeClassifier
 
 
 FairTree
@@ -23,4 +23,4 @@ FairTree
    :toctree: generated/
    :template: class.rst
 
-   FairTree.FairTreeClassifier
+   trees.FairTree.FairTreeClassifier
