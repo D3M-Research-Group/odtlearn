@@ -3,3 +3,5 @@ sphinx-rtd-theme
 numpydoc
 pillow
 numpy
+pandas
+scikit-learn
