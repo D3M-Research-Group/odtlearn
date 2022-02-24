@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>trees.FairTree &mdash; trees 0.0.1 documentation</title><link rel="stylesheet" href="../../_static/css/trees.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> trees
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start with the Trees Package</a></li>
+</ul>
+<p><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide: create your own scikit-learn estimator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">Trees API</a></li>
+</ul>
+<p><span class="caption-text">Tutorial - Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">General examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">trees</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>trees.FairTree</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for trees.FairTree</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
+<span class="kn">from</span> <span class="nn">trees.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="n">check_binary</span>
+
+<span class="c1"># Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder</span>
+<span class="kn">from</span> <span class="nn">trees.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">trees.utils.StrongTreeFairOCT</span> <span class="kn">import</span> <span class="n">FairOCT</span>
+
+
+<div class="viewcode-block" id="FairTreeClassifier"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">FairTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Description of this estimator here</span>
+
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    depth : int, default= 1</span>
+<span class="sd">        A parameter specifying the depth of the tree</span>
+<span class="sd">    time_limit : int, default= 30</span>
+<span class="sd">        The given time limit (seconds) for solving the MIO in seconds</span>
+<span class="sd">    _lambda : int, default= 0</span>
+<span class="sd">        The regularization parameter in the objective</span>
+<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If None, it will use all avaiable threads</span>
+<span class="sd">    positive_class : int</span>
+<span class="sd">        The value of the class label which is corresponding to the desired outcome</span>
+<span class="sd">    fairness_type: [None, &#39;SP&#39;, &#39;CSP&#39;, &#39;PE&#39;, &#39;EOpp&#39;, &#39;EOdds&#39;], default=None</span>
+<span class="sd">        The type of fairness we want to enforce</span>
+<span class="sd">    fairness_bound: float (0,1], default=1</span>
+<span class="sd">        The bound of the fairnes constraint. The smaller the value the stricter the fairness constraint and 1 corresponds to no fairness at all</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from trees.FairTree import FairTreeClassifier</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; X = np.arange(100).reshape(100, 1)</span>
+<span class="sd">    &gt;&gt;&gt; y = np.zeros((100, ))</span>
+<span class="sd">    &gt;&gt;&gt; P = np.arange(200).reshape(100, 2)</span>
+<span class="sd">    &gt;&gt;&gt; l = np.zeros((100, ))</span>
+<span class="sd">    &gt;&gt;&gt; fcl = FairTreeClassifier(positive_class = 1, depth = 1, _lambda = 0, time_limit = 10,</span>
+<span class="sd">        fairness_type = &#39;CSP&#39;, fairness_bound = 1, num_threads = 1)</span>
+<span class="sd">    &gt;&gt;&gt; fcl.fit(X_train, y_train, P, l)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="FairTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">positive_class</span><span class="p">,</span>
+        <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="n">fairness_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="c1"># this is where we will initialize the values we want users to provide</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="n">_lambda</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span> <span class="o">=</span> <span class="n">num_threads</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fairness_type</span> <span class="o">=</span> <span class="n">fairness_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fairness_bound</span> <span class="o">=</span> <span class="n">fairness_bound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_col_dtypes</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_dtypes</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_col_labels</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_col_dtypes</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l_col_dtypes</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="FairTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A function for extracting metadata from the inputs before converting</span>
+<span class="sd">        them into numpy arrays to work with the sklearn API</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_dtypes</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">dtypes</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;X_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P_col_labels</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">columns</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P_col_dtypes</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">dtypes</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;P_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">P</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_dtypes</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">dtypes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_dtypes</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">dtypes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FairTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A reference implementation of a fitting function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : {array-like, sparse matrix}, shape (n_samples, n_features)</span>
+<span class="sd">            The training input samples.</span>
+<span class="sd">        y : array-like, shape (n_samples,)</span>
+<span class="sd">            The target values (class labels in classification).</span>
+<span class="sd">        P : array-like, shape (n_samples,1) or (n_samples, n_p)</span>
+<span class="sd">            The protected feature columns (Race, gender, etc); We could have one or more columns</span>
+
+<span class="sd">        l : array-like, shape (n_samples,)</span>
+<span class="sd">            The legitimate factor column(e.g., prior number of criminal acts)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            Returns self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># store column information and dtypes if any</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+        <span class="c1"># this function returns converted X and y but we retain metadata</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="c1"># Raises ValueError if there is a column that has values other than 0 or 1</span>
+        <span class="n">check_binary</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="c1"># Store the classes seen during fit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># Here we need to convert P and L to np.arrays. We need a function.</span>
+        <span class="c1"># I am worried about the case if the shape is (n_samples, )</span>
+        <span class="n">P</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+
+        <span class="c1"># keep original data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_</span> <span class="o">=</span> <span class="n">P</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l_</span> <span class="o">=</span> <span class="n">l</span>
+
+        <span class="c1"># Instantiate tree object here</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">primal</span> <span class="o">=</span> <span class="n">FairOCT</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span>
+            <span class="n">y</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fairness_type</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fairness_bound</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">positive_class</span><span class="p">,</span>
+            <span class="n">P</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P_col_labels</span><span class="p">,</span>
+            <span class="n">l</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">create_primal_problem</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -91,7 +91,207 @@
            <div itemprop="articleBody">
              
   <section id="trees-strongtree-strongtreeclassifier">
-<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.StrongTree</span></code>.StrongTreeClassifier<a class="headerlink" href="#trees-strongtree-strongtreeclassifier" title="Permalink to this headline">¶</a></h1>
+<h1><a class="reference internal" href="trees.StrongTree.html#trees.StrongTree" title="trees.StrongTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.StrongTree</span></code></a>.StrongTreeClassifier<a class="headerlink" href="#trees-strongtree-strongtreeclassifier" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="trees.StrongTree.StrongTreeClassifier">
+<em class="property">class </em><code class="sig-prename descclassname">trees.StrongTree.</code><code class="sig-name descname">StrongTreeClassifier</code><span class="sig-paren">(</span><em class="sig-param">depth</em>, <em class="sig-param">time_limit</em>, <em class="sig-param">_lambda</em>, <em class="sig-param">benders_oct=False</em>, <em class="sig-param">num_threads=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>TO-DO: NEED DESCRIPTION OF THE CLASS HERE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>A parameter specifying the depth of the tree</p>
+</dd>
+<dt><strong>time_limit</strong><span class="classifier">int</span></dt><dd><p>The given time limit for solving the MIP in seconds</p>
+</dd>
+<dt><strong>_lambda</strong><span class="classifier">int</span></dt><dd><p>The regularization parameter in the objective</p>
+</dd>
+<dt><strong>num_threads: int, default=1</strong></dt><dd><p>The number of threads the solver should use</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>X_</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>The input passed during <a class="reference internal" href="#trees.StrongTree.StrongTreeClassifier.fit" title="trees.StrongTree.StrongTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+</dd>
+<dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The labels passed during <a class="reference internal" href="#trees.StrongTree.StrongTreeClassifier.fit" title="trees.StrongTree.StrongTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+</dd>
+<dt><strong>classes_</strong><span class="classifier">ndarray, shape (n_classes,)</span></dt><dd><p>The classes seen at <a class="reference internal" href="#trees.StrongTree.StrongTreeClassifier.fit" title="trees.StrongTree.StrongTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="method">
+<dt id="trees.StrongTree.StrongTreeClassifier.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">depth</em>, <em class="sig-param">time_limit</em>, <em class="sig-param">_lambda</em>, <em class="sig-param">benders_oct=False</em>, <em class="sig-param">num_threads=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.StrongTree.StrongTreeClassifier.extract_metadata">
+<code class="sig-name descname">extract_metadata</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.extract_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.extract_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function for extracting metadata from the inputs before converting
+them into numpy arrays to work with the sklearn API</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.StrongTree.StrongTreeClassifier.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>TO-DO: NEED DESCRIPTION OF METHOD HERE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The training input samples.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The target values. An array of int.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>Returns self.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.StrongTree.StrongTreeClassifier.get_node_status">
+<code class="sig-name descname">get_node_status</code><span class="sig-paren">(</span><em class="sig-param">labels</em>, <em class="sig-param">column_names</em>, <em class="sig-param">b</em>, <em class="sig-param">w</em>, <em class="sig-param">p</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.get_node_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.get_node_status" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function give the status of a given node in a tree. By status we mean whether the node</dt><dd><p>1- is pruned? i.e., we have made a prediction at one of its ancestors
+2- is a branching node? If yes, what feature do we branch on
+3- is a leaf? If yes, what is the prediction at this node?</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> – the unique values of the response variable y</p></li>
+<li><p><strong>column_names</strong> – the column names of the data set X</p></li>
+<li><p><strong>b</strong> – The values of branching decision variable b</p></li>
+<li><p><strong>w</strong> – The values of prediction decision variable w</p></li>
+<li><p><strong>p</strong> – The values of decision variable p</p></li>
+<li><p><strong>n</strong> – A valid node index in the tree</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pruned, branching, selected_feature, leaf, value</p>
+</dd>
+</dl>
+<p>pruned=1 iff the node is pruned
+branching = 1 iff the node branches at some feature f
+selected_feature: The feature that the node branch on
+leaf = 1 iff node n is a leaf in the tree
+value: if node n is a leaf, value represent the prediction at this node</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.StrongTree.StrongTreeClassifier.get_params">
+<code class="sig-name descname">get_params</code><span class="sig-paren">(</span><em class="sig-param">deep=True</em><span class="sig-paren">)</span><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters for this estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>deep</strong><span class="classifier">bool, default=True</span></dt><dd><p>If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>Parameter names mapped to their values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.StrongTree.StrongTreeClassifier.get_predicted_value">
+<code class="sig-name descname">get_predicted_value</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">b</em>, <em class="sig-param">w</em>, <em class="sig-param">p</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.get_predicted_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.get_predicted_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the predicted value for a given dataset
+:param X: The dataset we want to compute accuracy for
+:param b: The value of decision variable b
+:param w: The value of decision variable w
+:param p: The value of decision variable p
+:return: The predicted value for all datapoints in dataset X</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.StrongTree.StrongTreeClassifier.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>TO-DO: NEED DESCRIPTION OF METHOD HERE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input samples.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The label for each sample is the label of the closest sample
+seen during fit.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.StrongTree.StrongTreeClassifier.score">
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">sample_weight=None</em><span class="sig-paren">)</span><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mean accuracy on the given test data and labels.</p>
+<p>In multi-label classification, this is the subset accuracy
+which is a harsh metric since you require for each sample that
+each label set be correctly predicted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>Test samples.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,) or (n_samples, n_outputs)</span></dt><dd><p>True labels for <cite>X</cite>.</p>
+</dd>
+<dt><strong>sample_weight</strong><span class="classifier">array-like of shape (n_samples,), default=None</span></dt><dd><p>Sample weights.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>score</strong><span class="classifier">float</span></dt><dd><p>Mean accuracy of <code class="docutils literal notranslate"><span class="pre">self.predict(X)</span></code> wrt. <cite>y</cite>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.StrongTree.StrongTreeClassifier.set_params">
+<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">**params</em><span class="sig-paren">)</span><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this estimator.</p>
+<p>The method works on simple estimators as well as on nested objects
+(such as <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>). The latter have
+parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code> so that it’s
+possible to update each component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>**params</strong><span class="classifier">dict</span></dt><dd><p>Estimator parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">estimator instance</span></dt><dd><p>Estimator instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <div style='clear:both'></div></section>
 
 

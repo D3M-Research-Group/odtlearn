@@ -91,7 +91,156 @@
            <div itemprop="articleBody">
              
   <section id="trees-fairtree-fairtreeclassifier">
-<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code>.FairTreeClassifier<a class="headerlink" href="#trees-fairtree-fairtreeclassifier" title="Permalink to this headline">¶</a></h1>
+<h1><a class="reference internal" href="trees.FairTree.html#trees.FairTree" title="trees.FairTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code></a>.FairTreeClassifier<a class="headerlink" href="#trees-fairtree-fairtreeclassifier" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="trees.FairTree.FairTreeClassifier">
+<em class="property">class </em><code class="sig-prename descclassname">trees.FairTree.</code><code class="sig-name descname">FairTreeClassifier</code><span class="sig-paren">(</span><em class="sig-param">positive_class</em>, <em class="sig-param">depth=1</em>, <em class="sig-param">_lambda=0</em>, <em class="sig-param">time_limit=30</em>, <em class="sig-param">fairness_type=None</em>, <em class="sig-param">fairness_bound=1</em>, <em class="sig-param">num_threads=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description of this estimator here</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>depth</strong><span class="classifier">int, default= 1</span></dt><dd><p>A parameter specifying the depth of the tree</p>
+</dd>
+<dt><strong>time_limit</strong><span class="classifier">int, default= 30</span></dt><dd><p>The given time limit (seconds) for solving the MIO in seconds</p>
+</dd>
+<dt><strong>_lambda</strong><span class="classifier">int, default= 0</span></dt><dd><p>The regularization parameter in the objective</p>
+</dd>
+<dt><strong>num_threads: int, default=None</strong></dt><dd><p>The number of threads the solver should use. If None, it will use all avaiable threads</p>
+</dd>
+<dt><strong>positive_class</strong><span class="classifier">int</span></dt><dd><p>The value of the class label which is corresponding to the desired outcome</p>
+</dd>
+<dt><strong>fairness_type: [None, ‘SP’, ‘CSP’, ‘PE’, ‘EOpp’, ‘EOdds’], default=None</strong></dt><dd><p>The type of fairness we want to enforce</p>
+</dd>
+<dt><strong>fairness_bound: float (0,1], default=1</strong></dt><dd><p>The bound of the fairnes constraint. The smaller the value the stricter the fairness constraint and 1 corresponds to no fairness at all</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">trees.FairTree</span> <span class="kn">import</span> <span class="n">FairTreeClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fcl</span> <span class="o">=</span> <span class="n">FairTreeClassifier</span><span class="p">(</span><span class="n">positive_class</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_lambda</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="go">    fairness_type = &#39;CSP&#39;, fairness_bound = 1, num_threads = 1)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">positive_class</em>, <em class="sig-param">depth=1</em>, <em class="sig-param">_lambda=0</em>, <em class="sig-param">time_limit=30</em>, <em class="sig-param">fairness_type=None</em>, <em class="sig-param">fairness_bound=1</em>, <em class="sig-param">num_threads=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.extract_metadata">
+<code class="sig-name descname">extract_metadata</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">P</em>, <em class="sig-param">l</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.extract_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.extract_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function for extracting metadata from the inputs before converting
+them into numpy arrays to work with the sklearn API</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">P</em>, <em class="sig-param">l</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>A reference implementation of a fitting function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">{array-like, sparse matrix}, shape (n_samples, n_features)</span></dt><dd><p>The training input samples.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The target values (class labels in classification).</p>
+</dd>
+<dt><strong>P</strong><span class="classifier">array-like, shape (n_samples,1) or (n_samples, n_p)</span></dt><dd><p>The protected feature columns (Race, gender, etc); We could have one or more columns</p>
+</dd>
+<dt><strong>l</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The legitimate factor column(e.g., prior number of criminal acts)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>Returns self.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.get_params">
+<code class="sig-name descname">get_params</code><span class="sig-paren">(</span><em class="sig-param">deep=True</em><span class="sig-paren">)</span><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parameters for this estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>deep</strong><span class="classifier">bool, default=True</span></dt><dd><p>If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>Parameter names mapped to their values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.score">
+<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">sample_weight=None</em><span class="sig-paren">)</span><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the mean accuracy on the given test data and labels.</p>
+<p>In multi-label classification, this is the subset accuracy
+which is a harsh metric since you require for each sample that
+each label set be correctly predicted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>Test samples.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,) or (n_samples, n_outputs)</span></dt><dd><p>True labels for <cite>X</cite>.</p>
+</dd>
+<dt><strong>sample_weight</strong><span class="classifier">array-like of shape (n_samples,), default=None</span></dt><dd><p>Sample weights.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>score</strong><span class="classifier">float</span></dt><dd><p>Mean accuracy of <code class="docutils literal notranslate"><span class="pre">self.predict(X)</span></code> wrt. <cite>y</cite>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.set_params">
+<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">**params</em><span class="sig-paren">)</span><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.set_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parameters of this estimator.</p>
+<p>The method works on simple estimators as well as on nested objects
+(such as <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>). The latter have
+parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code> so that it’s
+possible to update each component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>**params</strong><span class="classifier">dict</span></dt><dd><p>Estimator parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">estimator instance</span></dt><dd><p>Estimator instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <div style='clear:both'></div></section>
 
 
