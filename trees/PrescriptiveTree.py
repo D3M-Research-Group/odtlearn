@@ -24,7 +24,6 @@ from trees.utils.PrescriptiveTreesMIP import FlowOPT_IPW, FlowOPT_Robust
 
 class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
     """
-
     Parameters
     ----------
     depth : int
@@ -216,7 +215,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         return y
 
     def fit(self, X, t, y, ipw=None, y_hat=None):
-        """A reference implementation of a fitting function for a classifier.
+        """Method to fit the PrescriptiveTree class on the data
 
         Parameters
         ----------
@@ -339,7 +338,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         return self
 
     def predict(self, X):
-        """A reference implementation of a prediction for a classifier.
+        """Method for making predictions using a PrescriptiveTree classifier
 
         Parameters
         ----------

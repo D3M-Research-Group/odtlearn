@@ -10,11 +10,16 @@ class FlowOPT_Robust:
                                                                    time_limit, num_threads):
         """
         :param X: numpy matrix or pandas dataframe of covariates
-        :param y: numpy array or pandas series/dataframe of class labels
+        :param t: numpy array or pandas series/dataframe of treatment assignments
+        :param y: numpy array or pandas series/dataframe of observed outcomes
+        :param ipw: numpy array or pandas series/dataframe of inverse propensity weights
+        :param y_hat: numpy matrix or pandas dataframe of counterfactual estimates
+        :param robust: Boolean indicating whether or not the FlowOPT method should be Doubly Robust (True)
+                        or Direct Method (False)
+        :param treatments_set: a list or set of all possible treatments
         :param tree: Tree object
-        :param _lambda: The regularization parameter in the objective
+        :param X_col_labels: a list of features in the covariate space X
         :param time_limit: The given time limit for solving the MIP
-        :param mode: Regression vs Classification
         :param num_threads: Number of threads for the solver to use
         """
         # self.mode = mode
@@ -45,15 +50,14 @@ class FlowOPT_Robust:
         self.model.params.TimeLimit = time_limit
 
 
-
     ###########################################################
     # Create the MIP formulation
     ###########################################################
     def create_main_problem(self):
         """
-        This function create and return a gurobi model formulating
-        the FlowOCT problem
-        :return:  gurobi model object with the FlowOCT formulation
+        This function creates and return a gurobi model formulating
+        the FlowOPT_Robust problem
+        :return:  gurobi model object with the FlowOPT_Robust formulation
         """
         self.b = self.model.addVars(self.tree.Nodes, self.features, vtype=GRB.BINARY, name='b')
         self.p = self.model.addVars(self.tree.Nodes + self.tree.Terminals, vtype=GRB.BINARY, name='p')
@@ -96,13 +100,6 @@ class FlowOPT_Robust:
                 self.p[m] for m in self.tree.get_ancestors(n)) == 1) for n in
             self.tree.Terminals)
 
-        # self.model.addConstr(self.p[1] == 0)
-
-        # sum(sum(b[n,f], f), n) <= branching_limit
-        # self.model.addConstr(
-        #     (quicksum(
-        #         quicksum(self.b[n, f] for f in self.features) for n in self.tree.Nodes)) <= self.branching_limit)
-
         # zeta[i,n] <= w[n,T[i]] for all n in N+L, i
         for n in self.tree.Nodes + self.tree.Terminals:
             for k in self.treatments_set:
@@ -114,19 +111,11 @@ class FlowOPT_Robust:
             (quicksum(self.w[n, k] for k in self.treatments_set) == self.p[n]) for n in
             self.tree.Nodes + self.tree.Terminals)
 
-        # 2k
-        """for n in self.tree.Nodes + self.tree.Terminals:
-            for i in self.datapoints:
-                self.model.addConstr(quicksum(self.zeta[i, n, k] for k in self.treatments_set) == self.p[n])"""
-
         for n in self.tree.Terminals:
             self.model.addConstrs(
                 quicksum(self.zeta[i, n, k] for k in self.treatments_set) == self.z[i, n] for i in self.datapoints)
 
         self.model.addConstrs(self.z[i, 1] == 1 for i in self.datapoints)
-
-        # self.model.addConstr(self.b[1, 'V1'] == 1)
-        # self.model.addConstr(self.b[2, 'V2'] == 1)
 
         # define objective function
         obj = LinExpr(0)
@@ -149,11 +138,13 @@ class FlowOPT_IPW:
                                                                    time_limit, num_threads):
         """
         :param X: numpy matrix or pandas dataframe of covariates
-        :param y: numpy array or pandas series/dataframe of class labels
+        :param t: numpy array or pandas series/dataframe of treatment assignments
+        :param y: numpy array or pandas series/dataframe of observed outcomes
+        :param ipw: numpy array or pandas series/dataframe of inverse propensity weights
+        :param treatments_set: a list or set of all possible treatments
         :param tree: Tree object
-        :param _lambda: The regularization parameter in the objective
+        :param X_col_labels: a list of features in the covariate space X
         :param time_limit: The given time limit for solving the MIP
-        :param mode: Regression vs Classification
         :param num_threads: Number of threads for the solver to use
         """
         self.X = pd.DataFrame(X, columns=X_col_labels)
@@ -163,22 +154,10 @@ class FlowOPT_IPW:
         self.treatments_set = treatments_set
         self.features = X_col_labels
 
-        # self.X_col_labels = X_col_labels
-        # self.labels = labels
         # datapoints contains the indicies of our training data
         self.datapoints = np.arange(0, self.X.shape[0])
 
         self.tree = tree
-
-        # parameters
-        # self.m = {}
-        # for i in self.datapoints:
-        #     self.m[i] = 1
-        #
-        # if self.mode == "regression":
-        #     for i in self.datapoints:
-        #         y_i = y[i]
-        #         self.m[i] = max(y_i, 1 - y_i)
 
         # Decision Variables
         self.b = 0
@@ -193,31 +172,14 @@ class FlowOPT_IPW:
             self.model.params.Threads = num_threads
         self.model.params.TimeLimit = time_limit
 
-        """
-        The following variables are used for the Benders problem to keep track
-        of the times we call the callback.
-        They are not used for this formulation.
-        """
-        # self.model._total_callback_time_integer = 0
-        # self.model._total_callback_time_integer_success = 0
-        #
-        # self.model._total_callback_time_general = 0
-        # self.model._total_callback_time_general_success = 0
-        #
-        # self.model._callback_counter_integer = 0
-        # self.model._callback_counter_integer_success = 0
-        #
-        # self.model._callback_counter_general = 0
-        # self.model._callback_counter_general_success = 0
-
     ###########################################################
     # Create the MIP formulation
     ###########################################################
-    def create_master_problem(self):
+    def create_main_problem(self):
         """
-        This function create and return a gurobi model formulating
-        the FlowOCT problem
-        :return:  gurobi model object with the FlowOCT formulation
+        This function creates and return a gurobi model formulating
+        the FlowOPT_IPW problem
+        :return:  gurobi model object with the FlowOPT_IPW formulation
         """
         ############################### define variables
 
@@ -262,11 +224,6 @@ class FlowOPT_IPW:
             (self.p[n] + quicksum(
                 self.p[m] for m in self.tree.get_ancestors(n)) == 1) for n in
             self.tree.Terminals)
-
-        # sum(sum(b[n,f], f), n) <= branching_limit
-        # self.model.addConstr(
-        #     (quicksum(
-        #         quicksum(self.b[n, f] for f in self.features) for n in self.tree.Nodes)) <= self.branching_limit)
 
         # zeta[i,n] <= w[n,T[i]] for all n in N+L, i
         for n in self.tree.Nodes + self.tree.Terminals:
