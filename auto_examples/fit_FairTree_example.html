@@ -102,11 +102,13 @@ to download the full example code</p>
 <span class="kn">from</span> <span class="nn">trees.FairTree</span> <span class="kn">import</span> <span class="n">FairTreeClassifier</span>
 
 
-<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/compas/compas_train_1.csv&quot;</span><span class="p">)</span>
-<span class="n">data_enc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/compas/compas_train_enc_1.csv&quot;</span><span class="p">)</span>
+<span class="n">data_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/compas/compas_train_1.csv&quot;</span><span class="p">)</span>
+<span class="n">dat_train_enc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/compas/compas_train_enc_1.csv&quot;</span><span class="p">)</span> <span class="c1">#This is one-hot encoded version of data_train where every column is binary</span>
 
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">data_enc</span><span class="p">[</span>
-    <span class="p">[</span>
+<span class="n">data_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/compas/compas_test_1.csv&quot;</span><span class="p">)</span>
+<span class="n">dat_test_enc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/compas/compas_test_enc_1.csv&quot;</span><span class="p">)</span>
+
+<span class="n">branching_features</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;race.1&quot;</span><span class="p">,</span>
         <span class="s2">&quot;race.2&quot;</span><span class="p">,</span>
         <span class="s2">&quot;race.3&quot;</span><span class="p">,</span>
@@ -126,10 +128,16 @@ to download the full example code</p>
         <span class="s2">&quot;length_of_stay.4&quot;</span><span class="p">,</span>
         <span class="s2">&quot;length_of_stay.5&quot;</span><span class="p">,</span>
     <span class="p">]</span>
-<span class="p">]</span>
-<span class="n">y_train</span> <span class="o">=</span> <span class="n">data_enc</span><span class="p">[[</span><span class="s2">&quot;target&quot;</span><span class="p">]]</span>
-<span class="n">P</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">]]</span>  <span class="c1"># P could have multiple columns or only one</span>
-<span class="n">l</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s2">&quot;priors_count&quot;</span><span class="p">]]</span>  <span class="c1"># For now we assume that L has only a single column</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">dat_train_enc</span><span class="p">[</span> <span class="n">branching_features</span><span class="p">]</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">dat_train_enc</span><span class="p">[[</span><span class="s2">&quot;target&quot;</span><span class="p">]]</span>
+<span class="n">P_train</span> <span class="o">=</span> <span class="n">data_train</span><span class="p">[[</span><span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">]]</span>  <span class="c1"># P could have multiple columns or only one</span>
+<span class="n">l_train</span> <span class="o">=</span> <span class="n">data_train</span><span class="p">[[</span><span class="s2">&quot;priors_count&quot;</span><span class="p">]]</span>  <span class="c1"># For now we assume that L has only a single column</span>
+
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">dat_test_enc</span><span class="p">[</span> <span class="n">branching_features</span><span class="p">]</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">dat_test_enc</span><span class="p">[[</span><span class="s2">&quot;target&quot;</span><span class="p">]]</span>
+<span class="n">P_test</span> <span class="o">=</span> <span class="n">data_test</span><span class="p">[[</span><span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="s2">&quot;sex&quot;</span><span class="p">]]</span>
+<span class="n">l_test</span> <span class="o">=</span> <span class="n">data_test</span><span class="p">[[</span><span class="s2">&quot;priors_count&quot;</span><span class="p">]]</span>
 
 
 <span class="n">fcl</span> <span class="o">=</span> <span class="n">FairTreeClassifier</span><span class="p">(</span>
@@ -140,9 +148,15 @@ to download the full example code</p>
     <span class="n">fairness_type</span><span class="o">=</span><span class="s2">&quot;CSP&quot;</span><span class="p">,</span>
     <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">num_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">&#39;balance&#39;</span>
 <span class="p">)</span>
 
-<span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+<span class="n">fcl_obj</span> <span class="o">=</span> <span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">P_train</span><span class="p">,</span> <span class="n">l_train</span><span class="p">)</span>
+<span class="n">pred_test</span> <span class="o">=</span> <span class="n">fcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="c1"># sp_val = fcl_obj.get_SP(P_test, y_test)</span>
+<span class="c1"># csp_val = fcl_obj.get_CSP(P_test, l_test, y_test)</span>
+<span class="c1"># eq_val = fcl_obj.get_EqOdds(P_test, y_test, pred_test)</span>
+<span class="c1"># ceq_val = fcl_obj.get_CondEqOdds(P_test, l_test, y_test, pred_test)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>

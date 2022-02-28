@@ -83,14 +83,15 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
-<span class="kn">from</span> <span class="nn">trees.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="n">check_binary</span>
+<span class="kn">from</span> <span class="nn">trees.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="n">check_binary</span><span class="p">,</span> <span class="n">check_columns_match</span>
 
 <span class="c1"># Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder</span>
 <span class="kn">from</span> <span class="nn">trees.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
 <span class="kn">from</span> <span class="nn">trees.utils.StrongTreeFairOCT</span> <span class="kn">import</span> <span class="n">FairOCT</span>
 
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
 
 <div class="viewcode-block" id="FairTreeClassifier"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">FairTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Description of this estimator here</span>
@@ -119,12 +120,12 @@
 <span class="sd">    &gt;&gt;&gt; from trees.FairTree import FairTreeClassifier</span>
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
 <span class="sd">    &gt;&gt;&gt; X = np.arange(100).reshape(100, 1)</span>
-<span class="sd">    &gt;&gt;&gt; y = np.zeros((100, ))</span>
+<span class="sd">    &gt;&gt;&gt; y = np.random.randint(2, size=100)</span>
 <span class="sd">    &gt;&gt;&gt; P = np.arange(200).reshape(100, 2)</span>
 <span class="sd">    &gt;&gt;&gt; l = np.zeros((100, ))</span>
 <span class="sd">    &gt;&gt;&gt; fcl = FairTreeClassifier(positive_class = 1, depth = 1, _lambda = 0, time_limit = 10,</span>
 <span class="sd">        fairness_type = &#39;CSP&#39;, fairness_bound = 1, num_threads = 1)</span>
-<span class="sd">    &gt;&gt;&gt; fcl.fit(X_train, y_train, P, l)</span>
+<span class="sd">    &gt;&gt;&gt; fcl.fit(X, y, P, l)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FairTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -136,12 +137,14 @@
         <span class="n">fairness_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">&#39;acc&#39;</span>
     <span class="p">):</span>
         <span class="c1"># this is where we will initialize the values we want users to provide</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="n">_lambda</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span> <span class="o">=</span> <span class="n">num_threads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span> 
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fairness_type</span> <span class="o">=</span> <span class="n">fairness_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fairness_bound</span> <span class="o">=</span> <span class="n">fairness_bound</span>
@@ -153,7 +156,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">P_col_labels</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">P_col_dtypes</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">l_col_dtypes</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l_dtypes</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="FairTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;A function for extracting metadata from the inputs before converting</span>
@@ -173,8 +176,90 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">P_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;P_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">P</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">y_dtypes</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">dtypes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">y_dtypes</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">dtypes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l_dtypes</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">dtypes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FairTreeClassifier.get_node_status"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_node_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_node_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">column_names</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function give the status of a given node in a tree. By status we mean whether the node</span>
+<span class="sd">            1- is pruned? i.e., we have made a prediction at one of its ancestors</span>
+<span class="sd">            2- is a branching node? If yes, what feature do we branch on</span>
+<span class="sd">            3- is a leaf? If yes, what is the prediction at this node?</span>
+<span class="sd">        :param labels: the unique values of the response variable y</span>
+<span class="sd">        :param column_names: the column names of the data set X</span>
+<span class="sd">        :param b: The values of branching decision variable b</span>
+<span class="sd">        :param w: The values of prediction decision variable w</span>
+<span class="sd">        :param p: The values of decision variable p</span>
+<span class="sd">        :param n: A valid node index in the tree</span>
+<span class="sd">        :return: pruned, branching, selected_feature, leaf, value</span>
+<span class="sd">        pruned=1 iff the node is pruned</span>
+<span class="sd">        branching = 1 iff the node branches at some feature f</span>
+<span class="sd">        selected_feature: The feature that the node branch on</span>
+<span class="sd">        leaf = 1 iff node n is a leaf in the tree</span>
+<span class="sd">        value: if node n is a leaf, value represent the prediction at this node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">pruned</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">branching</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">leaf</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">selected_feature</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">p_sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_ancestors</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">p_sum</span> <span class="o">=</span> <span class="n">p_sum</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">m</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># leaf</span>
+            <span class="n">leaf</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">w</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">k</span>
+
+        <span class="k">elif</span> <span class="n">p_sum</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Pruned</span>
+            <span class="n">pruned</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">pruned</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">leaf</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">):</span>  <span class="c1"># branching</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">column_names</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+                        <span class="n">selected_feature</span> <span class="o">=</span> <span class="n">f</span>
+                        <span class="n">branching</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">pruned</span><span class="p">,</span> <span class="n">branching</span><span class="p">,</span> <span class="n">selected_feature</span><span class="p">,</span> <span class="n">leaf</span><span class="p">,</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="FairTreeClassifier.get_predicted_value"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_predicted_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_predicted_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function returns the predicted value for a given dataset</span>
+<span class="sd">        :param X: The dataset we want to compute accuracy for</span>
+<span class="sd">        :param b: The value of decision variable b</span>
+<span class="sd">        :param w: The value of decision variable w</span>
+<span class="sd">        :param p: The value of decision variable p</span>
+<span class="sd">        :return: The predicted value for all datapoints in dataset X</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">predicted_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">pruned</span><span class="p">,</span> <span class="n">branching</span><span class="p">,</span> <span class="n">selected_feature</span><span class="p">,</span> <span class="n">leaf</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_node_status</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">current</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">leaf</span><span class="p">:</span>
+                    <span class="n">predicted_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">elif</span> <span class="n">branching</span><span class="p">:</span>
+                    <span class="n">selected_feature_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">==</span> <span class="n">selected_feature</span>
+                    <span class="p">)</span>
+                    <span class="c1"># Raise assertion error we don&#39;t have a column that matches</span>
+                    <span class="c1"># the selected feature or more than one column that matches</span>
+                    <span class="k">assert</span> <span class="p">(</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_idx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+                    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_idx</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns matching the selected feature </span><span class="si">{</span><span class="n">selected_feature</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="k">if</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">selected_feature_idx</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># going right on the branch</span>
+                        <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_right_children</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># going left on the branch</span>
+                        <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_left_children</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predicted_values</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="FairTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;A reference implementation of a fitting function.</span>
@@ -202,8 +287,7 @@
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="c1"># Raises ValueError if there is a column that has values other than 0 or 1</span>
         <span class="n">check_binary</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="c1"># Store the classes seen during fit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        
 
         <span class="c1"># Here we need to convert P and L to np.arrays. We need a function.</span>
         <span class="c1"># I am worried about the case if the shape is (n_samples, )</span>
@@ -233,12 +317,257 @@
             <span class="n">P</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">P_col_labels</span><span class="p">,</span>
             <span class="n">l</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">create_primal_problem</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="bp">self</span></div></div>
+        <span class="c1"># solving_time or other potential parameters of interest can be stored</span>
+        <span class="c1"># within the class: self.solving_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solving_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;Runtime&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Here we will want to store these values and any other variables</span>
+        <span class="c1"># needed for making predictions later</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+
+
+        <span class="c1"># Return the classifier</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="FairTreeClassifier.predict"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A reference implementation of a prediction for a classifier.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
+<span class="sd">            The input samples.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        y : ndarray, shape (n_samples,)</span>
+<span class="sd">            The label for each sample is the label of the closest sample</span>
+<span class="sd">            seen during fit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check is fit had been called</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;X_&quot;</span><span class="p">,</span> <span class="s2">&quot;y_&quot;</span><span class="p">,</span><span class="s2">&quot;P_&quot;</span><span class="p">,</span> <span class="s2">&quot;l_&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
+        <span class="c1"># This will again convert a pandas df to numpy array</span>
+        <span class="c1"># but we have the column information from when we called fit</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+        <span class="n">prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_predicted_value</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">,</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">prediction</span></div>
+
+
+<div class="viewcode-block" id="FairTreeClassifier.get_SP"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_SP">[docs]</a>    <span class="k">def</span> <span class="nf">get_SP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function returns the statistical parity value for any given protected level and outcome value</span>
+
+<span class="sd">        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)</span>
+<span class="sd">                The protected feature columns (Race, gender, etc); We could have one or more columns</span>
+<span class="sd">        :param y: array-like, shape (n_samples,)</span>
+<span class="sd">                The target values (class labels in classification).</span>
+<span class="sd">        </span>
+
+<span class="sd">        :return sp_dict: a dictionary with key =(p,t) and value = P(Y=t|P=p) where p is a protected level and t is an outcome value</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">columns</span>
+        <span class="c1"># This will again convert a pandas df to numpy array</span>
+        <span class="c1"># but we have the column information from when we called fit</span>
+        <span class="n">P</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_col_labels</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+
+        <span class="n">class_name</span> <span class="o">=</span> <span class="s2">&quot;class_label&quot;</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">X_p</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">class_name</span><span class="p">]),</span>
+        <span class="p">)</span>
+
+        <span class="n">sp_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                    <span class="n">p_df</span> <span class="o">=</span> <span class="n">X_p</span><span class="p">[</span><span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">]</span>
+                    <span class="n">sp_p_t</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="n">p_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">sp_p_t</span> <span class="o">=</span> <span class="n">p_df</span><span class="p">[</span><span class="n">p_df</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">p_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">sp_dict</span><span class="p">[(</span><span class="n">p</span><span class="p">,</span><span class="n">t</span><span class="p">)]</span> <span class="o">=</span> <span class="n">sp_p_t</span>
+
+        <span class="k">return</span> <span class="n">sp_dict</span></div>
+
+<div class="viewcode-block" id="FairTreeClassifier.get_CSP"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_CSP">[docs]</a>    <span class="k">def</span> <span class="nf">get_CSP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function returns the conditional statistical parity value for any given </span>
+<span class="sd">        protected level, legitimate feature value and outcome value</span>
+
+<span class="sd">        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)</span>
+<span class="sd">                The protected feature columns (Race, gender, etc); We could have one or more columns</span>
+<span class="sd">        :param l: array-like, shape (n_samples,)</span>
+<span class="sd">            The legitimate factor column(e.g., prior number of criminal acts)</span>
+<span class="sd">        :param y: array-like, shape (n_samples,)</span>
+<span class="sd">                The target values (class labels in classification).</span>
+<span class="sd">        </span>
+
+<span class="sd">        :return csp_dict: a dictionary with key =(p, f, t) and value = P(Y=t|P=p, L=f) where p is a protected level</span>
+<span class="sd">                          and t is an outcome value and l is the value of the legitimate feature</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">columns</span>
+        <span class="c1"># This will again convert a pandas df to numpy array</span>
+        <span class="c1"># but we have the column information from when we called fit</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">P</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+
+        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_col_labels</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+
+        <span class="n">class_name</span> <span class="o">=</span> <span class="s2">&quot;class_label&quot;</span>
+        <span class="n">legitimate_name</span> <span class="o">=</span> <span class="s2">&quot;legitimate_feature_name&quot;</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">X_p</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">legitimate_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">]),</span>
+        <span class="p">)</span>
+
+        <span class="n">csp_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">legitimate_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                        <span class="n">p_f_df</span> <span class="o">=</span> <span class="n">X_p</span><span class="p">[(</span><span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">X_p</span><span class="p">[</span><span class="n">legitimate_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">f</span><span class="p">)]</span>
+                        <span class="n">csp_p_f_t</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">if</span> <span class="n">p_f_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">csp_p_f_t</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_f_df</span><span class="p">[</span><span class="n">p_f_df</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">p_f_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">csp_dict</span><span class="p">[(</span><span class="n">p</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">)]</span> <span class="o">=</span> <span class="n">csp_p_f_t</span>
+
+        <span class="k">return</span> <span class="n">csp_dict</span></div>
+
+<div class="viewcode-block" id="FairTreeClassifier.get_EqOdds"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_EqOdds">[docs]</a>    <span class="k">def</span> <span class="nf">get_EqOdds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function returns the false negative and true positive rate value </span>
+<span class="sd">        for any given protected level, outcome value and prediction value</span>
+
+<span class="sd">        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)</span>
+<span class="sd">                The protected feature columns (Race, gender, etc); We could have one or more columns</span>
+
+<span class="sd">        :param y: array-like, shape (n_samples,)</span>
+<span class="sd">                The true target values (class labels in classification).</span>
+<span class="sd">        :param y_pred: array-like, shape (n_samples,)</span>
+<span class="sd">                The predicted values (class labels in classification).</span>
+
+<span class="sd">        :return eq_dict: a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t) </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">columns</span>
+        <span class="c1"># This will again convert a pandas df to numpy array</span>
+        <span class="c1"># but we have the column information from when we called fit</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">P</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_col_labels</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+
+        <span class="n">class_name</span> <span class="o">=</span> <span class="s2">&quot;class_label&quot;</span>
+        <span class="n">pred_name</span> <span class="o">=</span> <span class="s2">&quot;pred_label&quot;</span>
+        <span class="n">legitimate_name</span> <span class="o">=</span> <span class="s2">&quot;legitimate_feature_name&quot;</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">X_p</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">class_name</span><span class="p">,</span> <span class="n">pred_name</span><span class="p">]),</span>
+        <span class="p">)</span>
+
+        <span class="n">eq_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">t_pred</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">pred_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                        <span class="n">p_t_df</span> <span class="o">=</span> <span class="n">X_p</span><span class="p">[(</span><span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">)]</span>
+                        <span class="n">eq_p_t_t_pred</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">if</span> <span class="n">p_t_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">eq_p_t_t_pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_t_df</span><span class="p">[</span><span class="n">p_t_df</span><span class="p">[</span><span class="n">pred_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t_pred</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">p_t_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">eq_dict</span><span class="p">[(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">t_pred</span><span class="p">)]</span> <span class="o">=</span> <span class="n">eq_p_t_t_pred</span>
+
+                    
+                   
+
+
+        <span class="k">return</span> <span class="n">eq_dict</span></div>
+
+<div class="viewcode-block" id="FairTreeClassifier.get_CondEqOdds"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_CondEqOdds">[docs]</a>    <span class="k">def</span> <span class="nf">get_CondEqOdds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function returns the conditional false negative and true positive rate value </span>
+<span class="sd">        for any given protected level, outcome value, prediction value and legitimate feature value</span>
+
+<span class="sd">        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)</span>
+<span class="sd">                The protected feature columns (Race, gender, etc); We could have one or more columns</span>
+<span class="sd">        :param l: array-like, shape (n_samples,)</span>
+<span class="sd">            The legitimate factor column(e.g., prior number of criminal acts)</span>
+
+<span class="sd">        :param y: array-like, shape (n_samples,)</span>
+<span class="sd">                The true target values (class labels in classification).</span>
+<span class="sd">        :param y_pred: array-like, shape (n_samples,)</span>
+<span class="sd">                The predicted values (class labels in classification).</span>
+
+<span class="sd">        :return ceq_dict: a dictionary with key =(p, f, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t, L=f) </span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">columns</span>
+        <span class="c1"># This will again convert a pandas df to numpy array</span>
+        <span class="c1"># but we have the column information from when we called fit</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+        <span class="n">P</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+
+        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_col_labels</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+
+        <span class="n">class_name</span> <span class="o">=</span> <span class="s2">&quot;class_label&quot;</span>
+        <span class="n">pred_name</span> <span class="o">=</span> <span class="s2">&quot;pred_label&quot;</span>
+        <span class="n">legitimate_name</span> <span class="o">=</span> <span class="s2">&quot;legitimate_feature_name&quot;</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">X_p</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">legitimate_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">pred_name</span><span class="p">]),</span>
+        <span class="p">)</span>
+
+        <span class="n">ceq_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">t_pred</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">pred_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">P_test_col_names</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">legitimate_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                            <span class="n">p_f_t_df</span> <span class="o">=</span> <span class="n">X_p</span><span class="p">[(</span><span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">X_p</span><span class="p">[</span><span class="n">legitimate_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">f</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">)]</span>
+                            <span class="n">ceq_p_f_t_t_pred</span> <span class="o">=</span> <span class="kc">None</span>
+                            <span class="k">if</span> <span class="n">p_f_t_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="n">ceq_p_f_t_t_pred</span> <span class="o">=</span> <span class="p">(</span><span class="n">p_f_t_df</span><span class="p">[</span><span class="n">p_f_t_df</span><span class="p">[</span><span class="n">pred_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t_pred</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">p_f_t_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">ceq_dict</span><span class="p">[(</span><span class="n">p</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">t_pred</span><span class="p">)]</span> <span class="o">=</span> <span class="n">ceq_p_f_t_t_pred</span>
+
+                    
+                   
+
+
+        <span class="k">return</span> <span class="n">ceq_dict</span></div></div>
+
 </pre></div>
 
            </div>

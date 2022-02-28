@@ -94,7 +94,7 @@
 <h1><a class="reference internal" href="trees.FairTree.html#trees.FairTree" title="trees.FairTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code></a>.FairTreeClassifier<a class="headerlink" href="#trees-fairtree-fairtreeclassifier" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="trees.FairTree.FairTreeClassifier">
-<em class="property">class </em><code class="sig-prename descclassname">trees.FairTree.</code><code class="sig-name descname">FairTreeClassifier</code><span class="sig-paren">(</span><em class="sig-param">positive_class</em>, <em class="sig-param">depth=1</em>, <em class="sig-param">_lambda=0</em>, <em class="sig-param">time_limit=30</em>, <em class="sig-param">fairness_type=None</em>, <em class="sig-param">fairness_bound=1</em>, <em class="sig-param">num_threads=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">trees.FairTree.</code><code class="sig-name descname">FairTreeClassifier</code><span class="sig-paren">(</span><em class="sig-param">positive_class</em>, <em class="sig-param">depth=1</em>, <em class="sig-param">_lambda=0</em>, <em class="sig-param">time_limit=30</em>, <em class="sig-param">fairness_type=None</em>, <em class="sig-param">fairness_bound=1</em>, <em class="sig-param">num_threads=None</em>, <em class="sig-param">obj_mode='acc'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Description of this estimator here</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -120,17 +120,17 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">trees.FairTree</span> <span class="kn">import</span> <span class="n">FairTreeClassifier</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fcl</span> <span class="o">=</span> <span class="n">FairTreeClassifier</span><span class="p">(</span><span class="n">positive_class</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_lambda</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
 <span class="go">    fairness_type = &#39;CSP&#39;, fairness_bound = 1, num_threads = 1)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="method">
 <dt id="trees.FairTree.FairTreeClassifier.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">positive_class</em>, <em class="sig-param">depth=1</em>, <em class="sig-param">_lambda=0</em>, <em class="sig-param">time_limit=30</em>, <em class="sig-param">fairness_type=None</em>, <em class="sig-param">fairness_bound=1</em>, <em class="sig-param">num_threads=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">positive_class</em>, <em class="sig-param">depth=1</em>, <em class="sig-param">_lambda=0</em>, <em class="sig-param">time_limit=30</em>, <em class="sig-param">fairness_type=None</em>, <em class="sig-param">fairness_bound=1</em>, <em class="sig-param">num_threads=None</em>, <em class="sig-param">obj_mode='acc'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -168,6 +168,125 @@ them into numpy arrays to work with the sklearn API</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.get_CSP">
+<code class="sig-name descname">get_CSP</code><span class="sig-paren">(</span><em class="sig-param">P</em>, <em class="sig-param">l</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_CSP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_CSP" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the conditional statistical parity value for any given 
+protected level, legitimate feature value and outcome value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
+The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
+<li><p><strong>l</strong> – array-like, shape (n_samples,)
+The legitimate factor column(e.g., prior number of criminal acts)</p></li>
+<li><p><strong>y</strong> – array-like, shape (n_samples,)
+The target values (class labels in classification).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return csp_dict</dt>
+<dd class="field-even"><p>a dictionary with key =(p, f, t) and value = P(Y=t|P=p, L=f) where p is a protected level
+and t is an outcome value and l is the value of the legitimate feature</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.get_CondEqOdds">
+<code class="sig-name descname">get_CondEqOdds</code><span class="sig-paren">(</span><em class="sig-param">P</em>, <em class="sig-param">l</em>, <em class="sig-param">y</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_CondEqOdds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_CondEqOdds" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the conditional false negative and true positive rate value 
+for any given protected level, outcome value, prediction value and legitimate feature value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
+The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
+<li><p><strong>l</strong> – array-like, shape (n_samples,)
+The legitimate factor column(e.g., prior number of criminal acts)</p></li>
+<li><p><strong>y</strong> – array-like, shape (n_samples,)
+The true target values (class labels in classification).</p></li>
+<li><p><strong>y_pred</strong> – array-like, shape (n_samples,)
+The predicted values (class labels in classification).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return ceq_dict</dt>
+<dd class="field-even"><p>a dictionary with key =(p, f, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t, L=f)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.get_EqOdds">
+<code class="sig-name descname">get_EqOdds</code><span class="sig-paren">(</span><em class="sig-param">P</em>, <em class="sig-param">y</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_EqOdds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_EqOdds" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the false negative and true positive rate value 
+for any given protected level, outcome value and prediction value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
+The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
+<li><p><strong>y</strong> – array-like, shape (n_samples,)
+The true target values (class labels in classification).</p></li>
+<li><p><strong>y_pred</strong> – array-like, shape (n_samples,)
+The predicted values (class labels in classification).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return eq_dict</dt>
+<dd class="field-even"><p>a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.get_SP">
+<code class="sig-name descname">get_SP</code><span class="sig-paren">(</span><em class="sig-param">P</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_SP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_SP" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the statistical parity value for any given protected level and outcome value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
+The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
+<li><p><strong>y</strong> – array-like, shape (n_samples,)
+The target values (class labels in classification).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return sp_dict</dt>
+<dd class="field-even"><p>a dictionary with key =(p,t) and value = P(Y=t|P=p) where p is a protected level and t is an outcome value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.get_node_status">
+<code class="sig-name descname">get_node_status</code><span class="sig-paren">(</span><em class="sig-param">labels</em>, <em class="sig-param">column_names</em>, <em class="sig-param">b</em>, <em class="sig-param">w</em>, <em class="sig-param">p</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_node_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_node_status" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function give the status of a given node in a tree. By status we mean whether the node</dt><dd><p>1- is pruned? i.e., we have made a prediction at one of its ancestors
+2- is a branching node? If yes, what feature do we branch on
+3- is a leaf? If yes, what is the prediction at this node?</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> – the unique values of the response variable y</p></li>
+<li><p><strong>column_names</strong> – the column names of the data set X</p></li>
+<li><p><strong>b</strong> – The values of branching decision variable b</p></li>
+<li><p><strong>w</strong> – The values of prediction decision variable w</p></li>
+<li><p><strong>p</strong> – The values of decision variable p</p></li>
+<li><p><strong>n</strong> – A valid node index in the tree</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pruned, branching, selected_feature, leaf, value</p>
+</dd>
+</dl>
+<p>pruned=1 iff the node is pruned
+branching = 1 iff the node branches at some feature f
+selected_feature: The feature that the node branch on
+leaf = 1 iff node n is a leaf in the tree
+value: if node n is a leaf, value represent the prediction at this node</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="trees.FairTree.FairTreeClassifier.get_params">
 <code class="sig-name descname">get_params</code><span class="sig-paren">(</span><em class="sig-param">deep=True</em><span class="sig-paren">)</span><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get parameters for this estimator.</p>
@@ -182,6 +301,38 @@ contained subobjects that are estimators.</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>Parameter names mapped to their values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.get_predicted_value">
+<code class="sig-name descname">get_predicted_value</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">b</em>, <em class="sig-param">w</em>, <em class="sig-param">p</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_predicted_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_predicted_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function returns the predicted value for a given dataset
+:param X: The dataset we want to compute accuracy for
+:param b: The value of decision variable b
+:param w: The value of decision variable w
+:param p: The value of decision variable p
+:return: The predicted value for all datapoints in dataset X</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="trees.FairTree.FairTreeClassifier.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>A reference implementation of a prediction for a classifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input samples.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The label for each sample is the label of the closest sample
+seen during fit.</p>
 </dd>
 </dl>
 </dd>

@@ -94,7 +94,7 @@
 <h1><a class="reference internal" href="trees.StrongTree.html#trees.StrongTree" title="trees.StrongTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.StrongTree</span></code></a>.StrongTreeClassifier<a class="headerlink" href="#trees-strongtree-strongtreeclassifier" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="trees.StrongTree.StrongTreeClassifier">
-<em class="property">class </em><code class="sig-prename descclassname">trees.StrongTree.</code><code class="sig-name descname">StrongTreeClassifier</code><span class="sig-paren">(</span><em class="sig-param">depth</em>, <em class="sig-param">time_limit</em>, <em class="sig-param">_lambda</em>, <em class="sig-param">benders_oct=False</em>, <em class="sig-param">num_threads=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">trees.StrongTree.</code><code class="sig-name descname">StrongTreeClassifier</code><span class="sig-paren">(</span><em class="sig-param">depth</em>, <em class="sig-param">time_limit</em>, <em class="sig-param">_lambda</em>, <em class="sig-param">benders_oct=False</em>, <em class="sig-param">num_threads=None</em>, <em class="sig-param">obj_mode='acc'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>TO-DO: NEED DESCRIPTION OF THE CLASS HERE.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -109,8 +109,19 @@
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><dl class="simple">
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">trees.StrongTree</span> <span class="kn">import</span> <span class="n">StrongTreeClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stcl</span> <span class="o">=</span> <span class="n">StrongTreeClassifier</span><span class="p">(</span><span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_lambda</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num_threads</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
 <dt><strong>X_</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>The input passed during <a class="reference internal" href="#trees.StrongTree.StrongTreeClassifier.fit" title="trees.StrongTree.StrongTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
 </dd>
 <dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The labels passed during <a class="reference internal" href="#trees.StrongTree.StrongTreeClassifier.fit" title="trees.StrongTree.StrongTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
@@ -122,7 +133,7 @@
 </dl>
 <dl class="method">
 <dt id="trees.StrongTree.StrongTreeClassifier.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">depth</em>, <em class="sig-param">time_limit</em>, <em class="sig-param">_lambda</em>, <em class="sig-param">benders_oct=False</em>, <em class="sig-param">num_threads=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">depth</em>, <em class="sig-param">time_limit</em>, <em class="sig-param">_lambda</em>, <em class="sig-param">benders_oct=False</em>, <em class="sig-param">num_threads=None</em>, <em class="sig-param">obj_mode='acc'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 

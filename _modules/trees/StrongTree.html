@@ -120,15 +120,26 @@
 <span class="sd">        The labels passed during :meth:`fit`.</span>
 <span class="sd">    classes_ : ndarray, shape (n_classes,)</span>
 <span class="sd">        The classes seen at :meth:`fit`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from trees.StrongTree import StrongTreeClassifier</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; X = np.arange(100).reshape(100, 1)</span>
+<span class="sd">    &gt;&gt;&gt; y = np.random.randint(2, size=100)</span>
+<span class="sd">    &gt;&gt;&gt; stcl = StrongTreeClassifier(depth = 1, _lambda = 0, time_limit = 10, num_threads = 1)</span>
+<span class="sd">    &gt;&gt;&gt; stcl.fit(X, y)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="StrongTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">benders_oct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="StrongTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">benders_oct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">&#39;acc&#39;</span><span class="p">):</span>
         <span class="c1"># this is where we will initialize the values we want users to provide</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="n">_lambda</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span> <span class="o">=</span> <span class="n">num_threads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">benders_oct</span> <span class="o">=</span> <span class="n">benders_oct</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span> <span class="c1"># if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">X_col_dtypes</span> <span class="o">=</span> <span class="kc">None</span>
@@ -212,6 +223,7 @@
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">leaf</span><span class="p">:</span>
                     <span class="n">predicted_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                    <span class="k">break</span>
                 <span class="k">elif</span> <span class="n">branching</span><span class="p">:</span>
                     <span class="n">selected_feature_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">==</span> <span class="n">selected_feature</span>
@@ -271,6 +283,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_main_problem</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
@@ -285,6 +298,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_primal_problem</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
