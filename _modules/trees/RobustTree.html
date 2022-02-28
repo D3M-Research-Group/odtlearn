@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>trees.RobustTree — trees 0.0.1 documentation</title>
+<link href="../../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/css/trees.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css"/>
+
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/jquery.js"></script>
+<script src="../../_static/underscore.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/js/copybutton.js"></script>
+<script src="../../_static/js/theme.js"></script>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+</head>
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../../index.html"> trees
+          </a>
+<div class="version">
+                0.0.1
+              </div>
+<div role="search">
+<form action="../../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
+</div>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start with the Trees Package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide: create your own scikit-learn estimator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">Trees API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial - Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">General examples</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../../index.html">trees</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a class="icon icon-home" href="../../index.html"></a> »</li>
+<li><a href="../index.html">Module code</a> »</li>
+<li>trees.RobustTree</li>
+<li class="wy-breadcrumbs-aside">
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<h1>Source code for trees.RobustTree</h1><div class="highlight"><pre>
+<code><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
+
+<span class="c1"># Include Necessary imports in the same folder</span>
+<span class="kn">from</span> <span class="nn">trees.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">trees.utils.RobustOCT</span> <span class="kn">import</span> <span class="n">RobustOCT</span>
+<span class="kn">from</span> <span class="nn">trees.utils.RobustTreeUtils</span> <span class="kn">import</span> <span class="n">mycallback</span><span class="p">,</span> <span class="n">check_integer</span><span class="p">,</span> <span class="n">check_same_as_X</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<div class="viewcode-block" id="RobustTreeClassifier"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">RobustTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+    <span class="sd">"""An example classifier which implements a 1-NN algorithm.</span>
+
+<span class="sd">    For more information regarding how to build your own classifier, read more</span>
+<span class="sd">    in the :ref:`User Guide &lt;user_guide&gt;`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    depth : int, default=1</span>
+<span class="sd">        A parameter specifying the depth of the tree</span>
+<span class="sd">    time_limit : int, default=1800</span>
+<span class="sd">        The given time limit for solving the MIP in seconds</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X_ : ndarray, shape (n_samples, n_features)</span>
+<span class="sd">        The input passed during :meth:`fit`.</span>
+<span class="sd">    y_ : ndarray, shape (n_samples,)</span>
+<span class="sd">        The labels passed during :meth:`fit`.</span>
+<span class="sd">    classes_ : ndarray, shape (n_classes,)</span>
+<span class="sd">        The classes seen at :meth:`fit`.</span>
+<span class="sd">    """</span>
+
+<div class="viewcode-block" id="RobustTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">1800</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span></div>
+
+<div class="viewcode-block" id="RobustTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">"""A function for extracting metadata from the inputs before converting</span>
+<span class="sd">        them into numpy arrays to work with the sklearn API</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span></div>
+
+<div class="viewcode-block" id="RobustTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">"""A reference implementation of a fitting function for a classifier.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
+<span class="sd">            The training input samples.</span>
+<span class="sd">        y : array-like, shape (n_samples,)</span>
+<span class="sd">            The target values. An array of int.</span>
+<span class="sd">        costs: array-like, shape (n_samples, n_features)</span>
+<span class="sd">            The costs of uncertainty</span>
+<span class="sd">        budget: float</span>
+<span class="sd">            The budget of uncertainty</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            Returns self.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">check_integer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_</span> <span class="o">=</span> <span class="n">y</span>
+
+        <span class="c1"># Instantiate tree object here</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
+
+        <span class="c1"># Set default for costs of uncertainty if needed</span>
+        <span class="k">if</span> <span class="n">costs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">costs</span> <span class="o">=</span> <span class="n">check_same_as_X</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="s2">"Uncertainty costs"</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># By default, set costs to be budget + 1 (i.e. no uncertainty)</span>
+            <span class="n">gammas_df</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"float"</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">gammas_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">gammas_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">budget</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">costs</span> <span class="o">=</span> <span class="n">gammas_df</span>
+
+        <span class="c1"># Budget of uncertainty</span>
+        <span class="k">if</span> <span class="n">budget</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Budget of uncertainty must be nonnegative"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">budget</span> <span class="o">=</span> <span class="n">budget</span>
+
+        <span class="c1"># Code for setting up and running the MIP goes here.</span>
+        <span class="c1"># Note that we are taking X and y as array-like objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">master</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">tree</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">master</span><span class="o">.</span><span class="n">create_master_problem</span><span class="p">()</span>
+        <span class="n">master</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="n">master</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">mycallback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solving_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
+
+        <span class="c1"># Store fitted Gurobi model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">master</span>
+
+        <span class="c1"># `fit` should always return `self`</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">get_prediction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+            <span class="c1"># Get prediction value</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">terminal</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">w</span><span class="p">[</span><span class="n">node</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># w[n,k] == 1</span>
+                        <span class="n">prediction</span> <span class="o">+=</span> <span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                        <span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="n">terminal</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">f_theta_indices</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="n">node</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># b[n,f]== 1</span>
+                            <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">theta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_right_children</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_left_children</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                            <span class="k">break</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RobustTreeClassifier.predict"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">"""A reference implementation of a prediction for a classifier.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
+<span class="sd">            The input samples.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        y : ndarray, shape (n_samples,)</span>
+<span class="sd">            The label for each sample is the label of the closest sample</span>
+<span class="sd">            seen during fit.</span>
+<span class="sd">        """</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"model"</span><span class="p">])</span>
+
+        <span class="c1"># Convert to dataframe</span>
+        <span class="n">df_test</span> <span class="o">=</span> <span class="n">check_same_as_X</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"Test covariates"</span><span class="p">)</span>
+        <span class="n">check_integer</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_prediction</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span></div></div>
+</code></pre></div>
+</div>
+</div>
+<footer>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright .</p>
+</div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+</div>
+</div>
+</section>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+</body>
+</html>
