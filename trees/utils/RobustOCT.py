@@ -6,36 +6,26 @@ import pandas as pd
 import sys
 
 class RobustOCT:
-    def __init__(self, X, y, tree, time_limit, q, s, p, l, seed):
+    def __init__(self, X, y, tree, X_col_labels, labels, time_limit, costs, budget):
         '''
         :param data: The training data
         :param label: Name of the column representing the class label
         :param tree: Tree object
         :param time_limit: The given time limit for solving the MIP
-        :param q_values: probability that a feature is certain
-        :param p: probability that a label is certain (rho)
-        :param l: lambda threshold for uncertainty set
-        :param seed: random seed
+        :param costs: The costs of uncertainty
+        :param budget: The budget of uncertainty
         '''
-        # if our data is given as a data frame, keep the feature labels
-        # otherwise, just give numeric variable names
-        # Make X matrix a pd dataframe, but keep y as an array
-        if isinstance(X, pd.Dataframe):
-            self.cat_features = X.columns
-            self.X = X
-        else:
-            self.cat_features = np.arange(0, self.X.shape[1])
-            self.X = pd.Dataframe(X, columns=self.cat_features)
-
-        if isinstance(self.y, [pd.Series, pd.DataFrame]):
-            self.y = y.values
-            self.labels = np.unique(self.y)
-        else:
-            self.y = y
-            self.labels = np.unique(self.y)
+        self.cat_features = X_col_labels
+        self.X = X
+        self.y = y
+        self.labels = labels        
+        
         # datapoints contains the indicies of our training data
         self.datapoints = np.arange(0, self.X.shape[0])
         self.tree = tree
+
+        # Regularization term: encourage less branching without sacrificing accuracy
+        self.reg = 1 / (len(tree.Nodes) + 1)
 
         '''
         Get range of data, and store indices of branching variables based on range
@@ -53,49 +43,17 @@ class RobustOCT:
                 f_theta_indices += [(f,theta)]
                 b_indices += [(n, f, theta) for n in self.tree.Nodes]
 
-        self.min_values = min_values
-        self.max_values = max_values
+        self.min_values = X.min(axis=0)
+        self.max_values = X.max(axis=0)
         self.f_theta_indices = f_theta_indices
         self.b_indices = b_indices
 
         '''
         Create uncertainty set
-        NOTE - I think that we should have users somehow input the uncertainty
-        parameters rather than us do it. Perhaps we can add functionality to
-        generate uncertain parameters through the below process
         '''
-        if seed:
-            np.random.seed(seed)
-
-        # Create epsilon
-        if l > 0:
-            self.epsilon = -1 * math.log(l) * len(self.datapoints)
-        else: # l == 0
-            self.epsilon = sys.maxsize # Infinity
-
-        # Get q_f values for each feature
-        q_f = np.random.normal(loc=q, scale=s, size=len(self.cat_features))
-        # Snap q_f to range [0,1]
-        q_f[q_f <= 0] = np.nextafter(np.float32(0), np.float32(1))
-        q_f[q_f > 1] = 1.0
-        self.q_values = q_f
-
-        # Create gammas (budget of feature uncertainty)
-        gammas_df = copy.deepcopy(X)
-        gammas_df = gammas_df.astype('float')
-        for f in range(len(q_f)):
-            if q_f[f] == 1:
-                gammas_df[gammas_df.columns[f]] = self.epsilon + 1
-            else:
-                gammas_df[gammas_df.columns[f]] = -1 * math.log(1 - q_f[f])
-
-        self.gammas = gammas_df
-
-        # Create etas (budget of label uncertainty)
-        if p == 1:
-            self.eta = self.epsilon + 1
-        else:
-            self.eta = math.log(p / (1 - p))
+        self.epsilon = budget # Budget of uncertainty
+        self.gammas = costs # Cost of feature uncertainty
+        self.eta = budget + 1 # Cost of label uncertainty - future work
 
         # Decision Variables
         self.t = 0
@@ -180,16 +138,10 @@ class RobustOCT:
 
         # define objective function
         obj = LinExpr(0)
-        if self.epsilon == 0:
-            # Nominal Tree
-            for i in self.datapoints:
-                obj.add(self.reg * self.t[i])
-            obj.add(-1 * (1-self.reg) * quicksum(self.b[n, f, theta] for (n,f,theta) in self.b_indices))
-        else:
-            for i in self.datapoints:
-                obj.add(self.t[i])
-            # Add regularization term so that in case of tie in objective function, 
-            # encourage less branching
-            obj.add(-1 * self.reg * quicksum(self.b[n, f, theta] for (n,f,theta) in self.b_indices))
+        for i in self.datapoints:
+            obj.add(self.t[i])
+        # Add regularization term so that in case of tie in objective function, 
+        # encourage less branching
+        obj.add(-1 * self.reg * quicksum(self.b[n, f, theta] for (n,f,theta) in self.b_indices))
         
         self.model.setObjective(obj, GRB.MAXIMIZE)

@@ -2,39 +2,33 @@ from gurobipy import GRB, LinExpr, quicksum
 import time
 from sklearn.model_selection import train_test_split
 import numpy as np
+import pandas as pd
 import copy
 import heapq
 
 def check_integer(df):
     if not np.array_equal(df.values, df.values.astype(int)):
-        raise ValueError(
-            f"Found columns ({non_binary_columns}) that contain values other than 0 or 1.")
+        raise ValueError("Found non-integer values.")
 
-def get_prediction(master, X):
-    b = master.model.getAttr("X", master.b)
-    w = master.model.getAttr("X", master.w)
-    prediction = []
-    for i in X.index:
-        # Get prediction value
-        node = 1
-        while True:
-            terminal = False
-            for k in master.labels:
-                if w[node, k] > 0.5: # w[n,k] == 1
-                    prediction += [k]
-                    terminal = True
-                    break
-            if terminal:
-                break
-            else:
-                for (f, theta) in master.f_theta_indices:
-                    if b[node, f, theta] > 0.5: # b[n,f]== 1
-                        if X.at[i, f] >= theta + 1:
-                            node = master.tree.get_right_children(node)
-                        else:
-                            node = master.tree.get_left_children(node)
-                        break
-    return np.array(prediction)
+def check_same_as_X(X, X_col_labels, G, G_label):
+    """ Check if a DataFrame G has the shape & columns of X """
+    # Check if X has shape of G
+    if X.shape != G.shape:
+        raise ValueError(
+            f"Input covariates have shape ({X.shape}) but {G_label} have shape ({G.shape})")
+    
+    # Check if X has same columns as G
+    if isinstance(G, pd.DataFrame):
+        if not np.array_equal(np.sort(X_col_labels), np.sort(G.columns)):
+            raise ValueError(
+                f"{G_label} should have the same columns as the input covariates")
+        return G
+    else:
+        # Check if X has default column labels or not
+        if not np.array_equal(X_col_labels, np.arange(0, G.shape[1])):
+            raise ValueError(
+                f"{G_label} should be a Pandas dataframe with the same columns as the input covariates")
+        return pd.DataFrame(X, np.arange(0, G.shape[1]))
 
 def print_tree(master, b, w):
     tree = master.tree
@@ -74,7 +68,7 @@ def get_cut_expression(master, b, w, path, xi, v, i):
         # Add to expr the node going to the sink
         if not (x == len(path)-1 and v): 
             # Don't add edge to sink if at assignment node and label is changed
-            expr += master.w[n, master.X.at[i, master.label]]
+            expr += master.w[n, master.y[i]]
         else:
             expr += quicksum(master.w[n, l] for l in master.labels if (l != master.y[i]))
     return expr
