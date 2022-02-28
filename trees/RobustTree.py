@@ -11,8 +11,9 @@ from trees.utils.RobustOCT import RobustOCT
 from trees.utils.RobustTreeUtils import mycallback, check_integer, check_same_as_X
 import time
 
+
 class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
-    """ An example classifier which implements a 1-NN algorithm.
+    """An example classifier which implements a 1-NN algorithm.
 
     For more information regarding how to build your own classifier, read more
     in the :ref:`User Guide <user_guide>`.
@@ -39,7 +40,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         self.time_limit = time_limit
 
     def extract_metadata(self, X, y):
-        """ A function for extracting metadata from the inputs before converting
+        """A function for extracting metadata from the inputs before converting
         them into numpy arrays to work with the sklearn API
 
         """
@@ -53,7 +54,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         if isinstance(y, (pd.Series, pd.DataFrame)):
             self.y = y.values
         else:
-            self.y = y        
+            self.y = y
 
     def fit(self, X, y, costs=None, budget=0):
         """A reference implementation of a fitting function for a classifier.
@@ -65,7 +66,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         y : array-like, shape (n_samples,)
             The target values. An array of int.
         costs: array-like, shape (n_samples, n_features)
-            The costs of uncertainty 
+            The costs of uncertainty
         budget: float
             The budget of uncertainty
 
@@ -87,12 +88,14 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
 
         # Set default for costs of uncertainty if needed
         if costs is not None:
-            self.costs = check_same_as_X(self.X, self.X_col_labels, costs, "Uncertainty costs")
+            self.costs = check_same_as_X(
+                self.X, self.X_col_labels, costs, "Uncertainty costs"
+            )
         else:
             # By default, set costs to be budget + 1 (i.e. no uncertainty)
-            gammas_df = deepcopy(self.X).astype('float')
+            gammas_df = deepcopy(self.X).astype("float")
             for col in gammas_df.columns:
-                gammas_df[col].values[:] = budget+1
+                gammas_df[col].values[:] = budget + 1
             self.costs = gammas_df
 
         # Budget of uncertainty
@@ -103,8 +106,16 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
         self.start_time = time.time()
-        master = RobustOCT(self.X, self.y, tree, self.X_col_labels, self.classes_, 
-            self.time_limit, self.costs, self.budget)
+        master = RobustOCT(
+            self.X,
+            self.y,
+            tree,
+            self.X_col_labels,
+            self.classes_,
+            self.time_limit,
+            self.costs,
+            self.budget,
+        )
         master.create_master_problem()
         master.model.update()
         master.model.optimize(mycallback)
@@ -127,7 +138,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             while True:
                 terminal = False
                 for k in self.model.labels:
-                    if w[node, k] > 0.5: # w[n,k] == 1
+                    if w[node, k] > 0.5:  # w[n,k] == 1
                         prediction += [k]
                         terminal = True
                         break
@@ -135,7 +146,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
                     break
                 else:
                     for (f, theta) in self.model.f_theta_indices:
-                        if b[node, f, theta] > 0.5: # b[n,f]== 1
+                        if b[node, f, theta] > 0.5:  # b[n,f]== 1
                             if X.at[i, f] >= theta + 1:
                                 node = self.model.tree.get_right_children(node)
                             else:
@@ -144,7 +155,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         return np.array(prediction)
 
     def predict(self, X):
-        """ A reference implementation of a prediction for a classifier.
+        """A reference implementation of a prediction for a classifier.
 
         Parameters
         ----------
@@ -157,7 +168,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             The label for each sample is the label of the closest sample
             seen during fit.
         """
-        check_is_fitted(self, ['model'])
+        check_is_fitted(self, ["model"])
 
         # Convert to dataframe
         df_test = check_same_as_X(self.X, self.X_col_labels, X, "Test covariates")
