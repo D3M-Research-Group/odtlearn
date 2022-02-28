@@ -1,143 +1,179 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Trees API — trees 0.0.1 documentation</title>
+<link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="_static/css/trees.css" rel="stylesheet" type="text/css"/>
+<link href="_static/sg_gallery.css" rel="stylesheet" type="text/css"/>
+<link href="_static/sg_gallery-binder.css" rel="stylesheet" type="text/css"/>
+<link href="_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css"/>
+<link href="_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css"/>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trees API &mdash; trees 0.0.1 documentation</title><link rel="stylesheet" href="_static/css/trees.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
-      <link rel="stylesheet" href="_static/sg_gallery-binder.css" type="text/css" />
-      <link rel="stylesheet" href="_static/sg_gallery-dataframe.css" type="text/css" />
-      <link rel="stylesheet" href="_static/sg_gallery-rendered-html.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script type="text/javascript" src="_static/js/copybutton.js"></script>
-    <script src="_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="trees.StrongTree.StrongTreeClassifier" href="generated/trees.StrongTree.StrongTreeClassifier.html" />
-    <link rel="prev" title="User guide: create your own scikit-learn estimator" href="user_guide.html" /> 
+<script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+<script src="_static/jquery.js"></script>
+<script src="_static/underscore.js"></script>
+<script src="_static/doctools.js"></script>
+<script src="_static/js/copybutton.js"></script>
+<script src="_static/js/theme.js"></script>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="generated/trees.StrongTree.StrongTreeClassifier.html" rel="next" title="trees.StrongTree.StrongTreeClassifier"/>
+<link href="user_guide.html" rel="prev" title="User guide: create your own scikit-learn estimator"/>
 </head>
-
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> trees
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="index.html"> trees
           </a>
-              <div class="version">
+<div class="version">
                 0.0.1
               </div>
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+<form action="search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Getting Started</span></p>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start with the Trees Package</a></li>
 </ul>
-<p><span class="caption-text">Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html">User guide: create your own scikit-learn estimator</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Trees API</a><ul>
+<li class="toctree-l1 current expanded"><a class="current reference internal" href="#">Trees API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#test">TEST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#strongtree">StrongTree</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="generated/trees.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.StrongTree</span></code>.StrongTreeClassifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/trees.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate">trees.StrongTree</code>.StrongTreeClassifier</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#fairtree">FairTree</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="generated/trees.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code>.FairTreeClassifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/trees.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate">trees.FairTree</code>.FairTreeClassifier</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-<p><span class="caption-text">Tutorial - Examples</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tutorial - Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">General examples</a></li>
 </ul>
-
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">trees</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Trees API</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <section id="trees-api">
-<h1>Trees API<a class="headerlink" href="#trees-api" title="Permalink to this headline">¶</a></h1>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="index.html">trees</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a class="icon icon-home" href="index.html"></a> »</li>
+<li>Trees API</li>
+<li class="wy-breadcrumbs-aside">
+<a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="trees-api">
+<h1>Trees API<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees-api">¶</a></h1>
 <p>This is an example on how to document the API of your own project.</p>
+<section id="test">
+<h2>TEST<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#test">¶</a></h2>
+<dl class="py class code-definition">
+<dt class="sig sig-object py" id="trees.StrongTree.StrongTreeClassifier">
+<em class="property">class<span class="w"> </span></em><code class="sig-prename descclassname">trees.StrongTree.</code><code class="sig-name descname">StrongTreeClassifier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">depth</span></em>, <em class="sig-param"><span class="n">time_limit</span></em>, <em class="sig-param"><span class="n">_lambda</span></em>, <em class="sig-param"><span class="n">benders_oct</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_threads</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">obj_mode</span><span class="o">=</span><span class="default_value">'acc'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trees/StrongTree.html#StrongTreeClassifier"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.StrongTree.StrongTreeClassifier">¶</a></dt>
+<dd>
+<p>TO-DO: NEED DESCRIPTION OF THE CLASS HERE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>A parameter specifying the depth of the tree</p>
+</dd>
+<dt><strong>time_limit</strong><span class="classifier">int</span></dt><dd><p>The given time limit for solving the MIP in seconds</p>
+</dd>
+<dt><strong>_lambda</strong><span class="classifier">int</span></dt><dd><p>The regularization parameter in the objective</p>
+</dd>
+<dt><strong>num_threads: int, default=1</strong></dt><dd><p>The number of threads the solver should use</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">default</span></div>
+<div class="highlight"><pre><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">trees.StrongTree</span> <span class="kn">import</span> <span class="n">StrongTreeClassifier</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stcl</span> <span class="o">=</span> <span class="n">StrongTreeClassifier</span><span class="p">(</span><span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_lambda</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">num_threads</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</code></pre></div></div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X_</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>The input passed during <a class="reference internal" href="generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.fit" title="trees.StrongTree.StrongTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate">fit()</code></a>.</p>
+</dd>
+<dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The labels passed during <a class="reference internal" href="generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.fit" title="trees.StrongTree.StrongTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate">fit()</code></a>.</p>
+</dd>
+<dt><strong>classes_</strong><span class="classifier">ndarray, shape (n_classes,)</span></dt><dd><p>The classes seen at <a class="reference internal" href="generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.fit" title="trees.StrongTree.StrongTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate">fit()</code></a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+</section>
 <section id="strongtree">
-<h2>StrongTree<a class="headerlink" href="#strongtree" title="Permalink to this headline">¶</a></h2>
+<h2>StrongTree<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#strongtree">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
+<col style="width: 10%"/>
+<col style="width: 90%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier" title="trees.StrongTree.StrongTreeClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trees.StrongTree.StrongTreeClassifier</span></code></a>(depth, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier" title="trees.StrongTree.StrongTreeClassifier"><code class="xref py py-obj docutils literal notranslate">trees.StrongTree.StrongTreeClassifier</code></a>(depth, ...)</p></td>
 <td><p>TO-DO: NEED DESCRIPTION OF THE CLASS HERE.</p></td>
 </tr>
 </tbody>
 </table>
 </section>
 <section id="fairtree">
-<h2>FairTree<a class="headerlink" href="#fairtree" title="Permalink to this headline">¶</a></h2>
+<h2>FairTree<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#fairtree">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
+<col style="width: 10%"/>
+<col style="width: 90%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier" title="trees.FairTree.FairTreeClassifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trees.FairTree.FairTreeClassifier</span></code></a>(positive_class)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier" title="trees.FairTree.FairTreeClassifier"><code class="xref py py-obj docutils literal notranslate">trees.FairTree.FairTreeClassifier</code></a>(positive_class)</p></td>
 <td><p>Description of this estimator here</p></td>
 </tr>
 </tbody>
 </table>
 </section>
 </section>
-
-
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="user_guide.html" class="btn btn-neutral float-left" title="User guide: create your own scikit-learn estimator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="generated/trees.StrongTree.StrongTreeClassifier.html" class="btn btn-neutral float-right" title="trees.StrongTree.StrongTreeClassifier" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright .</p>
-  </div>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="user_guide.html" rel="prev" title="User guide: create your own scikit-learn estimator"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="generated/trees.StrongTree.StrongTreeClassifier.html" rel="next" title="trees.StrongTree.StrongTreeClassifier">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright .</p>
+</div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
@@ -145,15 +181,14 @@
    
 
 </footer>
-        </div>
-      </div>
-    </section>
-  </div>
-  <script>
+</div>
+</div>
+</section>
+</div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
-
+  </script>
 </body>
 </html>

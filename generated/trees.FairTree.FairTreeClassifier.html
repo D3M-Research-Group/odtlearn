@@ -1,101 +1,96 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+
+<html class="writer-html5" lang="en">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<meta charset="utf-8"/><meta content="Docutils 0.17.1: http://docutils.sourceforge.net/" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>trees.FairTree.FairTreeClassifier — trees 0.0.1 documentation</title>
+<link href="../_static/pygments.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/trees.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery-binder.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery-dataframe.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery-rendered-html.css" rel="stylesheet" type="text/css"/>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>trees.FairTree.FairTreeClassifier &mdash; trees 0.0.1 documentation</title><link rel="stylesheet" href="../_static/css/trees.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script type="text/javascript" src="../_static/js/copybutton.js"></script>
-    <script src="../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="General examples" href="../auto_examples/index.html" />
-    <link rel="prev" title="trees.StrongTree.StrongTreeClassifier" href="trees.StrongTree.StrongTreeClassifier.html" /> 
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/jquery.js"></script>
+<script src="../_static/underscore.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/js/copybutton.js"></script>
+<script src="../_static/js/theme.js"></script>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../auto_examples/index.html" rel="next" title="General examples"/>
+<link href="trees.StrongTree.StrongTreeClassifier.html" rel="prev" title="trees.StrongTree.StrongTreeClassifier"/>
 </head>
-
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> trees
+<body class="wy-body-for-nav">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href="../index.html"> trees
           </a>
-              <div class="version">
+<div class="version">
                 0.0.1
               </div>
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search docs" type="text"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
+</form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p><span class="caption-text">Getting Started</span></p>
+</div><div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start with the Trees Package</a></li>
 </ul>
-<p><span class="caption-text">Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User guide: create your own scikit-learn estimator</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">Trees API</a><ul class="current">
+<li class="toctree-l1 current expanded"><a class="reference internal" href="../api.html">Trees API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#test">TEST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#strongtree">StrongTree</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html#fairtree">FairTree</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code>.FairTreeClassifier</a></li>
+<li class="toctree-l2 current expanded"><a class="reference internal" href="../api.html#fairtree">FairTree</a><ul class="current">
+<li class="toctree-l3 current expanded"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate">trees.FairTree</code>.FairTreeClassifier</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-<p><span class="caption-text">Tutorial - Examples</span></p>
+<p class="caption" role="heading"><span class="caption-text">Tutorial - Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">General examples</a></li>
 </ul>
-
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">trees</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../api.html">Trees API</a> &raquo;</li>
-      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code>.FairTreeClassifier</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/generated/trees.FairTree.FairTreeClassifier.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <section id="trees-fairtree-fairtreeclassifier">
-<h1><a class="reference internal" href="trees.FairTree.html#trees.FairTree" title="trees.FairTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code></a>.FairTreeClassifier<a class="headerlink" href="#trees-fairtree-fairtreeclassifier" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="trees.FairTree.FairTreeClassifier">
-<em class="property">class </em><code class="sig-prename descclassname">trees.FairTree.</code><code class="sig-name descname">FairTreeClassifier</code><span class="sig-paren">(</span><em class="sig-param">positive_class</em>, <em class="sig-param">depth=1</em>, <em class="sig-param">_lambda=0</em>, <em class="sig-param">time_limit=30</em>, <em class="sig-param">fairness_type=None</em>, <em class="sig-param">fairness_bound=1</em>, <em class="sig-param">num_threads=None</em>, <em class="sig-param">obj_mode='acc'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description of this estimator here</p>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift"><nav aria-label="Mobile navigation menu" class="wy-nav-top">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="../index.html">trees</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content">
+<div aria-label="Page navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a class="icon icon-home" href="../index.html"></a> »</li>
+<li><a href="../api.html">Trees API</a> »</li>
+<li><code class="xref py py-mod docutils literal notranslate">trees.FairTree</code>.FairTreeClassifier</li>
+<li class="wy-breadcrumbs-aside">
+<a href="../_sources/generated/trees.FairTree.FairTreeClassifier.rst.txt" rel="nofollow"> View page source</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div itemprop="articleBody">
+<section id="trees-fairtree-fairtreeclassifier">
+<h1><a class="reference internal" href="trees.FairTree.html#trees.FairTree" title="trees.FairTree"><code class="xref py py-mod docutils literal notranslate">trees.FairTree</code></a>.FairTreeClassifier<a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees-fairtree-fairtreeclassifier">¶</a></h1>
+<dl class="py class code-definition">
+<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier">
+<em class="property">class<span class="w"> </span></em><code class="sig-prename descclassname">trees.FairTree.</code><code class="sig-name descname">FairTreeClassifier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">positive_class</span></em>, <em class="sig-param"><span class="n">depth</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">_lambda</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">time_limit</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">fairness_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fairness_bound</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">num_threads</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">obj_mode</span><span class="o">=</span><span class="default_value">'acc'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.FairTree.FairTreeClassifier">¶</a></dt>
+<dd>
+<p>Description of this estimator here</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -117,34 +112,36 @@
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">trees.FairTree</span> <span class="kn">import</span> <span class="n">FairTreeClassifier</span>
+<div class="code-wrapper" data-controller="code">
+<div class="code-header">
+<span class="code-lang">default</span></div>
+<div class="highlight"><pre><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">trees.FairTree</span> <span class="kn">import</span> <span class="n">FairTreeClassifier</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fcl</span> <span class="o">=</span> <span class="n">FairTreeClassifier</span><span class="p">(</span><span class="n">positive_class</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_lambda</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-<span class="go">    fairness_type = &#39;CSP&#39;, fairness_bound = 1, num_threads = 1)</span>
+<span class="go">    fairness_type = 'CSP', fairness_bound = 1, num_threads = 1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">positive_class</em>, <em class="sig-param">depth=1</em>, <em class="sig-param">_lambda=0</em>, <em class="sig-param">time_limit=30</em>, <em class="sig-param">fairness_type=None</em>, <em class="sig-param">fairness_bound=1</em>, <em class="sig-param">num_threads=None</em>, <em class="sig-param">obj_mode='acc'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</code></pre></div></div>
+<dl class="py method code-definition">
+<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">positive_class</span></em>, <em class="sig-param"><span class="n">depth</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">_lambda</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">time_limit</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">fairness_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fairness_bound</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">num_threads</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">obj_mode</span><span class="o">=</span><span class="default_value">'acc'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.__init__"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.FairTree.FairTreeClassifier.__init__">¶</a></dt>
+<dd>
 </dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.extract_metadata">
-<code class="sig-name descname">extract_metadata</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">P</em>, <em class="sig-param">l</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.extract_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.extract_metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>A function for extracting metadata from the inputs before converting
+<dl class="py method code-definition">
+<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.extract_metadata">
+<code class="sig-name descname">extract_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">P</span></em>, <em class="sig-param"><span class="n">l</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.extract_metadata"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.FairTree.FairTreeClassifier.extract_metadata">¶</a></dt>
+<dd>
+<p>A function for extracting metadata from the inputs before converting
 them into numpy arrays to work with the sklearn API</p>
 </dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.fit">
-<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">P</em>, <em class="sig-param">l</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>A reference implementation of a fitting function.</p>
+<dl class="py method code-definition">
+<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">P</span></em>, <em class="sig-param"><span class="n">l</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.fit"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.FairTree.FairTreeClassifier.fit">¶</a></dt>
+<dd>
+<p>A reference implementation of a fitting function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -166,11 +163,11 @@ them into numpy arrays to work with the sklearn API</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.get_CSP">
-<code class="sig-name descname">get_CSP</code><span class="sig-paren">(</span><em class="sig-param">P</em>, <em class="sig-param">l</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_CSP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_CSP" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns the conditional statistical parity value for any given 
+<dl class="py method code-definition">
+<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.get_CSP">
+<code class="sig-name descname">get_CSP</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">P</span></em>, <em class="sig-param"><span class="n">l</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_CSP"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.FairTree.FairTreeClassifier.get_CSP">¶</a></dt>
+<dd>
+<p>This function returns the conditional statistical parity value for any given 
 protected level, legitimate feature value and outcome value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -189,11 +186,11 @@ and t is an outcome value and l is the value of the legitimate feature</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.get_CondEqOdds">
-<code class="sig-name descname">get_CondEqOdds</code><span class="sig-paren">(</span><em class="sig-param">P</em>, <em class="sig-param">l</em>, <em class="sig-param">y</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_CondEqOdds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_CondEqOdds" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns the conditional false negative and true positive rate value 
+<dl class="py method code-definition">
+<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.get_CondEqOdds">
+<code class="sig-name descname">get_CondEqOdds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">P</span></em>, <em class="sig-param"><span class="n">l</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">y_pred</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_CondEqOdds"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.FairTree.FairTreeClassifier.get_CondEqOdds">¶</a></dt>
+<dd>
+<p>This function returns the conditional false negative and true positive rate value 
 for any given protected level, outcome value, prediction value and legitimate feature value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -213,11 +210,11 @@ The predicted values (class labels in classification).</p></li>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.get_EqOdds">
-<code class="sig-name descname">get_EqOdds</code><span class="sig-paren">(</span><em class="sig-param">P</em>, <em class="sig-param">y</em>, <em class="sig-param">y_pred</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_EqOdds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_EqOdds" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns the false negative and true positive rate value 
+<dl class="py method code-definition">
+<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.get_EqOdds">
+<code class="sig-name descname">get_EqOdds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">P</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">y_pred</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_EqOdds"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.FairTree.FairTreeClassifier.get_EqOdds">¶</a></dt>
+<dd>
+<p>This function returns the false negative and true positive rate value 
 for any given protected level, outcome value and prediction value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -235,11 +232,11 @@ The predicted values (class labels in classification).</p></li>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.get_SP">
-<code class="sig-name descname">get_SP</code><span class="sig-paren">(</span><em class="sig-param">P</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_SP"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_SP" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns the statistical parity value for any given protected level and outcome value</p>
+<dl class="py method code-definition">
+<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.get_SP">
+<code class="sig-name descname">get_SP</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">P</span></em>, <em class="sig-param"><span class="n">y</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_SP"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.FairTree.FairTreeClassifier.get_SP">¶</a></dt>
+<dd>
+<p>This function returns the statistical parity value for any given protected level and outcome value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -254,11 +251,11 @@ The target values (class labels in classification).</p></li>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.get_node_status">
-<code class="sig-name descname">get_node_status</code><span class="sig-paren">(</span><em class="sig-param">labels</em>, <em class="sig-param">column_names</em>, <em class="sig-param">b</em>, <em class="sig-param">w</em>, <em class="sig-param">p</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_node_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_node_status" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
+<dl class="py method code-definition">
+<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.get_node_status">
+<code class="sig-name descname">get_node_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">labels</span></em>, <em class="sig-param"><span class="n">column_names</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">p</span></em>, <em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_node_status"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.FairTree.FairTreeClassifier.get_node_status">¶</a></dt>
+<dd>
+<dl class="simple">
 <dt>This function give the status of a given node in a tree. By status we mean whether the node</dt><dd><p>1- is pruned? i.e., we have made a prediction at one of its ancestors
 2- is a branching node? If yes, what feature do we branch on
 3- is a leaf? If yes, what is the prediction at this node?</p>
@@ -285,43 +282,22 @@ selected_feature: The feature that the node branch on
 leaf = 1 iff node n is a leaf in the tree
 value: if node n is a leaf, value represent the prediction at this node</p>
 </dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.get_params">
-<code class="sig-name descname">get_params</code><span class="sig-paren">(</span><em class="sig-param">deep=True</em><span class="sig-paren">)</span><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get parameters for this estimator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>deep</strong><span class="classifier">bool, default=True</span></dt><dd><p>If True, will return the parameters for this estimator and
-contained subobjects that are estimators.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>params</strong><span class="classifier">dict</span></dt><dd><p>Parameter names mapped to their values.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.get_predicted_value">
-<code class="sig-name descname">get_predicted_value</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">b</em>, <em class="sig-param">w</em>, <em class="sig-param">p</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_predicted_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_predicted_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns the predicted value for a given dataset
+<dl class="py method code-definition">
+<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.get_predicted_value">
+<code class="sig-name descname">get_predicted_value</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">b</span></em>, <em class="sig-param"><span class="n">w</span></em>, <em class="sig-param"><span class="n">p</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_predicted_value"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.FairTree.FairTreeClassifier.get_predicted_value">¶</a></dt>
+<dd>
+<p>This function returns the predicted value for a given dataset
 :param X: The dataset we want to compute accuracy for
 :param b: The value of decision variable b
 :param w: The value of decision variable w
 :param p: The value of decision variable p
 :return: The predicted value for all datapoints in dataset X</p>
 </dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">X</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>A reference implementation of a prediction for a classifier.</p>
+<dl class="py method code-definition">
+<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.predict"><span class="viewcode-link">[source]</span></a><a aria-label="Click to copy this link" class="headerlink tooltipped tooltipped-ne" data-action="click-&gt;clipboard#copyHeaderLink" data-controller="clipboard" href="#trees.FairTree.FairTreeClassifier.predict">¶</a></dt>
+<dd>
+<p>A reference implementation of a prediction for a classifier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -338,75 +314,18 @@ seen during fit.</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.score">
-<code class="sig-name descname">score</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">sample_weight=None</em><span class="sig-paren">)</span><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.score" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the mean accuracy on the given test data and labels.</p>
-<p>In multi-label classification, this is the subset accuracy
-which is a harsh metric since you require for each sample that
-each label set be correctly predicted.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>Test samples.</p>
-</dd>
-<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,) or (n_samples, n_outputs)</span></dt><dd><p>True labels for <cite>X</cite>.</p>
-</dd>
-<dt><strong>sample_weight</strong><span class="classifier">array-like of shape (n_samples,), default=None</span></dt><dd><p>Sample weights.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>score</strong><span class="classifier">float</span></dt><dd><p>Mean accuracy of <code class="docutils literal notranslate"><span class="pre">self.predict(X)</span></code> wrt. <cite>y</cite>.</p>
-</dd>
-</dl>
-</dd>
-</dl>
 </dd></dl>
-
-<dl class="method">
-<dt id="trees.FairTree.FairTreeClassifier.set_params">
-<code class="sig-name descname">set_params</code><span class="sig-paren">(</span><em class="sig-param">**params</em><span class="sig-paren">)</span><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.set_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the parameters of this estimator.</p>
-<p>The method works on simple estimators as well as on nested objects
-(such as <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>). The latter have
-parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code> so that it’s
-possible to update each component of a nested object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>**params</strong><span class="classifier">dict</span></dt><dd><p>Estimator parameters.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>self</strong><span class="classifier">estimator instance</span></dt><dd><p>Estimator instance.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<div style='clear:both'></div></section>
-
-
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="trees.StrongTree.StrongTreeClassifier.html" class="btn btn-neutral float-left" title="trees.StrongTree.StrongTreeClassifier" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../auto_examples/index.html" class="btn btn-neutral float-right" title="General examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright .</p>
-  </div>
+<div style="clear:both"></div></section>
+</div>
+</div>
+<footer><div aria-label="Footer" class="rst-footer-buttons" role="navigation">
+<a accesskey="p" class="btn btn-neutral float-left" href="trees.StrongTree.StrongTreeClassifier.html" rel="prev" title="trees.StrongTree.StrongTreeClassifier"><span aria-hidden="true" class="fa fa-arrow-circle-left"></span> Previous</a>
+<a accesskey="n" class="btn btn-neutral float-right" href="../auto_examples/index.html" rel="next" title="General examples">Next <span aria-hidden="true" class="fa fa-arrow-circle-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<p>© Copyright .</p>
+</div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
@@ -414,15 +333,14 @@ possible to update each component of a nested object.</p>
    
 
 </footer>
-        </div>
-      </div>
-    </section>
-  </div>
-  <script>
+</div>
+</div>
+</section>
+</div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
-
+  </script>
 </body>
 </html>
