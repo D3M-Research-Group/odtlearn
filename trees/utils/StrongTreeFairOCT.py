@@ -25,6 +25,7 @@ class FairOCT:
         P,
         P_col_labels,
         l,
+        obj_mode
     ):
         """
         :param X: numpy matrix or pandas data-frame of covariates.
@@ -44,12 +45,14 @@ class FairOCT:
                   protected feaures.
         :param l: numpy array or pandas series/data-frame of legitimate feature
         :param P_col_labels: Names of the protected columns
+        :param obj_mode: if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
         """
 
         self.X = pd.DataFrame(X, columns=X_col_labels)
         self.y = y
         self.P = P
         self.l = l
+        self.obj_mode= obj_mode
 
         self.class_name = "class_label"
         self.legitimate_name = "legitimate_feature_name"
@@ -346,15 +349,21 @@ class FairOCT:
         # Define Objective
         ###########################################################
         # Max sum(sum(zeta[i,n,y(i)]))
-
-        # Add negative one #
         obj = LinExpr(0)
-        for i in self.datapoints:
-            for n in self.tree.Nodes + self.tree.Leaves:
-                obj.add((1 - self._lambda) * (self.zeta[i, n, self.y[i]]))
-
         for n in self.tree.Nodes:
             for f in self.X_col_labels:
                 obj.add(-1 * self._lambda * self.b[n, f])
+        if self.obj_mode == 'acc':
+            for i in self.datapoints:
+                for n in self.tree.Nodes + self.tree.Leaves:
+                    obj.add((1 - self._lambda) * (self.zeta[i, n, self.y[i]]))
+        elif self.obj_mode == 'balance':
+            for i in self.datapoints:
+                for n in self.tree.Nodes + self.tree.Leaves:
+                    obj.add((1 - self._lambda) * (1/self.y[self.y==self.y[i]].shape[0]/self.labels.shape[0]) *(self.zeta[i, n, self.y[i]]))
+        else:
+            assert (self.obj_mode not in ['acc','balance']), f"Wrong objective mode. obj_mode should be one of acc or balance."
+
+        
 
         self.model.setObjective(obj, GRB.MAXIMIZE)

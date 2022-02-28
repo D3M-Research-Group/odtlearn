@@ -1,14 +1,15 @@
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.validation import check_X_y
+from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
-from trees.utils.StrongTreeUtils import check_binary
+from trees.utils.StrongTreeUtils import check_binary, check_columns_match
 
 # Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
 from trees.utils.Tree import Tree
 from trees.utils.StrongTreeFairOCT import FairOCT
 
+from itertools import combinations
 
 class FairTreeClassifier(ClassifierMixin, BaseEstimator):
     """Description of this estimator here
@@ -37,12 +38,12 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
     >>> from trees.FairTree import FairTreeClassifier
     >>> import numpy as np
     >>> X = np.arange(100).reshape(100, 1)
-    >>> y = np.zeros((100, ))
+    >>> y = np.random.randint(2, size=100)
     >>> P = np.arange(200).reshape(100, 2)
     >>> l = np.zeros((100, ))
     >>> fcl = FairTreeClassifier(positive_class = 1, depth = 1, _lambda = 0, time_limit = 10,
         fairness_type = 'CSP', fairness_bound = 1, num_threads = 1)
-    >>> fcl.fit(X_train, y_train, P, l)
+    >>> fcl.fit(X, y, P, l)
     """
 
     def __init__(
@@ -54,12 +55,14 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         fairness_type=None,
         fairness_bound=1,
         num_threads=None,
+        obj_mode = 'acc'
     ):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit
         self._lambda = _lambda
         self.num_threads = num_threads
+        self.obj_mode = obj_mode 
 
         self.fairness_type = fairness_type
         self.fairness_bound = fairness_bound
@@ -71,7 +74,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         self.P_col_labels = None
         self.P_col_dtypes = None
-        self.l_col_dtypes = None
+        self.l_dtypes = None
 
     def extract_metadata(self, X, y, P, l):
         """A function for extracting metadata from the inputs before converting
@@ -91,8 +94,90 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             self.P_col_labels = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
 
         self.y_dtypes = y.dtypes
-        self.y_dtypes = l.dtypes
+        self.l_dtypes = l.dtypes
         self.labels = np.unique(y)
+
+    def get_node_status(self, labels, column_names, b, w, p, n):
+        """
+        This function give the status of a given node in a tree. By status we mean whether the node
+            1- is pruned? i.e., we have made a prediction at one of its ancestors
+            2- is a branching node? If yes, what feature do we branch on
+            3- is a leaf? If yes, what is the prediction at this node?
+        :param labels: the unique values of the response variable y
+        :param column_names: the column names of the data set X
+        :param b: The values of branching decision variable b
+        :param w: The values of prediction decision variable w
+        :param p: The values of decision variable p
+        :param n: A valid node index in the tree
+        :return: pruned, branching, selected_feature, leaf, value
+        pruned=1 iff the node is pruned
+        branching = 1 iff the node branches at some feature f
+        selected_feature: The feature that the node branch on
+        leaf = 1 iff node n is a leaf in the tree
+        value: if node n is a leaf, value represent the prediction at this node
+        """
+
+        pruned = False
+        branching = False
+        leaf = False
+        value = None
+        selected_feature = None
+
+        p_sum = 0
+        for m in self.tree.get_ancestors(n):
+            p_sum = p_sum + p[m]
+        if p[n] > 0.5:  # leaf
+            leaf = True
+            for k in labels:
+                if w[n, k] > 0.5:
+                    value = k
+
+        elif p_sum == 1:  # Pruned
+            pruned = True
+
+        if n in self.tree.Nodes:
+            if (pruned is False) and (leaf is False):  # branching
+                for f in column_names:
+                    if b[n, f] > 0.5:
+                        selected_feature = f
+                        branching = True
+
+        return pruned, branching, selected_feature, leaf, value
+
+    def get_predicted_value(self, X, b, w, p):
+        """
+        This function returns the predicted value for a given dataset
+        :param X: The dataset we want to compute accuracy for
+        :param b: The value of decision variable b
+        :param w: The value of decision variable w
+        :param p: The value of decision variable p
+        :return: The predicted value for all datapoints in dataset X
+        """
+        predicted_values = []
+        for i in range(X.shape[0]):
+            current = 1
+            while True:
+                pruned, branching, selected_feature, leaf, value = self.get_node_status(
+                    self.labels, self.X_predict_col_names, b, w, p, current
+                )
+                if leaf:
+                    predicted_values.append(value)
+                    break
+                elif branching:
+                    selected_feature_idx = np.where(
+                        self.X_predict_col_names == selected_feature
+                    )
+                    # Raise assertion error we don't have a column that matches
+                    # the selected feature or more than one column that matches
+                    assert (
+                        len(selected_feature_idx) == 1
+                    ), f"Found {len(selected_feature_idx)} columns matching the selected feature {selected_feature}"
+                    if X[i, selected_feature_idx] == 1:  # going right on the branch
+                        current = self.tree.get_right_children(current)
+                    else:  # going left on the branch
+                        current = self.tree.get_left_children(current)
+        return np.array(predicted_values)
+
 
     def fit(self, X, y, P, l):
         """A reference implementation of a fitting function.
@@ -120,8 +205,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         X, y = check_X_y(X, y)
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
-        # Store the classes seen during fit
-        self.classes_ = unique_labels(y)
+        
 
         # Here we need to convert P and L to np.arrays. We need a function.
         # I am worried about the case if the shape is (n_samples, )
@@ -151,9 +235,254 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             P,
             self.P_col_labels,
             l,
+            self.obj_mode
         )
         self.primal.create_primal_problem()
         self.primal.model.update()
         self.primal.model.optimize()
 
+        # solving_time or other potential parameters of interest can be stored
+        # within the class: self.solving_time
+        self.solving_time = self.primal.model.getAttr("Runtime")
+
+        # Here we will want to store these values and any other variables
+        # needed for making predictions later
+        self.b_value = self.primal.model.getAttr("X", self.primal.b)
+        self.w_value = self.primal.model.getAttr("X", self.primal.w)
+        self.p_value = self.primal.model.getAttr("X", self.primal.p)
+
+
+        # Return the classifier
         return self
+
+
+    def predict(self, X):
+        """A reference implementation of a prediction for a classifier.
+
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The input samples.
+
+        Returns
+        -------
+        y : ndarray, shape (n_samples,)
+            The label for each sample is the label of the closest sample
+            seen during fit.
+        """
+        # Check is fit had been called
+        check_is_fitted(self, ["X_", "y_","P_", "l_"])
+        self.X_predict_col_names = X.columns
+        # This will again convert a pandas df to numpy array
+        # but we have the column information from when we called fit
+        X = check_array(X)
+
+        check_columns_match(self.X_col_labels, X)
+
+        prediction = self.get_predicted_value(
+            X,
+            self.b_value,
+            self.w_value,
+            self.p_value,
+        )
+        
+        return prediction
+
+
+    def get_SP(self, P, y):
+        """
+        This function returns the statistical parity value for any given protected level and outcome value
+
+        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)
+                The protected feature columns (Race, gender, etc); We could have one or more columns
+        :param y: array-like, shape (n_samples,)
+                The target values (class labels in classification).
+        
+
+        :return sp_dict: a dictionary with key =(p,t) and value = P(Y=t|P=p) where p is a protected level and t is an outcome value
+
+        """
+
+        self.P_test_col_names = P.columns
+        # This will again convert a pandas df to numpy array
+        # but we have the column information from when we called fit
+        P, y = check_X_y(P, y)
+
+        check_columns_match(self.P_col_labels, P)
+
+        class_name = "class_label"
+        X_p = np.concatenate((P, y.reshape(-1, 1)), axis=1)
+        X_p = pd.DataFrame(
+            X_p,
+            columns=(self.P_test_col_names.tolist() + [class_name]),
+        )
+
+        sp_dict = {}
+
+        for t in X_p[class_name].unique():
+            for protected_feature in self.P_test_col_names:
+                for p in X_p[protected_feature].unique():
+                    p_df = X_p[X_p[protected_feature] == p]
+                    sp_p_t = None
+                    if p_df.shape[0] != 0:
+                        sp_p_t = p_df[p_df[class_name] == t].shape[0]/p_df.shape[0]
+                    sp_dict[(p,t)] = sp_p_t
+
+        return sp_dict
+
+    def get_CSP(self, P, l, y):
+        """
+        This function returns the conditional statistical parity value for any given 
+        protected level, legitimate feature value and outcome value
+
+        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)
+                The protected feature columns (Race, gender, etc); We could have one or more columns
+        :param l: array-like, shape (n_samples,)
+            The legitimate factor column(e.g., prior number of criminal acts)
+        :param y: array-like, shape (n_samples,)
+                The target values (class labels in classification).
+        
+
+        :return csp_dict: a dictionary with key =(p, f, t) and value = P(Y=t|P=p, L=f) where p is a protected level
+                          and t is an outcome value and l is the value of the legitimate feature
+
+        """
+
+        self.P_test_col_names = P.columns
+        # This will again convert a pandas df to numpy array
+        # but we have the column information from when we called fit
+        _, y = check_X_y(P, y)
+        P, l = check_X_y(P, l)
+
+        check_columns_match(self.P_col_labels, P)
+
+        class_name = "class_label"
+        legitimate_name = "legitimate_feature_name"
+        X_p = np.concatenate((P, l.reshape(-1, 1), y.reshape(-1, 1)), axis=1)
+        X_p = pd.DataFrame(
+            X_p,
+            columns=(self.P_test_col_names.tolist() + [legitimate_name, class_name]),
+        )
+
+        csp_dict = {}
+
+        for t in X_p[class_name].unique():
+            for protected_feature in self.P_test_col_names:
+                for p in X_p[protected_feature].unique():
+                    for f in X_p[legitimate_name].unique():
+                        p_f_df = X_p[(X_p[protected_feature] == p) & (X_p[legitimate_name] == f)]
+                        csp_p_f_t = None
+                        if p_f_df.shape[0] != 0:
+                            csp_p_f_t = (p_f_df[p_f_df[class_name] == t].shape[0])/p_f_df.shape[0]
+                        csp_dict[(p, f, t)] = csp_p_f_t
+
+        return csp_dict
+
+    def get_EqOdds(self, P, y, y_pred):
+        """
+        This function returns the false negative and true positive rate value 
+        for any given protected level, outcome value and prediction value
+
+        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)
+                The protected feature columns (Race, gender, etc); We could have one or more columns
+
+        :param y: array-like, shape (n_samples,)
+                The true target values (class labels in classification).
+        :param y_pred: array-like, shape (n_samples,)
+                The predicted values (class labels in classification).
+
+        :return eq_dict: a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t) 
+
+        """
+
+        self.P_test_col_names = P.columns
+        # This will again convert a pandas df to numpy array
+        # but we have the column information from when we called fit
+        _, y = check_X_y(P, y)
+        P, y_pred = check_X_y(P, y_pred)
+
+        check_columns_match(self.P_col_labels, P)
+
+        class_name = "class_label"
+        pred_name = "pred_label"
+        legitimate_name = "legitimate_feature_name"
+        X_p = np.concatenate((P, y.reshape(-1, 1), y_pred.reshape(-1, 1)), axis=1)
+        X_p = pd.DataFrame(
+            X_p,
+            columns=(self.P_test_col_names.tolist() + [class_name, pred_name]),
+        )
+
+        eq_dict = {}
+
+        for t in X_p[class_name].unique():
+            for t_pred in X_p[pred_name].unique():
+                for protected_feature in self.P_test_col_names:
+                    for p in X_p[protected_feature].unique():
+                        p_t_df = X_p[(X_p[protected_feature] == p) & (X_p[class_name] == t)]
+                        eq_p_t_t_pred = None
+                        if p_t_df.shape[0] != 0:
+                            eq_p_t_t_pred = (p_t_df[p_t_df[pred_name] == t_pred].shape[0])/p_t_df.shape[0]
+                        eq_dict[(p, t, t_pred)] = eq_p_t_t_pred
+
+                    
+                   
+
+
+        return eq_dict
+
+    def get_CondEqOdds(self, P, l, y, y_pred):
+        """
+        This function returns the conditional false negative and true positive rate value 
+        for any given protected level, outcome value, prediction value and legitimate feature value
+
+        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)
+                The protected feature columns (Race, gender, etc); We could have one or more columns
+        :param l: array-like, shape (n_samples,)
+            The legitimate factor column(e.g., prior number of criminal acts)
+
+        :param y: array-like, shape (n_samples,)
+                The true target values (class labels in classification).
+        :param y_pred: array-like, shape (n_samples,)
+                The predicted values (class labels in classification).
+
+        :return ceq_dict: a dictionary with key =(p, f, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t, L=f) 
+
+        """
+
+        self.P_test_col_names = P.columns
+        # This will again convert a pandas df to numpy array
+        # but we have the column information from when we called fit
+        _, y = check_X_y(P, y)
+        _, y_pred = check_X_y(P, y_pred)
+        P, l = check_X_y(P, l)
+
+        check_columns_match(self.P_col_labels, P)
+
+        class_name = "class_label"
+        pred_name = "pred_label"
+        legitimate_name = "legitimate_feature_name"
+        X_p = np.concatenate((P, l.reshape(-1, 1), y.reshape(-1, 1), y_pred.reshape(-1, 1)), axis=1)
+        X_p = pd.DataFrame(
+            X_p,
+            columns=(self.P_test_col_names.tolist() + [legitimate_name, class_name, pred_name]),
+        )
+
+        ceq_dict = {}
+
+        for t in X_p[class_name].unique():
+            for t_pred in X_p[pred_name].unique():
+                for protected_feature in self.P_test_col_names:
+                    for p in X_p[protected_feature].unique():
+                        for f in X_p[legitimate_name].unique():
+                            p_f_t_df = X_p[(X_p[protected_feature] == p) & (X_p[legitimate_name] == f) & (X_p[class_name] == t)]
+                            ceq_p_f_t_t_pred = None
+                            if p_f_t_df.shape[0] != 0:
+                                ceq_p_f_t_t_pred = (p_f_t_df[p_f_t_df[pred_name] == t_pred].shape[0])/p_f_t_df.shape[0]
+                            ceq_dict[(p, f, t, t_pred)] = ceq_p_f_t_t_pred
+
+                    
+                   
+
+
+        return ceq_dict
+

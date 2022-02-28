@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from trees.StrongTree import StrongTreeClassifier
 
 
-data = pd.read_csv("../data/balance-scale_enc.csv")
+data = pd.read_csv("./data/balance-scale_enc.csv")
 y = data.pop("target")
 
 X_train, X_test, y_train, y_test = train_test_split(
