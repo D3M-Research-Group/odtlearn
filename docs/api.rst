@@ -2,15 +2,9 @@
 Trees API
 ####################
 
-This is an example on how to document the API of your own project.
-
-TEST
-====
-.. vale Awesome.SpellCheck = YES
-
-.. autoclass:: trees.StrongTree.StrongTreeClassifier
-   :members: walk
-
+This is the class and function reference of trees. 
+Please refer to the :ref:`full user guide <user_guide>` for further details, 
+as the class and function raw specifications may not be enough to give full guidelines on their uses.
 
 
 StrongTree
@@ -31,3 +25,12 @@ FairTree
    :template: class.rst
 
    trees.FairTree.FairTreeClassifier
+
+RobustTree
+==========
+
+.. autosummary::
+   :toctree: generated/
+   :template: class.rst
+
+   trees.RobustTree.RobustTreeClassifier
