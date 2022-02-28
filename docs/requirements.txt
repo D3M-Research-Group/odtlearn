@@ -1,6 +1,6 @@
 sphinx-gallery
 sphinx-rtd-theme
-sphinx-awesome-theme
+sphinxawesome-theme
 numpydoc
 pillow
 numpy
