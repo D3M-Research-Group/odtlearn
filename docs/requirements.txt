@@ -8,3 +8,4 @@ pandas
 scikit-learn
 gurobipy
 myst_parser
+sphinx-prompt

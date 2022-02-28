@@ -10,12 +10,14 @@ Getting Started
 1. Clone the repository
 ------------------------------------------
 
-To install the package, you need to clone the ``trees`` repository::
+To install the package, you need to clone the ``trees`` repository:
 
-    $ git clone https://github.com/patrickvossler18/decision_tree_estimators.git
+.. code-block:: console
+
+   $ git clone https://github.com/patrickvossler18/decision_tree_estimators.git
 
 
-2. Install the package
+1. Install the package
 -------------------------------------------
 
 .. _check_estimator: http://scikit-learn.org/stable/modules/generated/sklearn.utils.estimator_checks.check_estimator.html#sklearn.utils.estimator_checks.check_estimator

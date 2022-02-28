@@ -17,7 +17,6 @@ import os
 
 import sphinx_gallery
 import sphinx_rtd_theme
-import sphinxawesome_theme
 
 # Add to sys.path the top-level directory where the package is located.
 sys.path.insert(0, os.path.abspath(".."))
@@ -38,11 +37,10 @@ sys.path.insert(0, os.path.abspath(".."))
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
+    "sphinx.ext.autosectionlabel",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
-    "sphinx.ext.viewcode",
-    "sphinxawesome_theme",
     "myst_parser",
     "sphinx.ext.viewcode",
     "numpydoc",
@@ -183,11 +181,12 @@ exclude_patterns = ["_build", "_templates"]
 
 # Add any paths that contain custom themes here, relative to this directory.
 # The name of the Pygments (syntax highlighting) style to use.
+
+# The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
 html_theme = "sphinx_rtd_theme"
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 html_style = "css/trees.css"
-
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 # html_title = None
@@ -353,18 +352,6 @@ sphinx_gallery_conf = {
     "doc_module": "skltemplate",
     "backreferences_dir": os.path.join("generated"),
     "reference_url": {"skltemplate": None},
-}
-
-extlinks = {
-    "gh": (
-        "https://github.com/patrickvossler18/decision_tree_estimators/blob/master/%s",
-        "%s",
-    ),
-    "ghdir": (
-        "https://github.com/patrickvossler18/decision_tree_estimators/tree/master/%s",
-        "%s",
-    ),
-    "sphinxdocs": ("https://www.sphinx-doc.org/en/master/%s", "%s"),
 }
 
 

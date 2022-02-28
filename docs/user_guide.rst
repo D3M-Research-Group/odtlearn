@@ -3,8 +3,13 @@
 .. _user_guide:
 
 ==================================================
-User guide: create your own scikit-learn estimator
+User guide: fitting tree estimators
 ==================================================
+
+StrongTree
+----------
+
+StrongTrees were first introduced in :ref:`Agahaei et al., 2021 <https://arxiv.org/abs/2103.15965>`.
 
 Estimator
 ---------

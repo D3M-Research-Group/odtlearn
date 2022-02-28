@@ -32,6 +32,7 @@ This site contains the documentation for the tree package.
 
 Information how to install and use this package.
 
+
 `User Guide <user_guide.html>`_
 -------------------------------
 
