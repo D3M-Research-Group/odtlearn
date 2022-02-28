@@ -130,6 +130,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 )
                 if leaf:
                     predicted_values.append(value)
+                    break
                 elif branching:
                     selected_feature_idx = np.where(
                         self.X_predict_col_names == selected_feature
