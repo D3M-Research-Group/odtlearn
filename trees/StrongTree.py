@@ -38,15 +38,26 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The labels passed during :meth:`fit`.
     classes_ : ndarray, shape (n_classes,)
         The classes seen at :meth:`fit`.
+
+    Examples
+    --------
+    >>> from trees.StrongTree import StrongTreeClassifier
+    >>> import numpy as np
+    >>> X = np.arange(100).reshape(100, 1)
+    >>> y = np.random.randint(2, size=100)
+    >>> stcl = StrongTreeClassifier(depth = 1, _lambda = 0, time_limit = 10, num_threads = 1)
+    >>> stcl.fit(X, y)
+
     """
 
-    def __init__(self, depth, time_limit, _lambda, benders_oct=False, num_threads=None):
+    def __init__(self, depth, time_limit, _lambda, benders_oct=False, num_threads=None, obj_mode = 'acc'):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit
         self._lambda = _lambda
         self.num_threads = num_threads
         self.benders_oct = benders_oct
+        self.obj_mode = obj_mode # if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
 
         self.X_col_labels = None
         self.X_col_dtypes = None
@@ -190,6 +201,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self._lambda,
                 self.time_limit,
                 self.num_threads,
+                self.obj_mode
             )
             self.grb_model.create_main_problem()
             self.grb_model.model.update()
@@ -204,6 +216,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self._lambda,
                 self.time_limit,
                 self.num_threads,
+                self.obj_mode
             )
             self.grb_model.create_primal_problem()
             self.grb_model.model.update()

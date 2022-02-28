@@ -55,13 +55,14 @@ fcl = FairTreeClassifier(
     fairness_type="CSP",
     fairness_bound=1,
     num_threads=1,
+    obj_mode = 'balance'
 )
 
 fcl_obj = fcl.fit(X_train, y_train, P_train, l_train)
 pred_test = fcl.predict(X_test)
-sp_val = fcl_obj.get_SP(P_test, y_test)
-csp_val = fcl_obj.get_CSP(P_test, l_test, y_test)
-eq_val = fcl_obj.get_EqOdds(P_test, y_test, pred_test)
-ceq_val = fcl_obj.get_CondEqOdds(P_test, l_test, y_test, pred_test)
+# sp_val = fcl_obj.get_SP(P_test, y_test)
+# csp_val = fcl_obj.get_CSP(P_test, l_test, y_test)
+# eq_val = fcl_obj.get_EqOdds(P_test, y_test, pred_test)
+# ceq_val = fcl_obj.get_CondEqOdds(P_test, l_test, y_test, pred_test)
 
 

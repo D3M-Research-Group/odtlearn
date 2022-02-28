@@ -38,12 +38,12 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
     >>> from trees.FairTree import FairTreeClassifier
     >>> import numpy as np
     >>> X = np.arange(100).reshape(100, 1)
-    >>> y = np.zeros((100, ))
+    >>> y = np.random.randint(2, size=100)
     >>> P = np.arange(200).reshape(100, 2)
     >>> l = np.zeros((100, ))
     >>> fcl = FairTreeClassifier(positive_class = 1, depth = 1, _lambda = 0, time_limit = 10,
         fairness_type = 'CSP', fairness_bound = 1, num_threads = 1)
-    >>> fcl.fit(X_train, y_train, P, l)
+    >>> fcl.fit(X, y, P, l)
     """
 
     def __init__(
@@ -55,12 +55,14 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         fairness_type=None,
         fairness_bound=1,
         num_threads=None,
+        obj_mode = 'acc'
     ):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit
         self._lambda = _lambda
         self.num_threads = num_threads
+        self.obj_mode = obj_mode 
 
         self.fairness_type = fairness_type
         self.fairness_bound = fairness_bound
@@ -232,7 +234,8 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             self.positive_class,
             P,
             self.P_col_labels,
-            l
+            l,
+            self.obj_mode
         )
         self.primal.create_primal_problem()
         self.primal.model.update()

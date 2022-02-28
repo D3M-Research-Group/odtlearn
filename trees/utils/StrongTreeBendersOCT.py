@@ -7,7 +7,7 @@ import numpy as np
 
 class BendersOCT:
     def __init__(
-        self, X, y, tree, X_col_labels, labels, _lambda, time_limit, num_threads
+        self, X, y, tree, X_col_labels, labels, _lambda, time_limit, num_threads, obj_mode
     ):
         """
         :param X: numpy matrix or pandas dataframe of covariates
@@ -15,6 +15,7 @@ class BendersOCT:
         :param tree: Tree object
         :param _lambda: The regularization parameter in the objective
         :param time_limit: The given time limit for solving the MIP
+        :param obj_mode: if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
         """
         self.X = X
         self.y = y
@@ -26,6 +27,7 @@ class BendersOCT:
 
         self.tree = tree
         self._lambda = _lambda
+        self.obj_mode= obj_mode
 
         # Decision Variables
         self.g = 0
@@ -143,11 +145,18 @@ class BendersOCT:
         # Define the Objective
         ###########################################################
         obj = LinExpr(0)
-        for i in self.datapoints:
-            obj.add((1 - self._lambda) * (self.g[i] - 1))
-
         for n in self.tree.Nodes:
             for f in self.X_col_labels:
                 obj.add(-1 * self._lambda * self.b[n, f])
+        if self.obj_mode == 'acc':
+            for i in self.datapoints:
+                obj.add((1 - self._lambda) * self.g[i])
+        elif self.obj_mode == 'balance':
+            for i in self.datapoints:
+                obj.add((1 - self._lambda) * (1/self.y[self.y==self.y[i]].shape[0]/self.labels.shape[0]) *self.g[i])
+        else:
+            assert (self.obj_mode not in ['acc','balance']), f"Wrong objective mode. obj_mode should be one of acc or balance."
+
+        
 
         self.model.setObjective(obj, GRB.MAXIMIZE)
