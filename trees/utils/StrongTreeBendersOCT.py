@@ -3,21 +3,21 @@ This module formulate the BendersOCT problem in gurobipy.
 """
 from gurobipy import Model, GRB, quicksum, LinExpr
 import numpy as np
-
+import pandas as pd
 
 class BendersOCT:
     def __init__(
         self, X, y, tree, X_col_labels, labels, _lambda, time_limit, num_threads, obj_mode
     ):
         """
-        :param X: numpy matrix or pandas dataframe of covariates
-        :param y: numpy array or pandas series/dataframe of class labels
+        :param X: numpy matrix of covariates
+        :param y: numpy array of class labels
         :param tree: Tree object
         :param _lambda: The regularization parameter in the objective
         :param time_limit: The given time limit for solving the MIP
         :param obj_mode: if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
         """
-        self.X = X
+        self.X = pd.DataFrame(X, columns=X_col_labels)
         self.y = y
 
         self.X_col_labels = X_col_labels
@@ -74,7 +74,7 @@ class BendersOCT:
         self.model._callback_counter_general_success = 0
 
         # We also pass the following information to the model as we need them in the callback
-        self.model._master = self
+        self.model._main_grb_obj = self
 
     def create_main_problem(self):
         """

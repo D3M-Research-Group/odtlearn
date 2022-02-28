@@ -8,6 +8,7 @@ from trees.utils.StrongTreeUtils import (
     check_columns_match,
     check_binary,
     benders_callback,
+    get_predicted_value
 )
 
 # Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
@@ -76,87 +77,6 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
         self.labels = np.unique(y)
 
-    def get_node_status(self, labels, column_names, b, w, p, n):
-        """
-        This function give the status of a given node in a tree. By status we mean whether the node
-            1- is pruned? i.e., we have made a prediction at one of its ancestors
-            2- is a branching node? If yes, what feature do we branch on
-            3- is a leaf? If yes, what is the prediction at this node?
-        :param labels: the unique values of the response variable y
-        :param column_names: the column names of the data set X
-        :param b: The values of branching decision variable b
-        :param w: The values of prediction decision variable w
-        :param p: The values of decision variable p
-        :param n: A valid node index in the tree
-        :return: pruned, branching, selected_feature, leaf, value
-        pruned=1 iff the node is pruned
-        branching = 1 iff the node branches at some feature f
-        selected_feature: The feature that the node branch on
-        leaf = 1 iff node n is a leaf in the tree
-        value: if node n is a leaf, value represent the prediction at this node
-        """
-
-        pruned = False
-        branching = False
-        leaf = False
-        value = None
-        selected_feature = None
-
-        p_sum = 0
-        for m in self.tree.get_ancestors(n):
-            p_sum = p_sum + p[m]
-        if p[n] > 0.5:  # leaf
-            leaf = True
-            for k in labels:
-                if w[n, k] > 0.5:
-                    value = k
-
-        elif p_sum == 1:  # Pruned
-            pruned = True
-
-        if n in self.tree.Nodes:
-            if (pruned is False) and (leaf is False):  # branching
-                for f in column_names:
-                    if b[n, f] > 0.5:
-                        selected_feature = f
-                        branching = True
-
-        return pruned, branching, selected_feature, leaf, value
-
-    def get_predicted_value(self, X, b, w, p):
-        """
-        This function returns the predicted value for a given dataset
-        :param X: The dataset we want to compute accuracy for
-        :param b: The value of decision variable b
-        :param w: The value of decision variable w
-        :param p: The value of decision variable p
-        :return: The predicted value for all datapoints in dataset X
-        """
-        predicted_values = []
-        for i in range(X.shape[0]):
-            current = 1
-            while True:
-                pruned, branching, selected_feature, leaf, value = self.get_node_status(
-                    self.labels, self.X_predict_col_names, b, w, p, current
-                )
-                if leaf:
-                    predicted_values.append(value)
-                    break
-                elif branching:
-                    selected_feature_idx = np.where(
-                        self.X_predict_col_names == selected_feature
-                    )
-                    # Raise assertion error we don't have a column that matches
-                    # the selected feature or more than one column that matches
-                    assert (
-                        len(selected_feature_idx) == 1
-                    ), f"Found {len(selected_feature_idx)} columns matching the selected feature {selected_feature}"
-                    if X[i, selected_feature_idx] == 1:  # going right on the branch
-                        current = self.tree.get_right_children(current)
-                    else:  # going left on the branch
-                        current = self.tree.get_left_children(current)
-        return np.array(predicted_values)
-
     def fit(self, X, y):
         """TO-DO: NEED DESCRIPTION OF METHOD HERE.
 
@@ -190,7 +110,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
-        self.start_time = time.time()
+        
         if self.benders_oct:
             self.grb_model = BendersOCT(
                 X,
@@ -222,10 +142,10 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             self.grb_model.model.update()
             self.grb_model.model.optimize()
 
-        self.end_time = time.time()
+        
         # solving_time or other potential parameters of interest can be stored
         # within the class: self.solving_time
-        self.solving_time = self.end_time - self.start_time
+        self.solving_time = self.grb_model.model.getAttr("Runtime")
 
         # Here we will want to store these values and any other variables
         # needed for making predictions later
@@ -259,7 +179,8 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
         check_columns_match(self.X_col_labels, X)
 
-        prediction = self.get_predicted_value(
+        prediction = get_predicted_value(
+            self.grb_model,
             X,
             self.b_value,
             self.w_value,
