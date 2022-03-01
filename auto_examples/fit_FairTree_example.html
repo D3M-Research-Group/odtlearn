@@ -57,9 +57,9 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">General examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="plot_template.html">Plotting Template Estimator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_example.html">Sklearn Pipeline Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_transformer.html">Plotting Template Transformer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plotting_example.html">Tree Plotting Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline_example.html">Sklearn Pipeline Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plot_classifier.html">Plotting Template Classifier</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">FairTree Fit Example</a></li>
 </ul>
@@ -100,7 +100,9 @@ to download the full example code</p>
 <span id="sphx-glr-auto-examples-fit-fairtree-example-py"></span><h1>FairTree Fit Example<a class="headerlink" href="#fairtree-fit-example" title="Permalink to this headline">¶</a></h1>
 <p>An example of fitting a FairTree decision tree using <a class="reference internal" href="../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier" title="trees.FairTree.FairTreeClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">trees.FairTree.FairTreeClassifier</span></code></a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">trees.FairTree</span> <span class="kn">import</span> <span class="n">FairTreeClassifier</span>
+<span class="kn">from</span> <span class="nn">trees.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="n">print_tree</span>
 
 
 <span class="n">data_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./data/compas/compas_train_1.csv&quot;</span><span class="p">)</span>
@@ -152,12 +154,13 @@ to download the full example code</p>
     <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">&#39;balance&#39;</span>
 <span class="p">)</span>
 
-<span class="n">fcl_obj</span> <span class="o">=</span> <span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">P_train</span><span class="p">,</span> <span class="n">l_train</span><span class="p">)</span>
+<span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">P_train</span><span class="p">,</span> <span class="n">l_train</span><span class="p">)</span>
+<span class="n">print_tree</span><span class="p">(</span><span class="n">fcl</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span> <span class="n">fcl</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span> <span class="n">fcl</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span> <span class="n">fcl</span><span class="o">.</span><span class="n">p_value</span><span class="p">)</span>
 <span class="n">pred_test</span> <span class="o">=</span> <span class="n">fcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="c1"># sp_val = fcl_obj.get_SP(P_test, y_test)</span>
-<span class="c1"># csp_val = fcl_obj.get_CSP(P_test, l_test, y_test)</span>
-<span class="c1"># eq_val = fcl_obj.get_EqOdds(P_test, y_test, pred_test)</span>
-<span class="c1"># ceq_val = fcl_obj.get_CondEqOdds(P_test, l_test, y_test, pred_test)</span>
+<span class="c1"># sp_val = fcl.get_SP(P_test, y_test)</span>
+<span class="c1"># csp_val = fcl.get_CSP(P_test, l_test, y_test)</span>
+<span class="c1"># eq_val = fcl.get_EqOdds(P_test, y_test, pred_test)</span>
+<span class="c1"># ceq_val = fcl.get_CondEqOdds(P_test, l_test, y_test, pred_test)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>

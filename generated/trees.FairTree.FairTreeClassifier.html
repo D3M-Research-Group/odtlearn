@@ -257,48 +257,6 @@ The target values (class labels in classification).</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.get_node_status">
-<span class="sig-name descname"><span class="pre">get_node_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_node_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_node_status" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>This function give the status of a given node in a tree. By status we mean whether the node</dt><dd><p>1- is pruned? i.e., we have made a prediction at one of its ancestors
-2- is a branching node? If yes, what feature do we branch on
-3- is a leaf? If yes, what is the prediction at this node?</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> – the unique values of the response variable y</p></li>
-<li><p><strong>column_names</strong> – the column names of the data set X</p></li>
-<li><p><strong>b</strong> – The values of branching decision variable b</p></li>
-<li><p><strong>w</strong> – The values of prediction decision variable w</p></li>
-<li><p><strong>p</strong> – The values of decision variable p</p></li>
-<li><p><strong>n</strong> – A valid node index in the tree</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pruned, branching, selected_feature, leaf, value</p>
-</dd>
-</dl>
-<p>pruned=1 iff the node is pruned
-branching = 1 iff the node branches at some feature f
-selected_feature: The feature that the node branch on
-leaf = 1 iff node n is a leaf in the tree
-value: if node n is a leaf, value represent the prediction at this node</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.get_predicted_value">
-<span class="sig-name descname"><span class="pre">get_predicted_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_predicted_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_predicted_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns the predicted value for a given dataset
-:param X: The dataset we want to compute accuracy for
-:param b: The value of decision variable b
-:param w: The value of decision variable w
-:param p: The value of decision variable p
-:return: The predicted value for all datapoints in dataset X</p>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>A reference implementation of a prediction for a classifier.</p>

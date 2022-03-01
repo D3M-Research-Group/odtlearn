@@ -86,7 +86,7 @@
 <span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
-<span class="kn">from</span> <span class="nn">trees.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="n">check_binary</span><span class="p">,</span> <span class="n">check_columns_match</span>
+<span class="kn">from</span> <span class="nn">trees.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="n">check_binary</span><span class="p">,</span> <span class="n">check_columns_match</span><span class="p">,</span> <span class="n">get_predicted_value</span>
 
 <span class="c1"># Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder</span>
 <span class="kn">from</span> <span class="nn">trees.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
@@ -180,87 +180,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">l_dtypes</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">dtypes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FairTreeClassifier.get_node_status"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_node_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_node_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">column_names</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This function give the status of a given node in a tree. By status we mean whether the node</span>
-<span class="sd">            1- is pruned? i.e., we have made a prediction at one of its ancestors</span>
-<span class="sd">            2- is a branching node? If yes, what feature do we branch on</span>
-<span class="sd">            3- is a leaf? If yes, what is the prediction at this node?</span>
-<span class="sd">        :param labels: the unique values of the response variable y</span>
-<span class="sd">        :param column_names: the column names of the data set X</span>
-<span class="sd">        :param b: The values of branching decision variable b</span>
-<span class="sd">        :param w: The values of prediction decision variable w</span>
-<span class="sd">        :param p: The values of decision variable p</span>
-<span class="sd">        :param n: A valid node index in the tree</span>
-<span class="sd">        :return: pruned, branching, selected_feature, leaf, value</span>
-<span class="sd">        pruned=1 iff the node is pruned</span>
-<span class="sd">        branching = 1 iff the node branches at some feature f</span>
-<span class="sd">        selected_feature: The feature that the node branch on</span>
-<span class="sd">        leaf = 1 iff node n is a leaf in the tree</span>
-<span class="sd">        value: if node n is a leaf, value represent the prediction at this node</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">pruned</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">branching</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">leaf</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">selected_feature</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="n">p_sum</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_ancestors</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-            <span class="n">p_sum</span> <span class="o">=</span> <span class="n">p_sum</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">m</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># leaf</span>
-            <span class="n">leaf</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">w</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="n">k</span>
-
-        <span class="k">elif</span> <span class="n">p_sum</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Pruned</span>
-            <span class="n">pruned</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">pruned</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">leaf</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">):</span>  <span class="c1"># branching</span>
-                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">column_names</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
-                        <span class="n">selected_feature</span> <span class="o">=</span> <span class="n">f</span>
-                        <span class="n">branching</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="k">return</span> <span class="n">pruned</span><span class="p">,</span> <span class="n">branching</span><span class="p">,</span> <span class="n">selected_feature</span><span class="p">,</span> <span class="n">leaf</span><span class="p">,</span> <span class="n">value</span></div>
-
-<div class="viewcode-block" id="FairTreeClassifier.get_predicted_value"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_predicted_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_predicted_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This function returns the predicted value for a given dataset</span>
-<span class="sd">        :param X: The dataset we want to compute accuracy for</span>
-<span class="sd">        :param b: The value of decision variable b</span>
-<span class="sd">        :param w: The value of decision variable w</span>
-<span class="sd">        :param p: The value of decision variable p</span>
-<span class="sd">        :return: The predicted value for all datapoints in dataset X</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">predicted_values</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">current</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">pruned</span><span class="p">,</span> <span class="n">branching</span><span class="p">,</span> <span class="n">selected_feature</span><span class="p">,</span> <span class="n">leaf</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_node_status</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">current</span>
-                <span class="p">)</span>
-                <span class="k">if</span> <span class="n">leaf</span><span class="p">:</span>
-                    <span class="n">predicted_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-                    <span class="k">break</span>
-                <span class="k">elif</span> <span class="n">branching</span><span class="p">:</span>
-                    <span class="n">selected_feature_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">==</span> <span class="n">selected_feature</span>
-                    <span class="p">)</span>
-                    <span class="c1"># Raise assertion error we don&#39;t have a column that matches</span>
-                    <span class="c1"># the selected feature or more than one column that matches</span>
-                    <span class="k">assert</span> <span class="p">(</span>
-                        <span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_idx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-                    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_idx</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns matching the selected feature </span><span class="si">{</span><span class="n">selected_feature</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="k">if</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">selected_feature_idx</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># going right on the branch</span>
-                        <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_right_children</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># going left on the branch</span>
-                        <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_left_children</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predicted_values</span><span class="p">)</span></div>
-
 
 <div class="viewcode-block" id="FairTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;A reference implementation of a fitting function.</span>
@@ -303,7 +222,7 @@
         <span class="c1"># Instantiate tree object here</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">primal</span> <span class="o">=</span> <span class="n">FairOCT</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span> <span class="o">=</span> <span class="n">FairOCT</span><span class="p">(</span>
             <span class="n">X</span><span class="p">,</span>
             <span class="n">y</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span>
@@ -320,19 +239,19 @@
             <span class="n">l</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">create_primal_problem</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_primal_problem</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 
         <span class="c1"># solving_time or other potential parameters of interest can be stored</span>
         <span class="c1"># within the class: self.solving_time</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">solving_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;Runtime&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solving_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;Runtime&quot;</span><span class="p">)</span>
 
         <span class="c1"># Here we will want to store these values and any other variables</span>
         <span class="c1"># needed for making predictions later</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
 
 
         <span class="c1"># Return the classifier</span>
@@ -362,7 +281,8 @@
 
         <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 
-        <span class="n">prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_predicted_value</span><span class="p">(</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="n">get_predicted_value</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span>
             <span class="n">X</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span>

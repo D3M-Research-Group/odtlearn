@@ -24,12 +24,14 @@ FairTree Fit Example
 
 An example of fitting a FairTree decision tree using :class:`trees.FairTree.FairTreeClassifier`
 
-.. GENERATED FROM PYTHON SOURCE LINES 8-69
+.. GENERATED FROM PYTHON SOURCE LINES 8-72
 
 .. code-block:: default
 
     import pandas as pd
+    import numpy as np
     from trees.FairTree import FairTreeClassifier
+    from trees.utils.StrongTreeUtils import print_tree 
 
 
     data_train = pd.read_csv("./data/compas/compas_train_1.csv")
@@ -81,12 +83,13 @@ An example of fitting a FairTree decision tree using :class:`trees.FairTree.Fair
         obj_mode = 'balance'
     )
 
-    fcl_obj = fcl.fit(X_train, y_train, P_train, l_train)
+    fcl.fit(X_train, y_train, P_train, l_train)
+    print_tree(fcl.grb_model, fcl.b_value, fcl.w_value, fcl.p_value)
     pred_test = fcl.predict(X_test)
-    # sp_val = fcl_obj.get_SP(P_test, y_test)
-    # csp_val = fcl_obj.get_CSP(P_test, l_test, y_test)
-    # eq_val = fcl_obj.get_EqOdds(P_test, y_test, pred_test)
-    # ceq_val = fcl_obj.get_CondEqOdds(P_test, l_test, y_test, pred_test)
+    # sp_val = fcl.get_SP(P_test, y_test)
+    # csp_val = fcl.get_CSP(P_test, l_test, y_test)
+    # eq_val = fcl.get_EqOdds(P_test, y_test, pred_test)
+    # ceq_val = fcl.get_CondEqOdds(P_test, l_test, y_test, pred_test)
 
 
 
