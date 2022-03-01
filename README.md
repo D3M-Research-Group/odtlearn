@@ -2,7 +2,7 @@
 
 A package for tree-based statistical estimation and inference. Trees provides implementations of StrongTrees, FairTrees, RobustTrees, and Prescriptive Trees for classification.
 
-## Documentation
+# Documentation
 
 The [package documentation](https://patrickvossler18.github.io/decision_tree_estimators/index.html) contains usage examples and method reference.
 
