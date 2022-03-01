@@ -50,14 +50,22 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
     """
 
-    def __init__(self, depth, time_limit, _lambda, benders_oct=False, num_threads=None, obj_mode = 'acc'):
+    def __init__(
+        self,
+        depth,
+        time_limit,
+        _lambda,
+        benders_oct=False,
+        num_threads=None,
+        obj_mode="acc",
+    ):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit
         self._lambda = _lambda
         self.num_threads = num_threads
         self.benders_oct = benders_oct
-        self.obj_mode = obj_mode # if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
+        self.obj_mode = obj_mode  # if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
 
         self.X_col_labels = None
         self.X_col_dtypes = None
@@ -72,7 +80,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             self.X_col_labels = X.columns
             self.X_col_dtypes = X.dtypes
         else:
-            self.X_col_labels = np.arange(0, self.X.shape[1])
+            self.X_col_labels = np.arange(0, X.shape[1])
 
         self.labels = np.unique(y)
 
@@ -174,10 +182,13 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         """
         # store column information and dtypes if any
         self.extract_metadata(X, y)
-        # this function returns converted X and y but we retain metadata
-        X, y = check_X_y(X, y)
+
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
+
+        # this function returns converted X and y but we retain metadata
+        X, y = check_X_y(X, y)
+
         # Store the classes seen during fit
         self.classes_ = unique_labels(y)
 
@@ -201,7 +212,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self._lambda,
                 self.time_limit,
                 self.num_threads,
-                self.obj_mode
+                self.obj_mode,
             )
             self.grb_model.create_main_problem()
             self.grb_model.model.update()
@@ -216,7 +227,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self._lambda,
                 self.time_limit,
                 self.num_threads,
-                self.obj_mode
+                self.obj_mode,
             )
             self.grb_model.create_primal_problem()
             self.grb_model.model.update()
@@ -252,7 +263,11 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         # Check is fit had been called
         check_is_fitted(self, ["X_", "y_"])
 
-        self.X_predict_col_names = X.columns
+        if isinstance(X, pd.DataFrame):
+            self.X_predict_col_names = X.columns
+        else:
+            self.X_predict_col_names = np.arange(0, X.shape[1])
+
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         X = check_array(X)
