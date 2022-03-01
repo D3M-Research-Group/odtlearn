@@ -8,7 +8,7 @@ from trees.utils.StrongTreeUtils import (
     check_columns_match,
     check_binary,
     benders_callback,
-    get_predicted_value
+    get_predicted_value,
 )
 
 # Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
@@ -121,7 +121,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
-        
+
         if self.benders_oct:
             self.grb_model = BendersOCT(
                 X,
@@ -153,7 +153,6 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             self.grb_model.model.update()
             self.grb_model.model.optimize()
 
-        
         # solving_time or other potential parameters of interest can be stored
         # within the class: self.solving_time
         self.solving_time = self.grb_model.model.getAttr("Runtime")
@@ -197,6 +196,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         prediction = get_predicted_value(
             self.grb_model,
             X,
+            self.X_predict_col_names,
             self.b_value,
             self.w_value,
             self.p_value,
