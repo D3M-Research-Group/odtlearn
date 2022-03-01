@@ -1,12 +1,14 @@
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.validation import (check_X_y,
-                                      check_array,
-                                      _assert_all_finite,
-                                      check_is_fitted,
-                                      column_or_1d,
-                                      check_consistent_length)
+from sklearn.utils.validation import (
+    check_X_y,
+    check_array,
+    _assert_all_finite,
+    check_is_fitted,
+    column_or_1d,
+    check_consistent_length,
+)
 from sklearn.utils.multiclass import unique_labels
 import time
 from trees.utils.StrongTreeUtils import (
@@ -23,7 +25,8 @@ from trees.utils.PrescriptiveTreesMIP import FlowOPT_IPW, FlowOPT_Robust
 
 
 class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
-    """
+    """A classifier which uses PrescriptiveTrees.
+
     Parameters
     ----------
     depth : int
@@ -46,7 +49,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         The classes seen at :meth:`fit`.
     """
 
-    def __init__(self, depth, time_limit, method='IPW', num_threads=None):
+    def __init__(self, depth, time_limit, method="IPW", num_threads=None):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit
@@ -76,7 +79,6 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
             self.X_col_labels = np.arange(0, self.X.shape[1])
 
         self.treatments = np.unique(t)
-
 
     def get_node_status(self, labels, column_names, b, beta, p, n):
         """
@@ -165,14 +167,12 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         :param y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR
         :return: The converted versions of ipw and y_hat after passing the series of checks
         """
-        if self.method in ['IPW', 'DR']:
-            assert (
-                    ipw is not None
-            ), f"Inverse propensity weights cannot be None"
+        if self.method in ["IPW", "DR"]:
+            assert ipw is not None, f"Inverse propensity weights cannot be None"
 
             ipw = column_or_1d(ipw, warn=True)
 
-            if ipw.dtype.kind == 'O':
+            if ipw.dtype.kind == "O":
                 ipw = ipw.astype(np.float64)
 
             assert (
@@ -181,16 +181,14 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
 
             check_consistent_length(X, ipw)
 
-        if self.method in ['DM', 'DR']:
-            assert (
-                    y_hat is not None
-            ), f"Counterfactual estimates cannot be None"
+        if self.method in ["DM", "DR"]:
+            assert y_hat is not None, f"Counterfactual estimates cannot be None"
 
             y_hat = check_array(y_hat)
 
             # y_hat has to have as many columns as there are treatments
-            assert(
-                    y_hat.shape[1] == len(self.treatments)
+            assert y_hat.shape[1] == len(
+                self.treatments
             ), f"Found counterfactual estimates for {y_hat.shape[1]} treatments. \
             There are {len(self.treatments)} unique treatments in the data"
 
@@ -208,7 +206,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         # check consistent length
         y = column_or_1d(y, warn=True)
         _assert_all_finite(y)
-        if y.dtype.kind == 'O':
+        if y.dtype.kind == "O":
             y = y.astype(np.float64)
 
         check_consistent_length(X, y)
@@ -247,11 +245,11 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         try:
             t = t.astype(int)
         except Exception as e:
-            print('The set of treatments must be discrete.')
+            print("The set of treatments must be discrete.")
 
         assert (
-                min(t) == 0 and max(t) == len(set(t)) - 1
-        ), 'The set of treatments must be discrete starting from {0, 1, ...}'
+            min(t) == 0 and max(t) == len(set(t)) - 1
+        ), "The set of treatments must be discrete starting from {0, 1, ...}"
 
         # we also need to check on y and ipw/y_hat depending on the method chosen
         y = self.check_y(X, y)
@@ -275,7 +273,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         # Note that we are taking X and y as array-like objects
         self.start_time = time.time()
 
-        if self.method == 'IPW':
+        if self.method == "IPW":
             self.primal = FlowOPT_IPW(
                 X,
                 t,
@@ -285,10 +283,10 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 tree,
                 self.X_col_labels,
                 self.time_limit,
-                self.num_threads
+                self.num_threads,
             )
 
-        elif self.method == 'DM':
+        elif self.method == "DM":
             self.primal = FlowOPT_Robust(
                 X,
                 t,
@@ -300,10 +298,10 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 tree,
                 X_col_labels,
                 self.time_limit,
-                self.num_threads
+                self.num_threads,
             )
 
-        elif self.method == 'DR':
+        elif self.method == "DR":
             self.primal = FlowOPT_Robust(
                 X,
                 t,
@@ -315,13 +313,12 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 tree,
                 X_col_labels,
                 self.time_limit,
-                self.num_threads
+                self.num_threads,
             )
 
         self.primal.create_main_problem()
         self.primal.model.update()
         self.primal.model.optimize()
-
 
         self.end_time = time.time()
         # solving_time or other potential parameters of interest can be stored
