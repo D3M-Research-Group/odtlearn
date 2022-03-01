@@ -35,3 +35,12 @@ RobustTree
    :template: class.rst
 
    trees.RobustTree.RobustTreeClassifier
+
+PrescriptiveTree
+================
+
+.. autosummary::
+   :toctree: generated/
+   :template: class.rst
+
+   trees.PrescriptiveTree.PrescriptiveTreeClassifier
