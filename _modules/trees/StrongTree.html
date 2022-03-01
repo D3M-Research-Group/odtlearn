@@ -133,14 +133,22 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="StrongTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">benders_oct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">&#39;acc&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="StrongTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">depth</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="p">,</span>
+        <span class="n">benders_oct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="c1"># this is where we will initialize the values we want users to provide</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="n">_lambda</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span> <span class="o">=</span> <span class="n">num_threads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">benders_oct</span> <span class="o">=</span> <span class="n">benders_oct</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span> <span class="c1"># if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>  <span class="c1"># if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">X_col_dtypes</span> <span class="o">=</span> <span class="kc">None</span>
@@ -155,7 +163,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X_col_dtypes</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">dtypes</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
 
@@ -257,10 +265,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># store column information and dtypes if any</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-        <span class="c1"># this function returns converted X and y but we retain metadata</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
         <span class="c1"># Raises ValueError if there is a column that has values other than 0 or 1</span>
         <span class="n">check_binary</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># this function returns converted X and y but we retain metadata</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
         <span class="c1"># Store the classes seen during fit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
@@ -284,7 +295,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_main_problem</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
@@ -299,7 +310,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_primal_problem</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
@@ -335,7 +346,11 @@
         <span class="c1"># Check is fit had been called</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;X_&quot;</span><span class="p">,</span> <span class="s2">&quot;y_&quot;</span><span class="p">])</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
         <span class="c1"># This will again convert a pandas df to numpy array</span>
         <span class="c1"># but we have the column information from when we called fit</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
