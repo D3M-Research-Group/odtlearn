@@ -1,3 +1,4 @@
+.. _api:
 
 ####################
 Trees API
@@ -16,6 +17,7 @@ StrongTree
    :template: class.rst
 
    trees.StrongTree.StrongTreeClassifier
+
 
 
 FairTree

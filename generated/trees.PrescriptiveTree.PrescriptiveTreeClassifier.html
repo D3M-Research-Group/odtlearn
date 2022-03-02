@@ -7,6 +7,7 @@
   <title>trees.PrescriptiveTree.PrescriptiveTreeClassifier &mdash; trees 0.0.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/trees.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
@@ -19,6 +20,8 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
         <script src="../_static/js/copybutton.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -119,8 +122,6 @@ inverse propensity weighting, direct method, and doubly robust methods, respecti
 </dd>
 <dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The labels passed during <a class="reference internal" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
 </dd>
-<dt><strong>classes_</strong><span class="classifier">ndarray, shape (n_classes,)</span></dt><dd><p>The classes seen at <a class="reference internal" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
-</dd>
 </dl>
 </dd>
 </dl>
@@ -132,11 +133,17 @@ inverse propensity weighting, direct method, and doubly robust methods, respecti
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.PrescriptiveTree.PrescriptiveTreeClassifier.check_helpers">
 <span class="sig-name descname"><span class="pre">check_helpers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_hat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/PrescriptiveTree.html#PrescriptiveTreeClassifier.check_helpers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.check_helpers" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function checks the propensity weights and counterfactual predictions
-:param X: The input/training data
-:param ipw: A vector or array-like object for inverse propensity weights. Only needed when running IPW/DR
-:param y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR
-:return: The converted versions of ipw and y_hat after passing the series of checks</p>
+<dd><p>This function checks the propensity weights and counterfactual predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X: The input/training data</strong></dt><dd></dd>
+<dt><strong>ipw: A vector or array-like object for inverse propensity weights. Only needed when running IPW/DR</strong></dt><dd></dd>
+<dt><strong>y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR</strong></dt><dd></dd>
+<dt><strong>:return: The converted versions of ipw and y_hat after passing the series of checks</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -155,10 +162,12 @@ inverse propensity weighting, direct method, and doubly robust methods, respecti
 them into numpy arrays to work with the sklearn API</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> – The input/training data</p></li>
-<li><p><strong>t</strong> – A vector or array-like object for the treatment assignments</p></li>
-</ul>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong></dt><dd><p>The input/training data</p>
+</dd>
+<dt><strong>t</strong></dt><dd><p>A vector or array-like object for the treatment assignments</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -189,48 +198,6 @@ them into numpy arrays to work with the sklearn API</p>
 </dl>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.PrescriptiveTree.PrescriptiveTreeClassifier.get_node_status">
-<span class="sig-name descname"><span class="pre">get_node_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/PrescriptiveTree.html#PrescriptiveTreeClassifier.get_node_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.get_node_status" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>This function give the status of a given node in a tree. By status we mean whether the node</dt><dd><p>1- is pruned? i.e., we have made a prediction at one of its ancestors
-2- is a branching node? If yes, what feature do we branch on
-3- is a leaf? If yes, what is the prediction at this node?</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> – the unique values of the response variable y</p></li>
-<li><p><strong>column_names</strong> – the column names of the data set X</p></li>
-<li><p><strong>b</strong> – The values of branching decision variable b</p></li>
-<li><p><strong>beta</strong> – The values of prediction decision variable beta</p></li>
-<li><p><strong>p</strong> – The values of decision variable p</p></li>
-<li><p><strong>n</strong> – A valid node index in the tree</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pruned, branching, selected_feature, leaf, value</p>
-</dd>
-</dl>
-<p>pruned=1 iff the node is pruned
-branching = 1 iff the node branches at some feature f
-selected_feature: The feature that the node branch on
-leaf = 1 iff node n is a leaf in the tree
-value: if node n is a leaf, value represent the prediction at this node</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.PrescriptiveTree.PrescriptiveTreeClassifier.get_predicted_value">
-<span class="sig-name descname"><span class="pre">get_predicted_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/PrescriptiveTree.html#PrescriptiveTreeClassifier.get_predicted_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.get_predicted_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns the predicted value for a given datapoint
-:param X: The dataset we want to compute accuracy for
-:param b: The value of decision variable b
-:param beta: The value of decision variable beta
-:param p: The value of decision variable p
-:return: The predicted value for all datapoints in dataset X</p>
 </dd></dl>
 
 <dl class="py method">

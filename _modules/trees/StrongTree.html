@@ -6,6 +6,7 @@
   <title>trees.StrongTree &mdash; trees 0.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/trees.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
@@ -18,6 +19,8 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
         <script src="../../_static/js/copybutton.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -91,7 +94,7 @@
     <span class="n">check_columns_match</span><span class="p">,</span>
     <span class="n">check_binary</span><span class="p">,</span>
     <span class="n">benders_callback</span><span class="p">,</span>
-    <span class="n">get_predicted_value</span>
+    <span class="n">get_predicted_value</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder</span>
@@ -204,7 +207,7 @@
 
         <span class="c1"># Code for setting up and running the MIP goes here.</span>
         <span class="c1"># Note that we are taking X and y as array-like objects</span>
-        
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">benders_oct</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span>
@@ -236,7 +239,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 
-        
         <span class="c1"># solving_time or other potential parameters of interest can be stored</span>
         <span class="c1"># within the class: self.solving_time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solving_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;Runtime&quot;</span><span class="p">)</span>
@@ -280,6 +282,7 @@
         <span class="n">prediction</span> <span class="o">=</span> <span class="n">get_predicted_value</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span>
             <span class="n">X</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">,</span>

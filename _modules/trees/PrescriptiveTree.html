@@ -6,6 +6,7 @@
   <title>trees.PrescriptiveTree &mdash; trees 0.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/trees.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
@@ -18,6 +19,8 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
         <script src="../../_static/js/copybutton.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -92,18 +95,13 @@
     <span class="n">column_or_1d</span><span class="p">,</span>
     <span class="n">check_consistent_length</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">trees.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">check_columns_match</span><span class="p">,</span>
     <span class="n">check_binary</span><span class="p">,</span>
-    <span class="n">benders_callback</span><span class="p">,</span>
+    <span class="n">get_predicted_value</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="c1"># Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder</span>
 <span class="kn">from</span> <span class="nn">trees.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
-<span class="kn">from</span> <span class="nn">trees.utils.StrongTreeFlowOCT</span> <span class="kn">import</span> <span class="n">FlowOCT</span>
-<span class="kn">from</span> <span class="nn">trees.utils.StrongTreeBendersOCT</span> <span class="kn">import</span> <span class="n">BendersOCT</span>
 <span class="kn">from</span> <span class="nn">trees.utils.PrescriptiveTreesMIP</span> <span class="kn">import</span> <span class="n">FlowOPT_IPW</span><span class="p">,</span> <span class="n">FlowOPT_Robust</span>
 
 
@@ -128,8 +126,6 @@
 <span class="sd">        The input passed during :meth:`fit`.</span>
 <span class="sd">    y_ : ndarray, shape (n_samples,)</span>
 <span class="sd">        The labels passed during :meth:`fit`.</span>
-<span class="sd">    classes_ : ndarray, shape (n_classes,)</span>
-<span class="sd">        The classes seen at :meth:`fit`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PrescriptiveTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;IPW&quot;</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -151,8 +147,12 @@
         <span class="sd">&quot;&quot;&quot;A function for extracting metadata from the inputs before converting</span>
 <span class="sd">        them into numpy arrays to work with the sklearn API</span>
 
-<span class="sd">        :param X: The input/training data</span>
-<span class="sd">        :param t: A vector or array-like object for the treatment assignments</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X :</span>
+<span class="sd">            The input/training data</span>
+<span class="sd">        t :</span>
+<span class="sd">            A vector or array-like object for the treatment assignments</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
@@ -163,95 +163,20 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">treatments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="PrescriptiveTreeClassifier.get_node_status"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.get_node_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_node_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">column_names</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This function give the status of a given node in a tree. By status we mean whether the node</span>
-<span class="sd">            1- is pruned? i.e., we have made a prediction at one of its ancestors</span>
-<span class="sd">            2- is a branching node? If yes, what feature do we branch on</span>
-<span class="sd">            3- is a leaf? If yes, what is the prediction at this node?</span>
-<span class="sd">        :param labels: the unique values of the response variable y</span>
-<span class="sd">        :param column_names: the column names of the data set X</span>
-<span class="sd">        :param b: The values of branching decision variable b</span>
-<span class="sd">        :param beta: The values of prediction decision variable beta</span>
-<span class="sd">        :param p: The values of decision variable p</span>
-<span class="sd">        :param n: A valid node index in the tree</span>
-<span class="sd">        :return: pruned, branching, selected_feature, leaf, value</span>
-<span class="sd">        pruned=1 iff the node is pruned</span>
-<span class="sd">        branching = 1 iff the node branches at some feature f</span>
-<span class="sd">        selected_feature: The feature that the node branch on</span>
-<span class="sd">        leaf = 1 iff node n is a leaf in the tree</span>
-<span class="sd">        value: if node n is a leaf, value represent the prediction at this node</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">pruned</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">branching</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">leaf</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">selected_feature</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="n">p_sum</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_ancestors</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-            <span class="n">p_sum</span> <span class="o">=</span> <span class="n">p_sum</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">m</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># leaf</span>
-            <span class="n">leaf</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">beta</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="n">k</span>
-        <span class="k">elif</span> <span class="n">p_sum</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Pruned</span>
-            <span class="n">pruned</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">pruned</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">leaf</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">):</span>  <span class="c1"># branching</span>
-                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">column_names</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
-                        <span class="n">selected_feature</span> <span class="o">=</span> <span class="n">f</span>
-                        <span class="n">branching</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="k">return</span> <span class="n">pruned</span><span class="p">,</span> <span class="n">branching</span><span class="p">,</span> <span class="n">selected_feature</span><span class="p">,</span> <span class="n">leaf</span><span class="p">,</span> <span class="n">value</span></div>
-
-<div class="viewcode-block" id="PrescriptiveTreeClassifier.get_predicted_value"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.get_predicted_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_predicted_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This function returns the predicted value for a given datapoint</span>
-<span class="sd">        :param X: The dataset we want to compute accuracy for</span>
-<span class="sd">        :param b: The value of decision variable b</span>
-<span class="sd">        :param beta: The value of decision variable beta</span>
-<span class="sd">        :param p: The value of decision variable p</span>
-<span class="sd">        :return: The predicted value for all datapoints in dataset X</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">predicted_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">current</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">pruned</span><span class="p">,</span> <span class="n">branching</span><span class="p">,</span> <span class="n">selected_feature</span><span class="p">,</span> <span class="n">leaf</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_node_status</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">current</span>
-                <span class="p">)</span>
-                <span class="k">if</span> <span class="n">leaf</span><span class="p">:</span>
-                    <span class="n">predicted_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">branching</span><span class="p">:</span>
-                    <span class="n">selected_feature_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">==</span> <span class="n">selected_feature</span>
-                    <span class="p">)</span>
-                    <span class="c1"># Raise assertion error we don&#39;t have a column that matches</span>
-                    <span class="c1"># the selected feature or more than one column that matches</span>
-                    <span class="k">assert</span> <span class="p">(</span>
-                        <span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_idx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-                    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_feature_idx</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns matching the selected feature </span><span class="si">{</span><span class="n">selected_feature</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="k">if</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">selected_feature_idx</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># going right on the branch</span>
-                        <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_right_children</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># going left on the branch</span>
-                        <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_left_children</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">predicted_values</span></div>
-
 <div class="viewcode-block" id="PrescriptiveTreeClassifier.check_helpers"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.check_helpers">[docs]</a>    <span class="k">def</span> <span class="nf">check_helpers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">ipw</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function checks the propensity weights and counterfactual predictions</span>
-<span class="sd">        :param X: The input/training data</span>
-<span class="sd">        :param ipw: A vector or array-like object for inverse propensity weights. Only needed when running IPW/DR</span>
-<span class="sd">        :param y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X: The input/training data</span>
+<span class="sd">        ipw: A vector or array-like object for inverse propensity weights. Only needed when running IPW/DR</span>
+<span class="sd">        y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR</span>
+
 <span class="sd">        :return: The converted versions of ipw and y_hat after passing the series of checks</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;IPW&quot;</span><span class="p">,</span> <span class="s2">&quot;DR&quot;</span><span class="p">]:</span>
-            <span class="k">assert</span> <span class="n">ipw</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Inverse propensity weights cannot be None&quot;</span>
+            <span class="k">assert</span> <span class="n">ipw</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Inverse propensity weights cannot be None&quot;</span>
 
             <span class="n">ipw</span> <span class="o">=</span> <span class="n">column_or_1d</span><span class="p">(</span><span class="n">ipw</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -260,12 +185,12 @@
 
             <span class="k">assert</span> <span class="p">(</span>
                 <span class="nb">min</span><span class="p">(</span><span class="n">ipw</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">max</span><span class="p">(</span><span class="n">ipw</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span>
-            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Inverse propensity weights must be in the range (0, 1]&quot;</span>
+            <span class="p">),</span> <span class="s2">&quot;Inverse propensity weights must be in the range (0, 1]&quot;</span>
 
             <span class="n">check_consistent_length</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">ipw</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;DM&quot;</span><span class="p">,</span> <span class="s2">&quot;DR&quot;</span><span class="p">]:</span>
-            <span class="k">assert</span> <span class="n">y_hat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Counterfactual estimates cannot be None&quot;</span>
+            <span class="k">assert</span> <span class="n">y_hat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Counterfactual estimates cannot be None&quot;</span>
 
             <span class="n">y_hat</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">y_hat</span><span class="p">)</span>
 
@@ -327,7 +252,7 @@
         <span class="c1"># need to check that t is discrete, and/or convert -- starts from 0 in accordance with indexing rule</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The set of treatments must be discrete.&quot;</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="p">(</span>
@@ -357,20 +282,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;IPW&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">primal</span> <span class="o">=</span> <span class="n">FlowOPT_IPW</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span> <span class="o">=</span> <span class="n">FlowOPT_IPW</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span>
                 <span class="n">t</span><span class="p">,</span>
                 <span class="n">y</span><span class="p">,</span>
                 <span class="n">ipw</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">treatments</span><span class="p">,</span>
-                <span class="n">tree</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;DM&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">primal</span> <span class="o">=</span> <span class="n">FlowOPT_Robust</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span> <span class="o">=</span> <span class="n">FlowOPT_Robust</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span>
                 <span class="n">t</span><span class="p">,</span>
                 <span class="n">y</span><span class="p">,</span>
@@ -378,14 +303,14 @@
                 <span class="n">y_hat</span><span class="p">,</span>
                 <span class="kc">False</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">treatments</span><span class="p">,</span>
-                <span class="n">tree</span><span class="p">,</span>
-                <span class="n">X_col_labels</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;DR&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">primal</span> <span class="o">=</span> <span class="n">FlowOPT_Robust</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span> <span class="o">=</span> <span class="n">FlowOPT_Robust</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span>
                 <span class="n">t</span><span class="p">,</span>
                 <span class="n">y</span><span class="p">,</span>
@@ -393,15 +318,15 @@
                 <span class="n">y_hat</span><span class="p">,</span>
                 <span class="kc">True</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">treatments</span><span class="p">,</span>
-                <span class="n">tree</span><span class="p">,</span>
-                <span class="n">X_col_labels</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">create_main_problem</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_main_problem</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="c1"># solving_time or other potential parameters of interest can be stored</span>
@@ -410,9 +335,9 @@
 
         <span class="c1"># Here we will want to store these values and any other variables</span>
         <span class="c1"># needed for making predictions later</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
 
         <span class="c1"># Return the classifier</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -433,14 +358,21 @@
         <span class="c1"># Check if fit had been called</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;X_&quot;</span><span class="p">,</span> <span class="s2">&quot;y_&quot;</span><span class="p">,</span> <span class="s2">&quot;t_&quot;</span><span class="p">])</span>
 
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
         <span class="c1"># This will again convert a pandas df to numpy array</span>
         <span class="c1"># but we have the column information from when we called fit</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
         <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 
-        <span class="n">prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_predicted_value</span><span class="p">(</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="n">get_predicted_value</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span>
             <span class="n">X</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">,</span>
