@@ -14,7 +14,7 @@ To install the package, you need to run the following command in your terminal:
 
 .. code-block:: console
 
-   $ pip install git+https://github.com/patrickvossler18/decision_tree_estimators.git#egg=trees
+   pip install git+https://github.com/patrickvossler18/decision_tree_estimators.git#egg=trees
 
 
 Usage Examples

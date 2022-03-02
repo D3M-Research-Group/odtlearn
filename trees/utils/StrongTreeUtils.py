@@ -47,7 +47,9 @@ def check_binary(df):
 
 def get_node_status(tree, labels, column_names, b, w, p, n):
     """
-    This function give the status of a given node in a tree. By status we mean whether the node
+    This function give the status of a given node in a tree.
+
+    By status we mean whether the node
         1- is pruned? i.e., we have made a prediction at one of its ancestors
         2- is a branching node? If yes, what feature do we branch on
         3- is a leaf? If yes, what is the prediction at this node?

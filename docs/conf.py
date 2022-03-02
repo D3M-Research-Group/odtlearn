@@ -43,6 +43,7 @@ extensions = [
     "sphinx.ext.extlinks",
     "myst_parser",
     "sphinx.ext.viewcode",
+    "sphinx_copybutton",
     "numpydoc",
     "sphinx_gallery.gen_gallery",
 ]
