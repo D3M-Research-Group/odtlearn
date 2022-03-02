@@ -10,3 +10,4 @@ gurobipy
 myst_parser
 sphinx-prompt
 sphinx-copybutton
+sphinx-toggleprompt

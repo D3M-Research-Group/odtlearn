@@ -46,6 +46,7 @@ extensions = [
     "sphinx_copybutton",
     "numpydoc",
     "sphinx_gallery.gen_gallery",
+    "sphinx_toggleprompt",
 ]
 
 # this is needed for some reason...
@@ -356,6 +357,13 @@ sphinx_gallery_conf = {
 }
 
 
-def setup(app):
-    # a copy button to copy snippet of code from the documentation
-    app.add_js_file("js/copybutton.js")
+# copybutton strip prompt text
+copybutton_prompt_text = ">>> "
+
+# toggle prompt
+toggleprompt_offset_right = 30
+
+
+# def setup(app):
+# a copy button to copy snippet of code from the documentation
+# app.add_js_file("js/copybutton.js")
