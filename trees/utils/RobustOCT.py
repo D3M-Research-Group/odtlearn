@@ -6,7 +6,7 @@ import pandas as pd
 import sys
 
 class RobustOCT:
-    def __init__(self, X, y, tree, X_col_labels, labels, time_limit, costs, budget):
+    def __init__(self, X, y, tree, X_col_labels, labels, costs, budget, time_limit, threads, verbose):
         '''
         :param data: The training data
         :param label: Name of the column representing the class label
@@ -62,6 +62,11 @@ class RobustOCT:
 
         # Gurobi model
         self.model = Model('RobustOCT')
+
+        if not verbose:
+            # supress all logging
+            self.model.params.OutputFlag = 0 
+
         # The cuts we add in the callback function would be treated as lazy constraints
         self.model.params.LazyConstraints = 1
 
@@ -69,11 +74,10 @@ class RobustOCT:
         To compare all approaches in a fair setting we limit the solver to use only one thread to merely evaluate 
         the strength of the formulation.
         '''
-        # self.model.params.Threads = 1
-        self.model.params.TimeLimit = time_limit
+        if threads is not None:
+            self.model.params.Threads = threads
         
-        # NOTE - Should we allow users to suppress logging?
-        # self.model.params.OutputFlag = 0 # supress all logging
+        self.model.params.TimeLimit = time_limit
 
         '''
         The following variables are used for the Benders problem to keep track of the times we call the callback.
