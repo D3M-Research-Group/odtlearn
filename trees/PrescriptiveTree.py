@@ -26,7 +26,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
     """
     Parameters
     ----------
-    depth : int
+    depth : intClassifierMixin
         A parameter specifying the depth of the tree
     time_limit : int
         The given time limit for solving the MIP in seconds
@@ -73,7 +73,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
             self.X_col_labels = X.columns
             self.X_col_dtypes = X.dtypes
         else:
-            self.X_col_labels = np.arange(0, self.X.shape[1])
+            self.X_col_labels = np.arange(0, X.shape[1])
 
         self.treatments = np.unique(t)
 
@@ -133,18 +133,19 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         :param p: The value of decision variable p
         :return: The predicted value for all datapoints in dataset X
         """
-        predicted_values = np.array([])
+        predicted_values = []
         for i in range(X.shape[0]):
             current = 1
             while True:
                 pruned, branching, selected_feature, leaf, value = self.get_node_status(
-                    self.labels, self.X_predict_col_names, b, beta, p, current
+                    self.treatments, self.X_col_labels, b, beta, p, current
                 )
                 if leaf:
                     predicted_values.append(value)
+                    break
                 elif branching:
                     selected_feature_idx = np.where(
-                        self.X_predict_col_names == selected_feature
+                        self.X_col_labels == selected_feature
                     )
                     # Raise assertion error we don't have a column that matches
                     # the selected feature or more than one column that matches
@@ -191,8 +192,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
             # y_hat has to have as many columns as there are treatments
             assert(
                     y_hat.shape[1] == len(self.treatments)
-            ), f"Found counterfactual estimates for {y_hat.shape[1]} treatments. \
-            There are {len(self.treatments)} unique treatments in the data"
+            ), f"Found counterfactual estimates for {y_hat.shape[1]} treatments. There are {len(self.treatments)} unique treatments in the data"
 
             check_consistent_length(X, y_hat)
 
@@ -282,7 +282,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 y,
                 ipw,
                 self.treatments,
-                tree,
+                self.tree,
                 self.X_col_labels,
                 self.time_limit,
                 self.num_threads
@@ -297,8 +297,8 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 y_hat,
                 False,
                 self.treatments,
-                tree,
-                X_col_labels,
+                self.tree,
+                self.X_col_labels,
                 self.time_limit,
                 self.num_threads
             )
@@ -312,8 +312,8 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 y_hat,
                 True,
                 self.treatments,
-                tree,
-                X_col_labels,
+                self.tree,
+                self.X_col_labels,
                 self.time_limit,
                 self.num_threads
             )
