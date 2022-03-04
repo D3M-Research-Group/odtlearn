@@ -104,7 +104,7 @@
 
 
 <div class="viewcode-block" id="StrongTreeClassifier"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">StrongTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A classifier which uses StrongTrees</span>
+    <span class="sd">&quot;&quot;&quot;A StrongTree classifier.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -128,8 +128,12 @@
 <span class="sd">        The input passed during :meth:`fit`.</span>
 <span class="sd">    y_ : ndarray, shape (n_samples,)</span>
 <span class="sd">        The labels passed during :meth:`fit`.</span>
-<span class="sd">    classes_ : ndarray, shape (n_classes,)</span>
-<span class="sd">        The classes seen at :meth:`fit`.</span>
+<span class="sd">    tree : Tree</span>
+<span class="sd">    b_value : float</span>
+<span class="sd">    w_value : float</span>
+<span class="sd">    p_value : float</span>
+<span class="sd">    grb_model : gurobipy.Model</span>
+<span class="sd">        The fitted Gurobi model</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -261,7 +265,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="StrongTreeClassifier.predict"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;TO-DO: NEED DESCRIPTION OF METHOD HERE.</span>
+        <span class="sd">&quot;&quot;&quot;Classify test points using the StrongTree classifier</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

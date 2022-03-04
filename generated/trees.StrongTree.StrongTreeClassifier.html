@@ -101,7 +101,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="trees.StrongTree.StrongTreeClassifier">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">trees.StrongTree.</span></span><span class="sig-name descname"><span class="pre">StrongTreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benders_oct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>A classifier which uses StrongTrees</p>
+<dd><p>A StrongTree classifier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -136,7 +136,11 @@
 </dd>
 <dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The labels passed during <a class="reference internal" href="#trees.StrongTree.StrongTreeClassifier.fit" title="trees.StrongTree.StrongTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
 </dd>
-<dt><strong>classes_</strong><span class="classifier">ndarray, shape (n_classes,)</span></dt><dd><p>The classes seen at <a class="reference internal" href="#trees.StrongTree.StrongTreeClassifier.fit" title="trees.StrongTree.StrongTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+<dt><strong>tree</strong><span class="classifier">Tree</span></dt><dd></dd>
+<dt><strong>b_value</strong><span class="classifier">float</span></dt><dd></dd>
+<dt><strong>w_value</strong><span class="classifier">float</span></dt><dd></dd>
+<dt><strong>p_value</strong><span class="classifier">float</span></dt><dd></dd>
+<dt><strong>grb_model</strong><span class="classifier">gurobipy.Model</span></dt><dd><p>The fitted Gurobi model</p>
 </dd>
 </dl>
 </dd>
@@ -180,7 +184,7 @@ them into numpy arrays to work with the sklearn API</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.StrongTree.StrongTreeClassifier.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>TO-DO: NEED DESCRIPTION OF METHOD HERE.</p>
+<dd><p>Classify test points using the StrongTree classifier</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">

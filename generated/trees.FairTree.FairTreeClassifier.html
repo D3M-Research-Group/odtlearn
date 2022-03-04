@@ -101,7 +101,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">trees.FairTree.</span></span><span class="sig-name descname"><span class="pre">FairTreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">positive_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Description of this estimator here</p>
+<dd><p>A FairTree classifier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -134,6 +134,26 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 </pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X_</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>The input passed during <a class="reference internal" href="#trees.FairTree.FairTreeClassifier.fit" title="trees.FairTree.FairTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+</dd>
+<dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The labels passed during <a class="reference internal" href="#trees.FairTree.FairTreeClassifier.fit" title="trees.FairTree.FairTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+</dd>
+<dt><strong>p_</strong><span class="classifier">ndarray</span></dt><dd><p>The protected feature columns passed during :meth: <cite>fit</cite>.</p>
+</dd>
+<dt><strong>l_</strong><span class="classifier">ndarray</span></dt><dd><p>The legitimate factor column passed during :meth: <cite>fit</cite>.</p>
+</dd>
+<dt><strong>tree</strong><span class="classifier">Tree</span></dt><dd></dd>
+<dt><strong>b_value</strong><span class="classifier">float</span></dt><dd></dd>
+<dt><strong>w_value</strong><span class="classifier">float</span></dt><dd></dd>
+<dt><strong>p_value</strong><span class="classifier">float</span></dt><dd></dd>
+<dt><strong>grb_model</strong><span class="classifier">gurobipy.Model</span></dt><dd><p>The fitted Gurobi model.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">positive_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
@@ -265,7 +285,7 @@ The target values (class labels in classification).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>A reference implementation of a prediction for a classifier.</p>
+<dd><p>Classify test points using the FairTree classifier</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">

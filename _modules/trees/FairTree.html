@@ -103,7 +103,7 @@
 
 
 <div class="viewcode-block" id="FairTreeClassifier"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">FairTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Description of this estimator here</span>
+    <span class="sd">&quot;&quot;&quot;A FairTree classifier.</span>
 
 
 <span class="sd">    Parameters</span>
@@ -123,6 +123,22 @@
 <span class="sd">    fairness_bound: float (0,1], default=1</span>
 <span class="sd">        The bound of the fairnes constraint. The smaller the value the stricter the fairness constraint and 1 corresponds to no fairness at all</span>
 
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X_ : ndarray, shape (n_samples, n_features)</span>
+<span class="sd">        The input passed during :meth:`fit`.</span>
+<span class="sd">    y_ : ndarray, shape (n_samples,)</span>
+<span class="sd">        The labels passed during :meth:`fit`.</span>
+<span class="sd">    p_ : ndarray</span>
+<span class="sd">        The protected feature columns passed during :meth: `fit`.</span>
+<span class="sd">    l_ : ndarray</span>
+<span class="sd">        The legitimate factor column passed during :meth: `fit`.</span>
+<span class="sd">    tree : Tree</span>
+<span class="sd">    b_value : float</span>
+<span class="sd">    w_value : float</span>
+<span class="sd">    p_value : float</span>
+<span class="sd">    grb_model : gurobipy.Model</span>
+<span class="sd">        The fitted Gurobi model.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -265,7 +281,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FairTreeClassifier.predict"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A reference implementation of a prediction for a classifier.</span>
+        <span class="sd">&quot;&quot;&quot;Classify test points using the FairTree classifier</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
