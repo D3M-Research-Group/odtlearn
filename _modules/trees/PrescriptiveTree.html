@@ -125,7 +125,19 @@
 <span class="sd">    X_ : ndarray, shape (n_samples, n_features)</span>
 <span class="sd">        The input passed during :meth:`fit`.</span>
 <span class="sd">    y_ : ndarray, shape (n_samples,)</span>
-<span class="sd">        The labels passed during :meth:`fit`.</span>
+<span class="sd">        The observed outcomes passed during :meth:`fit`.</span>
+<span class="sd">    t_ : ndarray, shape (n_samples,)</span>
+<span class="sd">        The treatments passed during :meth: `fit`.</span>
+<span class="sd">    treatments : set, shape (n_treatments,)</span>
+<span class="sd">        The set of unique treatments seen at :meth:`fit`.</span>
+<span class="sd">    solving_time : float</span>
+<span class="sd">        The amount of time the mixed-integer program took to solve</span>
+<span class="sd">    b_value : nddict, shape (tree_internal_nodes, X_features)</span>
+<span class="sd">        The values of decision variable b -- the branching decisions of the tree</span>
+<span class="sd">    w_value : nddict, shape (tree_nodes, treatments_set)</span>
+<span class="sd">        The values of decision variable w -- the treatment decisions at the tree&#39;s nodes</span>
+<span class="sd">    p_value : nddict, shape (tree_nodes,)</span>
+<span class="sd">        The values of decision variable p -- whether or not a tree&#39;s nodes branch or assign treatment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PrescriptiveTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;IPW&quot;</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -159,7 +171,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X_col_dtypes</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">dtypes</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">treatments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
 
@@ -195,6 +207,7 @@
             <span class="n">y_hat</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">y_hat</span><span class="p">)</span>
 
             <span class="c1"># y_hat has to have as many columns as there are treatments</span>
+
             <span class="k">assert</span> <span class="n">y_hat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">treatments</span>
             <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Found counterfactual estimates for </span><span class="si">{</span><span class="n">y_hat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> treatments. </span><span class="se">\</span>

@@ -120,7 +120,19 @@ inverse propensity weighting, direct method, and doubly robust methods, respecti
 <dd class="field-even"><dl class="simple">
 <dt><strong>X_</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>The input passed during <a class="reference internal" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
 </dd>
-<dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The labels passed during <a class="reference internal" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+<dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The observed outcomes passed during <a class="reference internal" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+</dd>
+<dt><strong>t_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The treatments passed during :meth: <cite>fit</cite>.</p>
+</dd>
+<dt><strong>treatments</strong><span class="classifier">set, shape (n_treatments,)</span></dt><dd><p>The set of unique treatments seen at <a class="reference internal" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+</dd>
+<dt><strong>solving_time</strong><span class="classifier">float</span></dt><dd><p>The amount of time the mixed-integer program took to solve</p>
+</dd>
+<dt><strong>b_value</strong><span class="classifier">nddict, shape (tree_internal_nodes, X_features)</span></dt><dd><p>The values of decision variable b – the branching decisions of the tree</p>
+</dd>
+<dt><strong>w_value</strong><span class="classifier">nddict, shape (tree_nodes, treatments_set)</span></dt><dd><p>The values of decision variable w – the treatment decisions at the tree’s nodes</p>
+</dd>
+<dt><strong>p_value</strong><span class="classifier">nddict, shape (tree_nodes,)</span></dt><dd><p>The values of decision variable p – whether or not a tree’s nodes branch or assign treatment</p>
 </dd>
 </dl>
 </dd>
