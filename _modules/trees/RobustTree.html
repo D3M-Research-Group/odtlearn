@@ -99,10 +99,9 @@
 
 
 <div class="viewcode-block" id="RobustTreeClassifier"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">RobustTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;An example classifier which implements a 1-NN algorithm.</span>
-
-<span class="sd">    For more information regarding how to build your own classifier, read more</span>
-<span class="sd">    in the :ref:`User Guide &lt;user_guide&gt;`.</span>
+    <span class="sd">&quot;&quot;&quot;An optimal robust decision tree classifier, fitted on a given integer-valued</span>
+<span class="sd">    data set and a given cost-and-budget uncertainty set to produce a tree robust</span>
+<span class="sd">    against distribition shifts.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -110,20 +109,32 @@
 <span class="sd">        A parameter specifying the depth of the tree</span>
 <span class="sd">    time_limit : int, default=1800</span>
 <span class="sd">        The given time limit for solving the MIP in seconds</span>
+<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If not specified, </span>
+<span class="sd">        solver uses Gurobi&#39;s default number of threads</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    X_ : ndarray, shape (n_samples, n_features)</span>
+<span class="sd">    X_ : array-like, shape (n_samples, n_features)</span>
 <span class="sd">        The input passed during :meth:`fit`.</span>
-<span class="sd">    y_ : ndarray, shape (n_samples,)</span>
+<span class="sd">    y_ : array-like, shape (n_samples,)</span>
 <span class="sd">        The labels passed during :meth:`fit`.</span>
 <span class="sd">    classes_ : ndarray, shape (n_classes,)</span>
 <span class="sd">        The classes seen at :meth:`fit`.</span>
+<span class="sd">    costs : pandas.DataFrame, shape (n_samples, n_features)</span>
+<span class="sd">        The uncertainty costs used during fitting</span>
+<span class="sd">    budget : float</span>
+<span class="sd">        The uncertainty budget used during fitting</span>
+<span class="sd">    model : gurobipy.Model</span>
+<span class="sd">        The trained Gurobi model, with solver information and</span>
+<span class="sd">        decision variable information (`b` for branching variables,</span>
+<span class="sd">        `w` for assignment variables)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="RobustTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">1800</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">1800</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">num_threads</span></div>
 
 <div class="viewcode-block" id="RobustTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;A function for extracting metadata from the inputs before converting</span>
@@ -140,9 +151,12 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        
+        <span class="c1"># Strip indices in training data into integers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RobustTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">budget</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;A reference implementation of a fitting function for a classifier.</span>
 
 <span class="sd">        Parameters</span>
@@ -151,10 +165,12 @@
 <span class="sd">            The training input samples.</span>
 <span class="sd">        y : array-like, shape (n_samples,)</span>
 <span class="sd">            The target values. An array of int.</span>
-<span class="sd">        costs: array-like, shape (n_samples, n_features)</span>
+<span class="sd">        costs : array-like, shape (n_samples, n_features), default = budget + 1</span>
 <span class="sd">            The costs of uncertainty</span>
-<span class="sd">        budget: float</span>
+<span class="sd">        budget : float, default = -1</span>
 <span class="sd">            The budget of uncertainty</span>
+<span class="sd">        verbose : bool, default = True</span>
+<span class="sd">            Flag for logging Gurobi outputs</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -175,8 +191,14 @@
         <span class="c1"># Set default for costs of uncertainty if needed</span>
         <span class="k">if</span> <span class="n">costs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">costs</span> <span class="o">=</span> <span class="n">check_same_as_X</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="s2">&quot;Uncertainty costs&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">costs</span><span class="p">,</span> <span class="s2">&quot;uncertainty costs&quot;</span>
             <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">costs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="c1"># Also check if indices are the same</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input covariates has </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> samples, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;but uncertainty costs has </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># By default, set costs to be budget + 1 (i.e. no uncertainty)</span>
             <span class="n">gammas_df</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
@@ -185,8 +207,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">costs</span> <span class="o">=</span> <span class="n">gammas_df</span>
 
         <span class="c1"># Budget of uncertainty</span>
-        <span class="k">if</span> <span class="n">budget</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Budget of uncertainty must be nonnegative&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">budget</span> <span class="o">=</span> <span class="n">budget</span>
 
         <span class="c1"># Code for setting up and running the MIP goes here.</span>
@@ -198,9 +218,11 @@
             <span class="n">tree</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">threads</span><span class="p">,</span>
+            <span class="n">verbose</span>
         <span class="p">)</span>
         <span class="n">master</span><span class="o">.</span><span class="n">create_master_problem</span><span class="p">()</span>
         <span class="n">master</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
@@ -257,7 +279,7 @@
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">])</span>
 
         <span class="c1"># Convert to dataframe</span>
-        <span class="n">df_test</span> <span class="o">=</span> <span class="n">check_same_as_X</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">&quot;Test covariates&quot;</span><span class="p">)</span>
+        <span class="n">df_test</span> <span class="o">=</span> <span class="n">check_same_as_X</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">&quot;test covariates&quot;</span><span class="p">)</span>
         <span class="n">check_integer</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_prediction</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span></div></div>

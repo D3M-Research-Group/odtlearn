@@ -100,10 +100,10 @@
 <h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.RobustTree</span></code>.RobustTreeClassifier<a class="headerlink" href="#trees-robusttree-robusttreeclassifier" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="trees.RobustTree.RobustTreeClassifier">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">trees.RobustTree.</span></span><span class="sig-name descname"><span class="pre">RobustTreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1800</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>An example classifier which implements a 1-NN algorithm.</p>
-<p>For more information regarding how to build your own classifier, read more
-in the <a class="reference internal" href="../user_guide.html#user-guide"><span class="std std-ref">User Guide</span></a>.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">trees.RobustTree.</span></span><span class="sig-name descname"><span class="pre">RobustTreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1800</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>An optimal robust decision tree classifier, fitted on a given integer-valued
+data set and a given cost-and-budget uncertainty set to produce a tree robust
+against distribition shifts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -111,22 +111,33 @@ in the <a class="reference internal" href="../user_guide.html#user-guide"><span 
 </dd>
 <dt><strong>time_limit</strong><span class="classifier">int, default=1800</span></dt><dd><p>The given time limit for solving the MIP in seconds</p>
 </dd>
+<dt><strong>num_threads: int, default=None</strong></dt><dd><p>The number of threads the solver should use. If not specified, 
+solver uses Gurobi’s default number of threads</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-even">Attributes</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>X_</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>The input passed during <a class="reference internal" href="#trees.RobustTree.RobustTreeClassifier.fit" title="trees.RobustTree.RobustTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+<dt><strong>X_</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input passed during <a class="reference internal" href="#trees.RobustTree.RobustTreeClassifier.fit" title="trees.RobustTree.RobustTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
 </dd>
-<dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The labels passed during <a class="reference internal" href="#trees.RobustTree.RobustTreeClassifier.fit" title="trees.RobustTree.RobustTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+<dt><strong>y_</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The labels passed during <a class="reference internal" href="#trees.RobustTree.RobustTreeClassifier.fit" title="trees.RobustTree.RobustTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
 </dd>
 <dt><strong>classes_</strong><span class="classifier">ndarray, shape (n_classes,)</span></dt><dd><p>The classes seen at <a class="reference internal" href="#trees.RobustTree.RobustTreeClassifier.fit" title="trees.RobustTree.RobustTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
+</dd>
+<dt><strong>costs</strong><span class="classifier">pandas.DataFrame, shape (n_samples, n_features)</span></dt><dd><p>The uncertainty costs used during fitting</p>
+</dd>
+<dt><strong>budget</strong><span class="classifier">float</span></dt><dd><p>The uncertainty budget used during fitting</p>
+</dd>
+<dt><strong>model</strong><span class="classifier">gurobipy.Model</span></dt><dd><p>The trained Gurobi model, with solver information and
+decision variable information (<cite>b</cite> for branching variables,
+<cite>w</cite> for assignment variables)</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.RobustTree.RobustTreeClassifier.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1800</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1800</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -138,7 +149,7 @@ them into numpy arrays to work with the sklearn API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.RobustTree.RobustTreeClassifier.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>A reference implementation of a fitting function for a classifier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -147,9 +158,11 @@ them into numpy arrays to work with the sklearn API</p>
 </dd>
 <dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The target values. An array of int.</p>
 </dd>
-<dt><strong>costs: array-like, shape (n_samples, n_features)</strong></dt><dd><p>The costs of uncertainty</p>
+<dt><strong>costs</strong><span class="classifier">array-like, shape (n_samples, n_features), default = budget + 1</span></dt><dd><p>The costs of uncertainty</p>
 </dd>
-<dt><strong>budget: float</strong></dt><dd><p>The budget of uncertainty</p>
+<dt><strong>budget</strong><span class="classifier">float, default = -1</span></dt><dd><p>The budget of uncertainty</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool, default = True</span></dt><dd><p>Flag for logging Gurobi outputs</p>
 </dd>
 </dl>
 </dd>
