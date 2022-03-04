@@ -17,8 +17,9 @@ This site contains the documentation for the tree package.
    :hidden:
    :caption: Documentation
 
-   user_guide
    api
+   user_guide
+   
 
 .. toctree::
    :maxdepth: 2
