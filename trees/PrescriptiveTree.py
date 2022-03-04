@@ -26,7 +26,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
     """
     Parameters
     ----------
-    depth : intClassifierMixin
+    depth : int
         A parameter specifying the depth of the tree
     time_limit : int
         The given time limit for solving the MIP in seconds
@@ -41,9 +41,19 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
     X_ : ndarray, shape (n_samples, n_features)
         The input passed during :meth:`fit`.
     y_ : ndarray, shape (n_samples,)
-        The labels passed during :meth:`fit`.
-    classes_ : ndarray, shape (n_classes,)
-        The classes seen at :meth:`fit`.
+        The observed outcomes passed during :meth:`fit`.
+    t_ : ndarray, shape (n_samples,)
+        The treatments passed during :meth: `fit`.
+    treatments : set, shape (n_treatments,)
+        The set of unique treatments seen at :meth:`fit`.
+    solving_time : float
+        The amount of time the mixed-integer program took to solve
+    b_value : nddict, shape (tree_internal_nodes, X_features)
+        The values of decision variable b -- the branching decisions of the tree
+    w_value : nddict, shape (tree_nodes, treatments_set)
+        The values of decision variable w -- the treatment decisions at the tree's nodes
+    p_value : nddict, shape (tree_nodes,)
+        The values of decision variable p -- whether or not a tree's nodes branch or assign treatment
     """
 
     def __init__(self, depth, time_limit, method='IPW', num_threads=None):
