@@ -2,14 +2,14 @@ import pytest
 
 from sklearn.utils.estimator_checks import check_estimator
 
-from StrongTrees import StrongTreeEstimator
-from StrongTrees import StrongTreeClassifier
-from StrongTrees import StrongTreeTransformer
+from trees.StrongTree import StrongTreeClassifier
+from trees.FairTree import FairTreeClassifier
+from trees.RobustTree import RobustTreeClassifier
+from trees.PrescriptiveTree import PrescriptiveTreeClassifier
 
 
 @pytest.mark.parametrize(
-    "estimator",
-    [StrongTreeEstimator(), StrongTreeTransformer(), StrongTreeClassifier()]
+    "estimator", [StrongTreeClassifier(depth=1, time_limit=1, _lambda=0.8)]
 )
 def test_all_estimators(estimator):
     return check_estimator(estimator)

@@ -1,17 +1,7 @@
 import pytest
 import numpy as np
 import pandas as pd
-
-from sklearn.datasets import load_iris
-from numpy.testing import assert_array_equal
-from numpy.testing import assert_allclose
-
 from trees.StrongTree import StrongTreeClassifier
-
-
-@pytest.fixture
-def data():
-    return load_iris(return_X_y=True)
 
 
 # Test that we raise a ValueError if X matrix has values other than zero or one
@@ -51,13 +41,18 @@ def test_StrongTree_X_data_shape_error():
         clf.fit(X, y_diff_size)
 
 
+@pytest.mark.test_gurobi
 # Test that if we are given a pandas dataframe, we keep the original data and its labels
 def test_StrongTree_classifier():
-    X = np.random.randint(2, size=(10, 3))
-    y = np.random.randint(2, size=X.shape[0])
-    clf = StrongTreeClassifier(depth=1, time_limit=2, _lambda=1)
+    train = pd.DataFrame(
+        {"x1": [1, 0, 0, 0, 1], "x2": [1, 1, 1, 0, 1], "y": [1, 1, 0, 0, 0]},
+        index=["A", "B", "C", "D", "E"],
+    )
+    y = train.pop("y")
+    test = pd.DataFrame({"x1": [1, 1, 0, 0, 1], "x2": [1, 1, 1, 0, 1]})
+    clf = StrongTreeClassifier(depth=1, time_limit=20, _lambda=0.2)
 
-    clf.fit(X, y)
+    clf.fit(train, y)
     # Test that after running the fit method we have b, w, and p
     assert hasattr(clf, "X_")
     assert hasattr(clf, "y_")
@@ -65,10 +60,11 @@ def test_StrongTree_classifier():
     assert hasattr(clf, "w_value")
     assert hasattr(clf, "p_value")
 
-    y_pred = clf.predict(X)
-    assert y_pred.shape == (X.shape[0],)
+    y_pred = clf.predict(test)
+    assert y_pred.shape == (train.shape[0],)
 
 
+# @pytest.mark.test_gurobi
 # # Test that on toy data we get the same predictions as our replication code
 # def test_StrongTree_same_predictions(data):
 #     predictions = []  # toy data predictions
