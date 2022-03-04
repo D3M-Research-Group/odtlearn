@@ -4,7 +4,7 @@ A package for tree-based statistical estimation and inference. Trees provides im
 
 ## Documentation
 
-The [package documentation](https://patrickvossler18.github.io/decision_tree_estimators/index.html) contains usage examples and method reference.
+The [package documentation](https://d3m-research-group.github.io/decision_tree_estimators/index.html) contains usage examples and method reference.
 
 ## Installation
 
