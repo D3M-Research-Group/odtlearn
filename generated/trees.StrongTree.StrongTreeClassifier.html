@@ -100,8 +100,8 @@
 <h1><a class="reference internal" href="trees.StrongTree.html#trees.StrongTree" title="trees.StrongTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.StrongTree</span></code></a>.StrongTreeClassifier<a class="headerlink" href="#trees-strongtree-strongtreeclassifier" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="trees.StrongTree.StrongTreeClassifier">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">trees.StrongTree.</span></span><span class="sig-name descname"><span class="pre">StrongTreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benders_oct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>TO-DO: NEED DESCRIPTION OF THE CLASS HERE.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">trees.StrongTree.</span></span><span class="sig-name descname"><span class="pre">StrongTreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benders_oct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>A classifier which uses StrongTrees</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -111,7 +111,11 @@
 </dd>
 <dt><strong>_lambda</strong><span class="classifier">int</span></dt><dd><p>The regularization parameter in the objective</p>
 </dd>
-<dt><strong>num_threads: int, default=1</strong></dt><dd><p>The number of threads the solver should use</p>
+<dt><strong>benders_oct: bool, default=False</strong></dt><dd><p>Use benders problem formulation.</p>
+</dd>
+<dt><strong>obj_mode: str, default=”acc”</strong></dt><dd><p>Set objective priority. If “acc”, maximize the accuracy, if “balance” maximize the balanced accuracy</p>
+</dd>
+<dt><strong>num_threads: int, default=None</strong></dt><dd><p>The number of threads the solver should use. If no argument is supplied, Gurobi will use all available threads.</p>
 </dd>
 </dl>
 </dd>
@@ -139,7 +143,7 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.StrongTree.StrongTreeClassifier.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benders_oct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">benders_oct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -151,14 +155,16 @@ them into numpy arrays to work with the sklearn API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.StrongTree.StrongTreeClassifier.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>TO-DO: NEED DESCRIPTION OF METHOD HERE.</p>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/StrongTree.html#StrongTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.StrongTree.StrongTreeClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a StrongTree using the supplied data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The training input samples.</p>
 </dd>
 <dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The target values. An array of int.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool, default = True</span></dt><dd><p>Flag for logging Gurobi outputs</p>
 </dd>
 </dl>
 </dd>

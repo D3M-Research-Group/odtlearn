@@ -104,7 +104,7 @@
 
 
 <div class="viewcode-block" id="StrongTreeClassifier"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">StrongTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;TO-DO: NEED DESCRIPTION OF THE CLASS HERE.</span>
+    <span class="sd">&quot;&quot;&quot;A classifier which uses StrongTrees</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -114,8 +114,13 @@
 <span class="sd">        The given time limit for solving the MIP in seconds</span>
 <span class="sd">    _lambda : int</span>
 <span class="sd">        The regularization parameter in the objective</span>
-<span class="sd">    num_threads: int, default=1</span>
-<span class="sd">        The number of threads the solver should use</span>
+<span class="sd">    benders_oct: bool, default=False</span>
+<span class="sd">        Use benders problem formulation.</span>
+<span class="sd">    obj_mode: str, default=&quot;acc&quot;</span>
+<span class="sd">        Set objective priority. If &quot;acc&quot;, maximize the accuracy, if &quot;balance&quot; maximize the balanced accuracy</span>
+<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If no argument is supplied, Gurobi will use all available threads.</span>
+
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -143,8 +148,8 @@
         <span class="n">time_limit</span><span class="p">,</span>
         <span class="n">_lambda</span><span class="p">,</span>
         <span class="n">benders_oct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="c1"># this is where we will initialize the values we want users to provide</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
@@ -171,8 +176,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="StrongTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;TO-DO: NEED DESCRIPTION OF METHOD HERE.</span>
+<div class="viewcode-block" id="StrongTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit a StrongTree using the supplied data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -180,6 +185,8 @@
 <span class="sd">            The training input samples.</span>
 <span class="sd">        y : array-like, shape (n_samples,)</span>
 <span class="sd">            The target values. An array of int.</span>
+<span class="sd">        verbose : bool, default = True</span>
+<span class="sd">            Flag for logging Gurobi outputs</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -219,6 +226,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span><span class="p">,</span>
+                <span class="n">verbose</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_main_problem</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
@@ -234,6 +242,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span><span class="p">,</span>
+                <span class="n">verbose</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_primal_problem</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>

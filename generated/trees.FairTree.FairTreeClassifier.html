@@ -148,7 +148,7 @@ them into numpy arrays to work with the sklearn API</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>A reference implementation of a fitting function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -160,6 +160,8 @@ them into numpy arrays to work with the sklearn API</p>
 <dt><strong>P</strong><span class="classifier">array-like, shape (n_samples,1) or (n_samples, n_p)</span></dt><dd><p>The protected feature columns (Race, gender, etc); We could have one or more columns</p>
 </dd>
 <dt><strong>l</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The legitimate factor column(e.g., prior number of criminal acts)</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool, default = True</span></dt><dd><p>Flag for logging Gurobi outputs</p>
 </dd>
 </dl>
 </dd>
@@ -175,7 +177,7 @@ them into numpy arrays to work with the sklearn API</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.get_CSP">
 <span class="sig-name descname"><span class="pre">get_CSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_CSP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_CSP" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns the conditional statistical parity value for any given 
+<dd><p>This function returns the conditional statistical parity value for any given
 protected level, legitimate feature value and outcome value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -198,7 +200,7 @@ and t is an outcome value and l is the value of the legitimate feature</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.get_CondEqOdds">
 <span class="sig-name descname"><span class="pre">get_CondEqOdds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_CondEqOdds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_CondEqOdds" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns the conditional false negative and true positive rate value 
+<dd><p>This function returns the conditional false negative and true positive rate value
 for any given protected level, outcome value, prediction value and legitimate feature value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -222,7 +224,7 @@ The predicted values (class labels in classification).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="trees.FairTree.FairTreeClassifier.get_EqOdds">
 <span class="sig-name descname"><span class="pre">get_EqOdds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/FairTree.html#FairTreeClassifier.get_EqOdds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.FairTree.FairTreeClassifier.get_EqOdds" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns the false negative and true positive rate value 
+<dd><p>This function returns the false negative and true positive rate value
 for any given protected level, outcome value and prediction value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
