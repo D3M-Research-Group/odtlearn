@@ -18,7 +18,7 @@ from trees.utils.StrongTreeBendersOCT import BendersOCT
 
 
 class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
-    """A classifier which uses StrongTrees
+    """A StrongTree classifier.
 
     Parameters
     ----------
@@ -42,8 +42,12 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The input passed during :meth:`fit`.
     y_ : ndarray, shape (n_samples,)
         The labels passed during :meth:`fit`.
-    classes_ : ndarray, shape (n_classes,)
-        The classes seen at :meth:`fit`.
+    tree : Tree
+    b_value : float
+    w_value : float
+    p_value : float
+    grb_model : gurobipy.Model
+        The fitted Gurobi model
 
     Examples
     --------
@@ -175,7 +179,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         return self
 
     def predict(self, X):
-        """TO-DO: NEED DESCRIPTION OF METHOD HERE.
+        """Classify test points using the StrongTree classifier
 
         Parameters
         ----------

@@ -17,7 +17,7 @@ from itertools import combinations
 
 
 class FairTreeClassifier(ClassifierMixin, BaseEstimator):
-    """Description of this estimator here
+    """A FairTree classifier.
 
 
     Parameters
@@ -37,6 +37,22 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
     fairness_bound: float (0,1], default=1
         The bound of the fairnes constraint. The smaller the value the stricter the fairness constraint and 1 corresponds to no fairness at all
 
+    Attributes
+    ----------
+    X_ : ndarray, shape (n_samples, n_features)
+        The input passed during :meth:`fit`.
+    y_ : ndarray, shape (n_samples,)
+        The labels passed during :meth:`fit`.
+    p_ : ndarray
+        The protected feature columns passed during :meth: `fit`.
+    l_ : ndarray
+        The legitimate factor column passed during :meth: `fit`.
+    tree : Tree
+    b_value : float
+    w_value : float
+    p_value : float
+    grb_model : gurobipy.Model
+        The fitted Gurobi model.
 
     Examples
     --------
@@ -179,7 +195,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         return self
 
     def predict(self, X):
-        """A reference implementation of a prediction for a classifier.
+        """Classify test points using the FairTree classifier
 
         Parameters
         ----------
