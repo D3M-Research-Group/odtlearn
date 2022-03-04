@@ -8,6 +8,7 @@ from trees.RobustTree import RobustTreeClassifier
 from trees.PrescriptiveTree import PrescriptiveTreeClassifier
 
 
+@pytest.mark.skip()
 @pytest.mark.parametrize(
     "estimator", [StrongTreeClassifier(depth=1, time_limit=1, _lambda=0.8)]
 )
