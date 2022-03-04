@@ -32,16 +32,17 @@ This site contains the documentation for the tree package.
 
 Information how to install and use this package.
 
+`API Documentation <api.html>`_
+-------------------------------
+
+API documentation for the package.
+
 
 `User Guide <user_guide.html>`_
 -------------------------------
 
 Example usage of each of the different types of tree methods.
 
-`API Documentation <api.html>`_
--------------------------------
-
-API documentation for the package.
 
 `Examples <auto_examples/index.html>`_
 --------------------------------------
