@@ -13,10 +13,9 @@ import time
 
 
 class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
-    """An example classifier which implements a 1-NN algorithm.
-
-    For more information regarding how to build your own classifier, read more
-    in the :ref:`User Guide <user_guide>`.
+    """An optimal robust decision tree classifier, fitted on a given integer-valued
+    data set and a given cost-and-budget uncertainty set to produce a tree robust
+    against distribition shifts.
 
     Parameters
     ----------
@@ -24,20 +23,32 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         A parameter specifying the depth of the tree
     time_limit : int, default=1800
         The given time limit for solving the MIP in seconds
+    num_threads: int, default=None
+        The number of threads the solver should use. If not specified, 
+        solver uses Gurobi's default number of threads
 
     Attributes
     ----------
-    X_ : ndarray, shape (n_samples, n_features)
+    X_ : array-like, shape (n_samples, n_features)
         The input passed during :meth:`fit`.
-    y_ : ndarray, shape (n_samples,)
+    y_ : array-like, shape (n_samples,)
         The labels passed during :meth:`fit`.
     classes_ : ndarray, shape (n_classes,)
         The classes seen at :meth:`fit`.
+    costs : pandas.DataFrame, shape (n_samples, n_features)
+        The uncertainty costs used during fitting
+    budget : float
+        The uncertainty budget used during fitting
+    model : gurobipy.Model
+        The trained Gurobi model, with solver information and
+        decision variable information (`b` for branching variables,
+        `w` for assignment variables)
     """
 
-    def __init__(self, depth=1, time_limit=1800):
+    def __init__(self, depth=1, time_limit=1800, num_threads=None):
         self.depth = depth
         self.time_limit = time_limit
+        self.threads = num_threads
 
     def extract_metadata(self, X, y):
         """A function for extracting metadata from the inputs before converting
@@ -55,8 +66,11 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             self.y = y.values
         else:
             self.y = y
+        
+        # Strip indices in training data into integers
+        self.X.set_index(pd.Index(range(X.shape[0])), inplace=True)
 
-    def fit(self, X, y, costs=None, budget=0):
+    def fit(self, X, y, costs=None, budget=-1, verbose=True):
         """A reference implementation of a fitting function for a classifier.
 
         Parameters
@@ -65,10 +79,12 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             The training input samples.
         y : array-like, shape (n_samples,)
             The target values. An array of int.
-        costs: array-like, shape (n_samples, n_features)
+        costs : array-like, shape (n_samples, n_features), default = budget + 1
             The costs of uncertainty
-        budget: float
+        budget : float, default = -1
             The budget of uncertainty
+        verbose : bool, default = True
+            Flag for logging Gurobi outputs
 
         Returns
         -------
@@ -89,8 +105,14 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         # Set default for costs of uncertainty if needed
         if costs is not None:
             self.costs = check_same_as_X(
-                self.X, self.X_col_labels, costs, "Uncertainty costs"
+                self.X, self.X_col_labels, costs, "uncertainty costs"
             )
+            self.costs.set_index(pd.Index(range(costs.shape[0])), inplace=True)
+            # Also check if indices are the same
+            if self.X.shape[0] != self.costs.shape[0]:
+                raise ValueError(
+                    (f"Input covariates has {self.X.shape[0]} samples, "
+                    f"but uncertainty costs has {self.costs.shape[0]}"))
         else:
             # By default, set costs to be budget + 1 (i.e. no uncertainty)
             gammas_df = deepcopy(self.X).astype("float")
@@ -99,8 +121,6 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             self.costs = gammas_df
 
         # Budget of uncertainty
-        if budget < 0:
-            raise ValueError("Budget of uncertainty must be nonnegative")
         self.budget = budget
 
         # Code for setting up and running the MIP goes here.
@@ -112,9 +132,11 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             tree,
             self.X_col_labels,
             self.classes_,
-            self.time_limit,
             self.costs,
             self.budget,
+            self.time_limit,
+            self.threads,
+            verbose
         )
         master.create_master_problem()
         master.model.update()
@@ -171,7 +193,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         check_is_fitted(self, ["model"])
 
         # Convert to dataframe
-        df_test = check_same_as_X(self.X, self.X_col_labels, X, "Test covariates")
+        df_test = check_same_as_X(self.X, self.X_col_labels, X, "test covariates")
         check_integer(df_test)
 
         return self.get_prediction(df_test)

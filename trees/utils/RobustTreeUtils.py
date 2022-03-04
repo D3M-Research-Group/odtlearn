@@ -11,23 +11,23 @@ def check_integer(df):
         raise ValueError("Found non-integer values.")
 
 def check_same_as_X(X, X_col_labels, G, G_label):
-    """ Check if a DataFrame G has the shape & columns of X """
+    """ Check if a DataFrame G has the columns of X """
     # Check if X has shape of G
-    if X.shape != G.shape:
+    if X.shape[1] != G.shape[1]:
         raise ValueError(
-            f"Input covariates have shape ({X.shape}) but {G_label} have shape ({G.shape})")
+            f"Input covariates has {X.shape[1]} columns but {G_label} has {G.shape[1]} columns")
     
     # Check if X has same columns as G
     if isinstance(G, pd.DataFrame):
         if not np.array_equal(np.sort(X_col_labels), np.sort(G.columns)):
-            raise ValueError(
+            raise KeyError(
                 f"{G_label} should have the same columns as the input covariates")
         return G
     else:
         # Check if X has default column labels or not
         if not np.array_equal(X_col_labels, np.arange(0, G.shape[1])):
-            raise ValueError(
-                f"{G_label} should be a Pandas dataframe with the same columns as the input covariates")
+            raise TypeError(
+                f"{G_label} should be a Pandas DataFrame with the same columns as the input covariates")
         return pd.DataFrame(X, np.arange(0, G.shape[1]))
 
 def print_tree(master, b, w):
