@@ -39,7 +39,19 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
     X_ : ndarray, shape (n_samples, n_features)
         The input passed during :meth:`fit`.
     y_ : ndarray, shape (n_samples,)
-        The labels passed during :meth:`fit`.
+        The observed outcomes passed during :meth:`fit`.
+    t_ : ndarray, shape (n_samples,)
+        The treatments passed during :meth: `fit`.
+    treatments : set, shape (n_treatments,)
+        The set of unique treatments seen at :meth:`fit`.
+    solving_time : float
+        The amount of time the mixed-integer program took to solve
+    b_value : nddict, shape (tree_internal_nodes, X_features)
+        The values of decision variable b -- the branching decisions of the tree
+    w_value : nddict, shape (tree_nodes, treatments_set)
+        The values of decision variable w -- the treatment decisions at the tree's nodes
+    p_value : nddict, shape (tree_nodes,)
+        The values of decision variable p -- whether or not a tree's nodes branch or assign treatment
     """
 
     def __init__(self, depth, time_limit, method="IPW", num_threads=None):
@@ -73,7 +85,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
             self.X_col_labels = X.columns
             self.X_col_dtypes = X.dtypes
         else:
-            self.X_col_labels = np.arange(0, self.X.shape[1])
+            self.X_col_labels = np.arange(0, X.shape[1])
 
         self.treatments = np.unique(t)
 
@@ -109,6 +121,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
             y_hat = check_array(y_hat)
 
             # y_hat has to have as many columns as there are treatments
+
             assert y_hat.shape[1] == len(
                 self.treatments
             ), f"Found counterfactual estimates for {y_hat.shape[1]} treatments. \
