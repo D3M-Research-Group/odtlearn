@@ -1,13 +1,9 @@
-.. project-template documentation master file, created by
-   sphinx-quickstart on Mon Jan 18 14:44:12 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. tree documentation master file
 
-Welcome to sklearn-template's documentation!
+Welcome to tree's documentation!
 ============================================
 
-This project is a reference implementation to anyone who wishes to develop
-scikit-learn compatible classes.
+This site contains the documentation for the tree package.
 
 .. toctree::
    :maxdepth: 2
@@ -34,17 +30,18 @@ scikit-learn compatible classes.
 `Getting started <quick_start.html>`_
 -------------------------------------
 
-Information regarding this template and how to modify it for your own project.
+Information how to install and use this package.
+
 
 `User Guide <user_guide.html>`_
 -------------------------------
 
-An example of narrative documentation.
+Example usage of each of the different types of tree methods.
 
 `API Documentation <api.html>`_
 -------------------------------
 
-An example of API documentation.
+API documentation for the package.
 
 `Examples <auto_examples/index.html>`_
 --------------------------------------

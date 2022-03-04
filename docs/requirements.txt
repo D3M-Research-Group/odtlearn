@@ -1,0 +1,13 @@
+sphinx-gallery
+sphinx-rtd-theme
+sphinxawesome-theme
+numpydoc
+pillow
+numpy
+pandas
+scikit-learn
+gurobipy
+myst_parser
+sphinx-prompt
+sphinx-copybutton
+sphinx-toggleprompt

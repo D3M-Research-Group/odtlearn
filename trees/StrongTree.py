@@ -8,6 +8,7 @@ from trees.utils.StrongTreeUtils import (
     check_columns_match,
     check_binary,
     benders_callback,
+    get_predicted_value,
 )
 
 # Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
@@ -17,7 +18,7 @@ from trees.utils.StrongTreeBendersOCT import BendersOCT
 
 
 class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
-    """
+    """A StrongTree classifier.
 
     Parameters
     ----------
@@ -27,8 +28,13 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The given time limit for solving the MIP in seconds
     _lambda : int
         The regularization parameter in the objective
-    num_threads: int, default=1
-        The number of threads the solver should use
+    benders_oct: bool, default=False
+        Use benders problem formulation.
+    obj_mode: str, default="acc"
+        Set objective priority. If "acc", maximize the accuracy, if "balance" maximize the balanced accuracy
+    num_threads: int, default=None
+        The number of threads the solver should use. If no argument is supplied, Gurobi will use all available threads.
+
 
     Attributes
     ----------
@@ -36,18 +42,40 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The input passed during :meth:`fit`.
     y_ : ndarray, shape (n_samples,)
         The labels passed during :meth:`fit`.
-    classes_ : ndarray, shape (n_classes,)
-        The classes seen at :meth:`fit`.
+    tree : Tree
+    b_value : float
+    w_value : float
+    p_value : float
+    grb_model : gurobipy.Model
+        The fitted Gurobi model
+
+    Examples
+    --------
+    >>> from trees.StrongTree import StrongTreeClassifier
+    >>> import numpy as np
+    >>> X = np.arange(100).reshape(100, 1)
+    >>> y = np.random.randint(2, size=100)
+    >>> stcl = StrongTreeClassifier(depth = 1, _lambda = 0, time_limit = 10, num_threads = 1)
+    >>> stcl.fit(X, y)
+
     """
 
-    def __init__(self, depth, time_limit, _lambda, benders_oct=False, num_threads=1):
+    def __init__(
+        self,
+        depth,
+        time_limit,
+        _lambda,
+        benders_oct=False,
+        obj_mode="acc",
+        num_threads=None,
+    ):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit
         self._lambda = _lambda
         self.num_threads = num_threads
-        self.mode = "classification"
         self.benders_oct = benders_oct
+        self.obj_mode = obj_mode  # if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
 
         self.X_col_labels = None
         self.X_col_dtypes = None
@@ -62,94 +90,12 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             self.X_col_labels = X.columns
             self.X_col_dtypes = X.dtypes
         else:
-            self.X_col_labels = np.arange(0, self.X.shape[1])
+            self.X_col_labels = np.arange(0, X.shape[1])
 
         self.labels = np.unique(y)
 
-    def get_node_status(self, labels, column_names, b, beta, p, n):
-        """
-        This function give the status of a given node in a tree. By status we mean whether the node
-            1- is pruned? i.e., we have made a prediction at one of its ancestors
-            2- is a branching node? If yes, what feature do we branch on
-            3- is a leaf? If yes, what is the prediction at this node?
-        :param labels: the unique values of the response variable y
-        :param column_names: the column names of the data set X
-        :param b: The values of branching decision variable b
-        :param beta: The values of prediction decision variable beta
-        :param p: The values of decision variable p
-        :param n: A valid node index in the tree
-        :return: pruned, branching, selected_feature, leaf, value
-        pruned=1 iff the node is pruned
-        branching = 1 iff the node branches at some feature f
-        selected_feature: The feature that the node branch on
-        leaf = 1 iff node n is a leaf in the tree
-        value: if node n is a leaf, value represent the prediction at this node
-        """
-
-        pruned = False
-        branching = False
-        leaf = False
-        value = None
-        selected_feature = None
-
-        p_sum = 0
-        for m in self.tree.get_ancestors(n):
-            p_sum = p_sum + p[m]
-        if p[n] > 0.5:  # leaf
-            leaf = True
-            if self.mode == "regression":
-                value = beta[n, 1]
-            elif self.mode == "classification":
-                for k in labels:
-                    if beta[n, k] > 0.5:
-                        value = k
-        elif p_sum == 1:  # Pruned
-            pruned = True
-
-        if n in self.tree.Nodes:
-            if (pruned is False) and (leaf is False):  # branching
-                for f in column_names:
-                    if b[n, f] > 0.5:
-                        selected_feature = f
-                        branching = True
-
-        return pruned, branching, selected_feature, leaf, value
-
-    def get_predicted_value(self, X, b, beta, p):
-        """
-        This function returns the predicted value for a given datapoint
-        :param X: The dataset we want to compute accuracy for
-        :param b: The value of decision variable b
-        :param beta: The value of decision variable beta
-        :param p: The value of decision variable p
-        :return: The predicted value for all datapoints in dataset X
-        """
-        predicted_values = np.array([])
-        for i in range(X.shape[0]):
-            current = 1
-            while True:
-                pruned, branching, selected_feature, leaf, value = self.get_node_status(
-                    self.labels, self.X_predict_col_names, b, beta, p, current
-                )
-                if leaf:
-                    predicted_values.append(value)
-                elif branching:
-                    selected_feature_idx = np.where(
-                        self.X_predict_col_names == selected_feature
-                    )
-                    # Raise assertion error we don't have a column that matches
-                    # the selected feature or more than one column that matches
-                    assert (
-                        len(selected_feature_idx) == 1
-                    ), f"Found {len(selected_feature_idx)} columns matching the selected feature {selected_feature}"
-                    if X[i, selected_feature_idx] == 1:  # going right on the branch
-                        current = self.tree.get_right_children(current)
-                    else:  # going left on the branch
-                        current = self.tree.get_left_children(current)
-        return predicted_values
-
-    def fit(self, X, y):
-        """A reference implementation of a fitting function for a classifier.
+    def fit(self, X, y, verbose=False):
+        """Fit a StrongTree using the supplied data.
 
         Parameters
         ----------
@@ -157,6 +103,8 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             The training input samples.
         y : array-like, shape (n_samples,)
             The target values. An array of int.
+        verbose : bool, default = True
+            Flag for logging Gurobi outputs
 
         Returns
         -------
@@ -165,10 +113,13 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         """
         # store column information and dtypes if any
         self.extract_metadata(X, y)
-        # this function returns converted X and y but we retain metadata
-        X, y = check_X_y(X, y)
+
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
+
+        # this function returns converted X and y but we retain metadata
+        X, y = check_X_y(X, y)
+
         # Store the classes seen during fit
         self.classes_ = unique_labels(y)
 
@@ -177,57 +128,58 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         self.y_ = y
 
         # Instantiate tree object here
-        tree = Tree(self.depth)
+        self.tree = Tree(self.depth)
 
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
-        self.start_time = time.time()
-        if self.benders_oct:
-            self.primal = BendersOCT(
-                X,
-                y,
-                tree,
-                self.X_col_labels,
-                self.labels,
-                self._lambda,
-                self.time_limit,
-                self.mode,
-                self.num_threads,
-            )
-            self.primal.create_master_problem()
-            self.primal.model.update()
-            self.primal.model.optimize(benders_callback)
-        else:
-            self.primal = FlowOCT(
-                X,
-                y,
-                tree,
-                self.X_col_labels,
-                self.labels,
-                self._lambda,
-                self.time_limit,
-                self.mode,
-                self.num_threads,
-            )
-            self.primal.create_master_problem()
-            self.primal.model.update()
-            self.primal.model.optimize()
 
-        self.end_time = time.time()
+        if self.benders_oct:
+            self.grb_model = BendersOCT(
+                X,
+                y,
+                self.tree,
+                self.X_col_labels,
+                self.labels,
+                self._lambda,
+                self.time_limit,
+                self.num_threads,
+                self.obj_mode,
+                verbose,
+            )
+            self.grb_model.create_main_problem()
+            self.grb_model.model.update()
+            self.grb_model.model.optimize(benders_callback)
+        else:
+            self.grb_model = FlowOCT(
+                X,
+                y,
+                self.tree,
+                self.X_col_labels,
+                self.labels,
+                self._lambda,
+                self.time_limit,
+                self.num_threads,
+                self.obj_mode,
+                verbose,
+            )
+            self.grb_model.create_primal_problem()
+            self.grb_model.model.update()
+            self.grb_model.model.optimize()
+
         # solving_time or other potential parameters of interest can be stored
         # within the class: self.solving_time
-        self.solving_time = self.end_time - self.start_time
+        self.solving_time = self.grb_model.model.getAttr("Runtime")
 
         # Here we will want to store these values and any other variables
         # needed for making predictions later
-        self.b_value = self.primal.model.getAttr("X", self.primal.b)
-        self.beta_value = self.primal.model.getAttr("X", self.primal.beta)
-        self.p_value = self.primal.model.getAttr("X", self.primal.p)
+        self.b_value = self.grb_model.model.getAttr("X", self.grb_model.b)
+        self.w_value = self.grb_model.model.getAttr("X", self.grb_model.w)
+        self.p_value = self.grb_model.model.getAttr("X", self.grb_model.p)
         # Return the classifier
         return self
 
     def predict(self, X):
-        """A reference implementation of a prediction for a classifier.
+        """Classify test points using the StrongTree classifier
 
         Parameters
         ----------
@@ -243,17 +195,23 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         # Check is fit had been called
         check_is_fitted(self, ["X_", "y_"])
 
-        self.X_predict_col_names = X.columns
+        if isinstance(X, pd.DataFrame):
+            self.X_predict_col_names = X.columns
+        else:
+            self.X_predict_col_names = np.arange(0, X.shape[1])
+
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         X = check_array(X)
 
         check_columns_match(self.X_col_labels, X)
 
-        prediction = self.get_predicted_value(
+        prediction = get_predicted_value(
+            self.grb_model,
             X,
+            self.X_predict_col_names,
             self.b_value,
-            self.beta_value,
+            self.w_value,
             self.p_value,
         )
         return prediction

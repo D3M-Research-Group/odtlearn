@@ -6,11 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
-# scikit-learn specific
-doc/_build/
-doc/auto_examples/
-doc/modules/generated/
-doc/datasets/generated/
+# ignore documentation build artifacts
+docs/_build/
+docs/auto_examples/
+docs/modules/generated/
+docs/datasets/generated/
 
 # Distribution / packaging
 
@@ -69,3 +69,9 @@ target/
 # vscode, pycharm
 .vscode/
 .idea/
+
+# Mac OS
+.DS_Store
+
+# ipynb checkpoints
+.ipynb_checkpoints/
