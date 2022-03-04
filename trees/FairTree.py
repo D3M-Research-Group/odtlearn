@@ -3,13 +3,18 @@ import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
-from trees.utils.StrongTreeUtils import check_binary, check_columns_match, get_predicted_value
+from trees.utils.StrongTreeUtils import (
+    check_binary,
+    check_columns_match,
+    get_predicted_value,
+)
 
 # Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
 from trees.utils.Tree import Tree
 from trees.utils.StrongTreeFairOCT import FairOCT
 
 from itertools import combinations
+
 
 class FairTreeClassifier(ClassifierMixin, BaseEstimator):
     """Description of this estimator here
@@ -55,14 +60,14 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         fairness_type=None,
         fairness_bound=1,
         num_threads=None,
-        obj_mode = 'acc'
+        obj_mode="acc",
     ):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit
         self._lambda = _lambda
         self.num_threads = num_threads
-        self.obj_mode = obj_mode 
+        self.obj_mode = obj_mode
 
         self.fairness_type = fairness_type
         self.fairness_bound = fairness_bound
@@ -97,8 +102,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         self.l_dtypes = l.dtypes
         self.labels = np.unique(y)
 
-
-    def fit(self, X, y, P, l):
+    def fit(self, X, y, P, l, verbose=True):
         """A reference implementation of a fitting function.
 
         Parameters
@@ -109,9 +113,10 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             The target values (class labels in classification).
         P : array-like, shape (n_samples,1) or (n_samples, n_p)
             The protected feature columns (Race, gender, etc); We could have one or more columns
-
         l : array-like, shape (n_samples,)
             The legitimate factor column(e.g., prior number of criminal acts)
+        verbose : bool, default = True
+            Flag for logging Gurobi outputs
 
         Returns
         -------
@@ -124,7 +129,6 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         X, y = check_X_y(X, y)
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
-        
 
         # Here we need to convert P and L to np.arrays. We need a function.
         # I am worried about the case if the shape is (n_samples, )
@@ -154,7 +158,8 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             P,
             self.P_col_labels,
             l,
-            self.obj_mode
+            self.obj_mode,
+            verbose,
         )
         self.grb_model.create_primal_problem()
         self.grb_model.model.update()
@@ -170,10 +175,8 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         self.w_value = self.grb_model.model.getAttr("X", self.grb_model.w)
         self.p_value = self.grb_model.model.getAttr("X", self.grb_model.p)
 
-
         # Return the classifier
         return self
-
 
     def predict(self, X):
         """A reference implementation of a prediction for a classifier.
@@ -190,7 +193,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             seen during fit.
         """
         # Check is fit had been called
-        check_is_fitted(self, ["X_", "y_","P_", "l_"])
+        check_is_fitted(self, ["X_", "y_", "P_", "l_"])
         self.X_predict_col_names = X.columns
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
@@ -205,9 +208,8 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             self.w_value,
             self.p_value,
         )
-        
-        return prediction
 
+        return prediction
 
     def get_SP(self, P, y):
         """
@@ -217,7 +219,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
                 The protected feature columns (Race, gender, etc); We could have one or more columns
         :param y: array-like, shape (n_samples,)
                 The target values (class labels in classification).
-        
+
 
         :return sp_dict: a dictionary with key =(p,t) and value = P(Y=t|P=p) where p is a protected level and t is an outcome value
 
@@ -245,14 +247,14 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
                     p_df = X_p[X_p[protected_feature] == p]
                     sp_p_t = None
                     if p_df.shape[0] != 0:
-                        sp_p_t = p_df[p_df[class_name] == t].shape[0]/p_df.shape[0]
-                    sp_dict[(p,t)] = sp_p_t
+                        sp_p_t = p_df[p_df[class_name] == t].shape[0] / p_df.shape[0]
+                    sp_dict[(p, t)] = sp_p_t
 
         return sp_dict
 
     def get_CSP(self, P, l, y):
         """
-        This function returns the conditional statistical parity value for any given 
+        This function returns the conditional statistical parity value for any given
         protected level, legitimate feature value and outcome value
 
         :param P: array-like, shape (n_samples,1) or (n_samples, n_p)
@@ -261,7 +263,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             The legitimate factor column(e.g., prior number of criminal acts)
         :param y: array-like, shape (n_samples,)
                 The target values (class labels in classification).
-        
+
 
         :return csp_dict: a dictionary with key =(p, f, t) and value = P(Y=t|P=p, L=f) where p is a protected level
                           and t is an outcome value and l is the value of the legitimate feature
@@ -290,17 +292,21 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             for protected_feature in self.P_test_col_names:
                 for p in X_p[protected_feature].unique():
                     for f in X_p[legitimate_name].unique():
-                        p_f_df = X_p[(X_p[protected_feature] == p) & (X_p[legitimate_name] == f)]
+                        p_f_df = X_p[
+                            (X_p[protected_feature] == p) & (X_p[legitimate_name] == f)
+                        ]
                         csp_p_f_t = None
                         if p_f_df.shape[0] != 0:
-                            csp_p_f_t = (p_f_df[p_f_df[class_name] == t].shape[0])/p_f_df.shape[0]
+                            csp_p_f_t = (
+                                p_f_df[p_f_df[class_name] == t].shape[0]
+                            ) / p_f_df.shape[0]
                         csp_dict[(p, f, t)] = csp_p_f_t
 
         return csp_dict
 
     def get_EqOdds(self, P, y, y_pred):
         """
-        This function returns the false negative and true positive rate value 
+        This function returns the false negative and true positive rate value
         for any given protected level, outcome value and prediction value
 
         :param P: array-like, shape (n_samples,1) or (n_samples, n_p)
@@ -311,7 +317,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         :param y_pred: array-like, shape (n_samples,)
                 The predicted values (class labels in classification).
 
-        :return eq_dict: a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t) 
+        :return eq_dict: a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t)
 
         """
 
@@ -338,21 +344,21 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             for t_pred in X_p[pred_name].unique():
                 for protected_feature in self.P_test_col_names:
                     for p in X_p[protected_feature].unique():
-                        p_t_df = X_p[(X_p[protected_feature] == p) & (X_p[class_name] == t)]
+                        p_t_df = X_p[
+                            (X_p[protected_feature] == p) & (X_p[class_name] == t)
+                        ]
                         eq_p_t_t_pred = None
                         if p_t_df.shape[0] != 0:
-                            eq_p_t_t_pred = (p_t_df[p_t_df[pred_name] == t_pred].shape[0])/p_t_df.shape[0]
+                            eq_p_t_t_pred = (
+                                p_t_df[p_t_df[pred_name] == t_pred].shape[0]
+                            ) / p_t_df.shape[0]
                         eq_dict[(p, t, t_pred)] = eq_p_t_t_pred
-
-                    
-                   
-
 
         return eq_dict
 
     def get_CondEqOdds(self, P, l, y, y_pred):
         """
-        This function returns the conditional false negative and true positive rate value 
+        This function returns the conditional false negative and true positive rate value
         for any given protected level, outcome value, prediction value and legitimate feature value
 
         :param P: array-like, shape (n_samples,1) or (n_samples, n_p)
@@ -365,7 +371,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         :param y_pred: array-like, shape (n_samples,)
                 The predicted values (class labels in classification).
 
-        :return ceq_dict: a dictionary with key =(p, f, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t, L=f) 
+        :return ceq_dict: a dictionary with key =(p, f, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t, L=f)
 
         """
 
@@ -381,10 +387,15 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         class_name = "class_label"
         pred_name = "pred_label"
         legitimate_name = "legitimate_feature_name"
-        X_p = np.concatenate((P, l.reshape(-1, 1), y.reshape(-1, 1), y_pred.reshape(-1, 1)), axis=1)
+        X_p = np.concatenate(
+            (P, l.reshape(-1, 1), y.reshape(-1, 1), y_pred.reshape(-1, 1)), axis=1
+        )
         X_p = pd.DataFrame(
             X_p,
-            columns=(self.P_test_col_names.tolist() + [legitimate_name, class_name, pred_name]),
+            columns=(
+                self.P_test_col_names.tolist()
+                + [legitimate_name, class_name, pred_name]
+            ),
         )
 
         ceq_dict = {}
@@ -394,15 +405,16 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
                 for protected_feature in self.P_test_col_names:
                     for p in X_p[protected_feature].unique():
                         for f in X_p[legitimate_name].unique():
-                            p_f_t_df = X_p[(X_p[protected_feature] == p) & (X_p[legitimate_name] == f) & (X_p[class_name] == t)]
+                            p_f_t_df = X_p[
+                                (X_p[protected_feature] == p)
+                                & (X_p[legitimate_name] == f)
+                                & (X_p[class_name] == t)
+                            ]
                             ceq_p_f_t_t_pred = None
                             if p_f_t_df.shape[0] != 0:
-                                ceq_p_f_t_t_pred = (p_f_t_df[p_f_t_df[pred_name] == t_pred].shape[0])/p_f_t_df.shape[0]
+                                ceq_p_f_t_t_pred = (
+                                    p_f_t_df[p_f_t_df[pred_name] == t_pred].shape[0]
+                                ) / p_f_t_df.shape[0]
                             ceq_dict[(p, f, t, t_pred)] = ceq_p_f_t_t_pred
 
-                    
-                   
-
-
         return ceq_dict
-

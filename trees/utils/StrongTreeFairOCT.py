@@ -25,7 +25,8 @@ class FairOCT:
         P,
         P_col_labels,
         l,
-        obj_mode
+        obj_mode,
+        verbose,
     ):
         """
         :param X: numpy matrix or pandas data-frame of covariates.
@@ -46,13 +47,14 @@ class FairOCT:
         :param l: numpy array or pandas series/data-frame of legitimate feature
         :param P_col_labels: Names of the protected columns
         :param obj_mode: if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
+        :param verbose: Display Gurobi model output
         """
 
         self.X = pd.DataFrame(X, columns=X_col_labels)
         self.y = y
         self.P = P
         self.l = l
-        self.obj_mode= obj_mode
+        self.obj_mode = obj_mode
 
         self.class_name = "class_label"
         self.legitimate_name = "legitimate_feature_name"
@@ -86,6 +88,9 @@ class FairOCT:
 
         # Gurobi model
         self.model = Model("FairOCT")
+        if not verbose:
+            # supress all logging
+            self.model.params.OutputFlag = 0
         if num_threads is not None:
             self.model.params.Threads = num_threads
         self.model.params.TimeLimit = time_limit
@@ -353,17 +358,26 @@ class FairOCT:
         for n in self.tree.Nodes:
             for f in self.X_col_labels:
                 obj.add(-1 * self._lambda * self.b[n, f])
-        if self.obj_mode == 'acc':
+        if self.obj_mode == "acc":
             for i in self.datapoints:
                 for n in self.tree.Nodes + self.tree.Leaves:
                     obj.add((1 - self._lambda) * (self.zeta[i, n, self.y[i]]))
-        elif self.obj_mode == 'balance':
+        elif self.obj_mode == "balance":
             for i in self.datapoints:
                 for n in self.tree.Nodes + self.tree.Leaves:
-                    obj.add((1 - self._lambda) * (1/self.y[self.y==self.y[i]].shape[0]/self.labels.shape[0]) *(self.zeta[i, n, self.y[i]]))
+                    obj.add(
+                        (1 - self._lambda)
+                        * (
+                            1
+                            / self.y[self.y == self.y[i]].shape[0]
+                            / self.labels.shape[0]
+                        )
+                        * (self.zeta[i, n, self.y[i]])
+                    )
         else:
-            assert (self.obj_mode not in ['acc','balance']), f"Wrong objective mode. obj_mode should be one of acc or balance."
-
-        
+            assert self.obj_mode not in [
+                "acc",
+                "balance",
+            ], f"Wrong objective mode. obj_mode should be one of acc or balance."
 
         self.model.setObjective(obj, GRB.MAXIMIZE)

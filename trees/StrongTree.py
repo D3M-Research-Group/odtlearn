@@ -18,7 +18,7 @@ from trees.utils.StrongTreeBendersOCT import BendersOCT
 
 
 class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
-    """TO-DO: NEED DESCRIPTION OF THE CLASS HERE.
+    """A classifier which uses StrongTrees
 
     Parameters
     ----------
@@ -28,8 +28,13 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The given time limit for solving the MIP in seconds
     _lambda : int
         The regularization parameter in the objective
-    num_threads: int, default=1
-        The number of threads the solver should use
+    benders_oct: bool, default=False
+        Use benders problem formulation.
+    obj_mode: str, default="acc"
+        Set objective priority. If "acc", maximize the accuracy, if "balance" maximize the balanced accuracy
+    num_threads: int, default=None
+        The number of threads the solver should use. If no argument is supplied, Gurobi will use all available threads.
+
 
     Attributes
     ----------
@@ -57,8 +62,8 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         time_limit,
         _lambda,
         benders_oct=False,
-        num_threads=None,
         obj_mode="acc",
+        num_threads=None,
     ):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
@@ -85,8 +90,8 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
         self.labels = np.unique(y)
 
-    def fit(self, X, y):
-        """TO-DO: NEED DESCRIPTION OF METHOD HERE.
+    def fit(self, X, y, verbose=False):
+        """Fit a StrongTree using the supplied data.
 
         Parameters
         ----------
@@ -94,6 +99,8 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             The training input samples.
         y : array-like, shape (n_samples,)
             The target values. An array of int.
+        verbose : bool, default = True
+            Flag for logging Gurobi outputs
 
         Returns
         -------
@@ -133,6 +140,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.time_limit,
                 self.num_threads,
                 self.obj_mode,
+                verbose,
             )
             self.grb_model.create_main_problem()
             self.grb_model.model.update()
@@ -148,6 +156,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.time_limit,
                 self.num_threads,
                 self.obj_mode,
+                verbose,
             )
             self.grb_model.create_primal_problem()
             self.grb_model.model.update()

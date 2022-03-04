@@ -5,9 +5,20 @@ from gurobipy import Model, GRB, quicksum, LinExpr
 import numpy as np
 import pandas as pd
 
+
 class BendersOCT:
     def __init__(
-        self, X, y, tree, X_col_labels, labels, _lambda, time_limit, num_threads, obj_mode
+        self,
+        X,
+        y,
+        tree,
+        X_col_labels,
+        labels,
+        _lambda,
+        time_limit,
+        num_threads,
+        obj_mode,
+        verbose,
     ):
         """
         :param X: numpy matrix of covariates
@@ -16,6 +27,7 @@ class BendersOCT:
         :param _lambda: The regularization parameter in the objective
         :param time_limit: The given time limit for solving the MIP
         :param obj_mode: if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
+        :param verbose: Display Gurobi model output
         """
         self.X = pd.DataFrame(X, columns=X_col_labels)
         self.y = y
@@ -27,7 +39,7 @@ class BendersOCT:
 
         self.tree = tree
         self._lambda = _lambda
-        self.obj_mode= obj_mode
+        self.obj_mode = obj_mode
 
         # Decision Variables
         self.g = 0
@@ -37,6 +49,9 @@ class BendersOCT:
 
         # Gurobi model
         self.model = Model("BendersOCT")
+        if not verbose:
+            # supress all logging
+            self.model.params.OutputFlag = 0
         # The cuts we add in the callback function would be treated as lazy constraints
         self.model.params.LazyConstraints = 1
         if num_threads is not None:
@@ -148,15 +163,20 @@ class BendersOCT:
         for n in self.tree.Nodes:
             for f in self.X_col_labels:
                 obj.add(-1 * self._lambda * self.b[n, f])
-        if self.obj_mode == 'acc':
+        if self.obj_mode == "acc":
             for i in self.datapoints:
                 obj.add((1 - self._lambda) * self.g[i])
-        elif self.obj_mode == 'balance':
+        elif self.obj_mode == "balance":
             for i in self.datapoints:
-                obj.add((1 - self._lambda) * (1/self.y[self.y==self.y[i]].shape[0]/self.labels.shape[0]) *self.g[i])
+                obj.add(
+                    (1 - self._lambda)
+                    * (1 / self.y[self.y == self.y[i]].shape[0] / self.labels.shape[0])
+                    * self.g[i]
+                )
         else:
-            assert (self.obj_mode not in ['acc','balance']), f"Wrong objective mode. obj_mode should be one of acc or balance."
-
-        
+            assert self.obj_mode not in [
+                "acc",
+                "balance",
+            ], f"Wrong objective mode. obj_mode should be one of acc or balance."
 
         self.model.setObjective(obj, GRB.MAXIMIZE)
