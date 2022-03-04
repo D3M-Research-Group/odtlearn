@@ -29,12 +29,20 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
 
     Attributes
     ----------
-    X_ : ndarray, shape (n_samples, n_features)
+    X_ : array-like, shape (n_samples, n_features)
         The input passed during :meth:`fit`.
-    y_ : ndarray, shape (n_samples,)
+    y_ : array-like, shape (n_samples,)
         The labels passed during :meth:`fit`.
     classes_ : ndarray, shape (n_classes,)
         The classes seen at :meth:`fit`.
+    costs : pandas.DataFrame, shape (n_samples, n_features)
+        The uncertainty costs used during fitting
+    budget : float
+        The uncertainty budget used during fitting
+    model : gurobipy.Model
+        The trained Gurobi model, with solver information and
+        decision variable information (`b` for branching variables,
+        `w` for assignment variables)
     """
 
     def __init__(self, depth=1, time_limit=1800, num_threads=None):
