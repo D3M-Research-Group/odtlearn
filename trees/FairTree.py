@@ -35,7 +35,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
     fairness_type: [None, 'SP', 'CSP', 'PE', 'EOpp', 'EOdds'], default=None
         The type of fairness we want to enforce
     fairness_bound: float (0,1], default=1
-        The bound of the fairnes constraint. The smaller the value the stricter the fairness constraint and 1 corresponds to no fairness at all
+        The bound of the fairness constraint. The smaller the value the stricter the fairness constraint and 1 corresponds to no fairness at all
 
     Attributes
     ----------
