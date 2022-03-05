@@ -88,7 +88,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
 
 <span class="c1"># Include Necessary imports in the same folder</span>
@@ -110,7 +110,7 @@
 <span class="sd">    time_limit : int, default=1800</span>
 <span class="sd">        The given time limit for solving the MIP in seconds</span>
 <span class="sd">    num_threads: int, default=None</span>
-<span class="sd">        The number of threads the solver should use. If not specified, </span>
+<span class="sd">        The number of threads the solver should use. If not specified,</span>
 <span class="sd">        solver uses Gurobi&#39;s default number of threads</span>
 
 <span class="sd">    Attributes</span>
@@ -152,7 +152,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
-        
+
         <span class="c1"># Strip indices in training data into integers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
@@ -197,8 +197,11 @@
             <span class="c1"># Also check if indices are the same</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input covariates has </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> samples, &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;but uncertainty costs has </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+                    <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Input covariates has </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> samples, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;but uncertainty costs has </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># By default, set costs to be budget + 1 (i.e. no uncertainty)</span>
             <span class="n">gammas_df</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
@@ -222,7 +225,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">threads</span><span class="p">,</span>
-            <span class="n">verbose</span>
+            <span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">master</span><span class="o">.</span><span class="n">create_master_problem</span><span class="p">()</span>
         <span class="n">master</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
