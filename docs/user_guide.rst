@@ -9,9 +9,9 @@ User guide: fitting tree estimators
 StrongTree
 ----------
 
-.. _`Agahaei et al., 2021`: https://arxiv.org/abs/2103.15965
+.. _`Aghaei et al., 2021`: https://arxiv.org/abs/2103.15965
 
-StrongTrees were first introduced in `Agahaei et al., 2021`_.
+StrongTrees were first introduced in `Aghaei et al., 2021`_.
 
 
 FairTree
