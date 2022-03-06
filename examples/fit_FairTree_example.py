@@ -63,9 +63,8 @@ fcl = FairTreeClassifier(
 fcl.fit(X_train, y_train, P_train, l_train)
 print_tree(fcl.grb_model, fcl.b_value, fcl.w_value, fcl.p_value)
 pred_test = fcl.predict(X_test)
-# sp_val = fcl.get_SP(P_test, y_test)
-# csp_val = fcl.get_CSP(P_test, l_test, y_test)
-# eq_val = fcl.get_EqOdds(P_test, y_test, pred_test)
-# ceq_val = fcl.get_CondEqOdds(P_test, l_test, y_test, pred_test)
-
+sp_val = fcl.get_SP(P_test, y_test)
+csp_val = fcl.get_CSP(P_test, l_test, y_test)
+eq_val = fcl.get_EqOdds(P_test, y_test, pred_test)
+ceq_val = fcl.get_CondEqOdds(P_test, l_test, y_test, pred_test)
 
