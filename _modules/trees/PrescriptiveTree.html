@@ -1,89 +1,217 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>trees.PrescriptiveTree &mdash; trees 0.0.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/trees.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/clipboard.min.js"></script>
-        <script src="../../_static/copybutton.js"></script>
-        <script src="../../_static/toggleprompt.js"></script>
-    <script src="../../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> trees
-          </a>
-              <div class="version">
-                0.0.1
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+    <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
+        <title>trees.PrescriptiveTree - trees 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">trees 0.0.1 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  
+  <span class="sidebar-brand-text">trees 0.0.1 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Getting started with the Trees Package</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../api.html">Trees API</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">Trees API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.StrongTree</span></code>.StrongTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code>.FairTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.RobustTree</span></code>.RobustTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide: fitting tree estimators</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial - Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">General examples</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../auto_examples/index.html">General examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../auto_examples/plotting_example.html">Tree Plotting Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../auto_examples/pipeline_example.html">Sklearn Pipeline Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../auto_examples/fit_FairTree_example.html">FairTree Fit Example</a></li>
+</ul>
+</li>
 </ul>
 
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">trees</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-      <li>trees.PrescriptiveTree</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
-  </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <h1>Source code for trees.PrescriptiveTree</h1><div class="highlight"><pre>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <h1>Source code for trees.PrescriptiveTree</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
@@ -106,7 +234,7 @@
 
 
 <div class="viewcode-block" id="PrescriptiveTreeClassifier"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">PrescriptiveTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A classifier which uses PrescriptiveTrees.</span>
+    <span class="sd">"""A classifier which uses PrescriptiveTrees.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -114,8 +242,8 @@
 <span class="sd">        A parameter specifying the depth of the tree</span>
 <span class="sd">    time_limit : int</span>
 <span class="sd">        The given time limit for solving the MIP in seconds</span>
-<span class="sd">    method : str, default=&#39;IPW&#39;</span>
-<span class="sd">        The method of Prescriptive Trees to run. Choices in (&#39;IPW&#39;, &#39;DM&#39;, &#39;DR), which represents the</span>
+<span class="sd">    method : str, default='IPW'</span>
+<span class="sd">        The method of Prescriptive Trees to run. Choices in ('IPW', 'DM', 'DR), which represents the</span>
 <span class="sd">        inverse propensity weighting, direct method, and doubly robust methods, respectively</span>
 <span class="sd">    num_threads: int, default=None</span>
 <span class="sd">        The number of threads the solver should use</span>
@@ -135,12 +263,12 @@
 <span class="sd">    b_value : nddict, shape (tree_internal_nodes, X_features)</span>
 <span class="sd">        The values of decision variable b -- the branching decisions of the tree</span>
 <span class="sd">    w_value : nddict, shape (tree_nodes, treatments_set)</span>
-<span class="sd">        The values of decision variable w -- the treatment decisions at the tree&#39;s nodes</span>
+<span class="sd">        The values of decision variable w -- the treatment decisions at the tree's nodes</span>
 <span class="sd">    p_value : nddict, shape (tree_nodes,)</span>
-<span class="sd">        The values of decision variable p -- whether or not a tree&#39;s nodes branch or assign treatment</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        The values of decision variable p -- whether or not a tree's nodes branch or assign treatment</span>
+<span class="sd">    """</span>
 
-<div class="viewcode-block" id="PrescriptiveTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;IPW&quot;</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="PrescriptiveTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"IPW"</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># this is where we will initialize the values we want users to provide</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span>
@@ -156,7 +284,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">y_hat</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="PrescriptiveTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;A function for extracting metadata from the inputs before converting</span>
+        <span class="sd">"""A function for extracting metadata from the inputs before converting</span>
 <span class="sd">        them into numpy arrays to work with the sklearn API</span>
 
 <span class="sd">        Parameters</span>
@@ -166,7 +294,7 @@
 <span class="sd">        t :</span>
 <span class="sd">            A vector or array-like object for the treatment assignments</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X_col_dtypes</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">dtypes</span>
@@ -176,7 +304,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">treatments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PrescriptiveTreeClassifier.check_helpers"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.check_helpers">[docs]</a>    <span class="k">def</span> <span class="nf">check_helpers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">ipw</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 <span class="sd">        This function checks the propensity weights and counterfactual predictions</span>
 
 <span class="sd">        Parameters</span>
@@ -186,23 +314,23 @@
 <span class="sd">        y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR</span>
 
 <span class="sd">        :return: The converted versions of ipw and y_hat after passing the series of checks</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;IPW&quot;</span><span class="p">,</span> <span class="s2">&quot;DR&quot;</span><span class="p">]:</span>
-            <span class="k">assert</span> <span class="n">ipw</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Inverse propensity weights cannot be None&quot;</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"IPW"</span><span class="p">,</span> <span class="s2">"DR"</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="n">ipw</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Inverse propensity weights cannot be None"</span>
 
             <span class="n">ipw</span> <span class="o">=</span> <span class="n">column_or_1d</span><span class="p">(</span><span class="n">ipw</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">ipw</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;O&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ipw</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">"O"</span><span class="p">:</span>
                 <span class="n">ipw</span> <span class="o">=</span> <span class="n">ipw</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
             <span class="k">assert</span> <span class="p">(</span>
                 <span class="nb">min</span><span class="p">(</span><span class="n">ipw</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">max</span><span class="p">(</span><span class="n">ipw</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span>
-            <span class="p">),</span> <span class="s2">&quot;Inverse propensity weights must be in the range (0, 1]&quot;</span>
+            <span class="p">),</span> <span class="s2">"Inverse propensity weights must be in the range (0, 1]"</span>
 
             <span class="n">check_consistent_length</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">ipw</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;DM&quot;</span><span class="p">,</span> <span class="s2">&quot;DR&quot;</span><span class="p">]:</span>
-            <span class="k">assert</span> <span class="n">y_hat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Counterfactual estimates cannot be None&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"DM"</span><span class="p">,</span> <span class="s2">"DR"</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="n">y_hat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Counterfactual estimates cannot be None"</span>
 
             <span class="n">y_hat</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">y_hat</span><span class="p">)</span>
 
@@ -210,31 +338,31 @@
 
             <span class="k">assert</span> <span class="n">y_hat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">treatments</span>
-            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Found counterfactual estimates for </span><span class="si">{</span><span class="n">y_hat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> treatments. </span><span class="se">\</span>
-<span class="s2">            There are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treatments</span><span class="p">)</span><span class="si">}</span><span class="s2"> unique treatments in the data&quot;</span>
+            <span class="p">),</span> <span class="sa">f</span><span class="s2">"Found counterfactual estimates for </span><span class="si">{</span><span class="n">y_hat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> treatments. </span><span class="se">\</span>
+<span class="s2">            There are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treatments</span><span class="p">)</span><span class="si">}</span><span class="s2"> unique treatments in the data"</span>
 
             <span class="n">check_consistent_length</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ipw</span><span class="p">,</span> <span class="n">y_hat</span></div>
 
 <div class="viewcode-block" id="PrescriptiveTreeClassifier.check_y"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.check_y">[docs]</a>    <span class="k">def</span> <span class="nf">check_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">"""</span>
 <span class="sd">        This function checks the shape and contents of the observed outcomes</span>
 <span class="sd">        :param X: The input/training data</span>
 <span class="sd">        :param y: A vector or array-like object for the observed outcomes corresponding to treatment t</span>
 <span class="sd">        :return: The converted version of y after passing the series of checks</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># check consistent length</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">column_or_1d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">_assert_all_finite</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;O&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">"O"</span><span class="p">:</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
         <span class="n">check_consistent_length</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">y</span></div>
 
 <div class="viewcode-block" id="PrescriptiveTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ipw</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_hat</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Method to fit the PrescriptiveTree class on the data</span>
+        <span class="sd">"""Method to fit the PrescriptiveTree class on the data</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -253,7 +381,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        self : object</span>
 <span class="sd">            Returns self.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># check if self.method is one of the three options</span>
 
         <span class="c1"># store column information and dtypes if any</span>
@@ -266,11 +394,11 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">t</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The set of treatments must be discrete.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"The set of treatments must be discrete."</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="p">(</span>
             <span class="nb">min</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">max</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="p">),</span> <span class="s2">&quot;The set of treatments must be discrete starting from {0, 1, ...}&quot;</span>
+        <span class="p">),</span> <span class="s2">"The set of treatments must be discrete starting from {0, 1, ...}"</span>
 
         <span class="c1"># we also need to check on y and ipw/y_hat depending on the method chosen</span>
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -294,7 +422,7 @@
         <span class="c1"># Note that we are taking X and y as array-like objects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;IPW&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"IPW"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span> <span class="o">=</span> <span class="n">FlowOPT_IPW</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span>
                 <span class="n">t</span><span class="p">,</span>
@@ -307,7 +435,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;DM&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"DM"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span> <span class="o">=</span> <span class="n">FlowOPT_Robust</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span>
                 <span class="n">t</span><span class="p">,</span>
@@ -322,7 +450,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
             <span class="p">)</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;DR&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">"DR"</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span> <span class="o">=</span> <span class="n">FlowOPT_Robust</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span>
                 <span class="n">t</span><span class="p">,</span>
@@ -348,15 +476,15 @@
 
         <span class="c1"># Here we will want to store these values and any other variables</span>
         <span class="c1"># needed for making predictions later</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
 
         <span class="c1"># Return the classifier</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="PrescriptiveTreeClassifier.predict"><a class="viewcode-back" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html#trees.PrescriptiveTree.PrescriptiveTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Method for making predictions using a PrescriptiveTree classifier</span>
+        <span class="sd">"""Method for making predictions using a PrescriptiveTree classifier</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -367,9 +495,9 @@
 <span class="sd">        -------</span>
 <span class="sd">        t : ndarray, shape (n_samples,)</span>
 <span class="sd">            The predicted treatment for the input samples.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Check if fit had been called</span>
-        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;X_&quot;</span><span class="p">,</span> <span class="s2">&quot;y_&quot;</span><span class="p">,</span> <span class="s2">&quot;t_&quot;</span><span class="p">])</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"X_"</span><span class="p">,</span> <span class="s2">"y_"</span><span class="p">,</span> <span class="s2">"t_"</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
@@ -392,32 +520,46 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">prediction</span></div></div>
 </pre></div>
-
-           </div>
-          </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright .</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
-        </div>
+        </article>
       </div>
-    </section>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/scripts/furo.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/toggleprompt.js"></script>
+    </body>
 </html>
