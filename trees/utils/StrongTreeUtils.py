@@ -115,8 +115,8 @@ def print_tree(grb_model, b, w, p):
         The gurobi model solved to optimality (or reached the time limit)
     b :
         The values of branching decision variable b
-    beta :
-        The values of prediction decision variable beta
+    w :
+        The values of prediction decision variable w
     p :
         The values of decision variable p
 
