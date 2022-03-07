@@ -2,7 +2,59 @@ import pytest
 import numpy as np
 import pandas as pd
 from trees.StrongTree import StrongTreeClassifier
+from trees.utils.StrongTreeUtils import print_tree 
 
+
+@pytest.fixture
+def data():
+    return load_iris(return_X_y=True)
+
+
+@pytest.fixture
+def synthetic_data_1():
+    '''
+    X2              |
+    |               |
+    1    + +        |    -
+    |               |   
+    |---------------|-------------
+    |               |
+    0    - - - -    |    + + +
+    |    - - -      |
+    |______0________|_______1_______X1
+    '''
+    X = np.array([[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
+                 [1,0],[1,0],[1,0],
+                 [1,1],
+                 [0,1],[0,1]])
+    y = np.array([0,0,0,0,0,0,0,1,1,1,0,1,1])
+
+    return X, y
+
+
+@pytest.fixture
+def synthetic_data_2():
+    '''
+    X2              |
+    |               |
+    1    + - -      |    -
+    |               |   
+    |---------------|-------------
+    |               |
+    0    - - - +    |    - - -
+    |    - - -      |
+    |______0________|_______1_______X1
+    '''
+    X = np.array([[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
+                  [1,0],[1,0],[1,0],
+                  [1,1],
+                  [0,1],[0,1],[0,1]])
+    y = np.array([0,0,0,0,0,0,1,
+                  0,0,0,
+                  0,
+                  1,0,0])
+
+    return X, y
 
 # Test that we raise a ValueError if X matrix has values other than zero or one
 def test_StrongTree_X_nonbinary_error():
@@ -64,13 +116,49 @@ def test_StrongTree_classifier():
     assert y_pred.shape == (train.shape[0],)
 
 
-# @pytest.mark.test_gurobi
-# # Test that on toy data we get the same predictions as our replication code
-# def test_StrongTree_same_predictions(data):
-#     predictions = []  # toy data predictions
-#     X, y = data
-#     X_test = []
-#     clf = StrongTreeClassifier(depth=1, time_limit=2, _lambda=1)
-#     clf.fit(X, y)
 
-#     assert_allclose(X_test, predictions)
+
+
+
+
+@pytest.mark.parametrize("d, l, benders, expected_pred", [(0, 0, False, np.array([0,0,0,0,0,0,0,0,0,0,0,0,0])), 
+                                                          (1, 0, False, np.array([0,0,0,0,0,0,0,1,1,1,1,0,0])),
+                                                          (2, 0, False, np.array([0,0,0,0,0,0,0,1,1,1,0,1,1])),
+                                                          (0, 0, True, np.array([0,0,0,0,0,0,0,0,0,0,0,0,0])), 
+                                                          (1, 0, True, np.array([0,0,0,0,0,0,0,1,1,1,1,0,0])),
+                                                          (2, 0, True, np.array([0,0,0,0,0,0,0,1,1,1,0,1,1])),
+                                                          (2, 0.51, False, np.array([0,0,0,0,0,0,0,1,1,1,1,1,1])),
+                                                          (2, 0.51, True, np.array([0,0,0,0,0,0,0,1,1,1,1,1,1]))])
+def test_StrongTree_same_predictions(synthetic_data_1, d, l, benders, expected_pred):
+    X, y = synthetic_data_1
+    stcl = StrongTreeClassifier(
+        depth = d, 
+        time_limit = 100,
+        _lambda = l,
+        benders_oct= benders, 
+        num_threads=None, 
+        obj_mode = 'acc'
+    )
+    stcl.fit(X, y)
+    print_tree(stcl.grb_model, stcl.b_value, stcl.w_value, stcl.p_value)
+    assert_allclose(stcl.predict(X), expected_pred)
+
+
+
+@pytest.mark.parametrize("benders, obj_mode ,expected_pred", [(False, 'acc' , np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,0])), 
+                                                              (False, 'balance' ,np.array([0,0,0,0,0,0,0,0,0,0,0,1,1,1])),
+                                                              (True, 'acc' , np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,0])), 
+                                                              (True, 'balance' ,np.array([0,0,0,0,0,0,0,0,0,0,0,1,1,1]))])
+def test_StrongTree_obj_mode(synthetic_data_2, benders, obj_mode, expected_pred):
+    X, y = synthetic_data_2
+    stcl = StrongTreeClassifier(
+        depth = 2, 
+        time_limit = 100,
+        _lambda = 0,
+        benders_oct= benders, 
+        num_threads=None, 
+        obj_mode = obj_mode
+    )
+    stcl.fit(X, y)
+    print_tree(stcl.grb_model, stcl.b_value, stcl.w_value, stcl.p_value)
+    assert_allclose(stcl.predict(X), expected_pred)

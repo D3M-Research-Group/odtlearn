@@ -114,8 +114,6 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         else:
             self.P_col_labels = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
 
-        self.y_dtypes = y.dtypes
-        self.l_dtypes = l.dtypes
         self.labels = np.unique(y)
 
     def fit(self, X, y, P, l, verbose=True):
@@ -209,8 +207,12 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             seen during fit.
         """
         # Check is fit had been called
-        check_is_fitted(self, ["X_", "y_", "P_", "l_"])
-        self.X_predict_col_names = X.columns
+        check_is_fitted(self, ["X_", "y_","P_", "l_"])
+
+        if isinstance(X, pd.DataFrame):
+            self.X_predict_col_names = X.columns
+        else:
+            self.X_predict_col_names = np.array([f"X_{i}" for i in np.arange(0, X.shape[1])])
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         X = check_array(X)
@@ -240,8 +242,12 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         :return sp_dict: a dictionary with key =(p,t) and value = P(Y=t|P=p) where p is a protected level and t is an outcome value
 
         """
+        if isinstance(P, pd.DataFrame):
+            self.P_test_col_names = P.columns
+        else:
+            self.P_test_col_names = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
 
-        self.P_test_col_names = P.columns
+        
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         P, y = check_X_y(P, y)
@@ -286,7 +292,11 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         """
 
-        self.P_test_col_names = P.columns
+        if isinstance(P, pd.DataFrame):
+            self.P_test_col_names = P.columns
+        else:
+            self.P_test_col_names = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
+
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         _, y = check_X_y(P, y)
@@ -337,7 +347,11 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         """
 
-        self.P_test_col_names = P.columns
+        if isinstance(P, pd.DataFrame):
+            self.P_test_col_names = P.columns
+        else:
+            self.P_test_col_names = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
+
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         _, y = check_X_y(P, y)
@@ -357,7 +371,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         eq_dict = {}
 
         for t in X_p[class_name].unique():
-            for t_pred in X_p[pred_name].unique():
+            for t_pred in X_p[class_name].unique():
                 for protected_feature in self.P_test_col_names:
                     for p in X_p[protected_feature].unique():
                         p_t_df = X_p[
@@ -391,7 +405,11 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         """
 
-        self.P_test_col_names = P.columns
+        if isinstance(P, pd.DataFrame):
+            self.P_test_col_names = P.columns
+        else:
+            self.P_test_col_names = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
+
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         _, y = check_X_y(P, y)
@@ -417,7 +435,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         ceq_dict = {}
 
         for t in X_p[class_name].unique():
-            for t_pred in X_p[pred_name].unique():
+            for t_pred in X_p[class_name].unique():
                 for protected_feature in self.P_test_col_names:
                     for p in X_p[protected_feature].unique():
                         for f in X_p[legitimate_name].unique():

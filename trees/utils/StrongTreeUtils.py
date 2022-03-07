@@ -9,7 +9,6 @@ def check_columns_match(original_columns, new_data):
     :param original_columns: List of column names from the data set used to fit the model
     :param new_data: The numpy matrix or pd dataframe new data set for
     which we want to make predictions
-
     :return ValueError if column names do not match, otherwise None
     """
 
@@ -47,9 +46,7 @@ def check_binary(df):
 
 def get_node_status(grb_model, b, w, p, n):
     """
-    This function give the status of a given node in a tree.
-
-    By status we mean whether the node
+    This function give the status of a given node in a tree. By status we mean whether the node
         1- is pruned? i.e., we have made a prediction at one of its ancestors
         2- is a branching node? If yes, what feature do we branch on
         3- is a leaf? If yes, what is the prediction at this node?
@@ -172,8 +169,9 @@ def get_predicted_value(grb_model, X, b, w, p):
             )
             if leaf:
                 predicted_values.append(value)
+                break
             elif branching:
-                selected_feature_idx = np.where(grb_model.labels == selected_feature)
+                selected_feature_idx = np.where(grb_model.X_col_labels == selected_feature)
                 # Raise assertion error we don't have a column that matches
                 # the selected feature or more than one column that matches
                 assert (
@@ -183,11 +181,13 @@ def get_predicted_value(grb_model, X, b, w, p):
                     current = grb_model.tree.get_right_children(current)
                 else:  # going left on the branch
                     current = grb_model.tree.get_left_children(current)
-    return predicted_values
+
+    return np.array(predicted_values)
 
 
 def get_left_exp_integer(main_grb_obj, n, i):
     lhs = quicksum(
+
         -1 * main_grb_obj.b[n, f]
         for f in main_grb_obj.X_col_labels
         if main_grb_obj.X.at[i, f] == 0
