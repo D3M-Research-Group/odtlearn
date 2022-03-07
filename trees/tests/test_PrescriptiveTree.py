@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from sklearn.datasets import load_iris
+from trees.utils.PrescriptiveTreeUtils import print_tree
 from numpy.testing import assert_array_equal
 from numpy.testing import assert_allclose
 
@@ -112,11 +113,14 @@ def test_PrescriptiveTree_X_treatment_error():
         ipw = np.random.rand(10)
         clf.fit(X, t, y, ipw)
 
-# Test that if we are given a pandas dataframe, we keep the original data and its labels
-def test_PrescriptiveTree_classifier():
+# Test all methods on toy dataset
+@pytest.mark.parametrize("method, expected_pred", [('DR', np.array([0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0])),
+                                                   ('DM', np.array([0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0])),
+                                                   ('IPW', np.array([1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1]))])
+def test_PrescriptiveTree_classifier(method, expected_pred):
     df = pd.read_csv('data/prescriptive_tree/train_50.csv')
 
-    clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method='DR')
+    clf = PrescriptiveTreeClassifier(depth=2, time_limit=300, method=method)
 
     X = df.iloc[:, :20]
     t = df['t']
@@ -133,5 +137,6 @@ def test_PrescriptiveTree_classifier():
     assert hasattr(clf, "w_value")
     assert hasattr(clf, "p_value")
 
-    t_pred = clf.predict(X)
-    assert len(t_pred) == X.shape[0]
+    print_tree(clf.grb_model, clf.b_value, clf.w_value, clf.p_value)
+
+    assert_allclose(clf.predict(X), expected_pred)
