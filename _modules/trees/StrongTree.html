@@ -220,6 +220,7 @@
     <span class="n">check_binary</span><span class="p">,</span>
     <span class="n">benders_callback</span><span class="p">,</span>
     <span class="n">get_predicted_value</span><span class="p">,</span>
+    <span class="n">print_tree_util</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder</span>
@@ -424,7 +425,22 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">prediction</span></div></div>
+        <span class="k">return</span> <span class="n">prediction</span></div>
+
+
+<div class="viewcode-block" id="StrongTreeClassifier.print_tree"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.print_tree">[docs]</a>    <span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        This function print the derived tree with the branching features and the predictions asserted for each node</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Print out the tree in the console</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># Check is fit had been called</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"X_"</span><span class="p">,</span> <span class="s2">"y_"</span><span class="p">])</span>
+        <span class="n">print_tree_util</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">)</span></div></div>
 </pre></div>
         </article>
       </div>
