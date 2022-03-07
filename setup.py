@@ -14,7 +14,7 @@ from setuptools import find_packages, setup
 
 DISTNAME = "trees"
 DESCRIPTION = "A package for decision tree methods."
-with codecs.open("README.rst", encoding="utf-8-sig") as f:
+with codecs.open("README.md", encoding="utf-8-sig") as f:
     LONG_DESCRIPTION = f.read()
 MAINTAINER = "P. Vossler"
 MAINTAINER_EMAIL = "patrick.vossler18@gmail.com"
