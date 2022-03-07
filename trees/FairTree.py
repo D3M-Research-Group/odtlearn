@@ -7,6 +7,7 @@ from trees.utils.StrongTreeUtils import (
     check_binary,
     check_columns_match,
     get_predicted_value,
+    print_tree_util,
 )
 
 # Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
@@ -228,6 +229,20 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         )
 
         return prediction
+    
+    def print_tree(self):
+        """
+        This function print the derived tree with the branching features and the predictions asserted for each node
+
+
+        Returns
+        -------
+        Print out the tree in the console
+        """
+
+        # Check is fit had been called
+        check_is_fitted(self, ["X_", "y_","P_", "l_"])
+        print_tree_util(self.grb_model, self.b_value, self.w_value, self.p_value)
 
     def get_SP(self, P, y):
         """
