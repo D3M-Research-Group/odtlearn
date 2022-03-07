@@ -1,6 +1,8 @@
 import pytest
 import numpy as np
 import pandas as pd
+from numpy.testing import assert_allclose
+from sklearn.datasets import load_iris
 from trees.StrongTree import StrongTreeClassifier
 from trees.utils.StrongTreeUtils import print_tree 
 

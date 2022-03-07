@@ -17,23 +17,25 @@ from itertools import combinations
 
 
 class FairTreeClassifier(ClassifierMixin, BaseEstimator):
-    """A FairTree classifier.
+    """An optimal and fair classification tree fitted on a given binary-valued
+    data set. The fairness criteria enforced in the training step is one of statistical parity (SP), 
+    conditional statistical parity (CSP), predictive equality (PE), equal opportunity (EOpp) or equalized odds (EOdds).
 
 
     Parameters
     ----------
     depth : int, default= 1
         A parameter specifying the depth of the tree
-    time_limit : int, default= 30
-        The given time limit (seconds) for solving the MIO in seconds
-    _lambda : int, default= 0
-        The regularization parameter in the objective
+    time_limit : int, default= 60
+        The given time limit (in seconds) for solving the MIO problem
+    _lambda : float, default= 0
+        The regularization parameter in the objective. _lambda is in the interval [0,1)
     num_threads: int, default=None
         The number of threads the solver should use. If None, it will use all avaiable threads
     positive_class : int
         The value of the class label which is corresponding to the desired outcome
     fairness_type: [None, 'SP', 'CSP', 'PE', 'EOpp', 'EOdds'], default=None
-        The type of fairness we want to enforce
+        The type of fairness criteria that we want to enforce
     fairness_bound: float (0,1], default=1
         The bound of the fairness constraint. The smaller the value the stricter the fairness constraint and 1 corresponds to no fairness at all
 
@@ -43,14 +45,13 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         The input passed during :meth:`fit`.
     y_ : ndarray, shape (n_samples,)
         The labels passed during :meth:`fit`.
-    p_ : ndarray
+    P_ : ndarray
         The protected feature columns passed during :meth: `fit`.
     l_ : ndarray
         The legitimate factor column passed during :meth: `fit`.
-    tree : Tree
-    b_value : float
-    w_value : float
-    p_value : float
+    b_value : a dictionary containing the value of the decision variables b, where b_value[(n,f)] is the value of b at node n and feature f 
+    w_value : a dictionary containing the value of the decision variables w, where w_value[(n,k)] is the value of w at node n and class label k
+    p_value : a dictionary containing the value of the decision variables p, where p_value[n] is the value of p at node n
     grb_model : gurobipy.Model
         The fitted Gurobi model.
 
@@ -58,12 +59,12 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
     --------
     >>> from trees.FairTree import FairTreeClassifier
     >>> import numpy as np
-    >>> X = np.arange(100).reshape(100, 1)
+    >>> X = np.arange(200).reshape(100, 2)
     >>> y = np.random.randint(2, size=100)
     >>> P = np.arange(200).reshape(100, 2)
     >>> l = np.zeros((100, ))
-    >>> fcl = FairTreeClassifier(positive_class = 1, depth = 1, _lambda = 0, time_limit = 10,
-        fairness_type = 'CSP', fairness_bound = 1, num_threads = 1)
+    >>> fcl = FairTreeClassifier(positive_class = 1, depth = 1, _lambda = 0, time_limit = 60,
+        fairness_type = 'CSP', fairness_bound = 1, num_threads = None)
     >>> fcl.fit(X, y, P, l)
     """
 
@@ -72,7 +73,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         positive_class,
         depth=1,
         _lambda=0,
-        time_limit=30,
+        time_limit=60,
         fairness_type=None,
         fairness_bound=1,
         num_threads=None,
@@ -144,8 +145,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
 
-        # Here we need to convert P and L to np.arrays. We need a function.
-        # I am worried about the case if the shape is (n_samples, )
+        # Here we need to convert P and l to np.arrays. 
         P, l = check_X_y(P, l)
 
         # keep original data
@@ -155,12 +155,12 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         self.l_ = l
 
         # Instantiate tree object here
-        self.tree = Tree(self.depth)
+        tree = Tree(self.depth)
 
         self.grb_model = FairOCT(
             X,
             y,
-            self.tree,
+            tree,
             self.X_col_labels,
             self.labels,
             self._lambda,
@@ -332,7 +332,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
     def get_EqOdds(self, P, y, y_pred):
         """
-        This function returns the false negative and true positive rate value
+        This function returns the false positive and true positive rate value
         for any given protected level, outcome value and prediction value
 
         :param P: array-like, shape (n_samples,1) or (n_samples, n_p)

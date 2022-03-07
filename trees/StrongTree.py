@@ -3,7 +3,6 @@ import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
-import time
 from trees.utils.StrongTreeUtils import (
     check_columns_match,
     check_binary,
@@ -18,18 +17,19 @@ from trees.utils.StrongTreeBendersOCT import BendersOCT
 
 
 class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
-    """A StrongTree classifier.
+    """A strong optimal classification tree fitted on a given binary-valued
+    data set.
 
     Parameters
     ----------
     depth : int, default=1
         A parameter specifying the depth of the tree
-    time_limit : int
-        The given time limit for solving the MIP in seconds
-    _lambda : int
-        The regularization parameter in the objective
+    time_limit : int, default=60
+        The given time limit (in seconds) for solving the MIO problem 
+    _lambda : float, default= 0
+        The regularization parameter in the objective. _lambda is in the interval [0,1)
     benders_oct: bool, default=False
-        Use benders problem formulation.
+        Use benders problem formulation. 
     obj_mode: str, default="acc"
         Set objective priority. If "acc", maximize the accuracy, if "balance" maximize the balanced accuracy
     num_threads: int, default=None
@@ -42,10 +42,9 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The input passed during :meth:`fit`.
     y_ : ndarray, shape (n_samples,)
         The labels passed during :meth:`fit`.
-    tree : Tree
-    b_value : float
-    w_value : float
-    p_value : float
+    b_value : a dictionary containing the value of the decision variables b, where b_value[(n,f)] is the value of b at node n and feature f 
+    w_value : a dictionary containing the value of the decision variables w, where w_value[(n,k)] is the value of w at node n and class label k
+    p_value : a dictionary containing the value of the decision variables p, where p_value[n] is the value of p at node n
     grb_model : gurobipy.Model
         The fitted Gurobi model
 
@@ -53,18 +52,18 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
     --------
     >>> from trees.StrongTree import StrongTreeClassifier
     >>> import numpy as np
-    >>> X = np.arange(100).reshape(100, 1)
+    >>> X = np.arange(200).reshape(100, 2)
     >>> y = np.random.randint(2, size=100)
-    >>> stcl = StrongTreeClassifier(depth = 1, _lambda = 0, time_limit = 10, num_threads = 1)
+    >>> stcl = StrongTreeClassifier(depth = 1, _lambda = 0, time_limit = 60, num_threads = 1)
     >>> stcl.fit(X, y)
 
     """
 
     def __init__(
         self,
-        depth,
-        time_limit,
-        _lambda,
+        depth=1,
+        time_limit=60,
+        _lambda=0,
         benders_oct=False,
         obj_mode="acc",
         num_threads=None,
@@ -75,7 +74,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         self._lambda = _lambda
         self.num_threads = num_threads
         self.benders_oct = benders_oct
-        self.obj_mode = obj_mode  # if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
+        self.obj_mode = obj_mode
 
         self.X_col_labels = None
         self.X_col_dtypes = None
@@ -128,7 +127,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         self.y_ = y
 
         # Instantiate tree object here
-        self.tree = Tree(self.depth)
+        tree = Tree(self.depth)
 
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
@@ -137,7 +136,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             self.grb_model = BendersOCT(
                 X,
                 y,
-                self.tree,
+                tree,
                 self.X_col_labels,
                 self.labels,
                 self._lambda,
@@ -153,7 +152,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             self.grb_model = FlowOCT(
                 X,
                 y,
-                self.tree,
+                tree,
                 self.X_col_labels,
                 self.labels,
                 self._lambda,
