@@ -105,7 +105,7 @@ def get_node_status(grb_model, b, w, p, n):
     return pruned, branching, selected_feature, leaf, value
 
 
-def print_tree(grb_model, b, w, p):
+def print_tree_util(grb_model, b, w, p):
     """
     This function print the derived tree with the branching features and the predictions asserted for each node
 

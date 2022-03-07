@@ -9,8 +9,7 @@ from pickle import TRUE
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from trees.StrongTree import StrongTreeClassifier
-from trees.utils.StrongTreeUtils import print_tree  
+from trees.StrongTree import StrongTreeClassifier 
 
 data = pd.read_csv("./data/balance-scale_enc.csv")
 y = data.pop("target")
@@ -29,6 +28,6 @@ stcl = StrongTreeClassifier(
 )
 
 stcl.fit(X_train, y_train, verbose=True)
-print_tree(stcl.grb_model, stcl.b_value, stcl.w_value, stcl.p_value)
+stcl.print_tree()
 test_pred = stcl.predict(X_test)
 print('The out-of-sample acc is {}'.format(np.sum(test_pred==y_test)/y_test.shape[0]))
