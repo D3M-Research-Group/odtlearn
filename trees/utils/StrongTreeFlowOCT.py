@@ -8,7 +8,17 @@ import pandas as pd
 
 class FlowOCT:
     def __init__(
-        self, X, y, tree, X_col_labels, labels, _lambda, time_limit, num_threads, obj_mode
+        self,
+        X,
+        y,
+        tree,
+        X_col_labels,
+        labels,
+        _lambda,
+        time_limit,
+        num_threads,
+        obj_mode,
+        verbose,
     ):
         """
         :param X: numpy matrix or pandas dataframe of covariates
@@ -18,6 +28,7 @@ class FlowOCT:
         :param time_limit: The given time limit for solving the MIP
         :param num_threads: Number of threads for the solver to use
         :param obj_mode: if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
+        :param verbose: Display Gurobi model output
         """
         self.X = pd.DataFrame(X, columns=X_col_labels)
         self.y = y
@@ -29,7 +40,7 @@ class FlowOCT:
 
         self.tree = tree
         self._lambda = _lambda
-        self.obj_mode= obj_mode
+        self.obj_mode = obj_mode
 
         # Decision Variables
         self.b = 0
@@ -40,6 +51,9 @@ class FlowOCT:
 
         # Gurobi model
         self.model = Model("FlowOCT")
+        if not verbose:
+            # supress all logging
+            self.model.params.OutputFlag = 0
         if num_threads is not None:
             self.model.params.Threads = num_threads
         self.model.params.TimeLimit = time_limit
@@ -175,16 +189,23 @@ class FlowOCT:
         ###########################################################
         obj = LinExpr(0)
         for n in self.tree.Nodes:
-                for f in self.X_col_labels:
-                    obj.add(-1 * self._lambda * self.b[n, f])
-        if self.obj_mode == 'acc':
+            for f in self.X_col_labels:
+                obj.add(-1 * self._lambda * self.b[n, f])
+        if self.obj_mode == "acc":
             for i in self.datapoints:
                 obj.add((1 - self._lambda) * self.z[i, 1])
 
-        elif self.obj_mode == 'balance':
+        elif self.obj_mode == "balance":
             for i in self.datapoints:
-                obj.add((1 - self._lambda) * (1/self.y[self.y==self.y[i]].shape[0]/self.labels.shape[0]) *self.z[i, 1])
+                obj.add(
+                    (1 - self._lambda)
+                    * (1 / self.y[self.y == self.y[i]].shape[0] / self.labels.shape[0])
+                    * self.z[i, 1]
+                )
         else:
-            assert (self.obj_mode not in ['acc','balance']), f"Wrong objective mode. obj_mode should be one of acc or balance."
+            assert self.obj_mode not in [
+                "acc",
+                "balance",
+            ], f"Wrong objective mode. obj_mode should be one of acc or balance."
 
         self.model.setObjective(obj, GRB.MAXIMIZE)

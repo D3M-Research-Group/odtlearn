@@ -50,17 +50,32 @@ def get_node_status(grb_model, b, w, p, n):
         1- is pruned? i.e., we have made a prediction at one of its ancestors
         2- is a branching node? If yes, what feature do we branch on
         3- is a leaf? If yes, what is the prediction at this node?
-    :param grb_model: the gurobi model solved to optimality (or reached to the time limit)
-    :param b: The values of branching decision variable b
-    :param w: The values of prediction decision variable w
-    :param p: The values of decision variable p
-    :param n: A valid node index in the tree
-    :return: pruned, branching, selected_feature, leaf, value
-    pruned=1 iff the node is pruned
-    branching = 1 iff the node branches at some feature f
-    selected_feature: The feature that the node branch on
-    leaf = 1 iff node n is a leaf in the tree
-    value: if node n is a leaf, value represent the prediction at this node
+
+    Parameters
+    ----------
+    grb_model :
+        The gurobi model solved to optimality (or reached to the time limit).
+    b :
+        The values of branching decision variable b.
+    w :
+        The values of prediction decision variable w.
+    p :
+        The values of decision variable p
+    n :
+        A valid node index in the tree
+
+    Returns
+    -------
+    pruned : int
+        pruned=1 iff the node is pruned
+    branching : int
+        branching = 1 iff the node branches at some feature f
+    selected_feature : str
+        The feature that the node branch on
+    leaf : int
+        leaf = 1 iff node n is a leaf in the tree
+    value :  double
+        if node n is a leaf, value represent the prediction at this node
     """
 
     pruned = False
@@ -93,11 +108,21 @@ def get_node_status(grb_model, b, w, p, n):
 def print_tree(grb_model, b, w, p):
     """
     This function print the derived tree with the branching features and the predictions asserted for each node
-    :param grb_model: the gurobi model solved to optimality (or reached to the time limit)
-    :param b: The values of branching decision variable b
-    :param w: The values of prediction decision variable w
-    :param p: The values of decision variable p
-    :return: print out the tree in the console
+
+    Parameters
+    ----------
+    grb_model :
+        The gurobi model solved to optimality (or reached the time limit)
+    b :
+        The values of branching decision variable b
+    beta :
+        The values of prediction decision variable beta
+    p :
+        The values of decision variable p
+
+    Returns
+    -------
+    Print out the tree in the console
     """
     for n in grb_model.tree.Nodes + grb_model.tree.Leaves:
         pruned, branching, selected_feature, leaf, value = get_node_status(
@@ -115,13 +140,26 @@ def print_tree(grb_model, b, w, p):
 def get_predicted_value(grb_model, X, b, w, p):
     """
     This function returns the predicted value for a given dataset
-    :param grb_model: The gurobi model we solved
-    :param X: The dataset we want to compute accuracy for
-    :param b: The value of decision variable b
-    :param w: The value of decision variable w
-    :param p: The value of decision variable p
-    :return: The predicted value for dataset X
+
+    Parameters
+    ----------
+    grb_model :
+        The gurobi model solved to optimality (or reached to the time limit)
+    X :
+        The dataset we want to compute accuracy for
+    b :
+        The value of decision variable b
+    w :
+        The value of decision variable w
+    p :
+        The value of decision variable p
+
+    Returns
+    -------
+    predicted_values :
+        The predicted value for dataset X
     """
+
     predicted_values = []
     for i in range(X.shape[0]):
         current = 1
@@ -143,12 +181,14 @@ def get_predicted_value(grb_model, X, b, w, p):
                     current = grb_model.tree.get_right_children(current)
                 else:  # going left on the branch
                     current = grb_model.tree.get_left_children(current)
+
     return np.array(predicted_values)
 
 
 def get_left_exp_integer(main_grb_obj, n, i):
     lhs = quicksum(
-        -1*main_grb_obj.b[n, f]
+
+        -1 * main_grb_obj.b[n, f]
         for f in main_grb_obj.X_col_labels
         if main_grb_obj.X.at[i, f] == 0
     )
@@ -158,7 +198,7 @@ def get_left_exp_integer(main_grb_obj, n, i):
 
 def get_right_exp_integer(main_grb_obj, n, i):
     lhs = quicksum(
-        -1*main_grb_obj.b[n, f]
+        -1 * main_grb_obj.b[n, f]
         for f in main_grb_obj.X_col_labels
         if main_grb_obj.X.at[i, f] == 1
     )
@@ -229,7 +269,9 @@ def benders_callback(model, where):
     """
     This function is called by Gurobi at every node through the branch-&-bound
     tree while we solve the model. Using the argument "where" we can see where
-    the callback has been called. We are specifically interested at nodes
+    the callback has been called.
+
+    We are specifically interested at nodes
     where we get an integer solution for the master problem.
     When we get an integer solution for b and p, for every data-point we solve
     the sub-problem which is a minimum cut and check if g[i] <= value of
@@ -237,6 +279,7 @@ def benders_callback(model, where):
     constraint as lazy constraint to the master problem and proceed.
     Whenever we have no violated constraint, it means that we have found
     the optimal solution.
+
     :param model: the gurobi model we are solving.
     :param where: the node where the callback function is called from
     :return:
@@ -263,9 +306,7 @@ def benders_callback(model, where):
                 )
                 if subproblem_value == 0:
                     added_cut = 1
-                    lhs = get_cut_integer(
-                        model._main_grb_obj, left, right, target, i
-                    )
+                    lhs = get_cut_integer(model._main_grb_obj, left, right, target, i)
                     model.cbLazy(lhs <= 0)
 
         func_end_time = time.time()
