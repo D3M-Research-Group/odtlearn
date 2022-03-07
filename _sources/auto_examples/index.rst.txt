@@ -36,14 +36,14 @@ Introductory examples.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="An example of using the sklearn train_test_split pipeline with trees.StrongTree.StrongTreeClass...">
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of fitting a StrongTree decision tree using trees.StrongTree.StrongTreeClassifier">
 
 .. only:: html
 
- .. figure:: /auto_examples/images/thumb/sphx_glr_pipeline_example_thumb.png
-     :alt: Sklearn Pipeline Example
+ .. figure:: /auto_examples/images/thumb/sphx_glr_fit_StrongTree_example_thumb.png
+     :alt: StrongTree Fit Example
 
-     :ref:`sphx_glr_auto_examples_pipeline_example.py`
+     :ref:`sphx_glr_auto_examples_fit_StrongTree_example.py`
 
 .. raw:: html
 
@@ -53,7 +53,7 @@ Introductory examples.
 .. toctree::
    :hidden:
 
-   /auto_examples/pipeline_example
+   /auto_examples/fit_StrongTree_example
 
 .. raw:: html
 

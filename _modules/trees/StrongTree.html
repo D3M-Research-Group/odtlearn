@@ -175,7 +175,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../auto_examples/index.html">General examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../auto_examples/plotting_example.html">Tree Plotting Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../auto_examples/pipeline_example.html">Sklearn Pipeline Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../auto_examples/fit_StrongTree_example.html">StrongTree Fit Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../auto_examples/fit_FairTree_example.html">FairTree Fit Example</a></li>
 </ul>
 </li>
@@ -217,7 +217,6 @@
 <span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
-<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">trees.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">check_columns_match</span><span class="p">,</span>
     <span class="n">check_binary</span><span class="p">,</span>
@@ -232,18 +231,19 @@
 
 
 <div class="viewcode-block" id="StrongTreeClassifier"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">StrongTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
-    <span class="sd">"""A StrongTree classifier.</span>
+    <span class="sd">"""A strong optimal classification tree fitted on a given binary-valued</span>
+<span class="sd">    data set.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    depth : int, default=1</span>
 <span class="sd">        A parameter specifying the depth of the tree</span>
-<span class="sd">    time_limit : int</span>
-<span class="sd">        The given time limit for solving the MIP in seconds</span>
-<span class="sd">    _lambda : int</span>
-<span class="sd">        The regularization parameter in the objective</span>
+<span class="sd">    time_limit : int, default=60</span>
+<span class="sd">        The given time limit (in seconds) for solving the MIO problem </span>
+<span class="sd">    _lambda : float, default= 0</span>
+<span class="sd">        The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
 <span class="sd">    benders_oct: bool, default=False</span>
-<span class="sd">        Use benders problem formulation.</span>
+<span class="sd">        Use benders problem formulation. </span>
 <span class="sd">    obj_mode: str, default="acc"</span>
 <span class="sd">        Set objective priority. If "acc", maximize the accuracy, if "balance" maximize the balanced accuracy</span>
 <span class="sd">    num_threads: int, default=None</span>
@@ -256,10 +256,9 @@
 <span class="sd">        The input passed during :meth:`fit`.</span>
 <span class="sd">    y_ : ndarray, shape (n_samples,)</span>
 <span class="sd">        The labels passed during :meth:`fit`.</span>
-<span class="sd">    tree : Tree</span>
-<span class="sd">    b_value : float</span>
-<span class="sd">    w_value : float</span>
-<span class="sd">    p_value : float</span>
+<span class="sd">    b_value : a dictionary containing the value of the decision variables b, where b_value[(n,f)] is the value of b at node n and feature f </span>
+<span class="sd">    w_value : a dictionary containing the value of the decision variables w, where w_value[(n,k)] is the value of w at node n and class label k</span>
+<span class="sd">    p_value : a dictionary containing the value of the decision variables p, where p_value[n] is the value of p at node n</span>
 <span class="sd">    grb_model : gurobipy.Model</span>
 <span class="sd">        The fitted Gurobi model</span>
 
@@ -267,18 +266,18 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; from trees.StrongTree import StrongTreeClassifier</span>
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
-<span class="sd">    &gt;&gt;&gt; X = np.arange(100).reshape(100, 1)</span>
+<span class="sd">    &gt;&gt;&gt; X = np.arange(200).reshape(100, 2)</span>
 <span class="sd">    &gt;&gt;&gt; y = np.random.randint(2, size=100)</span>
-<span class="sd">    &gt;&gt;&gt; stcl = StrongTreeClassifier(depth = 1, _lambda = 0, time_limit = 10, num_threads = 1)</span>
+<span class="sd">    &gt;&gt;&gt; stcl = StrongTreeClassifier(depth = 1, _lambda = 0, time_limit = 60, num_threads = 1)</span>
 <span class="sd">    &gt;&gt;&gt; stcl.fit(X, y)</span>
 
 <span class="sd">    """</span>
 
 <div class="viewcode-block" id="StrongTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">depth</span><span class="p">,</span>
-        <span class="n">time_limit</span><span class="p">,</span>
-        <span class="n">_lambda</span><span class="p">,</span>
+        <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">benders_oct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span>
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -289,7 +288,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="n">_lambda</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span> <span class="o">=</span> <span class="n">num_threads</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">benders_oct</span> <span class="o">=</span> <span class="n">benders_oct</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>  <span class="c1"># if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">X_col_dtypes</span> <span class="o">=</span> <span class="kc">None</span>
@@ -342,7 +341,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">y_</span> <span class="o">=</span> <span class="n">y</span>
 
         <span class="c1"># Instantiate tree object here</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
 
         <span class="c1"># Code for setting up and running the MIP goes here.</span>
         <span class="c1"># Note that we are taking X and y as array-like objects</span>
@@ -351,7 +350,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span>
                 <span class="n">y</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span>
+                <span class="n">tree</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span>
@@ -367,7 +366,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span>
                 <span class="n">X</span><span class="p">,</span>
                 <span class="n">y</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="p">,</span>
+                <span class="n">tree</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span>

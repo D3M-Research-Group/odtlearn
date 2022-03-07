@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="FairTree Fit Example" href="fit_FairTree_example.html" /><link rel="prev" title="Tree Plotting Example" href="plotting_example.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>Sklearn Pipeline Example - trees 0.0.1 documentation</title>
+        <title>StrongTree Fit Example - trees 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -176,7 +176,7 @@
 <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">General examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="plotting_example.html">Tree Plotting Example</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Sklearn Pipeline Example</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">StrongTree Fit Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fit_FairTree_example.html">FairTree Fit Example</a></li>
 </ul>
 </li>
@@ -214,12 +214,12 @@
         <article role="main">
           <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-pipeline-example-py"><span class="std std-ref">here</span></a>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-fit-strongtree-example-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<section class="sphx-glr-example-title" id="sklearn-pipeline-example">
-<span id="sphx-glr-auto-examples-pipeline-example-py"></span><h1>Sklearn Pipeline Example<a class="headerlink" href="#sklearn-pipeline-example" title="Permalink to this headline">#</a></h1>
-<p>An example of using the sklearn train_test_split pipeline with <a class="reference internal" href="../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier" title="trees.StrongTree.StrongTreeClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">trees.StrongTree.StrongTreeClassifier</span></code></a></p>
+<section class="sphx-glr-example-title" id="strongtree-fit-example">
+<span id="sphx-glr-auto-examples-fit-strongtree-example-py"></span><h1>StrongTree Fit Example<a class="headerlink" href="#strongtree-fit-example" title="Permalink to this headline">#</a></h1>
+<p>An example of fitting a StrongTree decision tree using <a class="reference internal" href="../generated/trees.StrongTree.StrongTreeClassifier.html#trees.StrongTree.StrongTreeClassifier" title="trees.StrongTree.StrongTreeClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">trees.StrongTree.StrongTreeClassifier</span></code></a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pickle</span> <span class="kn">import</span> <span class="n">TRUE</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -236,26 +236,26 @@ to download the full example code</p>
 
 <span class="n">stcl</span> <span class="o">=</span> <span class="n">StrongTreeClassifier</span><span class="p">(</span>
     <span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
     <span class="n">_lambda</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">benders_oct</span><span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">'acc'</span>
 <span class="p">)</span>
 
-<span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">print_tree</span><span class="p">(</span><span class="n">stcl</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span> <span class="n">stcl</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span> <span class="n">stcl</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span> <span class="n">stcl</span><span class="o">.</span><span class="n">p_value</span><span class="p">)</span>
 <span class="n">test_pred</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="numpy.sum" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">sum</span></a><span class="p">(</span><span class="n">test_pred</span><span class="o">==</span><span class="n">y_test</span><span class="p">)</span><span class="o">/</span><span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'The out-of-sample acc is </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="numpy.sum" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">sum</span></a><span class="p">(</span><span class="n">test_pred</span><span class="o">==</span><span class="n">y_test</span><span class="p">)</span><span class="o">/</span><span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 </pre></div>
 </div>
 <p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-pipeline-example-py">
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-fit-strongtree-example-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/0a4b77d4b76ea0643cd2102b60acedaa/pipeline_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">pipeline_example.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/ee375cf898b014c0252d6a333f4194f5/fit_StrongTree_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">fit_StrongTree_example.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/9bd28b2da76856210ba111916c08eea3/pipeline_example.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">pipeline_example.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/2b40490a24dc68b75bbf19cd3ce47654/fit_StrongTree_example.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">fit_StrongTree_example.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
