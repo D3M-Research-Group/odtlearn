@@ -13,8 +13,8 @@ import time
 from trees.utils.StrongTreeUtils import (
     check_columns_match,
     check_binary,
-    get_predicted_value,
 )
+from trees.utils.PrescriptiveTreeUtils import get_predicted_value
 from trees.utils.Tree import Tree
 from trees.utils.PrescriptiveTreesMIP import FlowOPT_IPW, FlowOPT_Robust
 
