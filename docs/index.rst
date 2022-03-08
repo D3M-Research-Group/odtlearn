@@ -18,7 +18,6 @@ This site contains the documentation for the tree package.
    :caption: Documentation
 
    api
-   user_guide
    
 
 .. toctree::
@@ -39,13 +38,7 @@ Information how to install and use this package.
 API documentation for the package.
 
 
-`User Guide <user_guide.html>`_
--------------------------------
-
-Example usage of each of the different types of tree methods.
-
-
 `Examples <auto_examples/index.html>`_
 --------------------------------------
 
-A set of examples. It complements the `User Guide <user_guide.html>`_.
+A set of examples.

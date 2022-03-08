@@ -13,8 +13,8 @@ import time
 from trees.utils.StrongTreeUtils import (
     check_columns_match,
     check_binary,
-    get_predicted_value,
 )
+from trees.utils.PrescriptiveTreeUtils import get_predicted_value
 from trees.utils.Tree import Tree
 from trees.utils.PrescriptiveTreesMIP import FlowOPT_IPW, FlowOPT_Robust
 
@@ -299,7 +299,6 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         prediction = get_predicted_value(
             self.grb_model,
             X,
-            self.X_predict_col_names,
             self.b_value,
             self.w_value,
             self.p_value,

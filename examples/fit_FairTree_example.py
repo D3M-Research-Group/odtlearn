@@ -8,7 +8,6 @@ An example of fitting a FairTree decision tree using :class:`trees.FairTree.Fair
 import pandas as pd
 import numpy as np
 from trees.FairTree import FairTreeClassifier
-from trees.utils.StrongTreeUtils import print_tree 
 
 
 data_train = pd.read_csv("./data/compas/compas_train_1.csv")
@@ -61,7 +60,7 @@ fcl = FairTreeClassifier(
 )
 
 fcl.fit(X_train, y_train, P_train, l_train,  verbose = False)
-print_tree(fcl.grb_model, fcl.b_value, fcl.w_value, fcl.p_value)
+fcl.print_tree()
 pred_test = fcl.predict(X_test)
 sp_val = fcl.get_SP(P_test, y_test)
 csp_val = fcl.get_CSP(P_test, l_test, y_test)

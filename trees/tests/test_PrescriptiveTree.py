@@ -2,7 +2,17 @@ import pytest
 import numpy as np
 import pandas as pd
 
+from trees.utils.PrescriptiveTreeUtils import print_tree
+from numpy.testing import assert_array_equal
+from numpy.testing import assert_allclose
+
 from trees.PrescriptiveTree import PrescriptiveTreeClassifier
+
+
+@pytest.fixture
+def data():
+    df = pd.read_csv("../../data/prescriptive_tree/train_50.csv")
+    return df
 
 
 # Test that we raise a ValueError if X matrix has values other than zero or one
@@ -39,7 +49,7 @@ def test_PrescriptiveTree_X_data_shape_error():
 
 
 # Test that we raise an error if IPW and y_hat are not in correct format
-def test_PrescriptiveTree_X_helpers_error():
+def test_PrescriptiveTree_X_helpers_error(data):
     X = np.ones(10).reshape(10, 1)
     t = np.random.randint(2, size=X.shape[0])
     y = np.random.rand(10)
@@ -68,7 +78,8 @@ def test_PrescriptiveTree_X_helpers_error():
         AssertionError,
         match=r"Found counterfactual estimates for .*",
     ):
-        df = pd.read_csv("../../data/prescriptive_tree/train_50.csv")
+        # df = pd.read_csv("../../data/prescriptive_tree/train_50.csv")
+        df = data
         y_hat = df[["lasso0", "lasso1", "lasso1"]]
         clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="DM")
         clf.fit(X=X, t=t, y=y, y_hat=y_hat)
@@ -89,12 +100,23 @@ def test_PrescriptiveTree_X_treatment_error():
         clf.fit(X, t, y, ipw)
 
 
+# fmt: off
 @pytest.mark.test_gurobi
-# Test that if we are given a pandas dataframe, we keep the original data and its labels
-def test_PrescriptiveTree_classifier():
-    df = pd.read_csv("data/prescriptive_tree/train_50.csv")
-
-    clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="DR")
+@pytest.mark.parametrize("method, expected_pred", [('DR', np.array([0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
+                                                                    1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0,
+                                                                    1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0,
+                                                                    1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0])),
+                                                   ('DM', np.array([0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1,
+                                                                    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1,
+                                                                    1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0])),
+                                                   ('IPW', np.array([1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1,
+                                                                     1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+                                                                     1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                                                                     0, 1]))])
+# fmt: on
+def test_PrescriptiveTree_classifier(data, method, expected_pred):
+    df = data
+    clf = PrescriptiveTreeClassifier(depth=2, time_limit=300, method=method)
 
     X = df.iloc[:, :20]
     t = df["t"]
@@ -111,5 +133,6 @@ def test_PrescriptiveTree_classifier():
     assert hasattr(clf, "w_value")
     assert hasattr(clf, "p_value")
 
-    t_pred = clf.predict(X)
-    assert len(t_pred) == X.shape[0]
+    print_tree(clf.grb_model, clf.b_value, clf.w_value, clf.p_value)
+
+    assert_allclose(clf.predict(X), expected_pred)

@@ -30,7 +30,7 @@ class FlowOPT_Robust:
         self.y_hat = y_hat
         self.robust = robust
         self.treatments_set = treatments_set
-        self.features = X_col_labels
+        self.X_col_labels = X_col_labels
 
         self.datapoints = np.arange(0, self.X.shape[0])
 
@@ -59,14 +59,14 @@ class FlowOPT_Robust:
         the FlowOPT_Robust problem
         :return:  gurobi model object with the FlowOPT_Robust formulation
         """
-        self.b = self.model.addVars(self.tree.Nodes, self.features, vtype=GRB.BINARY, name='b')
-        self.p = self.model.addVars(self.tree.Nodes + self.tree.Terminals, vtype=GRB.BINARY, name='p')
-        self.w = self.model.addVars(self.tree.Nodes + self.tree.Terminals, self.treatments_set, vtype=GRB.CONTINUOUS,
+        self.b = self.model.addVars(self.tree.Nodes, self.X_col_labels, vtype=GRB.BINARY, name='b')
+        self.p = self.model.addVars(self.tree.Nodes + self.tree.Leaves, vtype=GRB.BINARY, name='p')
+        self.w = self.model.addVars(self.tree.Nodes + self.tree.Leaves, self.treatments_set, vtype=GRB.CONTINUOUS,
                                     lb=0,
                                     name='w')
-        self.zeta = self.model.addVars(self.datapoints, self.tree.Nodes + self.tree.Terminals, self.treatments_set,
+        self.zeta = self.model.addVars(self.datapoints, self.tree.Nodes + self.tree.Leaves, self.treatments_set,
                                        vtype=GRB.CONTINUOUS, lb=0, name='zeta')
-        self.z = self.model.addVars(self.datapoints, self.tree.Nodes + self.tree.Terminals, vtype=GRB.CONTINUOUS, lb=0,
+        self.z = self.model.addVars(self.datapoints, self.tree.Nodes + self.tree.Leaves, vtype=GRB.CONTINUOUS, lb=0,
                                     name='z')
 
         ############################### define constraints
@@ -81,27 +81,27 @@ class FlowOPT_Robust:
         # z[i,l(n)] <= sum(b[n,f], f if x[i,f]<=0)    forall i, n in Nodes
         for i in self.datapoints:
             self.model.addConstrs((self.z[i, int(self.tree.get_left_children(n))] <= quicksum(
-                self.b[n, f] for f in self.features if self.X.at[i, f] <= 0)) for n in self.tree.Nodes)
+                self.b[n, f] for f in self.X_col_labels if self.X.at[i, f] <= 0)) for n in self.tree.Nodes)
 
         # z[i,r(n)] <= sum(b[n,f], f if x[i,f]=1)    forall i, n in Nodes
         for i in self.datapoints:
             self.model.addConstrs((self.z[i, int(self.tree.get_right_children(n))] <= quicksum(
-                self.b[n, f] for f in self.features if self.X.at[i, f] == 1)) for n in self.tree.Nodes)
+                self.b[n, f] for f in self.X_col_labels if self.X.at[i, f] == 1)) for n in self.tree.Nodes)
 
         # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
         self.model.addConstrs(
-            (quicksum(self.b[n, f] for f in self.features) + self.p[n] + quicksum(
+            (quicksum(self.b[n, f] for f in self.X_col_labels) + self.p[n] + quicksum(
                 self.p[m] for m in self.tree.get_ancestors(n)) == 1) for n in
             self.tree.Nodes)
 
-        # p[n] + sum(p[m], m in A(n)) = 1   forall n in Terminals
+        # p[n] + sum(p[m], m in A(n)) = 1   forall n in Leaves
         self.model.addConstrs(
             (self.p[n] + quicksum(
                 self.p[m] for m in self.tree.get_ancestors(n)) == 1) for n in
-            self.tree.Terminals)
+            self.tree.Leaves)
 
         # zeta[i,n] <= w[n,T[i]] for all n in N+L, i
-        for n in self.tree.Nodes + self.tree.Terminals:
+        for n in self.tree.Nodes + self.tree.Leaves:
             for k in self.treatments_set:
                 self.model.addConstrs(
                     self.zeta[i, n, k] <= self.w[n, k] for i in self.datapoints)
@@ -109,9 +109,9 @@ class FlowOPT_Robust:
         # sum(w[n,k], k in treatments) = p[n]
         self.model.addConstrs(
             (quicksum(self.w[n, k] for k in self.treatments_set) == self.p[n]) for n in
-            self.tree.Nodes + self.tree.Terminals)
+            self.tree.Nodes + self.tree.Leaves)
 
-        for n in self.tree.Terminals:
+        for n in self.tree.Leaves:
             self.model.addConstrs(
                 quicksum(self.zeta[i, n, k] for k in self.treatments_set) == self.z[i, n] for i in self.datapoints)
 
@@ -120,14 +120,14 @@ class FlowOPT_Robust:
         # define objective function
         obj = LinExpr(0)
         for i in self.datapoints:
-            for n in self.tree.Nodes + self.tree.Terminals:
+            for n in self.tree.Nodes + self.tree.Leaves:
                 for k in self.treatments_set:
-                    obj.add(self.zeta[i, n, k] * (self.y_hat.iloc[i, int(k)])) # we assume that each column corresponds to an ordered list t, which might be problematic
+                    obj.add(self.zeta[i, n, k] * (self.y_hat[i][int(k)])) # we assume that each column corresponds to an ordered list t, which might be problematic
                     treat = self.t[i]
                     if self.robust:
                         if int(treat) == int(k):
                             obj.add(self.zeta[i, n, k] * (
-                                        self.y[i] - self.y_hat.iloc[i, int(k)]) /
+                                        self.y[i] - self.y_hat[i][int(k)]) /
                                     self.ipw[i])
 
         self.model.setObjective(obj, GRB.MAXIMIZE)
@@ -152,7 +152,7 @@ class FlowOPT_IPW:
         self.t = t
         self.ipw = ipw
         self.treatments_set = treatments_set
-        self.features = X_col_labels
+        self.X_col_labels = X_col_labels
 
         # datapoints contains the indicies of our training data
         self.datapoints = np.arange(0, self.X.shape[0])
@@ -183,15 +183,15 @@ class FlowOPT_IPW:
         """
         ############################### define variables
 
-        self.b = self.model.addVars(self.tree.Nodes, self.features, vtype=GRB.BINARY, name='b')
-        self.p = self.model.addVars(self.tree.Nodes + self.tree.Terminals, vtype=GRB.BINARY, name='p')
-        self.w = self.model.addVars(self.tree.Nodes + self.tree.Terminals, self.treatments_set, vtype=GRB.CONTINUOUS,
+        self.b = self.model.addVars(self.tree.Nodes, self.X_col_labels, vtype=GRB.BINARY, name='b')
+        self.p = self.model.addVars(self.tree.Nodes + self.tree.Leaves, vtype=GRB.BINARY, name='p')
+        self.w = self.model.addVars(self.tree.Nodes + self.tree.Leaves, self.treatments_set, vtype=GRB.CONTINUOUS,
                                     lb=0,
                                     name='w')
-        self.zeta = self.model.addVars(self.datapoints, self.tree.Nodes + self.tree.Terminals, vtype=GRB.CONTINUOUS,
+        self.zeta = self.model.addVars(self.datapoints, self.tree.Nodes + self.tree.Leaves, vtype=GRB.CONTINUOUS,
                                        lb=0,
                                        name='zeta')
-        self.z = self.model.addVars(self.datapoints, self.tree.Nodes + self.tree.Terminals, vtype=GRB.CONTINUOUS, lb=0,
+        self.z = self.model.addVars(self.datapoints, self.tree.Nodes + self.tree.Leaves, vtype=GRB.CONTINUOUS, lb=0,
                                     name='z')
 
         ############################### define constraints
@@ -206,41 +206,41 @@ class FlowOPT_IPW:
         # z[i,l(n)] <= sum(b[n,f], f if x[i,f]<=0)    forall i, n in Nodes
         for i in self.datapoints:
             self.model.addConstrs((self.z[i, int(self.tree.get_left_children(n))] <= quicksum(
-                self.b[n, f] for f in self.features if self.data.at[i, f] <= 0)) for n in self.tree.Nodes)
+                self.b[n, f] for f in self.X_col_labels if self.X.at[i, f] <= 0)) for n in self.tree.Nodes)
 
         # z[i,r(n)] <= sum(b[n,f], f if x[i,f]=1)    forall i, n in Nodes
         for i in self.datapoints:
             self.model.addConstrs((self.z[i, int(self.tree.get_right_children(n))] <= quicksum(
-                self.b[n, f] for f in self.features if self.data.at[i, f] == 1)) for n in self.tree.Nodes)
+                self.b[n, f] for f in self.X_col_labels if self.X.at[i, f] == 1)) for n in self.tree.Nodes)
 
         # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
         self.model.addConstrs(
-            (quicksum(self.b[n, f] for f in self.features) + self.p[n] + quicksum(
+            (quicksum(self.b[n, f] for f in self.X_col_labels) + self.p[n] + quicksum(
                 self.p[m] for m in self.tree.get_ancestors(n)) == 1) for n in
             self.tree.Nodes)
 
-        # p[n] + sum(p[m], m in A(n)) = 1   forall n in Terminals
+        # p[n] + sum(p[m], m in A(n)) = 1   forall n in Leaves
         self.model.addConstrs(
             (self.p[n] + quicksum(
                 self.p[m] for m in self.tree.get_ancestors(n)) == 1) for n in
-            self.tree.Terminals)
+            self.tree.Leaves)
 
         # zeta[i,n] <= w[n,T[i]] for all n in N+L, i
-        for n in self.tree.Nodes + self.tree.Terminals:
+        for n in self.tree.Nodes + self.tree.Leaves:
             self.model.addConstrs(
-                self.zeta[i, n] <= self.w[n, self.data.at[i, self.treatment]] for i in self.datapoints)
+                self.zeta[i, n] <= self.w[n, self.t[i]] for i in self.datapoints)
 
         # sum(w[n,k], k in treatments) = p[n]
         self.model.addConstrs(
             (quicksum(self.w[n, k] for k in self.treatments_set) == self.p[n]) for n in
-            self.tree.Nodes + self.tree.Terminals)
+            self.tree.Nodes + self.tree.Leaves)
 
-        for n in self.tree.Terminals:
+        for n in self.tree.Leaves:
             self.model.addConstrs(self.zeta[i, n] == self.z[i, n] for i in self.datapoints)
 
         # define objective function
         obj = LinExpr(0)
         for i in self.datapoints:
-            obj.add(self.z[i, 1] * (self.data.at[i, self.outcome]) / self.data.at[i, self.prob_t])
+            obj.add(self.z[i, 1] * (self.y[i]) / self.ipw[i])
 
         self.model.setObjective(obj, GRB.MAXIMIZE)

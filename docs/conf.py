@@ -355,6 +355,7 @@ sphinx_gallery_conf = {
     "doc_module": "skltemplate",
     "backreferences_dir": os.path.join("generated"),
     "reference_url": {"skltemplate": None},
+    "filename_pattern": r"fit_*",
 }
 
 

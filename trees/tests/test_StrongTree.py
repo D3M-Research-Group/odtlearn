@@ -4,7 +4,6 @@ import pandas as pd
 from numpy.testing import assert_allclose
 from sklearn.datasets import load_iris
 from trees.StrongTree import StrongTreeClassifier
-from trees.utils.StrongTreeUtils import print_tree 
 
 
 @pytest.fixture
@@ -47,11 +46,11 @@ def synthetic_data_2():
     |    - - -      |
     |______0________|_______1_______X1
     '''
-    X = np.array([[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
+    X = np.array([[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
                   [1,0],[1,0],[1,0],
                   [1,1],
                   [0,1],[0,1],[0,1]])
-    y = np.array([0,0,0,0,0,0,1,
+    y = np.array([0,0,0,0,0,0,0,1,
                   0,0,0,
                   0,
                   1,0,0])
@@ -142,15 +141,15 @@ def test_StrongTree_same_predictions(synthetic_data_1, d, l, benders, expected_p
         obj_mode = 'acc'
     )
     stcl.fit(X, y)
-    print_tree(stcl.grb_model, stcl.b_value, stcl.w_value, stcl.p_value)
+    stcl.print_tree()
     assert_allclose(stcl.predict(X), expected_pred)
 
 
 
-@pytest.mark.parametrize("benders, obj_mode ,expected_pred", [(False, 'acc' , np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,0])), 
-                                                              (False, 'balance' ,np.array([0,0,0,0,0,0,0,0,0,0,0,1,1,1])),
-                                                              (True, 'acc' , np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,0])), 
-                                                              (True, 'balance' ,np.array([0,0,0,0,0,0,0,0,0,0,0,1,1,1]))])
+@pytest.mark.parametrize("benders, obj_mode ,expected_pred", [(False, 'acc' , np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])), 
+                                                              (False, 'balance' ,np.array([0,0,0,0,0,0,0,0,0,0,0,0,1,1,1])),
+                                                              (True, 'acc' , np.array([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])), 
+                                                              (True, 'balance' ,np.array([0,0,0,0,0,0,0,0,0,0,0,0,1,1,1]))])
 def test_StrongTree_obj_mode(synthetic_data_2, benders, obj_mode, expected_pred):
     X, y = synthetic_data_2
     stcl = StrongTreeClassifier(
@@ -162,5 +161,5 @@ def test_StrongTree_obj_mode(synthetic_data_2, benders, obj_mode, expected_pred)
         obj_mode = obj_mode
     )
     stcl.fit(X, y)
-    print_tree(stcl.grb_model, stcl.b_value, stcl.w_value, stcl.p_value)
+    stcl.print_tree()
     assert_allclose(stcl.predict(X), expected_pred)
