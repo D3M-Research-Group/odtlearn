@@ -22,5 +22,5 @@ jobs:
           pip install -r requirements.txt
       - name: Run tests with pytest
         run: |
-          cd trees/tests
+          cd odtlearn/tests
           pytest
