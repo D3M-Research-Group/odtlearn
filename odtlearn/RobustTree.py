@@ -15,7 +15,7 @@ import time
 class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
     """An optimal robust decision tree classifier, fitted on a given integer-valued
     data set and a given cost-and-budget uncertainty set to produce a tree robust
-    against distribition shifts.
+    against distribution shifts.
 
     Parameters
     ----------
@@ -184,7 +184,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         return np.array(prediction)
 
     def predict(self, X):
-        """Given the input covariates, predict the class labels of each sample 
+        """Given the input covariates, predict the class labels of each sample
         based on the fitted optimal robust classification tree
 
         Parameters
@@ -205,31 +205,31 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         check_integer(df_test)
 
         return self.get_prediction(df_test)
-    
+
     def print_tree(self):
         """Print the fitted tree with the branching features, the threshold values for
         each branching node's test, and the predictions asserted for each assignment node"""
-        
+
         check_is_fitted(self, ["model"])
 
         assignment_nodes = []
-        for n in self.model.tree.Nodes + self.model.tree.Leaves:         
-            print('#########node ', n)
+        for n in self.model.tree.Nodes + self.model.tree.Leaves:
+            print("#########node ", n)
             terminal = False
 
             # Check if pruned
             if self.model.tree.get_parent(n) in assignment_nodes:
-                print('pruned')
+                print("pruned")
                 continue
 
             for k in self.model.labels:
                 if self.w_value[n, k] > 0.5:
-                    print('leaf {}'.format(k))
+                    print("leaf {}".format(k))
                     terminal = True
                     assignment_nodes += [n]
                     break
             if not terminal:
                 for (f, theta) in self.model.f_theta_indices:
-                    if self.b_value[n, f, theta] > 0.5: # b[n,f]== 1
+                    if self.b_value[n, f, theta] > 0.5:  # b[n,f]== 1
                         print("Feature: ", f, ", Cutoff: ", theta)
                         break
