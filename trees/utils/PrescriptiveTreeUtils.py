@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def print_tree(grb_model, b, w, p):
     """
     This function print the derived tree with the branching features and the predictions asserted for each node
@@ -119,7 +122,9 @@ def get_predicted_value(grb_model, X, b, w, p):
                 predicted_values.append(value)
                 break
             elif branching:
-                selected_feature_idx = np.where(grb_model.X_col_labels == selected_feature)
+                selected_feature_idx = np.where(
+                    grb_model.X_col_labels == selected_feature
+                )
                 # Raise assertion error we don't have a column that matches
                 # the selected feature or more than one column that matches
                 assert (

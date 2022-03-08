@@ -299,7 +299,6 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         prediction = get_predicted_value(
             self.grb_model,
             X,
-            self.X_predict_col_names,
             self.b_value,
             self.w_value,
             self.p_value,
