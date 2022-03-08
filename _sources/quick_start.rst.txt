@@ -11,7 +11,7 @@ To install the package, you need to run the following command in your terminal:
 
 .. code-block:: bash
 
-    pip install git+https://github.com/D3M-Research-Group/decision_tree_estimators.git#egg=odtlearn
+    pip install git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
 
 
 Usage Example
