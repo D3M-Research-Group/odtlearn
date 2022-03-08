@@ -5,8 +5,8 @@ from sklearn.datasets import load_iris
 from numpy.testing import assert_array_equal
 from numpy.testing import assert_allclose
 
-from trees.FairTree import FairTreeClassifier
-from trees.StrongTree import StrongTreeClassifier
+from odtlearn.FairTree import FairTreeClassifier
+from odtlearn.StrongTree import StrongTreeClassifier
 
 
 # @pytest.fixture

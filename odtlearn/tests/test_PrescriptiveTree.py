@@ -2,11 +2,11 @@ import pytest
 import numpy as np
 import pandas as pd
 
-from trees.utils.PrescriptiveTreeUtils import print_tree
+from odtlearn.utils.PrescriptiveTreeUtils import print_tree
 from numpy.testing import assert_array_equal
 from numpy.testing import assert_allclose
 
-from trees.PrescriptiveTree import PrescriptiveTreeClassifier
+from odtlearn.PrescriptiveTree import PrescriptiveTreeClassifier
 
 
 @pytest.fixture

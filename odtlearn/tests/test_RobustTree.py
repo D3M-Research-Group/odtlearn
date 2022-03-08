@@ -4,7 +4,7 @@ import pandas as pd
 from numpy.testing import assert_allclose
 
 
-from trees.RobustTree import RobustTreeClassifier
+from odtlearn.RobustTree import RobustTreeClassifier
 
 @pytest.fixture
 def synthetic_data_1():

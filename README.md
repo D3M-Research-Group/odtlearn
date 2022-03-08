@@ -1,4 +1,4 @@
-# Decision Tree Estimators
+# ODTlearn
 
 A package for tree-based statistical estimation and inference. Trees provides implementations of StrongTrees ([1]), FairTrees ([2]), RobustTrees ([3]) for classification, and Prescriptive Trees ([4]) for prescription.
 
@@ -10,8 +10,8 @@ The [package documentation](https://d3m-research-group.github.io/decision_tree_e
 
 The current development version can be installed from source with the following command:
 
-```
-pip install git+https://github.com/D3M-Research-Group/decision_tree_estimators.git#egg=trees
+``` bash
+pip install git+https://github.com/D3M-Research-Group/decision_tree_estimators.git#egg=odtlearn
 ```
 
 A release version of the package will be available on PyPI shortly.

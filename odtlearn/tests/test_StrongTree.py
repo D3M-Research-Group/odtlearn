@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from numpy.testing import assert_allclose
 from sklearn.datasets import load_iris
-from trees.StrongTree import StrongTreeClassifier
+from odtlearn.StrongTree import StrongTreeClassifier
 
 
 @pytest.fixture

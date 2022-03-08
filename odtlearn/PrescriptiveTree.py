@@ -10,13 +10,13 @@ from sklearn.utils.validation import (
     check_consistent_length,
 )
 import time
-from trees.utils.StrongTreeUtils import (
+from odtlearn.utils.StrongTreeUtils import (
     check_columns_match,
     check_binary,
 )
-from trees.utils.PrescriptiveTreeUtils import get_predicted_value
-from trees.utils.Tree import Tree
-from trees.utils.PrescriptiveTreesMIP import FlowOPT_IPW, FlowOPT_Robust
+from odtlearn.utils.PrescriptiveTreeUtils import get_predicted_value
+from odtlearn.utils.Tree import Tree
+from odtlearn.utils.PrescriptiveTreesMIP import FlowOPT_IPW, FlowOPT_Robust
 
 
 class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):

@@ -3,11 +3,11 @@
 FairTree Fit Example
 ============================
 
-An example of fitting a FairTree decision tree using :class:`trees.FairTree.FairTreeClassifier`
+An example of fitting a FairTree decision tree using :class:`odtlearn.FairTree.FairTreeClassifier`
 """
 import pandas as pd
 import numpy as np
-from trees.FairTree import FairTreeClassifier
+from odtlearn.FairTree import FairTreeClassifier
 
 
 data_train = pd.read_csv("./data/compas/compas_train_1.csv")

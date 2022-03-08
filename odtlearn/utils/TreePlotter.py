@@ -3,7 +3,7 @@ from functools import reduce, partial
 from itertools import compress
 import matplotlib.pyplot as plt
 import numpy as np
-from trees.utils.StrongTreeUtils import get_node_status
+from odtlearn.utils.StrongTreeUtils import get_node_status
 
 
 def contain_dict(list_var):

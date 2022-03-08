@@ -6,9 +6,9 @@ from sklearn.utils.validation import check_X_y, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
 
 # Include Necessary imports in the same folder
-from trees.utils.Tree import Tree
-from trees.utils.RobustOCT import RobustOCT
-from trees.utils.RobustTreeUtils import mycallback, check_integer, check_same_as_X
+from odtlearn.utils.Tree import Tree
+from odtlearn.utils.RobustOCT import RobustOCT
+from odtlearn.utils.RobustTreeUtils import mycallback, check_integer, check_same_as_X
 import time
 
 

@@ -7,22 +7,22 @@ import os
 from setuptools import find_packages, setup
 
 # get __version__ from _version.py
-# ver_file = os.path.join("trees", "_version.py")
+# ver_file = os.path.join("odtlearn", "_version.py")
 # print(ver_file)
 # with open(ver_file) as f:
 #     exec(f.read())
 
-DISTNAME = "trees"
-DESCRIPTION = "A package for decision tree methods."
+DISTNAME = "odtlearn"
+DESCRIPTION = "A package for tree-based statistical estimation and inference using optimal decision trees."
 with codecs.open("README.md", encoding="utf-8-sig") as f:
     LONG_DESCRIPTION = f.read()
 MAINTAINER = "P. Vossler"
 MAINTAINER_EMAIL = "patrick.vossler18@gmail.com"
-URL = "https://github.com/scikit-learn-contrib/project-template"
+URL = "https://github.com/D3M-Research-Group/decision_tree_estimators"
 LICENSE = "new BSD"
-DOWNLOAD_URL = "https://github.com/scikit-learn-contrib/project-template"
+DOWNLOAD_URL = "https://github.com/D3M-Research-Group/decision_tree_estimators"
 VERSION = "0.0.1"
-INSTALL_REQUIRES = ["numpy", "scipy", "scikit-learn"]
+INSTALL_REQUIRES = ["numpy", "scipy", "scikit-learn", "pandas", "gurobipy"]
 CLASSIFIERS = [
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
@@ -30,14 +30,11 @@ CLASSIFIERS = [
     "Programming Language :: Python",
     "Topic :: Software Development",
     "Topic :: Scientific/Engineering",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: POSIX",
     "Operating System :: Unix",
     "Operating System :: MacOS",
-    "Programming Language :: Python :: 2.7",
-    "Programming Language :: Python :: 3.5",
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.9",
 ]
 EXTRAS_REQUIRE = {
     "tests": ["pytest", "pytest-cov"],
@@ -56,7 +53,7 @@ setup(
     long_description=LONG_DESCRIPTION,
     zip_safe=False,  # the package can run out of an .egg file
     classifiers=CLASSIFIERS,
-    packages=find_packages(include=["trees", "trees.*"]),
+    packages=find_packages(include=["odtlearn", "odtlearn.*"]),
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,
 )

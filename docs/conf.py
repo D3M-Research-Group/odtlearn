@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# trees documentation build configuration file, created by
+# odtlearn documentation build configuration file, created by
 # sphinx-quickstart on Mon Jan 18 14:44:12 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -83,7 +83,7 @@ plot_gallery = False
 master_doc = "index"
 
 # General information about the project.
-project = u"trees"
+project = u"odtlearn"
 # copyright = u'2022, Patrick Vossler'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -91,7 +91,7 @@ project = u"trees"
 # built documents.
 #
 # The short X.Y version.
-from trees import _version
+from odtlearn import _version
 
 version = _version.__version__
 # The full version, including alpha/beta/rc tags.
@@ -188,7 +188,7 @@ exclude_patterns = ["_build", "_templates"]
 # pygments_style = "sphinx"
 # html_theme = "sphinx_rtd_theme"
 # html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-# html_style = "css/trees.css"
+# html_style = "css/odtlearn.css"
 html_theme = "furo"
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -258,7 +258,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "treesdoc"
+htmlhelp_basename = "odtlearndoc"
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -276,7 +276,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ("index", "trees.tex", u"trees Documentation", u"Patrick Vossler", "manual"),
+    ("index", "odtlearn.tex", u"odtlearn Documentation", u"Patrick Vossler", "manual"),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -304,7 +304,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [("index", "trees", u"trees Documentation", [u"Patrick Vossler"], 1)]
+man_pages = [("index", "odtlearn", u"odtlearn Documentation", [u"Patrick Vossler"], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -318,10 +318,10 @@ man_pages = [("index", "trees", u"trees Documentation", [u"Patrick Vossler"], 1)
 texinfo_documents = [
     (
         "index",
-        "trees",
-        u"trees Documentation",
+        "odtlearn",
+        u"odtlearn Documentation",
         u"Patrick Vossler",
-        "trees",
+        "odtlearn",
         "One line description of project.",
         "Miscellaneous",
     ),

@@ -1,11 +1,11 @@
 .. _api:
 
 ####################
-Trees API
+ODTlearn API
 ####################
 
-This is the class and function reference of trees. 
-Please refer to the :ref:`full user guide <user_guide>` for further details, 
+This is the class and function reference of the odtlearn package.
+Please refer to the :ref:`examples <auto_examples/index.html>` for further details,
 as the class and function raw specifications may not be enough to give full guidelines on their uses.
 
 
@@ -16,7 +16,7 @@ StrongTree
    :toctree: generated/
    :template: class.rst
 
-   trees.StrongTree.StrongTreeClassifier
+   odtlearn.StrongTree.StrongTreeClassifier
 
 
 
@@ -27,7 +27,7 @@ FairTree
    :toctree: generated/
    :template: class.rst
 
-   trees.FairTree.FairTreeClassifier
+   odtlearn.FairTree.FairTreeClassifier
 
 RobustTree
 ==========
@@ -36,7 +36,7 @@ RobustTree
    :toctree: generated/
    :template: class.rst
 
-   trees.RobustTree.RobustTreeClassifier
+   odtlearn.RobustTree.RobustTreeClassifier
 
 PrescriptiveTree
 ================
@@ -45,4 +45,4 @@ PrescriptiveTree
    :toctree: generated/
    :template: class.rst
 
-   trees.PrescriptiveTree.PrescriptiveTreeClassifier
+   odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier

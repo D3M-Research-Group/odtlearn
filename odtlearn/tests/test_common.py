@@ -2,10 +2,10 @@ import pytest
 
 from sklearn.utils.estimator_checks import check_estimator
 
-from trees.StrongTree import StrongTreeClassifier
-from trees.FairTree import FairTreeClassifier
-from trees.RobustTree import RobustTreeClassifier
-from trees.PrescriptiveTree import PrescriptiveTreeClassifier
+from odtlearn.StrongTree import StrongTreeClassifier
+from odtlearn.FairTree import FairTreeClassifier
+from odtlearn.RobustTree import RobustTreeClassifier
+from odtlearn.PrescriptiveTree import PrescriptiveTreeClassifier
 
 
 @pytest.mark.skip()

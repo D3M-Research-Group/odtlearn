@@ -1,4 +1,4 @@
-name: trees
+name: odtlearn
 dependencies:
   - numpy
   - scipy

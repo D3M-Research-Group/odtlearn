@@ -3,12 +3,12 @@
 Tree Plotting Example
 ============================
 
-An example of plotting a fit decision tree using :class:`trees.utils.TreePlotter.TreePlotter`
+An example of plotting a fit decision tree using :class:`odtlearn.utils.TreePlotter.TreePlotter`
 """
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from trees.StrongTree import StrongTreeClassifier
-from trees.utils.TreePlotter import TreePlotter
+from odtlearn.StrongTree import StrongTreeClassifier
+from odtlearn.utils.TreePlotter import TreePlotter
 
 
 data = pd.read_csv("data/balance-scale_enc.csv")

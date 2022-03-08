@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
-from trees.utils.StrongTreeUtils import (
+from odtlearn.utils.StrongTreeUtils import (
     check_columns_match,
     check_binary,
     benders_callback,
@@ -12,9 +12,9 @@ from trees.utils.StrongTreeUtils import (
 )
 
 # Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
-from trees.utils.Tree import Tree
-from trees.utils.StrongTreeFlowOCT import FlowOCT
-from trees.utils.StrongTreeBendersOCT import BendersOCT
+from odtlearn.utils.Tree import Tree
+from odtlearn.utils.StrongTreeFlowOCT import FlowOCT
+from odtlearn.utils.StrongTreeBendersOCT import BendersOCT
 
 
 class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
@@ -51,7 +51,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from trees.StrongTree import StrongTreeClassifier
+    >>> from odtlearn.StrongTree import StrongTreeClassifier
     >>> import numpy as np
     >>> X = np.arange(200).reshape(100, 2)
     >>> y = np.random.randint(2, size=100)
