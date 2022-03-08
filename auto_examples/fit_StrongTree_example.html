@@ -218,8 +218,7 @@ to download the full example code</p>
 <section class="sphx-glr-example-title" id="strongtree-fit-example">
 <span id="sphx-glr-auto-examples-fit-strongtree-example-py"></span><h1>StrongTree Fit Example<a class="headerlink" href="#strongtree-fit-example" title="Permalink to this headline">#</a></h1>
 <p>An example of fitting a StrongTree decision tree using <a class="reference internal" href="../generated/odtlearn.StrongTree.StrongTreeClassifier.html#odtlearn.StrongTree.StrongTreeClassifier" title="odtlearn.StrongTree.StrongTreeClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">odtlearn.StrongTree.StrongTreeClassifier</span></code></a></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pickle</span> <span class="kn">import</span> <span class="n">TRUE</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" title="sklearn.model_selection.train_test_split" class="sphx-glr-backref-module-sklearn-model_selection sphx-glr-backref-type-py-function"><span class="n">train_test_split</span></a>
 <span class="kn">from</span> <span class="nn">odtlearn.StrongTree</span> <span class="kn">import</span> <span class="n">StrongTreeClassifier</span>
@@ -232,18 +231,20 @@ to download the full example code</p>
 <span class="p">)</span>
 
 <span class="n">stcl</span> <span class="o">=</span> <span class="n">StrongTreeClassifier</span><span class="p">(</span>
-    <span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
-    <span class="n">_lambda</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">benders_oct</span><span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+    <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">benders_oct</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">'acc'</span>
+    <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">stcl</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 <span class="n">test_pred</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'The out-of-sample acc is </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="numpy.sum" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">sum</span></a><span class="p">(</span><span class="n">test_pred</span><span class="o">==</span><span class="n">y_test</span><span class="p">)</span><span class="o">/</span><span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">"The out-of-sample acc is </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="numpy.sum" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">sum</span></a><span class="p">(</span><span class="n">test_pred</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">)</span> <span class="o">/</span> <span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
