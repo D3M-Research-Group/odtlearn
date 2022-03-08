@@ -4,14 +4,14 @@ A package for tree-based statistical estimation and inference using optimal deci
 
 ## Documentation
 
-The [package documentation](https://d3m-research-group.github.io/decision_tree_estimators/index.html) contains usage examples and method reference.
+The [package documentation](https://d3m-research-group.github.io/odtlearn/index.html) contains usage examples and method reference.
 
 ## Installation
 
 The current development version can be installed from source with the following command:
 
 ``` bash
-pip install git+https://github.com/D3M-Research-Group/decision_tree_estimators.git#egg=odtlearn
+pip install git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
 ```
 
 A release version of the package will be available on PyPI shortly.
