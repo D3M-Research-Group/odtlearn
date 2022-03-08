@@ -153,7 +153,7 @@ exclude_patterns = ["_build", "_templates"]
 #         "Docs": "/index",
 #         "About": "/about",
 #         "repository on GitHub": {
-#             "link": "https://github.com/patrickvossler18/decision_tree_estimators/",
+#             "link": "https://github.com/patrickvossler18/odtlearn/",
 #             "icon": (
 #                 '<svg style="height: 26px; margin-top: -2px;" viewBox="0 0 45 44" '
 #                 'fill="currentColor" xmlns="http://www.w3.org/2000/svg">'
