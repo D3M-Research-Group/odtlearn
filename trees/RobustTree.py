@@ -57,7 +57,6 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
     def extract_metadata(self, X, y):
         """A function for extracting metadata from the inputs before converting
         them into numpy arrays to work with the sklearn API
-
         """
         if isinstance(X, pd.DataFrame):
             self.X_col_labels = X.columns
@@ -75,7 +74,8 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         self.X.set_index(pd.Index(range(X.shape[0])), inplace=True)
 
     def fit(self, X, y, costs=None, budget=-1, verbose=True):
-        """A reference implementation of a fitting function for a classifier.
+        """Fit an optimal robust classification tree given data, labels,
+        costs of uncertainty, and budget of uncertainty
 
         Parameters
         ----------
@@ -184,7 +184,8 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         return np.array(prediction)
 
     def predict(self, X):
-        """A reference implementation of a prediction for a classifier.
+        """Given the input covariates, predict the class labels of each sample 
+        based on the fitted optimal robust classification tree
 
         Parameters
         ----------
@@ -206,7 +207,9 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         return self.get_prediction(df_test)
     
     def print_tree(self):
-        """Print the fitted tree"""
+        """Print the fitted tree with the branching features, the threshold values for
+        each branching node's test, and the predictions asserted for each assignment node"""
+        
         check_is_fitted(self, ["model"])
 
         assignment_nodes = []
