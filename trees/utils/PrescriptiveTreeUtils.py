@@ -1,3 +1,33 @@
+def print_tree(grb_model, b, w, p):
+    """
+    This function print the derived tree with the branching features and the predictions asserted for each node
+    Parameters
+    ----------
+    grb_model :
+        The gurobi model solved to optimality (or reached the time limit)
+    b :
+        The values of branching decision variable b
+    w :
+        The values of prediction decision variable w
+    p :
+        The values of decision variable p
+    Returns
+    -------
+    Print out the tree in the console
+    """
+    for n in grb_model.tree.Nodes + grb_model.tree.Leaves:
+        pruned, branching, selected_feature, leaf, value = get_node_status(
+            grb_model, b, w, p, n
+        )
+        print("#########node ", n)
+        if pruned:
+            print("pruned")
+        elif branching:
+            print("branch on {}".format(selected_feature))
+        elif leaf:
+            print("leaf {}".format(value))
+
+
 def get_node_status(grb_model, b, w, p, n):
     """
     This function give the status of a given node in a tree. By status we mean whether the node
@@ -57,31 +87,47 @@ def get_node_status(grb_model, b, w, p, n):
     return pruned, branching, selected_feature, leaf, value
 
 
-def print_tree(grb_model, b, w, p):
+def get_predicted_value(grb_model, X, b, w, p):
     """
-    This function print the derived tree with the branching features and the predictions asserted for each node
+    This function returns the predicted value for a given dataset
     Parameters
     ----------
     grb_model :
-        The gurobi model solved to optimality (or reached the time limit)
+        The gurobi model solved to optimality (or reached to the time limit)
+    X :
+        The dataset we want to compute accuracy for
     b :
-        The values of branching decision variable b
+        The value of decision variable b
     w :
-        The values of prediction decision variable w
+        The value of decision variable w
     p :
-        The values of decision variable p
+        The value of decision variable p
     Returns
     -------
-    Print out the tree in the console
+    predicted_values :
+        The predicted value for dataset X
     """
-    for n in grb_model.tree.Nodes + grb_model.tree.Leaves:
-        pruned, branching, selected_feature, leaf, value = get_node_status(
-            grb_model, b, w, p, n
-        )
-        print("#########node ", n)
-        if pruned:
-            print("pruned")
-        elif branching:
-            print("branch on {}".format(selected_feature))
-        elif leaf:
-            print("leaf {}".format(value))
+
+    predicted_values = []
+    for i in range(X.shape[0]):
+        current = 1
+        while True:
+            _, branching, selected_feature, leaf, value = get_node_status(
+                grb_model, b, w, p, current
+            )
+            if leaf:
+                predicted_values.append(value)
+                break
+            elif branching:
+                selected_feature_idx = np.where(grb_model.X_col_labels == selected_feature)
+                # Raise assertion error we don't have a column that matches
+                # the selected feature or more than one column that matches
+                assert (
+                    len(selected_feature_idx) == 1
+                ), f"Found {len(selected_feature_idx)} columns matching the selected feature {selected_feature}"
+                if X[i, selected_feature_idx] == 1:  # going right on the branch
+                    current = grb_model.tree.get_right_children(current)
+                else:  # going left on the branch
+                    current = grb_model.tree.get_left_children(current)
+
+    return np.array(predicted_values)
