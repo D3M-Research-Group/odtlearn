@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>trees.RobustTree - trees 0.0.1 documentation</title>
+        <title>odtlearn.RobustTree - odtlearn 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -125,7 +125,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">trees 0.0.1 documentation</div></a>
+      <a href="../../index.html"><div class="brand">odtlearn 0.0.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -148,7 +148,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">trees 0.0.1 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 0.0.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -158,15 +158,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Getting started with the Trees Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Getting started with the ODTlearn Package</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">Trees API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.StrongTree</span></code>.StrongTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code>.FairTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.RobustTree</span></code>.RobustTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/odtlearn.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.StrongTree</span></code>.StrongTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.FairTree</span></code>.FairTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.RobustTree</span></code>.RobustTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
 </ul>
 </li>
 </ul>
@@ -209,7 +209,7 @@
           </label>
         </div>
         <article role="main">
-          <h1>Source code for trees.RobustTree</h1><div class="highlight"><pre>
+          <h1>Source code for odtlearn.RobustTree</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -218,13 +218,13 @@
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
 
 <span class="c1"># Include Necessary imports in the same folder</span>
-<span class="kn">from</span> <span class="nn">trees.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
-<span class="kn">from</span> <span class="nn">trees.utils.RobustOCT</span> <span class="kn">import</span> <span class="n">RobustOCT</span>
-<span class="kn">from</span> <span class="nn">trees.utils.RobustTreeUtils</span> <span class="kn">import</span> <span class="n">mycallback</span><span class="p">,</span> <span class="n">check_integer</span><span class="p">,</span> <span class="n">check_same_as_X</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.RobustOCT</span> <span class="kn">import</span> <span class="n">RobustOCT</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.RobustTreeUtils</span> <span class="kn">import</span> <span class="n">mycallback</span><span class="p">,</span> <span class="n">check_integer</span><span class="p">,</span> <span class="n">check_same_as_X</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
 
-<div class="viewcode-block" id="RobustTreeClassifier"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">RobustTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustTreeClassifier"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">RobustTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
     <span class="sd">"""An optimal robust decision tree classifier, fitted on a given integer-valued</span>
 <span class="sd">    data set and a given cost-and-budget uncertainty set to produce a tree robust</span>
 <span class="sd">    against distribition shifts.</span>
@@ -261,12 +261,12 @@
 <span class="sd">        `w` for assignment variables)</span>
 <span class="sd">    """</span>
 
-<div class="viewcode-block" id="RobustTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">1800</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">1800</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">num_threads</span></div>
 
-<div class="viewcode-block" id="RobustTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">"""A function for extracting metadata from the inputs before converting</span>
 <span class="sd">        them into numpy arrays to work with the sklearn API</span>
 <span class="sd">        """</span>
@@ -285,7 +285,7 @@
         <span class="c1"># Strip indices in training data into integers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RobustTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">budget</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustTreeClassifier.fit"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">budget</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">"""Fit an optimal robust classification tree given data, labels,</span>
 <span class="sd">        costs of uncertainty, and budget of uncertainty</span>
 
@@ -395,7 +395,7 @@
                             <span class="k">break</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
 
-<div class="viewcode-block" id="RobustTreeClassifier.predict"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustTreeClassifier.predict"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">"""Given the input covariates, predict the class labels of each sample </span>
 <span class="sd">        based on the fitted optimal robust classification tree</span>
 
@@ -418,7 +418,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_prediction</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="RobustTreeClassifier.print_tree"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.print_tree">[docs]</a>    <span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustTreeClassifier.print_tree"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.print_tree">[docs]</a>    <span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""Print the fitted tree with the branching features, the threshold values for</span>
 <span class="sd">        each branching node's test, and the predictions asserted for each assignment node"""</span>
         

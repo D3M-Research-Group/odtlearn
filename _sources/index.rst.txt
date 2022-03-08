@@ -1,9 +1,9 @@
-.. tree documentation master file
+.. odtlearn documentation master file
 
-Welcome to tree's documentation!
+Welcome to odtlearn's documentation!
 ============================================
 
-This site contains the documentation for the tree package.
+This site contains the documentation for the odtlearn package.
 
 .. toctree::
    :maxdepth: 2

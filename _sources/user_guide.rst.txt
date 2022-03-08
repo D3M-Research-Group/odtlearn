@@ -3,7 +3,7 @@
 .. _user_guide:
 
 ==================================================
-User guide: fitting tree estimators
+User guide: fitting ODTlearn estimators
 ==================================================
 
 StrongTree

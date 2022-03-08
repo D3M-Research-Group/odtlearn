@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>trees.FairTree - trees 0.0.1 documentation</title>
+        <title>odtlearn.FairTree - odtlearn 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -125,7 +125,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">trees 0.0.1 documentation</div></a>
+      <a href="../../index.html"><div class="brand">odtlearn 0.0.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -148,7 +148,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">trees 0.0.1 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 0.0.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -158,15 +158,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Getting started with the Trees Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Getting started with the ODTlearn Package</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">Trees API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.StrongTree</span></code>.StrongTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code>.FairTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.RobustTree</span></code>.RobustTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../generated/trees.PrescriptiveTree.PrescriptiveTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/odtlearn.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.StrongTree</span></code>.StrongTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.FairTree</span></code>.FairTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.RobustTree</span></code>.RobustTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generated/odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
 </ul>
 </li>
 </ul>
@@ -209,13 +209,13 @@
           </label>
         </div>
         <article role="main">
-          <h1>Source code for trees.FairTree</h1><div class="highlight"><pre>
+          <h1>Source code for odtlearn.FairTree</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
-<span class="kn">from</span> <span class="nn">trees.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">check_binary</span><span class="p">,</span>
     <span class="n">check_columns_match</span><span class="p">,</span>
     <span class="n">get_predicted_value</span><span class="p">,</span>
@@ -223,13 +223,13 @@
 <span class="p">)</span>
 
 <span class="c1"># Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder</span>
-<span class="kn">from</span> <span class="nn">trees.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
-<span class="kn">from</span> <span class="nn">trees.utils.StrongTreeFairOCT</span> <span class="kn">import</span> <span class="n">FairOCT</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.StrongTreeFairOCT</span> <span class="kn">import</span> <span class="n">FairOCT</span>
 
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
 
 
-<div class="viewcode-block" id="FairTreeClassifier"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">FairTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+<div class="viewcode-block" id="FairTreeClassifier"><a class="viewcode-back" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">FairTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
     <span class="sd">"""An optimal and fair classification tree fitted on a given binary-valued</span>
 <span class="sd">    data set. The fairness criteria enforced in the training step is one of statistical parity (SP), </span>
 <span class="sd">    conditional statistical parity (CSP), predictive equality (PE), equal opportunity (EOpp) or equalized odds (EOdds).</span>
@@ -270,7 +270,7 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; from trees.FairTree import FairTreeClassifier</span>
+<span class="sd">    &gt;&gt;&gt; from odtlearn.FairTree import FairTreeClassifier</span>
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
 <span class="sd">    &gt;&gt;&gt; X = np.arange(200).reshape(100, 2)</span>
 <span class="sd">    &gt;&gt;&gt; y = np.random.randint(2, size=100)</span>
@@ -281,7 +281,7 @@
 <span class="sd">    &gt;&gt;&gt; fcl.fit(X, y, P, l)</span>
 <span class="sd">    """</span>
 
-<div class="viewcode-block" id="FairTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="FairTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">positive_class</span><span class="p">,</span>
         <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -311,7 +311,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">P_col_dtypes</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">l_dtypes</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="FairTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
+<div class="viewcode-block" id="FairTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
         <span class="sd">"""A function for extracting metadata from the inputs before converting</span>
 <span class="sd">        them into numpy arrays to work with the sklearn API</span>
 
@@ -330,7 +330,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FairTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="FairTreeClassifier.fit"><a class="viewcode-back" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">"""A reference implementation of a fitting function.</span>
 
 <span class="sd">        Parameters</span>
@@ -405,7 +405,7 @@
         <span class="c1"># Return the classifier</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FairTreeClassifier.predict"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="viewcode-block" id="FairTreeClassifier.predict"><a class="viewcode-back" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">"""Classify test points using the FairTree classifier</span>
 
 <span class="sd">        Parameters</span>
@@ -442,7 +442,7 @@
 
         <span class="k">return</span> <span class="n">prediction</span></div>
     
-<div class="viewcode-block" id="FairTreeClassifier.print_tree"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.print_tree">[docs]</a>    <span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FairTreeClassifier.print_tree"><a class="viewcode-back" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier.print_tree">[docs]</a>    <span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        This function print the derived tree with the branching features and the predictions asserted for each node</span>
 
@@ -456,7 +456,7 @@
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"X_"</span><span class="p">,</span> <span class="s2">"y_"</span><span class="p">,</span><span class="s2">"P_"</span><span class="p">,</span> <span class="s2">"l_"</span><span class="p">])</span>
         <span class="n">print_tree_util</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FairTreeClassifier.get_SP"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_SP">[docs]</a>    <span class="k">def</span> <span class="nf">get_SP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="FairTreeClassifier.get_SP"><a class="viewcode-back" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier.get_SP">[docs]</a>    <span class="k">def</span> <span class="nf">get_SP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        This function returns the statistical parity value for any given protected level and outcome value</span>
 
@@ -501,7 +501,7 @@
 
         <span class="k">return</span> <span class="n">sp_dict</span></div>
 
-<div class="viewcode-block" id="FairTreeClassifier.get_CSP"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_CSP">[docs]</a>    <span class="k">def</span> <span class="nf">get_CSP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="FairTreeClassifier.get_CSP"><a class="viewcode-back" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier.get_CSP">[docs]</a>    <span class="k">def</span> <span class="nf">get_CSP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        This function returns the conditional statistical parity value for any given</span>
 <span class="sd">        protected level, legitimate feature value and outcome value</span>
@@ -557,7 +557,7 @@
 
         <span class="k">return</span> <span class="n">csp_dict</span></div>
 
-<div class="viewcode-block" id="FairTreeClassifier.get_EqOdds"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_EqOdds">[docs]</a>    <span class="k">def</span> <span class="nf">get_EqOdds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="FairTreeClassifier.get_EqOdds"><a class="viewcode-back" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier.get_EqOdds">[docs]</a>    <span class="k">def</span> <span class="nf">get_EqOdds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        This function returns the false positive and true positive rate value</span>
 <span class="sd">        for any given protected level, outcome value and prediction value</span>
@@ -613,7 +613,7 @@
 
         <span class="k">return</span> <span class="n">eq_dict</span></div>
 
-<div class="viewcode-block" id="FairTreeClassifier.get_CondEqOdds"><a class="viewcode-back" href="../../generated/trees.FairTree.FairTreeClassifier.html#trees.FairTree.FairTreeClassifier.get_CondEqOdds">[docs]</a>    <span class="k">def</span> <span class="nf">get_CondEqOdds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="FairTreeClassifier.get_CondEqOdds"><a class="viewcode-back" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier.get_CondEqOdds">[docs]</a>    <span class="k">def</span> <span class="nf">get_CondEqOdds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        This function returns the conditional false negative and true positive rate value</span>
 <span class="sd">        for any given protected level, outcome value, prediction value and legitimate feature value</span>

@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="trees.PrescriptiveTree.PrescriptiveTreeClassifier" href="trees.PrescriptiveTree.PrescriptiveTreeClassifier.html" /><link rel="prev" title="trees.FairTree.FairTreeClassifier" href="trees.FairTree.FairTreeClassifier.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>trees.RobustTree.RobustTreeClassifier - trees 0.0.1 documentation</title>
+        <title>trees.RobustTree.RobustTreeClassifier - odtlearn 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -126,7 +126,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">trees 0.0.1 documentation</div></a>
+      <a href="../index.html"><div class="brand">odtlearn 0.0.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -149,7 +149,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">trees 0.0.1 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 0.0.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -159,15 +159,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Getting started with the Trees Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Getting started with the ODTlearn Package</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Trees API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="trees.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.StrongTree</span></code>.StrongTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="trees.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code>.FairTreeClassifier</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.RobustTree</span></code>.RobustTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="trees.PrescriptiveTree.PrescriptiveTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="odtlearn.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.StrongTree</span></code>.StrongTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odtlearn.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.FairTree</span></code>.FairTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odtlearn.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.RobustTree</span></code>.RobustTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
 </ul>
 </li>
 </ul>
@@ -212,113 +212,6 @@
         <article role="main">
           <section id="trees-robusttree-robusttreeclassifier">
 <h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.RobustTree</span></code>.RobustTreeClassifier<a class="headerlink" href="#trees-robusttree-robusttreeclassifier" title="Permalink to this headline">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="trees.RobustTree.RobustTreeClassifier">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">trees.RobustTree.</span></span><span class="sig-name descname"><span class="pre">RobustTreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1800</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier" title="Permalink to this definition">#</a></dt>
-<dd><p>An optimal robust decision tree classifier, fitted on a given integer-valued
-data set and a given cost-and-budget uncertainty set to produce a tree robust
-against distribition shifts.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>A parameter specifying the depth of the tree</p>
-</dd>
-<dt><strong>time_limit</strong><span class="classifier">int, default=1800</span></dt><dd><p>The given time limit for solving the MIP in seconds</p>
-</dd>
-<dt><strong>num_threads: int, default=None</strong></dt><dd><p>The number of threads the solver should use. If not specified,
-solver uses Gurobi’s default number of threads</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>X_</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input passed during <a class="reference internal" href="#trees.RobustTree.RobustTreeClassifier.fit" title="trees.RobustTree.RobustTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
-</dd>
-<dt><strong>y_</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The labels passed during <a class="reference internal" href="#trees.RobustTree.RobustTreeClassifier.fit" title="trees.RobustTree.RobustTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
-</dd>
-<dt><strong>classes_</strong><span class="classifier">ndarray, shape (n_classes,)</span></dt><dd><p>The classes seen at <a class="reference internal" href="#trees.RobustTree.RobustTreeClassifier.fit" title="trees.RobustTree.RobustTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
-</dd>
-<dt><strong>costs</strong><span class="classifier">pandas.DataFrame, shape (n_samples, n_features)</span></dt><dd><p>The uncertainty costs used during fitting</p>
-</dd>
-<dt><strong>budget</strong><span class="classifier">float</span></dt><dd><p>The uncertainty budget used during fitting</p>
-</dd>
-<dt><strong>b_value</strong><span class="classifier">nddict, shape (tree_internal_nodes, X_features, X_features_cutoffs)</span></dt><dd><p>The values of decision variable b – the branching decisions of the tree</p>
-</dd>
-<dt><strong>w_value</strong><span class="classifier">nddict, shape (tree_nodes)</span></dt><dd><p>The values of decision variable w – the predictions at the tree’s nodes</p>
-</dd>
-<dt><strong>model</strong><span class="classifier">gurobipy.Model</span></dt><dd><p>The trained Gurobi model, with solver information and
-decision variable information (<cite>b</cite> for branching variables,
-<cite>w</cite> for assignment variables)</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.RobustTree.RobustTreeClassifier.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1800</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier.__init__" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.RobustTree.RobustTreeClassifier.extract_metadata">
-<span class="sig-name descname"><span class="pre">extract_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier.extract_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier.extract_metadata" title="Permalink to this definition">#</a></dt>
-<dd><p>A function for extracting metadata from the inputs before converting
-them into numpy arrays to work with the sklearn API</p>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.RobustTree.RobustTreeClassifier.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier.fit" title="Permalink to this definition">#</a></dt>
-<dd><p>Fit an optimal robust classification tree given data, labels,
-costs of uncertainty, and budget of uncertainty</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The training input samples.</p>
-</dd>
-<dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The target values. An array of int.</p>
-</dd>
-<dt><strong>costs</strong><span class="classifier">array-like, shape (n_samples, n_features), default = budget + 1</span></dt><dd><p>The costs of uncertainty</p>
-</dd>
-<dt><strong>budget</strong><span class="classifier">float, default = -1</span></dt><dd><p>The budget of uncertainty</p>
-</dd>
-<dt><strong>verbose</strong><span class="classifier">bool, default = True</span></dt><dd><p>Flag for logging Gurobi outputs</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>Returns self.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.RobustTree.RobustTreeClassifier.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>Given the input covariates, predict the class labels of each sample 
-based on the fitted optimal robust classification tree</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input samples.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The label for each sample is the label of the closest sample
-seen during fit.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.RobustTree.RobustTreeClassifier.print_tree">
-<span class="sig-name descname"><span class="pre">print_tree</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/RobustTree.html#RobustTreeClassifier.print_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.RobustTree.RobustTreeClassifier.print_tree" title="Permalink to this definition">#</a></dt>
-<dd><p>Print the fitted tree with the branching features, the threshold values for
-each branching node’s test, and the predictions asserted for each assignment node</p>
-</dd></dl>
-</dd></dl>
 <div style="clear:both"></div></section>
 
         </article>
@@ -326,26 +219,8 @@ each branching node’s test, and the predictions asserted for each assignment n
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="trees.PrescriptiveTree.PrescriptiveTreeClassifier.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</div>
-              </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="trees.FairTree.FairTreeClassifier.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code>.FairTreeClassifier</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

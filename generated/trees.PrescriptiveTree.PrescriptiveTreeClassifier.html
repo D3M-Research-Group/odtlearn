@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="General examples" href="../auto_examples/index.html" /><link rel="prev" title="trees.RobustTree.RobustTreeClassifier" href="trees.RobustTree.RobustTreeClassifier.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>trees.PrescriptiveTree.PrescriptiveTreeClassifier - trees 0.0.1 documentation</title>
+        <title>trees.PrescriptiveTree.PrescriptiveTreeClassifier - odtlearn 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -126,7 +126,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">trees 0.0.1 documentation</div></a>
+      <a href="../index.html"><div class="brand">odtlearn 0.0.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -149,7 +149,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">trees 0.0.1 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 0.0.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -159,15 +159,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Getting started with the Trees Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Getting started with the ODTlearn Package</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
-<ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Trees API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="trees.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.StrongTree</span></code>.StrongTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="trees.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.FairTree</span></code>.FairTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="trees.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.RobustTree</span></code>.RobustTreeClassifier</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="odtlearn.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.StrongTree</span></code>.StrongTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odtlearn.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.FairTree</span></code>.FairTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odtlearn.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.RobustTree</span></code>.RobustTreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
 </ul>
 </li>
 </ul>
@@ -212,136 +212,6 @@
         <article role="main">
           <section id="trees-prescriptivetree-prescriptivetreeclassifier">
 <h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier<a class="headerlink" href="#trees-prescriptivetree-prescriptivetreeclassifier" title="Permalink to this headline">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="trees.PrescriptiveTree.PrescriptiveTreeClassifier">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">trees.PrescriptiveTree.</span></span><span class="sig-name descname"><span class="pre">PrescriptiveTreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'IPW'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/PrescriptiveTree.html#PrescriptiveTreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier" title="Permalink to this definition">#</a></dt>
-<dd><p>An optimal decision tree that prescribes treatments (as opposed to predicting class labels),
-fitted on a binary-valued observational data set.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>depth</strong><span class="classifier">int</span></dt><dd><p>A parameter specifying the depth of the tree</p>
-</dd>
-<dt><strong>time_limit</strong><span class="classifier">int</span></dt><dd><p>The given time limit for solving the MIP in seconds</p>
-</dd>
-<dt><strong>method</strong><span class="classifier">str, default=’IPW’</span></dt><dd><p>The method of Prescriptive Trees to run. Choices in (‘IPW’, ‘DM’, ‘DR), which represents the
-inverse propensity weighting, direct method, and doubly robust methods, respectively</p>
-</dd>
-<dt><strong>num_threads: int, default=None</strong></dt><dd><p>The number of threads the solver should use</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>X_</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>The input passed during <a class="reference internal" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
-</dd>
-<dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The observed outcomes passed during <a class="reference internal" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
-</dd>
-<dt><strong>t_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The treatments passed during :meth: <cite>fit</cite>.</p>
-</dd>
-<dt><strong>treatments</strong><span class="classifier">set, shape (n_treatments,)</span></dt><dd><p>The set of unique treatments seen at <a class="reference internal" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
-</dd>
-<dt><strong>solving_time</strong><span class="classifier">float</span></dt><dd><p>The amount of time the mixed-integer program took to solve</p>
-</dd>
-<dt><strong>b_value</strong><span class="classifier">nddict, shape (tree_internal_nodes, X_features)</span></dt><dd><p>The values of decision variable b – the branching decisions of the tree</p>
-</dd>
-<dt><strong>w_value</strong><span class="classifier">nddict, shape (tree_nodes, treatments_set)</span></dt><dd><p>The values of decision variable w – the treatment decisions at the tree’s nodes</p>
-</dd>
-<dt><strong>p_value</strong><span class="classifier">nddict, shape (tree_nodes,)</span></dt><dd><p>The values of decision variable p – whether or not a tree’s nodes branch or assign treatment</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.PrescriptiveTree.PrescriptiveTreeClassifier.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'IPW'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/PrescriptiveTree.html#PrescriptiveTreeClassifier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.__init__" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.PrescriptiveTree.PrescriptiveTreeClassifier.check_helpers">
-<span class="sig-name descname"><span class="pre">check_helpers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_hat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/PrescriptiveTree.html#PrescriptiveTreeClassifier.check_helpers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.check_helpers" title="Permalink to this definition">#</a></dt>
-<dd><p>This function checks the propensity weights and counterfactual predictions</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X: The input/training data</strong></dt><dd></dd>
-<dt><strong>ipw: A vector or array-like object for inverse propensity weights. Only needed when running IPW/DR</strong></dt><dd></dd>
-<dt><strong>y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR</strong></dt><dd></dd>
-<dt><strong>:return: The converted versions of ipw and y_hat after passing the series of checks</strong></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.PrescriptiveTree.PrescriptiveTreeClassifier.check_y">
-<span class="sig-name descname"><span class="pre">check_y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/PrescriptiveTree.html#PrescriptiveTreeClassifier.check_y"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.check_y" title="Permalink to this definition">#</a></dt>
-<dd><p>This function checks the shape and contents of the observed outcomes
-:param X: The input/training data
-:param y: A vector or array-like object for the observed outcomes corresponding to treatment t
-:return: The converted version of y after passing the series of checks</p>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.PrescriptiveTree.PrescriptiveTreeClassifier.extract_metadata">
-<span class="sig-name descname"><span class="pre">extract_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/PrescriptiveTree.html#PrescriptiveTreeClassifier.extract_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.extract_metadata" title="Permalink to this definition">#</a></dt>
-<dd><p>A function for extracting metadata from the inputs before converting
-them into numpy arrays to work with the sklearn API</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong></dt><dd><p>The input/training data</p>
-</dd>
-<dt><strong>t</strong></dt><dd><p>A vector or array-like object for the treatment assignments</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_hat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/PrescriptiveTree.html#PrescriptiveTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="Permalink to this definition">#</a></dt>
-<dd><p>Method to fit the PrescriptiveTree class on the data</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The training input samples.</p>
-</dd>
-<dt><strong>t</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The treatment values. An array of int.</p>
-</dd>
-<dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The observed outcomes upon given treatment t. An array of int.</p>
-</dd>
-<dt><strong>ipw</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The inverse propensity weight estimates. An array of floats in [0, 1].</p>
-</dd>
-<dt><strong>y_hat: array-like, shape (n_samples, n_treatments)</strong></dt><dd><p>The counterfactual predictions.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>Returns self.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="trees.PrescriptiveTree.PrescriptiveTreeClassifier.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/trees/PrescriptiveTree.html#PrescriptiveTreeClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trees.PrescriptiveTree.PrescriptiveTreeClassifier.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>Method for making predictions using a PrescriptiveTree classifier</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input samples.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>t</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The predicted treatment for the input samples.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-</dd></dl>
 <div style="clear:both"></div></section>
 
         </article>
@@ -349,26 +219,8 @@ them into numpy arrays to work with the sklearn API</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../auto_examples/index.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">General examples</div>
-              </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="trees.RobustTree.RobustTreeClassifier.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">trees.RobustTree</span></code>.RobustTreeClassifier</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

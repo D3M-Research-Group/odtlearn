@@ -3,13 +3,13 @@
 StrongTree Fit Example
 ============================
 
-An example of fitting a StrongTree decision tree using :class:`trees.StrongTree.StrongTreeClassifier`
+An example of fitting a StrongTree decision tree using :class:`odtlearn.StrongTree.StrongTreeClassifier`
 """
 from pickle import TRUE
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
-from trees.StrongTree import StrongTreeClassifier 
+from odtlearn.StrongTree import StrongTreeClassifier
 
 data = pd.read_csv("./data/balance-scale_enc.csv")
 y = data.pop("target")
