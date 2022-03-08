@@ -20,7 +20,8 @@ from trees.utils.PrescriptiveTreesMIP import FlowOPT_IPW, FlowOPT_Robust
 
 
 class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
-    """A classifier which uses PrescriptiveTrees.
+    """An optimal decision tree that prescribes treatments (as opposed to predicting class labels),
+    fitted on a binary-valued observational data set. 
 
     Parameters
     ----------
