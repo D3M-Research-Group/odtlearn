@@ -251,6 +251,10 @@
 <span class="sd">        The uncertainty costs used during fitting</span>
 <span class="sd">    budget : float</span>
 <span class="sd">        The uncertainty budget used during fitting</span>
+<span class="sd">    b_value : nddict, shape (tree_internal_nodes, X_features, X_features_cutoffs)</span>
+<span class="sd">        The values of decision variable b -- the branching decisions of the tree</span>
+<span class="sd">    w_value : nddict, shape (tree_nodes)</span>
+<span class="sd">        The values of decision variable w -- the predictions at the tree's nodes</span>
 <span class="sd">    model : gurobipy.Model</span>
 <span class="sd">        The trained Gurobi model, with solver information and</span>
 <span class="sd">        decision variable information (`b` for branching variables,</span>
@@ -265,13 +269,12 @@
 <div class="viewcode-block" id="RobustTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">"""A function for extracting metadata from the inputs before converting</span>
 <span class="sd">        them into numpy arrays to work with the sklearn API</span>
-
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)):</span>
@@ -283,7 +286,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobustTreeClassifier.fit"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">budget</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">"""A reference implementation of a fitting function for a classifier.</span>
+        <span class="sd">"""Fit an optimal robust classification tree given data, labels,</span>
+<span class="sd">        costs of uncertainty, and budget of uncertainty</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -361,13 +365,13 @@
 
         <span class="c1"># Store fitted Gurobi model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">master</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
 
         <span class="c1"># `fit` should always return `self`</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
     <span class="k">def</span> <span class="nf">get_prediction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
         <span class="n">prediction</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
             <span class="c1"># Get prediction value</span>
@@ -375,7 +379,7 @@
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">terminal</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">w</span><span class="p">[</span><span class="n">node</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># w[n,k] == 1</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">[</span><span class="n">node</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># w[n,k] == 1</span>
                         <span class="n">prediction</span> <span class="o">+=</span> <span class="p">[</span><span class="n">k</span><span class="p">]</span>
                         <span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="k">break</span>
@@ -383,7 +387,7 @@
                     <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">f_theta_indices</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="n">node</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># b[n,f]== 1</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">[</span><span class="n">node</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># b[n,f]== 1</span>
                             <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">theta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
                                 <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_right_children</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
                             <span class="k">else</span><span class="p">:</span>
@@ -392,7 +396,8 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RobustTreeClassifier.predict"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="sd">"""A reference implementation of a prediction for a classifier.</span>
+        <span class="sd">"""Given the input covariates, predict the class labels of each sample </span>
+<span class="sd">        based on the fitted optimal robust classification tree</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -411,7 +416,35 @@
         <span class="n">df_test</span> <span class="o">=</span> <span class="n">check_same_as_X</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"test covariates"</span><span class="p">)</span>
         <span class="n">check_integer</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_prediction</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_prediction</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="RobustTreeClassifier.print_tree"><a class="viewcode-back" href="../../generated/trees.RobustTree.RobustTreeClassifier.html#trees.RobustTree.RobustTreeClassifier.print_tree">[docs]</a>    <span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">"""Print the fitted tree with the branching features, the threshold values for</span>
+<span class="sd">        each branching node's test, and the predictions asserted for each assignment node"""</span>
+        
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"model"</span><span class="p">])</span>
+
+        <span class="n">assignment_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>         
+            <span class="nb">print</span><span class="p">(</span><span class="s1">'#########node '</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+            <span class="n">terminal</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="c1"># Check if pruned</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_parent</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="ow">in</span> <span class="n">assignment_nodes</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">'pruned'</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">'leaf </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                    <span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">assignment_nodes</span> <span class="o">+=</span> <span class="p">[</span><span class="n">n</span><span class="p">]</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">terminal</span><span class="p">:</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">f_theta_indices</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span> <span class="c1"># b[n,f]== 1</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">"Feature: "</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="s2">", Cutoff: "</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+                        <span class="k">break</span></div></div>
 </pre></div>
         </article>
       </div>
