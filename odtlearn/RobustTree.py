@@ -52,7 +52,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
     def __init__(self, depth=1, time_limit=1800, num_threads=None):
         self.depth = depth
         self.time_limit = time_limit
-        self.threads = num_threads
+        self.num_threads = num_threads
 
     def extract_metadata(self, X, y):
         """A function for extracting metadata from the inputs before converting
@@ -142,7 +142,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             self.costs,
             self.budget,
             self.time_limit,
-            self.threads,
+            self.num_threads,
             verbose,
         )
         master.create_master_problem()
@@ -220,6 +220,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             # Check if pruned
             if self.model.tree.get_parent(n) in assignment_nodes:
                 print("pruned")
+                assignment_nodes += [n]
                 continue
 
             for k in self.model.labels:
