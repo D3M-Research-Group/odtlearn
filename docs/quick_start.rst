@@ -1,6 +1,6 @@
-######################################
+#########################################
 Getting started with the ODTlearn Package
-######################################
+#########################################
 
 This package contains implementations of several decision tree algorithms including StrongTrees, FairTrees, RobustTrees, and Prescriptive Trees.
 

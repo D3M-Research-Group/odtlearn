@@ -247,7 +247,7 @@ html_static_path = ["_static"]
 # html_show_sphinx = True
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
-# html_show_copyright = True
+html_show_copyright = False
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
@@ -365,6 +365,10 @@ copybutton_prompt_text = ">>> "
 # toggle prompt
 toggleprompt_offset_right = 30
 
+# GH REPO URL
+# rst_prolog = """
+# .. |repo| replace:: https://github.com/D3M-Research-Group/decision_tree_estimators.git#egg=odtlearn
+# """
 
 # def setup(app):
 # a copy button to copy snippet of code from the documentation
