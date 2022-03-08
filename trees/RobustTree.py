@@ -39,6 +39,10 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         The uncertainty costs used during fitting
     budget : float
         The uncertainty budget used during fitting
+    b_value : nddict, shape (tree_internal_nodes, X_features, X_features_cutoffs)
+        The values of decision variable b -- the branching decisions of the tree
+    w_value : nddict, shape (tree_nodes)
+        The values of decision variable w -- the predictions at the tree's nodes
     model : gurobipy.Model
         The trained Gurobi model, with solver information and
         decision variable information (`b` for branching variables,
@@ -59,7 +63,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             self.X_col_labels = X.columns
             self.X = X
         else:
-            self.X_col_labels = np.arange(0, self.X.shape[1])
+            self.X_col_labels = np.arange(0, X.shape[1])
             self.X = pd.DataFrame(X, columns=self.X_col_labels)
 
         if isinstance(y, (pd.Series, pd.DataFrame)):
@@ -149,13 +153,13 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
 
         # Store fitted Gurobi model
         self.model = master
+        self.b_value = self.model.model.getAttr("X", self.model.b)
+        self.w_value = self.model.model.getAttr("X", self.model.w)
 
         # `fit` should always return `self`
         return self
 
     def get_prediction(self, X):
-        b = self.model.model.getAttr("X", self.model.b)
-        w = self.model.model.getAttr("X", self.model.w)
         prediction = []
         for i in X.index:
             # Get prediction value
@@ -163,7 +167,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             while True:
                 terminal = False
                 for k in self.model.labels:
-                    if w[node, k] > 0.5:  # w[n,k] == 1
+                    if self.w_value[node, k] > 0.5:  # w[n,k] == 1
                         prediction += [k]
                         terminal = True
                         break
@@ -171,7 +175,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
                     break
                 else:
                     for (f, theta) in self.model.f_theta_indices:
-                        if b[node, f, theta] > 0.5:  # b[n,f]== 1
+                        if self.b_value[node, f, theta] > 0.5:  # b[n,f]== 1
                             if X.at[i, f] >= theta + 1:
                                 node = self.model.tree.get_right_children(node)
                             else:
@@ -200,3 +204,29 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         check_integer(df_test)
 
         return self.get_prediction(df_test)
+    
+    def print_tree(self):
+        """Print the fitted tree"""
+        check_is_fitted(self, ["model"])
+
+        assignment_nodes = []
+        for n in self.model.tree.Nodes + self.model.tree.Leaves:         
+            print('#########node ', n)
+            terminal = False
+
+            # Check if pruned
+            if self.model.tree.get_parent(n) in assignment_nodes:
+                print('pruned')
+                continue
+
+            for k in self.model.labels:
+                if self.w_value[n, k] > 0.5:
+                    print('leaf {}'.format(k))
+                    terminal = True
+                    assignment_nodes += [n]
+                    break
+            if not terminal:
+                for (f, theta) in self.model.f_theta_indices:
+                    if self.b_value[n, f, theta] > 0.5: # b[n,f]== 1
+                        print("Feature: ", f, ", Cutoff: ", theta)
+                        break

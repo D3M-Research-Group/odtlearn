@@ -28,23 +28,7 @@ def check_same_as_X(X, X_col_labels, G, G_label):
         if not np.array_equal(X_col_labels, np.arange(0, G.shape[1])):
             raise TypeError(
                 f"{G_label} should be a Pandas DataFrame with the same columns as the input covariates")
-        return pd.DataFrame(X, np.arange(0, G.shape[1]))
-
-def print_tree(master, b, w):
-    tree = master.tree
-    for n in tree.Nodes + tree.Leaves:         
-        print('#########node ', n)
-        terminal = False
-        for k in master.labels:
-            if w[n, k] > 0.5:
-                print('leaf {}'.format(k))
-                terminal = True
-                break
-        if not terminal:
-            for (f, theta) in master.f_theta_indices:
-                if b[n, f, theta] > 0.5: # b[n,f]== 1
-                    print("Feature: ", f, ", Cutoff: ", theta)
-                    break
+        return pd.DataFrame(G, columns=np.arange(0, G.shape[1]))
 
 def get_cut_expression(master, b, w, path, xi, v, i):
     expr = LinExpr(0)
