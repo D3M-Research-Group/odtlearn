@@ -1,5 +1,9 @@
-name: project-template
+name: trees
 dependencies:
   - numpy
   - scipy
   - scikit-learn
+  - pandas
+  - gurobipy
+  - matplotlib
+  - pytest

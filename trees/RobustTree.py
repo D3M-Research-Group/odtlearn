@@ -2,7 +2,7 @@ from copy import deepcopy
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
+from sklearn.utils.validation import check_X_y, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
 
 # Include Necessary imports in the same folder
@@ -24,7 +24,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
     time_limit : int, default=1800
         The given time limit for solving the MIP in seconds
     num_threads: int, default=None
-        The number of threads the solver should use. If not specified, 
+        The number of threads the solver should use. If not specified,
         solver uses Gurobi's default number of threads
 
     Attributes
@@ -66,7 +66,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             self.y = y.values
         else:
             self.y = y
-        
+
         # Strip indices in training data into integers
         self.X.set_index(pd.Index(range(X.shape[0])), inplace=True)
 
@@ -111,8 +111,11 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             # Also check if indices are the same
             if self.X.shape[0] != self.costs.shape[0]:
                 raise ValueError(
-                    (f"Input covariates has {self.X.shape[0]} samples, "
-                    f"but uncertainty costs has {self.costs.shape[0]}"))
+                    (
+                        f"Input covariates has {self.X.shape[0]} samples, "
+                        f"but uncertainty costs has {self.costs.shape[0]}"
+                    )
+                )
         else:
             # By default, set costs to be budget + 1 (i.e. no uncertainty)
             gammas_df = deepcopy(self.X).astype("float")
@@ -136,7 +139,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             self.budget,
             self.time_limit,
             self.threads,
-            verbose
+            verbose,
         )
         master.create_master_problem()
         master.model.update()
