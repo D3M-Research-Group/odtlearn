@@ -264,7 +264,7 @@
 <div class="viewcode-block" id="RobustTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">1800</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">threads</span> <span class="o">=</span> <span class="n">num_threads</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span> <span class="o">=</span> <span class="n">num_threads</span></div>
 
 <div class="viewcode-block" id="RobustTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">"""A function for extracting metadata from the inputs before converting</span>
@@ -354,7 +354,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">threads</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
             <span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">master</span><span class="o">.</span><span class="n">create_master_problem</span><span class="p">()</span>
@@ -432,6 +432,7 @@
             <span class="c1"># Check if pruned</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_parent</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="ow">in</span> <span class="n">assignment_nodes</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">'pruned'</span><span class="p">)</span>
+                <span class="n">assignment_nodes</span> <span class="o">+=</span> <span class="p">[</span><span class="n">n</span><span class="p">]</span>
                 <span class="k">continue</span>
 
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
