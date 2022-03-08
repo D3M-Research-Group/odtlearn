@@ -9,7 +9,6 @@ def check_columns_match(original_columns, new_data):
     :param original_columns: List of column names from the data set used to fit the model
     :param new_data: The numpy matrix or pd dataframe new data set for
     which we want to make predictions
-
     :return ValueError if column names do not match, otherwise None
     """
 
@@ -45,27 +44,21 @@ def check_binary(df):
         ).all(), "Expecting all values of covariate matrix to be either 0 or 1."
 
 
-def get_node_status(tree, labels, column_names, b, w, p, n):
+def get_node_status(grb_model, b, w, p, n):
     """
-    This function give the status of a given node in a tree.
-
-    By status we mean whether the node
+    This function give the status of a given node in a tree. By status we mean whether the node
         1- is pruned? i.e., we have made a prediction at one of its ancestors
         2- is a branching node? If yes, what feature do we branch on
         3- is a leaf? If yes, what is the prediction at this node?
 
     Parameters
     ----------
-    tree :
-        The tree from the gurobi model solved to optimality (or reached the time limit)
-    labels :
-        the unique values of the response variable y
-    column_names:
-        the column names of the data set X
+    grb_model :
+        The gurobi model solved to optimality (or reached to the time limit).
     b :
-        The values of branching decision variable b
-    beta :
-        The values of prediction decision variable beta
+        The values of branching decision variable b.
+    w :
+        The values of prediction decision variable w.
     p :
         The values of decision variable p
     n :
@@ -92,19 +85,19 @@ def get_node_status(tree, labels, column_names, b, w, p, n):
     selected_feature = None
 
     p_sum = 0
-    for m in tree.get_ancestors(n):
+    for m in grb_model.tree.get_ancestors(n):
         p_sum = p_sum + p[m]
     if p[n] > 0.5:  # leaf
         leaf = True
-        for k in labels:
+        for k in grb_model.labels:
             if w[n, k] > 0.5:
                 value = k
     elif p_sum == 1:  # Pruned
         pruned = True
 
-    if n in tree.Nodes:
+    if n in grb_model.tree.Nodes:
         if (pruned is False) and (leaf is False):  # branching
-            for f in column_names:
+            for f in grb_model.X_col_labels:
                 if b[n, f] > 0.5:
                     selected_feature = f
                     branching = True
@@ -112,18 +105,18 @@ def get_node_status(tree, labels, column_names, b, w, p, n):
     return pruned, branching, selected_feature, leaf, value
 
 
-def print_tree(tree, labels, column_names, b, w, p):
+def print_tree_util(grb_model, b, w, p):
     """
     This function print the derived tree with the branching features and the predictions asserted for each node
 
     Parameters
     ----------
-    tree :
-        The tree from the gurobi model solved to optimality (or reached the time limit)
+    grb_model :
+        The gurobi model solved to optimality (or reached the time limit)
     b :
         The values of branching decision variable b
-    beta :
-        The values of prediction decision variable beta
+    w :
+        The values of prediction decision variable w
     p :
         The values of decision variable p
 
@@ -131,9 +124,9 @@ def print_tree(tree, labels, column_names, b, w, p):
     -------
     Print out the tree in the console
     """
-    for n in tree.Nodes + tree.Leaves:
+    for n in grb_model.tree.Nodes + grb_model.tree.Leaves:
         pruned, branching, selected_feature, leaf, value = get_node_status(
-            tree, labels, column_names, b, w, p, n
+            grb_model, b, w, p, n
         )
         print("#########node ", n)
         if pruned:
@@ -144,7 +137,7 @@ def print_tree(tree, labels, column_names, b, w, p):
             print("leaf {}".format(value))
 
 
-def get_predicted_value(grb_model, X, labels, b, w, p):
+def get_predicted_value(grb_model, X, b, w, p):
     """
     This function returns the predicted value for a given dataset
 
@@ -154,113 +147,90 @@ def get_predicted_value(grb_model, X, labels, b, w, p):
         The gurobi model solved to optimality (or reached to the time limit)
     X :
         The dataset we want to compute accuracy for
-    labels :
-        A list of the column names for the X dataset
     b :
         The value of decision variable b
     w :
         The value of decision variable w
     p :
         The value of decision variable p
-    i :
-        Index of the datapoint we are interested in
 
     Returns
     -------
     predicted_values :
-        The predicted value for datapoint i in dataset X
+        The predicted value for dataset X
     """
-    tree = grb_model.tree
-    predicted_values = np.array([])
+
+    predicted_values = []
     for i in range(X.shape[0]):
         current = 1
         while True:
-            pruned, branching, selected_feature, leaf, value = get_node_status(
+            _, branching, selected_feature, leaf, value = get_node_status(
                 grb_model, b, w, p, current
             )
             if leaf:
                 predicted_values.append(value)
+                break
             elif branching:
-                selected_feature_idx = np.where(labels == selected_feature)
+                selected_feature_idx = np.where(grb_model.X_col_labels == selected_feature)
                 # Raise assertion error we don't have a column that matches
                 # the selected feature or more than one column that matches
                 assert (
                     len(selected_feature_idx) == 1
                 ), f"Found {len(selected_feature_idx)} columns matching the selected feature {selected_feature}"
                 if X[i, selected_feature_idx] == 1:  # going right on the branch
-                    current = tree.get_right_children(current)
+                    current = grb_model.tree.get_right_children(current)
                 else:  # going left on the branch
-                    current = tree.get_left_children(current)
-    return predicted_values
+                    current = grb_model.tree.get_left_children(current)
+
+    return np.array(predicted_values)
 
 
-def get_acc(grb_model, local_data, b, w, p):
-    """
-    This function returns the accuracy of the prediction for a given dataset
-    :param grb_model: The gurobi model we solved
-    :param local_data: The dataset we want to compute accuracy for
-    :param b: The value of decision variable b
-    :param w: The value of decision variable w
-    :param p: The value of decision variable p
-    :return: The accuracy (fraction of datapoints which are correctly classified)
-    """
-    label = grb_model.label
-    acc = 0
-    for i in local_data.index:
-        yhat_i = get_predicted_value(grb_model, local_data, b, w, p, i)
-        y_i = local_data.at[i, label]
-        if yhat_i == y_i:
-            acc += 1
-
-    acc = acc / len(local_data.index)
-    return acc
-
-
-def get_left_exp_integer(master, b, n, i):
+def get_left_exp_integer(main_grb_obj, n, i):
     lhs = quicksum(
-        -master.m[i] * master.b[n, f]
-        for f in master.cat_features
-        if master.data.at[i, f] == 0
+
+        -1 * main_grb_obj.b[n, f]
+        for f in main_grb_obj.X_col_labels
+        if main_grb_obj.X.at[i, f] == 0
     )
 
     return lhs
 
 
-def get_right_exp_integer(master, b, n, i):
+def get_right_exp_integer(main_grb_obj, n, i):
     lhs = quicksum(
-        -master.m[i] * master.b[n, f]
-        for f in master.cat_features
-        if master.data.at[i, f] == 1
+        -1 * main_grb_obj.b[n, f]
+        for f in main_grb_obj.X_col_labels
+        if main_grb_obj.X.at[i, f] == 1
     )
 
     return lhs
 
 
-def get_target_exp_integer(master, p, w, n, i):
-    label_i = master.data.at[i, master.label]
-    lhs = -1 * master.w[n, label_i]
+def get_target_exp_integer(main_grb_obj, n, i):
+    label_i = main_grb_obj.y[i]
+    lhs = -1 * main_grb_obj.w[n, label_i]
     return lhs
 
 
-def get_cut_integer(master, b, p, w, left, right, target, i):
-    lhs = LinExpr(0) + master.g[i]
+def get_cut_integer(main_grb_obj, left, right, target, i):
+    lhs = LinExpr(0) + main_grb_obj.g[i]
     for n in left:
-        tmp_lhs = get_left_exp_integer(master, b, n, i)
+        tmp_lhs = get_left_exp_integer(main_grb_obj, n, i)
         lhs = lhs + tmp_lhs
 
     for n in right:
-        tmp_lhs = get_right_exp_integer(master, b, n, i)
+        tmp_lhs = get_right_exp_integer(main_grb_obj, n, i)
         lhs = lhs + tmp_lhs
 
     for n in target:
-        tmp_lhs = get_target_exp_integer(master, p, w, n, i)
+        tmp_lhs = get_target_exp_integer(main_grb_obj, n, i)
         lhs = lhs + tmp_lhs
 
     return lhs
 
 
-def subproblem(master, b, p, w, i):
-    label_i = master.data.at[i, master.label]
+def subproblem(main_grb_obj, b, p, w, i):
+    label_i = main_grb_obj.y[i]
     current = 1
     right = []
     left = []
@@ -268,26 +238,26 @@ def subproblem(master, b, p, w, i):
     subproblem_value = 0
 
     while True:
-        pruned, branching, selected_feature, terminal, current_value = get_node_status(
-            master, b, w, p, current
+        _, branching, selected_feature, terminal, _ = get_node_status(
+            main_grb_obj, b, w, p, current
         )
         if terminal:
             target.append(current)
-            if current in master.tree.Nodes:
+            if current in main_grb_obj.tree.Nodes:
                 left.append(current)
                 right.append(current)
             if w[current, label_i] > 0.5:
                 subproblem_value = 1
             break
         elif branching:
-            if master.data.at[i, selected_feature] == 1:  # going right on the branch
+            if main_grb_obj.X.at[i, selected_feature] == 1:  # going right on the branch
                 left.append(current)
                 target.append(current)
-                current = master.tree.get_right_children(current)
+                current = main_grb_obj.tree.get_right_children(current)
             else:  # going left on the branch
                 right.append(current)
                 target.append(current)
-                current = master.tree.get_left_children(current)
+                current = main_grb_obj.tree.get_left_children(current)
 
     return subproblem_value, left, right, target
 
@@ -299,7 +269,9 @@ def benders_callback(model, where):
     """
     This function is called by Gurobi at every node through the branch-&-bound
     tree while we solve the model. Using the argument "where" we can see where
-    the callback has been called. We are specifically interested at nodes
+    the callback has been called.
+
+    We are specifically interested at nodes
     where we get an integer solution for the master problem.
     When we get an integer solution for b and p, for every data-point we solve
     the sub-problem which is a minimum cut and check if g[i] <= value of
@@ -307,11 +279,12 @@ def benders_callback(model, where):
     constraint as lazy constraint to the master problem and proceed.
     Whenever we have no violated constraint, it means that we have found
     the optimal solution.
+
     :param model: the gurobi model we are solving.
     :param where: the node where the callback function is called from
     :return:
     """
-    data_train = model._master.data
+    X = model._main_grb_obj.X
 
     local_eps = 0.0001
     if where == GRB.Callback.MIPSOL:
@@ -325,17 +298,15 @@ def benders_callback(model, where):
 
         added_cut = 0
         # We only want indices that g_i is one!
-        for i in data_train.index:
+        for i in X.index:
             g_threshold = 0.5
             if g[i] > g_threshold:
                 subproblem_value, left, right, target = subproblem(
-                    model._master, b, p, w, i
+                    model._main_grb_obj, b, p, w, i
                 )
                 if subproblem_value == 0:
                     added_cut = 1
-                    lhs = get_cut_integer(
-                        model._master, b, p, w, left, right, target, i
-                    )
+                    lhs = get_cut_integer(model._main_grb_obj, left, right, target, i)
                     model.cbLazy(lhs <= 0)
 
         func_end_time = time.time()
