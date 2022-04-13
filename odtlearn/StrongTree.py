@@ -15,6 +15,7 @@ from odtlearn.utils.StrongTreeUtils import (
 from odtlearn.utils.Tree import Tree
 from odtlearn.utils.StrongTreeFlowOCT import FlowOCT
 from odtlearn.utils.StrongTreeBendersOCT import BendersOCT
+from odtlearn.utils.TreePlotter import MPLPlotter
 
 
 class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
@@ -26,11 +27,11 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
     depth : int, default=1
         A parameter specifying the depth of the tree
     time_limit : int, default=60
-        The given time limit (in seconds) for solving the MIO problem 
+        The given time limit (in seconds) for solving the MIO problem
     _lambda : float, default= 0
         The regularization parameter in the objective. _lambda is in the interval [0,1)
     benders_oct: bool, default=False
-        Use benders problem formulation. 
+        Use benders problem formulation.
     obj_mode: str, default="acc"
         Set objective priority. If "acc", maximize the accuracy, if "balance" maximize the balanced accuracy
     num_threads: int, default=None
@@ -43,7 +44,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The input passed during :meth:`fit`.
     y_ : ndarray, shape (n_samples,)
         The labels passed during :meth:`fit`.
-    b_value : a dictionary containing the value of the decision variables b, where b_value[(n,f)] is the value of b at node n and feature f 
+    b_value : a dictionary containing the value of the decision variables b, where b_value[(n,f)] is the value of b at node n and feature f
     w_value : a dictionary containing the value of the decision variables w, where w_value[(n,k)] is the value of w at node n and class label k
     p_value : a dictionary containing the value of the decision variables p, where p_value[n] is the value of p at node n
     grb_model : gurobipy.Model
@@ -215,7 +216,6 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         )
         return prediction
 
-
     def print_tree(self):
         """
         This function print the derived tree with the branching features and the predictions asserted for each node
@@ -229,3 +229,31 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         # Check is fit had been called
         check_is_fitted(self, ["X_", "y_"])
         print_tree_util(self.grb_model, self.b_value, self.w_value, self.p_value)
+
+    def plot_tree(
+        self,
+        label="all",
+        filled=True,
+        rounded=False,
+        precision=3,
+        ax=None,
+        fontsize=None,
+        color_dict={"node": None, "leaves": []},
+    ):
+        check_is_fitted(self, ["X_", "y_"])
+        exporter = MPLPlotter(
+            self.grb_model,
+            self.X_col_labels,
+            self.b_value,
+            self.w_value,
+            self.p_value,
+            self.grb_model.tree.depth,
+            self.classes_,
+            label=label,
+            filled=filled,
+            rounded=rounded,
+            precision=precision,
+            fontsize=fontsize,
+            color_dict=color_dict,
+        )
+        return exporter.export(ax=ax)
