@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
-from sklearn.utils.multiclass import unique_labels
 from odtlearn.utils.StrongTreeUtils import (
     check_binary,
     check_columns_match,
@@ -10,16 +9,14 @@ from odtlearn.utils.StrongTreeUtils import (
     print_tree_util,
 )
 
-# Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
+from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.Tree import Tree
 from odtlearn.utils.StrongTreeFairOCT import FairOCT
-
-from itertools import combinations
 
 
 class FairTreeClassifier(ClassifierMixin, BaseEstimator):
     """An optimal and fair classification tree fitted on a given binary-valued
-    data set. The fairness criteria enforced in the training step is one of statistical parity (SP), 
+    data set. The fairness criteria enforced in the training step is one of statistical parity (SP),
     conditional statistical parity (CSP), predictive equality (PE), equal opportunity (EOpp) or equalized odds (EOdds).
 
 
@@ -50,7 +47,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         The protected feature columns passed during :meth: `fit`.
     l_ : ndarray
         The legitimate factor column passed during :meth: `fit`.
-    b_value : a dictionary containing the value of the decision variables b, where b_value[(n,f)] is the value of b at node n and feature f 
+    b_value : a dictionary containing the value of the decision variables b, where b_value[(n,f)] is the value of b at node n and feature f
     w_value : a dictionary containing the value of the decision variables w, where w_value[(n,k)] is the value of w at node n and class label k
     p_value : a dictionary containing the value of the decision variables p, where p_value[n] is the value of p at node n
     grb_model : gurobipy.Model
@@ -146,7 +143,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
 
-        # Here we need to convert P and l to np.arrays. 
+        # Here we need to convert P and l to np.arrays.
         P, l = check_X_y(P, l)
 
         # keep original data
@@ -208,12 +205,14 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             seen during fit.
         """
         # Check is fit had been called
-        check_is_fitted(self, ["X_", "y_","P_", "l_"])
+        check_is_fitted(self, ["X_", "y_", "P_", "l_"])
 
         if isinstance(X, pd.DataFrame):
             self.X_predict_col_names = X.columns
         else:
-            self.X_predict_col_names = np.array([f"X_{i}" for i in np.arange(0, X.shape[1])])
+            self.X_predict_col_names = np.array(
+                [f"X_{i}" for i in np.arange(0, X.shape[1])]
+            )
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         X = check_array(X)
@@ -229,7 +228,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         )
 
         return prediction
-    
+
     def print_tree(self):
         """
         This function print the derived tree with the branching features and the predictions asserted for each node
@@ -241,8 +240,37 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         """
 
         # Check is fit had been called
-        check_is_fitted(self, ["X_", "y_","P_", "l_"])
+        check_is_fitted(self, ["X_", "y_", "P_", "l_"])
         print_tree_util(self.grb_model, self.b_value, self.w_value, self.p_value)
+
+    def plot_tree(
+        self,
+        label="all",
+        filled=True,
+        rounded=False,
+        precision=3,
+        ax=None,
+        fontsize=None,
+        color_dict={"node": None, "leaves": []},
+    ):
+
+        check_is_fitted(self, ["X_", "y_", "P_", "l_"])
+        exporter = MPLPlotter(
+            self.grb_model,
+            self.X_col_labels,
+            self.b_value,
+            self.w_value,
+            self.p_value,
+            self.grb_model.tree.depth,
+            self.classes_,
+            label=label,
+            filled=filled,
+            rounded=rounded,
+            precision=precision,
+            fontsize=fontsize,
+            color_dict=color_dict,
+        )
+        return exporter.export(ax=ax)
 
     def get_SP(self, P, y):
         """
@@ -260,9 +288,10 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         if isinstance(P, pd.DataFrame):
             self.P_test_col_names = P.columns
         else:
-            self.P_test_col_names = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
+            self.P_test_col_names = np.array(
+                [f"P_{i}" for i in np.arange(0, P.shape[1])]
+            )
 
-        
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         P, y = check_X_y(P, y)
@@ -310,7 +339,9 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         if isinstance(P, pd.DataFrame):
             self.P_test_col_names = P.columns
         else:
-            self.P_test_col_names = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
+            self.P_test_col_names = np.array(
+                [f"P_{i}" for i in np.arange(0, P.shape[1])]
+            )
 
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
@@ -365,7 +396,9 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         if isinstance(P, pd.DataFrame):
             self.P_test_col_names = P.columns
         else:
-            self.P_test_col_names = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
+            self.P_test_col_names = np.array(
+                [f"P_{i}" for i in np.arange(0, P.shape[1])]
+            )
 
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
@@ -423,7 +456,9 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         if isinstance(P, pd.DataFrame):
             self.P_test_col_names = P.columns
         else:
-            self.P_test_col_names = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
+            self.P_test_col_names = np.array(
+                [f"P_{i}" for i in np.arange(0, P.shape[1])]
+            )
 
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
