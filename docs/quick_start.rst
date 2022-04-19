@@ -55,5 +55,5 @@ References
 ==========
 * Aghaei, S., Gómez, A., & Vayanos, P. (2021). Strong optimal classification trees. arXiv preprint arXiv:2103.15965. `[arxiv] <https://arxiv.org/abs/2103.15965>`_ 
 * Jo, N., Aghaei, S., Benson, J., Gómez, A., & Vayanos, P. (2022). Learning optimal fair classification trees. arXiv preprint arXiv:2201.09932. `[arxiv] <https://arxiv.org/abs/2201.09932>`_
-* Justin, N., Aghaei, S., Gomez, A., & Vayanos, P. (2021). Optimal Robust Classification Trees. In The AAAI-22 Workshop on Adversarial Machine Learning and Beyond.
+* Justin, N., Aghaei, S., Gomez, A., & Vayanos, P. (2021). Optimal Robust Classification Trees. In The AAAI-22 Workshop on Adversarial Machine Learning and Beyond. `[link] <https://openreview.net/pdf?id=HbasA9ysA3>`_
 * Jo, N., Aghaei, S., Gómez, A., & Vayanos, P. (2021). Learning optimal prescriptive trees from observational data. arXiv preprint arXiv:2108.13628. `[arxiv] <https://arxiv.org/pdf/2108.13628.pdf>`_ 
