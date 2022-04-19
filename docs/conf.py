@@ -47,6 +47,7 @@ extensions = [
     "numpydoc",
     "sphinx_gallery.gen_gallery",
     "sphinx_toggleprompt",
+    "nbsphinx",
 ]
 
 # this is needed for some reason...
@@ -109,7 +110,7 @@ release = _version.__version__
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ["_build", "_templates"]
+exclude_patterns = ["_build", "_templates", '**.ipynb_checkpoints']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -373,3 +374,8 @@ toggleprompt_offset_right = 30
 # def setup(app):
 # a copy button to copy snippet of code from the documentation
 # app.add_js_file("js/copybutton.js")
+
+# NBSPHINX
+html_scaled_image_link = False
+
+nbsphinx_execute='always'

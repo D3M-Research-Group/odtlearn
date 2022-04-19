@@ -21,11 +21,11 @@ This site contains the documentation for the odtlearn package.
    
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :hidden:
    :caption: Tutorial - Examples
 
-   auto_examples/index
+   notebooks/StrongTree
 
 `Getting started <quick_start.html>`_
 -------------------------------------
