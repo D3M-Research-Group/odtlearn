@@ -26,6 +26,7 @@ This site contains the documentation for the odtlearn package.
    :caption: Tutorial - Examples
 
    notebooks/StrongTree
+   notebooks/FairTree
 
 `Getting started <quick_start.html>`_
 -------------------------------------
