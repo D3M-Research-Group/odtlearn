@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
+from sklearn.utils.multiclass import unique_labels
 from odtlearn.utils.StrongTreeUtils import (
     check_binary,
     check_columns_match,
@@ -145,6 +146,9 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         # Here we need to convert P and l to np.arrays.
         P, l = check_X_y(P, l)
+
+        # Store the classes seen during fit
+        self.classes_ = unique_labels(y)
 
         # keep original data
         self.X_ = X
