@@ -148,8 +148,6 @@ class MPLPlotter(_MPLTreeExporter):
                 p_sum += sum(w[m, k] for k in grb_model.labels)
             # to determine if a leaf, we look at its w value
             # and find for which label the value > 0.5
-            print(np.asarray([w[n, k] > 0.5 for k in grb_model.labels]).nonzero()[0])
-            print(p_sum)
             col_idx = np.asarray(
                 [w[n, k] > 0.5 for k in grb_model.labels]
             ).nonzero()[0]
