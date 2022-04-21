@@ -1,6 +1,6 @@
 from sklearn.tree._export import _MPLTreeExporter, _color_brew
 from sklearn.tree._reingold_tilford import Tree, buchheim
-from odtlearn.utils.StrongTreeUtils import get_node_status
+import numpy as np
 
 
 class MPLPlotter(_MPLTreeExporter):
@@ -64,7 +64,8 @@ class MPLPlotter(_MPLTreeExporter):
     def get_fill_color(self, node_id):
         # Fetch appropriate color for node
         # get value for particular node and see if that works?
-        _, branching, _, leaf, value = get_node_status(
+        # pruned, branching, selected_feature, cutoff, leaf, value
+        _, branching, _, _, leaf, value = self.get_node_status(
             self.grb_model, self.b, self.w, self.p, node_id
         )
         alpha = 1
@@ -77,14 +78,145 @@ class MPLPlotter(_MPLTreeExporter):
         # Return html color code in #RRGGBB format
         return "#%2x%2x%2x" % tuple(color)
 
+    def get_node_status(self, grb_model, b, w, p, n):
+        """
+        This function give the status of a given node in a tree. By status we mean whether the node
+            1- is pruned? i.e., we have made a prediction at one of its ancestors
+            2- is a branching node? If yes, what feature do we branch on
+            3- is a leaf? If yes, what is the prediction at this node?
+
+        Parameters
+        ----------
+        grb_model :
+            The gurobi model solved to optimality (or reached to the time limit).
+        b :
+            The values of branching decision variable b.
+        w :
+            The values of prediction decision variable w.
+        p :
+            The values of decision variable p
+        n :
+            A valid node index in the tree
+
+        Returns
+        -------
+        pruned : int
+            pruned=1 iff the node is pruned
+        branching : int
+            branching = 1 iff the node branches at some feature f
+        selected_feature : str
+            The feature that the node branch on
+        leaf : int
+            leaf = 1 iff node n is a leaf in the tree
+        value :  double
+            if node n is a leaf, value represent the prediction at this node
+        """
+
+        pruned = False
+        branching = False
+        leaf = False
+        value = None
+        selected_feature = None
+        cutoff = None
+
+        model_type = grb_model.model.ModelName
+        assert len(model_type) > 0
+
+        # Node status for StrongTree and FairTree
+        if model_type in ["FairOCT", "FlowOCT", "BendersOCT"]:
+            p_sum = 0
+            for m in grb_model.tree.get_ancestors(n):
+                p_sum = p_sum + p[m]
+            if p[n] > 0.5:  # leaf
+                leaf = True
+                for k in grb_model.labels:
+                    if w[n, k] > 0.5:
+                        value = k
+            elif p_sum == 1:  # Pruned
+                pruned = True
+
+            if n in grb_model.tree.Nodes:
+                if (pruned is False) and (leaf is False):  # branching
+                    for f in grb_model.X_col_labels:
+                        if b[n, f] > 0.5:
+                            selected_feature = f
+                            branching = True
+        elif model_type == "RobustOCT":
+            p_sum = 0
+            for m in grb_model.tree.get_ancestors(n):
+                # need to sum over all w values for a given n
+                p_sum += sum(w[m, k] for k in grb_model.labels)
+            # to determine if a leaf, we look at its w value
+            # and find for which label the value > 0.5
+            print(np.asarray([w[n, k] > 0.5 for k in grb_model.labels]).nonzero()[0])
+            print(p_sum)
+            col_idx = np.asarray(
+                [w[n, k] > 0.5 for k in grb_model.labels]
+            ).nonzero()[0]
+            # col_idx = np.asarray(w[n, :] > 0.5).nonzero().flatten()
+            # assuming here that we can only have one column > 0.5
+            if len(col_idx) > 0:
+                leaf = True
+                value = grb_model.labels[int(col_idx[0])]
+            elif p_sum == 1:
+                pruned = True
+
+            if not pruned and not leaf:
+                for f, theta in grb_model.f_theta_indices:
+                    if b[n, f, theta] > 0.5:
+                        selected_feature = f
+                        cutoff = theta
+                        branching = True
+
+        return pruned, branching, selected_feature, cutoff, leaf, value
+
+    def node_to_str(self, node_id, leaf, selected_feature, cutoff, value):
+        characters = self.characters
+        node_string = characters[-1]
+
+        name = str(value) if selected_feature is None else selected_feature
+        cutoff = cutoff if selected_feature is not None else None
+
+        # Should labels be shown?
+        labels = (self.label == "root" and node_id == 0) or self.label == "all"
+        if self.node_ids:
+            if labels:
+                node_string += "node "
+            node_string += characters[0] + str(node_id) + characters[4]
+        if not leaf:
+            # then we want to write the selected feature and if applicable the cutoff
+            feature = name
+            if cutoff is not None:
+                node_string += "feature %s %s %s%s" % (
+                    feature,
+                    characters[3],
+                    round(cutoff, self.precision),
+                    characters[4],
+                )
+            else:
+                node_string += "%s" % (feature)
+        else:
+            if labels:
+                node_string += "class = "
+            class_name = "%s" % (
+                name
+            )
+            node_string += class_name
+        # Clean up any trailing newlines
+        if node_string.endswith(characters[4]):
+            node_string = node_string[: -len(characters[4])]
+
+        return node_string + characters[5]
+
     # now we need to get our tree into a form sklearn can work with
     def _make_tree(self, node_id, depth=0):
         # traverses _tree.Tree recursively, builds intermediate
         # "_reingold_tilford.Tree" object
-        _, _, selected_feature, leaf, value = get_node_status(
+        _, _, selected_feature, cutoff, leaf, value = self.get_node_status(
             self.grb_model, self.b, self.w, self.p, node_id
         )
-        name = str(value) if selected_feature is None else selected_feature
+        print(leaf, selected_feature, cutoff, value)
+        label = self.node_to_str(node_id, leaf, selected_feature, cutoff, value)
         if not leaf and depth <= self.max_depth:
             left_child = self.tree.get_left_children(node_id)
             right_child = self.tree.get_right_children(node_id)
@@ -93,8 +225,8 @@ class MPLPlotter(_MPLTreeExporter):
                 self._make_tree(right_child, depth=depth + 1),
             ]
         else:
-            return Tree(name, node_id)
-        return Tree(name, node_id, *children)
+            return Tree(label, node_id)
+        return Tree(label, node_id, *children)
 
     def export(self, ax=None):
         import matplotlib.pyplot as plt

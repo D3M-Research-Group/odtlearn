@@ -6,8 +6,10 @@ Tree Plotting Example
 An example of plotting a fit decision tree using :class:`odtlearn.utils.TreePlotter.TreePlotter`
 """
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from odtlearn.StrongTree import StrongTreeClassifier
+from odtlearn.RobustTree import RobustTreeClassifier
 import matplotlib.pyplot as plt
 
 
@@ -31,4 +33,55 @@ stcl = StrongTreeClassifier(
 stcl.fit(X_train, y_train)
 
 stcl.plot_tree()
+plt.show()
+
+###################################
+
+X = np.array(
+    [
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [1, 0],
+        [1, 0],
+        [1, 0],
+        [1, 1],
+        [0, 1],
+        [0, 1],
+    ]
+)
+y = np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])
+
+costs = np.array(
+    [
+        [1, 4],
+        [1, 4],
+        [1, 4],
+        [1, 4],
+        [1, 4],
+        [4, 4],
+        [4, 4],
+        [4, 4],
+        [4, 4],
+        [4, 4],
+        [4, 1],
+        [4, 4],
+        [4, 4],
+    ]
+)
+
+
+robust_classifier = RobustTreeClassifier(
+    depth=2,
+    time_limit=10,
+)
+
+robust_classifier.fit(X, y, costs=costs, budget=5, verbose=False)
+robust_classifier.print_tree()
+
+robust_classifier.plot_tree()
 plt.show()
