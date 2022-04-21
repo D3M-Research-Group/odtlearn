@@ -209,7 +209,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         """Print the fitted tree with the branching features, the threshold values for
         each branching node's test, and the predictions asserted for each assignment node"""
 
-        check_is_fitted(self, ["model"])
+        check_is_fitted(self, ["grb_model"])
 
         assignment_nodes = []
         for n in self.grb_model.tree.Nodes + self.grb_model.tree.Leaves:
@@ -244,13 +244,13 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         fontsize=None,
         color_dict={"node": None, "leaves": []},
     ):
-        check_is_fitted(self, ["model"])
+        check_is_fitted(self, ["grb_model"])
         exporter = MPLPlotter(
             self.grb_model,
             self.X_col_labels,
             self.b_value,
             self.w_value,
-            self.p_value,
+            None,  # we will calculate p within get_node_status
             self.grb_model.tree.depth,
             self.classes_,
             label=label,
