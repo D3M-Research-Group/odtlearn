@@ -13,3 +13,4 @@ sphinx-copybutton
 sphinx-toggleprompt
 furo
 nbsphinx
+ipykernel
