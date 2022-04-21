@@ -202,7 +202,7 @@ def test_RobustTree_with_uncertainty_success():
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 7, 1]}, index=["A", "B", "C", "D", "E"]
     )
     clf.fit(train, y, costs=costs, budget=5, verbose=False)
-    assert hasattr(clf, "model")
+    assert hasattr(clf, "grb_model")
 
     y_pred = clf.predict(test)
     assert y_pred.shape[0] == test.shape[0]
@@ -220,7 +220,7 @@ def test_RobustTree_no_uncertainty_success():
     )
     y = train.pop("y")
     clf.fit(train, y, verbose=False)
-    assert hasattr(clf, "model")
+    assert hasattr(clf, "grb_model")
 
     y_pred = clf.predict(test)
     assert y_pred.shape[0] == test.shape[0]

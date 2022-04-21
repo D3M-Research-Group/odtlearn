@@ -5,7 +5,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_X_y, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
 
-# Include Necessary imports in the same folder
+from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.Tree import Tree
 from odtlearn.utils.RobustOCT import RobustOCT
 from odtlearn.utils.RobustTreeUtils import mycallback, check_integer, check_same_as_X
@@ -133,7 +133,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
         self.start_time = time.time()
-        master = RobustOCT(
+        self.grb_model = RobustOCT(
             self.X,
             self.y,
             tree,
@@ -145,16 +145,15 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             self.num_threads,
             verbose,
         )
-        master.create_master_problem()
-        master.model.update()
-        master.model.optimize(mycallback)
+        self.grb_model.create_main_problem()
+        self.grb_model.model.update()
+        self.grb_model.model.optimize(mycallback)
         self.end_time = time.time()
         self.solving_time = self.end_time - self.start_time
 
         # Store fitted Gurobi model
-        self.model = master
-        self.b_value = self.model.model.getAttr("X", self.model.b)
-        self.w_value = self.model.model.getAttr("X", self.model.w)
+        self.b_value = self.grb_model.model.getAttr("X", self.grb_model.b)
+        self.w_value = self.grb_model.model.getAttr("X", self.grb_model.w)
 
         # `fit` should always return `self`
         return self
@@ -166,7 +165,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             node = 1
             while True:
                 terminal = False
-                for k in self.model.labels:
+                for k in self.grb_model.labels:
                     if self.w_value[node, k] > 0.5:  # w[n,k] == 1
                         prediction += [k]
                         terminal = True
@@ -174,12 +173,12 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
                 if terminal:
                     break
                 else:
-                    for (f, theta) in self.model.f_theta_indices:
+                    for (f, theta) in self.grb_model.f_theta_indices:
                         if self.b_value[node, f, theta] > 0.5:  # b[n,f]== 1
                             if X.at[i, f] >= theta + 1:
-                                node = self.model.tree.get_right_children(node)
+                                node = self.grb_model.tree.get_right_children(node)
                             else:
-                                node = self.model.tree.get_left_children(node)
+                                node = self.grb_model.tree.get_left_children(node)
                             break
         return np.array(prediction)
 
@@ -198,7 +197,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             The label for each sample is the label of the closest sample
             seen during fit.
         """
-        check_is_fitted(self, ["model"])
+        check_is_fitted(self, ["grb_model"])
 
         # Convert to dataframe
         df_test = check_same_as_X(self.X, self.X_col_labels, X, "test covariates")
@@ -210,27 +209,55 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         """Print the fitted tree with the branching features, the threshold values for
         each branching node's test, and the predictions asserted for each assignment node"""
 
-        check_is_fitted(self, ["model"])
+        check_is_fitted(self, ["grb_model"])
 
         assignment_nodes = []
-        for n in self.model.tree.Nodes + self.model.tree.Leaves:
+        for n in self.grb_model.tree.Nodes + self.grb_model.tree.Leaves:
             print("#########node ", n)
             terminal = False
 
             # Check if pruned
-            if self.model.tree.get_parent(n) in assignment_nodes:
+            if self.grb_model.tree.get_parent(n) in assignment_nodes:
                 print("pruned")
                 assignment_nodes += [n]
                 continue
 
-            for k in self.model.labels:
+            for k in self.grb_model.labels:
                 if self.w_value[n, k] > 0.5:
                     print("leaf {}".format(k))
                     terminal = True
                     assignment_nodes += [n]
                     break
             if not terminal:
-                for (f, theta) in self.model.f_theta_indices:
+                for (f, theta) in self.grb_model.f_theta_indices:
                     if self.b_value[n, f, theta] > 0.5:  # b[n,f]== 1
                         print("Feature: ", f, ", Cutoff: ", theta)
                         break
+
+    def plot_tree(
+        self,
+        label="all",
+        filled=True,
+        rounded=False,
+        precision=3,
+        ax=None,
+        fontsize=None,
+        color_dict={"node": None, "leaves": []},
+    ):
+        check_is_fitted(self, ["grb_model"])
+        exporter = MPLPlotter(
+            self.grb_model,
+            self.X_col_labels,
+            self.b_value,
+            self.w_value,
+            None,  # we will calculate p within get_node_status
+            self.grb_model.tree.depth,
+            self.classes_,
+            label=label,
+            filled=filled,
+            rounded=rounded,
+            precision=precision,
+            fontsize=fontsize,
+            color_dict=color_dict,
+        )
+        return exporter.export(ax=ax)
