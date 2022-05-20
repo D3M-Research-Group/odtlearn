@@ -32,7 +32,7 @@ body:
       placeholder: I ran the following chunk of code and got this error message
     validations:
       required: true
-  - type: textarea
+  - type: input
     id: version
     attributes:
       label: Version
