@@ -2,19 +2,18 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="ODTlearn API" href="api.html" /><link rel="prev" title="Welcome to odtlearn’s documentation!" href="index.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.03.04"/>
+    <meta name="generator" content="sphinx-4.0.0, furo 2022.04.07"/>
         <title>Getting started with the ODTlearn Package - odtlearn 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
 
@@ -41,10 +40,12 @@
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
@@ -157,11 +158,11 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
-<ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Getting started with the ODTlearn Package</a></li>
+  <p class="caption"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<p class="caption"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/odtlearn.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.StrongTree</span></code>.StrongTreeClassifier</a></li>
@@ -171,13 +172,16 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Tutorial - Examples</span></p>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">General examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/fit_StrongTree_example.html">StrongTree Fit Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/fit_FairTree_example.html">FairTree Fit Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/StrongTree.html">Optimal Strong Classification Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/FairTree.html">Fair Optimal Classification Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/RobustTree.html">Optimal Robust Classification Trees</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/PrescriptiveTree.html">Optimal Prescriptive Trees</a></li>
 </ul>
-</li>
+<p class="caption"><span class="caption-text">Developer Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute to ODTlearn</a></li>
 </ul>
 
 </div>
@@ -210,19 +214,19 @@
           </label>
         </div>
         <article role="main">
-          <section id="getting-started-with-the-odtlearn-package">
+          <div class="section" id="getting-started-with-the-odtlearn-package">
 <h1>Getting started with the ODTlearn Package<a class="headerlink" href="#getting-started-with-the-odtlearn-package" title="Permalink to this headline">#</a></h1>
 <p>This package contains implementations of several decision tree algorithms including StrongTrees, FairTrees, RobustTrees, and Prescriptive Trees.</p>
-<section id="install-the-package">
+<div class="section" id="install-the-package">
 <h2>Install the package<a class="headerlink" href="#install-the-package" title="Permalink to this headline">#</a></h2>
 <p>To install the package, you need to run the following command in your terminal:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install git+https://github.com/D3M-Research-Group/odtlearn.git#egg<span class="o">=</span>odtlearn
 </pre></div>
 </div>
-</section>
-<section id="usage-example">
+</div>
+<div class="section" id="usage-example">
 <h2>Usage Example<a class="headerlink" href="#usage-example" title="Permalink to this headline">#</a></h2>
-<p>The following script demonstrates how to use the odtlearn package to fit a StrongTree. For examples of how to use other types of trees please consult the <span class="xref std std-ref">examples</span>
+<p>The following script demonstrates how to use the ODTlearn package to fit a StrongTree. For examples of how to use other types of trees please consult the <a class="reference internal" href="auto_examples/index.html"><span class="doc std std-doc">tutorials</span></a>
 and <a class="reference internal" href="api.html#api"><span class="std std-ref">API documentation</span></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -253,34 +257,25 @@ and <a class="reference internal" href="api.html#api"><span class="std std-ref">
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Aghaei, S., Gómez, A., &amp; Vayanos, P. (2021). Strong optimal classification trees. arXiv preprint arXiv:2103.15965. <a class="reference external" href="https://arxiv.org/abs/2103.15965">[arxiv]</a></p></li>
+<li><p>Jo, N., Aghaei, S., Benson, J., Gómez, A., &amp; Vayanos, P. (2022). Learning optimal fair classification trees. arXiv preprint arXiv:2201.09932. <a class="reference external" href="https://arxiv.org/abs/2201.09932">[arxiv]</a></p></li>
+<li><p>Justin, N., Aghaei, S., Gomez, A., &amp; Vayanos, P. (2021). Optimal Robust Classification Trees. In The AAAI-22 Workshop on Adversarial Machine Learning and Beyond. <a class="reference external" href="https://openreview.net/pdf?id=HbasA9ysA3">[link]</a></p></li>
+<li><p>Jo, N., Aghaei, S., Gómez, A., &amp; Vayanos, P. (2021). Learning optimal prescriptive trees from observational data. arXiv preprint arXiv:2108.13628. <a class="reference external" href="https://arxiv.org/pdf/2108.13628.pdf">[arxiv]</a></p></li>
+</ul>
+</div>
+</div>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="api.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">ODTlearn API</div>
-              </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="index.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Home</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -291,6 +286,11 @@ and <a class="reference internal" href="api.html#api"><span class="std std-ref">
           </div>
           <div class="right-details">
             <div class="icons">
+              <a class="muted-link " href="https://github.com/D3M-Research-Group/odtlearn" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
               
             </div>
           </div>
@@ -313,6 +313,7 @@ and <a class="reference internal" href="api.html#api"><span class="std std-ref">
 <li><a class="reference internal" href="#">Getting started with the ODTlearn Package</a><ul>
 <li><a class="reference internal" href="#install-the-package">Install the package</a></li>
 <li><a class="reference internal" href="#usage-example">Usage Example</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
 </ul>
@@ -332,5 +333,6 @@ and <a class="reference internal" href="api.html#api"><span class="std std-ref">
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script src="_static/toggleprompt.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     </body>
 </html>

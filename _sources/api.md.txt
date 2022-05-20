@@ -1,17 +1,14 @@
-.. _api:
+(api)=
 
-####################
-ODTlearn API
-####################
+# ODTlearn API
 
 This is the class and function reference of the odtlearn package.
-Please refer to the :ref:`examples <auto_examples/index.html>` for further details,
+Please refer to the [examples](auto_examples/index) for further details,
 as the class and function raw specifications may not be enough to give full guidelines on their uses.
 
+## StrongTree
 
-StrongTree
-==========
-
+```{eval-rst}
 .. autosummary::
    :toctree: generated/
    :template: class.rst
@@ -19,30 +16,34 @@ StrongTree
    odtlearn.StrongTree.StrongTreeClassifier
 
 
+```
 
-FairTree
-========
+## FairTree
 
+```{eval-rst}
 .. autosummary::
    :toctree: generated/
    :template: class.rst
 
    odtlearn.FairTree.FairTreeClassifier
+```
 
-RobustTree
-==========
+## RobustTree
 
+```{eval-rst}
 .. autosummary::
    :toctree: generated/
    :template: class.rst
 
    odtlearn.RobustTree.RobustTreeClassifier
+```
 
-PrescriptiveTree
-================
+## PrescriptiveTree
 
+```{eval-rst}
 .. autosummary::
    :toctree: generated/
    :template: class.rst
 
    odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier
+```

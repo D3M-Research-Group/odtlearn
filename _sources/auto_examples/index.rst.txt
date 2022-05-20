@@ -36,6 +36,27 @@ Introductory examples.
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of plotting a fit decision tree using odtlearn.utils.TreePlotter.TreePlotter">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plotting_example_thumb.png
+     :alt: Tree Plotting Example
+
+     :ref:`sphx_glr_auto_examples_plotting_example.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plotting_example
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="An example of fitting a FairTree decision tree using odtlearn.FairTree.FairTreeClassifier">
 
 .. only:: html
