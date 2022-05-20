@@ -72,7 +72,11 @@ templates_path = ["_templates"]
 autosummary_generate = True
 
 # The suffix of source filenames.
-source_suffix = ".rst"
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.txt': 'markdown',
+    '.md': 'markdown',
+}
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
@@ -110,7 +114,7 @@ release = _version.__version__
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ["_build", "_templates", '**.ipynb_checkpoints']
+exclude_patterns = ["_build", "_templates", '**.ipynb_checkpoints', 'old']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -368,9 +372,9 @@ intersphinx_mapping = {
 
 # sphinx-gallery configuration
 sphinx_gallery_conf = {
-    "doc_module": "skltemplate",
+    "doc_module": "odtlearn",
     "backreferences_dir": os.path.join("generated"),
-    "reference_url": {"skltemplate": None},
+    "reference_url": {"odtlearn": None},
     "filename_pattern": r"fit_*",
 }
 
