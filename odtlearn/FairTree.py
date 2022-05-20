@@ -380,6 +380,39 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         return csp_dict
 
+    def fairness_metric_summary(self, metric, new_data=None):
+        check_is_fitted(self, ["X_", "y_", "P_", "l_"])
+        metric_names = ["SP", "CSP", "PE", "CPE"]
+        if new_data is None:
+            new_data = self.predict(self.X_)
+        if metric not in metric_names:
+            raise ValueError(
+                f"metric argument: '{metric}' does not match any of the options: {metric_names}"
+            )
+        if metric == "SP":
+            sp_df = pd.DataFrame(
+                self.get_SP(self.P_, new_data), columns=["(p,y)", "P(Y=y|P=p)"]
+            )
+            print(sp_df.to_string(index=False))
+        elif metric == "CSP":
+            csp_df = pd.DataFrame(
+                self.get_CSP(self.P_, self.l_, new_data),
+                columns=["(p, f, y)", "P(Y=y|P=p, L=f)"],
+            )
+            print(csp_df.to_string(index=False))
+        elif metric == "PE":
+            pe_df = pd.DataFrame(
+                self.get_EqOdds(self.P_, self.y_, new_data),
+                columns=["(p, y, y_pred)", "P(Y_pred=y_pred|P=p, Y=y)"],
+            )
+            print(pe_df.to_string(index=False))
+        elif metric == "CPE":
+            cpe_df = pd.DataFrame(
+                self.get_CondEqOdds(self.P_, self.l_, self.y_, new_data),
+                columns=["(p, f, t, t_pred)" "P(Y_pred=y_pred|P=p, Y=y, L=f)"],
+            )
+            print(cpe_df.to_string(index=False))
+
     def get_EqOdds(self, P, y, y_pred):
         """
         This function returns the false positive and true positive rate value
@@ -413,7 +446,6 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         class_name = "class_label"
         pred_name = "pred_label"
-        legitimate_name = "legitimate_feature_name"
         X_p = np.concatenate((P, y.reshape(-1, 1), y_pred.reshape(-1, 1)), axis=1)
         X_p = pd.DataFrame(
             X_p,

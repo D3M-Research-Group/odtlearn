@@ -1,5 +1,5 @@
 from sklearn.tree._export import _MPLTreeExporter, _color_brew
-from sklearn.tree._reingold_tilford import Tree, buchheim
+from odtlearn.utils._reingold_tilford import Tree, buchheim
 import numpy as np
 
 
@@ -19,6 +19,7 @@ class MPLPlotter(_MPLTreeExporter):
         precision=3,
         fontsize=None,
         color_dict={"node": None, "leaves": []},
+        edge_annotation=True
     ):
         self.classes = classes
         self.max_depth = max_depth
@@ -36,6 +37,7 @@ class MPLPlotter(_MPLTreeExporter):
             self.color_dict["node"] = self.color_options[-1]
         if len(self.color_dict["leaves"]) == 0:
             self.color_dict["leaves"] = self.color_options[:-1]
+        self.edge_annotation = edge_annotation
 
         super().__init__(
             max_depth=self.max_depth,
@@ -148,9 +150,7 @@ class MPLPlotter(_MPLTreeExporter):
                 p_sum += sum(w[m, k] for k in grb_model.labels)
             # to determine if a leaf, we look at its w value
             # and find for which label the value > 0.5
-            col_idx = np.asarray(
-                [w[n, k] > 0.5 for k in grb_model.labels]
-            ).nonzero()[0]
+            col_idx = np.asarray([w[n, k] > 0.5 for k in grb_model.labels]).nonzero()[0]
             # col_idx = np.asarray(w[n, :] > 0.5).nonzero().flatten()
             # assuming here that we can only have one column > 0.5
             if len(col_idx) > 0:
@@ -196,9 +196,7 @@ class MPLPlotter(_MPLTreeExporter):
         else:
             if labels:
                 node_string += "class = "
-            class_name = "%s" % (
-                name
-            )
+            class_name = "%s" % (name)
             node_string += class_name
         # Clean up any trailing newlines
         if node_string.endswith(characters[4]):
@@ -213,7 +211,7 @@ class MPLPlotter(_MPLTreeExporter):
         _, _, selected_feature, cutoff, leaf, value = self.get_node_status(
             self.grb_model, self.b, self.w, self.p, node_id
         )
-        print(leaf, selected_feature, cutoff, value)
+        # print(leaf, selected_feature, cutoff, value)
         label = self.node_to_str(node_id, leaf, selected_feature, cutoff, value)
         if not leaf and depth <= self.max_depth:
             left_child = self.tree.get_left_children(node_id)
@@ -235,7 +233,7 @@ class MPLPlotter(_MPLTreeExporter):
         ax.clear()
         ax.set_axis_off()
         my_tree = self._make_tree(1)
-        draw_tree = buchheim(my_tree)
+        draw_tree = buchheim(my_tree, distance=1.0)
         # important to make sure we're still
         # inside the axis after drawing the box
         # this makes sense because the width of a box
@@ -271,7 +269,7 @@ class MPLPlotter(_MPLTreeExporter):
             for ann in anns:
                 ann.set_fontsize(size)
 
-        return anns
+        # return anns
 
     def recurse(self, node, ax, max_x, max_y, depth=0):
         import matplotlib.pyplot as plt
@@ -290,7 +288,13 @@ class MPLPlotter(_MPLTreeExporter):
             kwargs["fontsize"] = self.fontsize
 
         # offset things by .5 to center them in plot
-        xy = ((node.x + 0.5) / max_x, (max_y - node.y - 0.5) / max_y)
+        offset_amt = 0.5
+        xy = ((node.x + offset_amt) / max_x, (max_y - node.y - offset_amt) / max_y)
+
+        # when we annotate a node, we can add a text annotation at the midpoint between parent and node
+        # it needs to be offset to the left or right depending on whether the node is a left child or right child
+        # each node has a _lmost_sibling property that we can use to check if it is the left or right node
+        # if _lmost_sibling is None it is the left node
 
         if self.max_depth is None or depth <= self.max_depth:
             if self.filled:
@@ -304,17 +308,33 @@ class MPLPlotter(_MPLTreeExporter):
                 ax.annotate(node.tree.label, xy, **kwargs)
             else:
                 xy_parent = (
-                    (node.parent.x + 0.5) / max_x,
-                    (max_y - node.parent.y - 0.5) / max_y,
+                    (node.parent.x + offset_amt) / max_x,
+                    (max_y - node.parent.y - offset_amt) / max_y,
                 )
+                if self.edge_annotation:
+                    # calculate midpoint between parent and current node
+                    midpoint = [(xy_parent[0] + xy[0]) / 2, (xy_parent[1] + xy[1]) / 2]
+                    # check if left-most sibling
+                    if node._lmost_sibling is None:
+                        midpoint[0] = midpoint[0] - 0.08
+                        arrowtext = "yes"
+                    else:
+                        midpoint[0] = midpoint[0] + 0.02
+                        arrowtext = "no"
+                    # use text instead of annotation because we use annotations later for determining max extent of plot
+                    ax.text(midpoint[0], midpoint[1], arrowtext)
+                    # ax.annotate(arrowtext,
+                    #             xy=midpoint,
+                    #             xycoords="axes fraction")
+
                 ax.annotate(node.tree.label, xy_parent, xy, **kwargs)
             for child in node.children:
                 self.recurse(child, ax, max_x, max_y, depth=depth + 1)
 
         else:
             xy_parent = (
-                (node.parent.x + 0.5) / max_x,
-                (max_y - node.parent.y - 0.5) / max_y,
+                (node.parent.x + offset_amt) / max_x,
+                (max_y - node.parent.y - offset_amt) / max_y,
             )
             kwargs["bbox"]["fc"] = "grey"
             ax.annotate("\n  (...)  \n", xy_parent, xy, **kwargs)

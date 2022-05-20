@@ -1,0 +1,42 @@
+
+
+Examples using ``odtlearn.StrongTree.StrongTreeClassifier``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of fitting a StrongTree decision tree using odtlearn.StrongTree.StrongTreeClassifier">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_fit_StrongTree_example_thumb.png
+     :alt: StrongTree Fit Example
+
+     :ref:`sphx_glr_auto_examples_fit_StrongTree_example.py`
+
+.. raw:: html
+
+    </div>
+
+.. only:: not html
+
+ * :ref:`sphx_glr_auto_examples_fit_StrongTree_example.py`
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of plotting a fit decision tree using odtlearn.utils.TreePlotter.TreePlotter">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plotting_example_thumb.png
+     :alt: Tree Plotting Example
+
+     :ref:`sphx_glr_auto_examples_plotting_example.py`
+
+.. raw:: html
+
+    </div>
+
+.. only:: not html
+
+ * :ref:`sphx_glr_auto_examples_plotting_example.py`

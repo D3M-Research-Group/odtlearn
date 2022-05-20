@@ -1,7 +1,7 @@
 
 
-Examples using ``odtlearn.RobustTree.RobustTreeClassifier``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Examples using ``odtlearn.utils.TreePlotter.TreePlotter``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. raw:: html
 
