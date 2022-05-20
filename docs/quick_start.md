@@ -12,8 +12,8 @@ pip install git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
 
 ## Usage Example
 
-The following script demonstrates how to use the odtlearn package to fit a StrongTree. For examples of how to use other types of trees please consult the {ref}`examples <auto_examples/index.html>`
-and {ref}`API documentation <api>`.
+The following script demonstrates how to use the ODTlearn package to fit a StrongTree. For examples of how to use other types of trees please consult the [tutorials](auto_examples/index)
+and [API documentation](api).
 
 ```python
 import pandas as pd

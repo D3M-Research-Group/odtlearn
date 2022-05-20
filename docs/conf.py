@@ -114,7 +114,7 @@ release = _version.__version__
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ["_build", "_templates", '**.ipynb_checkpoints', 'old']
+exclude_patterns = ["_build", "_templates", '**.ipynb_checkpoints', 'old', "requirements.txt"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
