@@ -2,10 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ODTlearn API" href="../api.html" /><link rel="prev" title="User Guide" href="index.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>FairTree Fit Example - odtlearn 0.0.1 documentation</title>
+        <title>Optimal Classification Trees - odtlearn 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -136,7 +136,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -157,10 +157,10 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../user_guide/optimal_classification_trees.html">Optimal Classification Trees</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Optimal Classification Trees</a></li>
 </ul>
 </li>
 </ul>
@@ -210,93 +210,45 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-fit-fairtree-example-py"><span class="std std-ref">here</span></a>
-to download the full example code</p>
+          <div class="section" id="optimal-classification-trees">
+<h1>Optimal Classification Trees<a class="headerlink" href="#optimal-classification-trees" title="Permalink to this headline">#</a></h1>
+<p>This document shows how to use the <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> to train optimal classification trees. It introduces StrongTree, demonstrates the standard use case, walks through parameter choices and method details, and then provides a small example using a dataset from UCI repository.</p>
+<div class="section" id="the-basics">
+<h2>The Basics<a class="headerlink" href="#the-basics" title="Permalink to this headline">#</a></h2>
+<p>Classification trees are among the most popular and inherently interpretable machine learning models and are used routinely in applications ranging from revenue management and medicine to bioinformatics. In these settings, it is crucial to leverage the full potential of available data to obtain the best possible, a.k.a, optimal, classification tree. <strong>StrongTree</strong> is a Mixed-Integer-Optimization (MIO) based formulation for learning optimal classification trees of a given depth. StrongTree significantly improves upon traditional heuristic approaches in terms of performance and is much faster than other MIO-based alternatives. See the corresponding paper for a complete treatment of StrongTree (Aghaei et al., 2021).</p>
+<div class="section" id="handling-integer-features">
+<h3>Handling Integer Features<a class="headerlink" href="#handling-integer-features" title="Permalink to this headline">#</a></h3>
+<p>StrongTree requires all the input features to be binary, i.e., all the elements of feature matrix <span class="math">X</span> should be either 0 or 1. However, this formulation can also be applied to datasets involving categorical or integer features by first preprocessing the data. For each categorical feature, one needs to encode it as a one-hot vector, i.e., for each level of the feature, one needs to create a new binary column with a value of one if and only if the original column has the corresponding level. A similar approach for encoding integer features can be used with a slight change. The new binary column should have a value of one if and only if the main column has the corresponding value or any value smaller than it.
+ODTlearn provides a function called <code class="docutils literal notranslate"><span class="pre">binarize</span></code> for taking care of the binarization step where given a dataframe with only categorical/integer columns it outputs a binarized dataframe.</p>
 </div>
-<div class="sphx-glr-example-title section" id="fairtree-fit-example">
-<span id="sphx-glr-auto-examples-fit-fairtree-example-py"></span><h1>FairTree Fit Example<a class="headerlink" href="#fairtree-fit-example" title="Permalink to this headline">#</a></h1>
-<p>An example of fitting a FairTree decision tree using <a class="reference internal" href="../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier" title="odtlearn.FairTree.FairTreeClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">odtlearn.FairTree.FairTreeClassifier</span></code></a></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">odtlearn.FairTree</span> <span class="kn">import</span> <a href="../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier" title="odtlearn.FairTree.FairTreeClassifier" class="sphx-glr-backref-module-odtlearn-FairTree sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FairTreeClassifier</span></a>
-
-
-<span class="n">data_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./data/compas/compas_train_1.csv"</span><span class="p">)</span>
-<span class="n">dat_train_enc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./data/compas/compas_train_enc_1.csv"</span><span class="p">)</span> <span class="c1">#This is one-hot encoded version of data_train where every column is binary</span>
-
-<span class="n">data_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./data/compas/compas_test_1.csv"</span><span class="p">)</span>
-<span class="n">dat_test_enc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./data/compas/compas_test_enc_1.csv"</span><span class="p">)</span>
-
-<span class="n">branching_features</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">"race.1"</span><span class="p">,</span>
-        <span class="s2">"race.2"</span><span class="p">,</span>
-        <span class="s2">"race.3"</span><span class="p">,</span>
-        <span class="s2">"race.4"</span><span class="p">,</span>
-        <span class="s2">"age_cat.1"</span><span class="p">,</span>
-        <span class="s2">"age_cat.2"</span><span class="p">,</span>
-        <span class="s2">"age_cat.3"</span><span class="p">,</span>
-        <span class="s2">"sex.1"</span><span class="p">,</span>
-        <span class="s2">"priors_count.1"</span><span class="p">,</span>
-        <span class="s2">"priors_count.2"</span><span class="p">,</span>
-        <span class="s2">"priors_count.3"</span><span class="p">,</span>
-        <span class="s2">"priors_count.4"</span><span class="p">,</span>
-        <span class="s2">"c_charge_degree.1"</span><span class="p">,</span>
-        <span class="s2">"length_of_stay.1"</span><span class="p">,</span>
-        <span class="s2">"length_of_stay.2"</span><span class="p">,</span>
-        <span class="s2">"length_of_stay.3"</span><span class="p">,</span>
-        <span class="s2">"length_of_stay.4"</span><span class="p">,</span>
-        <span class="s2">"length_of_stay.5"</span><span class="p">,</span>
-    <span class="p">]</span>
-
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">dat_train_enc</span><span class="p">[</span> <span class="n">branching_features</span><span class="p">]</span>
-<span class="n">y_train</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">dat_train_enc</span><span class="p">[[</span><span class="s2">"target"</span><span class="p">]])</span>
-<span class="n">P_train</span> <span class="o">=</span> <span class="n">data_train</span><span class="p">[[</span><span class="s2">"race"</span><span class="p">,</span> <span class="s2">"sex"</span><span class="p">]]</span>  <span class="c1"># P could have multiple columns or only one</span>
-<span class="n">l_train</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">data_train</span><span class="p">[[</span><span class="s2">"priors_count"</span><span class="p">]]</span> <span class="p">)</span> <span class="c1"># For now we assume that L has only a single column</span>
-
-<span class="n">X_test</span> <span class="o">=</span> <span class="n">dat_test_enc</span><span class="p">[</span> <span class="n">branching_features</span><span class="p">]</span>
-<span class="n">y_test</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">dat_test_enc</span><span class="p">[[</span><span class="s2">"target"</span><span class="p">]])</span>
-<span class="n">P_test</span> <span class="o">=</span> <span class="n">data_test</span><span class="p">[[</span><span class="s2">"race"</span><span class="p">,</span> <span class="s2">"sex"</span><span class="p">]]</span>
-<span class="n">l_test</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">data_test</span><span class="p">[[</span><span class="s2">"priors_count"</span><span class="p">]]</span> <span class="p">)</span>
-
-
-<span class="n">fcl</span> <span class="o">=</span> <a href="../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier" title="odtlearn.FairTree.FairTreeClassifier" class="sphx-glr-backref-module-odtlearn-FairTree sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FairTreeClassifier</span></a><span class="p">(</span>
-    <span class="n">positive_class</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
-    <span class="n">fairness_type</span><span class="o">=</span><span class="s2">"CSP"</span><span class="p">,</span>
-    <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">'balance'</span>
-<span class="p">)</span>
-
-<span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">P_train</span><span class="p">,</span> <span class="n">l_train</span><span class="p">,</span>  <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-<span class="n">fcl</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
-<span class="n">pred_test</span> <span class="o">=</span> <span class="n">fcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-<span class="n">sp_val</span> <span class="o">=</span> <span class="n">fcl</span><span class="o">.</span><span class="n">get_SP</span><span class="p">(</span><span class="n">P_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
-<span class="n">csp_val</span> <span class="o">=</span> <span class="n">fcl</span><span class="o">.</span><span class="n">get_CSP</span><span class="p">(</span><span class="n">P_test</span><span class="p">,</span> <span class="n">l_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
-<span class="n">eq_val</span> <span class="o">=</span> <span class="n">fcl</span><span class="o">.</span><span class="n">get_EqOdds</span><span class="p">(</span><span class="n">P_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">pred_test</span><span class="p">)</span>
-<span class="n">ceq_val</span> <span class="o">=</span> <span class="n">fcl</span><span class="o">.</span><span class="n">get_CondEqOdds</span><span class="p">(</span><span class="n">P_test</span><span class="p">,</span> <span class="n">l_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">pred_test</span><span class="p">)</span>
-</pre></div>
-</div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-fit-fairtree-example-py">
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/fff801d4208541313a27b650995dce1f/fit_FairTree_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">fit_FairTree_example.py</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/fd28fb160b547209d976f0e1ddf0aaeb/fit_FairTree_example.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">fit_FairTree_example.ipynb</span></code></a></p>
+<div class="section" id="imbalanced-decision-trees">
+<h3>Imbalanced Decision Trees<a class="headerlink" href="#imbalanced-decision-trees" title="Permalink to this headline">#</a></h3>
+<p>To avoid overfitting on the training data, <code class="docutils literal notranslate"><span class="pre">StrongTree</span></code> can add a regularization term (with the regularization parameter <span class="math">0 \leq \lambda \leq 1</span>) to the objective function. This regularization term penalizes the number of branching nodes in the decision tree. Higher values of <span class="math">\lambda</span> results in a sparser decision tree, i.e., a decision tree where the distance of its leaf nodes from the root node is not the same. Figure 2 shows an example of an imbalanced decision tree. You can set the value of <span class="math">\lambda</span> via parameter <code class="docutils literal notranslate"><span class="pre">_lambda</span></code> in <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code>.</p>
+<img alt="An imbalanced decision tree of depth 2" class="align-center" src="../_images/classification_tree_imbalanced.png" style="width: 600px;"/>
+<!-- <p align = "center">
+Figure.2 - An imbalanced decision tree of depth 2
+</p> -->
 </div>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+<div class="section" id="different-choice-of-objective">
+<h2>Different Choice of Objective<a class="headerlink" href="#different-choice-of-objective" title="Permalink to this headline">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> provides two options for the objective function. It can either maximize the classification accuracy or the balanced accuracy, which averages the accuracy across classes.</p>
+<p>The balanced accuracy can be helpful in the case of imbalanced datasets. A dataset is imbalanced when the class distribution is not uniform, i.e., when the number of data points in each class varies significantly between classes. For an imbalanced dataset, predicting the majority class results in high accuracy. Thus decision trees that maximize prediction accuracy without accounting for the imbalanced nature of the data perform poorly on the minority class. Imbalanced datasets occur in many important domains, e.g., in a problem such as suicide prevention, there are very small number of suicide instances.</p>
+</div>
+<div class="section" id="optimality">
+<h2>Optimality<a class="headerlink" href="#optimality" title="Permalink to this headline">#</a></h2>
+<p>To use ODTlearn, you need to have the <strong>Gurobi</strong> solver installed on your machine. Depending on the size of the problem (number of data points and features), the <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> needs a certain amount of time to find the optimal decision tree. For larger problems, this solving time may be hours long. For this reason, you need to provide a time limit, and the solving process times out after the given time limit. The default time limit for the <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> is 60 seconds (<code class="docutils literal notranslate"><span class="pre">time_limit=60</span></code>). Still, you may need to increase the time limit for larger problems if the classifier cannot find a high-quality solution. <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> either finds the optimal tree within the time limit or reports the optimality gap, which is an indicator of the quality of the solution, i.e., how far our solution is from the optimal solution (in the case of optimality, the gap is zero).</p>
+</div>
+<div class="section" id="benders-decomposition">
+<h2>Benders’ Decomposition<a class="headerlink" href="#benders-decomposition" title="Permalink to this headline">#</a></h2>
+<p>ODTlearn offers a novel Benders’ decomposition-based algorithm for solving the problem of learning optimal classification trees. This algorithm is the default algorithm for <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code>. However, one may not want to use the decomposition algorithm, i.e., <code class="docutils literal notranslate"><span class="pre">benders_oct=</span> <span class="pre">False</span></code>, wherein, in this case, we directly solve the MIO formulation using Gurobi. The Benders’ decomposition-based algorithm is significantly faster than the direct approach.</p>
+</div>
 </div>
 
         </article>
@@ -304,8 +256,26 @@ to download the full example code</p>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="../api.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">ODTlearn API</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">User Guide</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -328,8 +298,34 @@ to download the full example code</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Optimal Classification Trees</a><ul>
+<li><a class="reference internal" href="#the-basics">The Basics</a><ul>
+<li><a class="reference internal" href="#handling-integer-features">Handling Integer Features</a></li>
+<li><a class="reference internal" href="#imbalanced-decision-trees">Imbalanced Decision Trees</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#different-choice-of-objective">Different Choice of Objective</a></li>
+<li><a class="reference internal" href="#optimality">Optimality</a></li>
+<li><a class="reference internal" href="#benders-decomposition">Benders’ Decomposition</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

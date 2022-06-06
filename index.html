@@ -4,16 +4,16 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Installation Guide" href="installation.html" />
 
-    <meta name="generator" content="sphinx-4.0.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
         <title>odtlearn 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
     
     
 
@@ -40,12 +40,10 @@
   }
 </style></head>
   <body>
-    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
-
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
@@ -158,13 +156,17 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption"><span class="caption-text">Getting Started</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="user_guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/optimal_classification_trees.html">Optimal Classification Trees</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API Reference</span></p>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/odtlearn.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.StrongTree</span></code>.StrongTreeClassifier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/odtlearn.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.FairTree</span></code>.FairTreeClassifier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/odtlearn.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.RobustTree</span></code>.RobustTreeClassifier</a></li>
@@ -172,14 +174,14 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Tutorials</span></p>
+<p class="caption" role="heading"><span class="caption-text">Example Notebooks</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/StrongTree.html">Optimal Strong Classification Trees</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/FairTree.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/RobustTree.html">Optimal Robust Classification Trees</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/PrescriptiveTree.html">Optimal Prescriptive Trees</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Developer Docs</span></p>
+<p class="caption" role="heading"><span class="caption-text">Developer Docs</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">How to contribute to ODTlearn</a></li>
 </ul>
@@ -216,15 +218,18 @@
         <article role="main">
           <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h1>
-<p>Welcome to odtlearn’s documentation!</p>
+<p>Welcome to ODTlearn’s documentation!</p>
 <div class="section" id="what-is-odtlearn">
 <h2>What is ODTlearn?<a class="headerlink" href="#what-is-odtlearn" title="Permalink to this headline">#</a></h2>
-<p>Decision trees are among the most popular and inherently interpretable machine learning models and are used routinely in applications ranging from revenue management and medicine to bioinformatics. <strong>ODTlearn</strong> is a python package for learning various types of decision trees including:</p>
+<p>Decision trees are among the most popular and inherently interpretable machine learning models and are used routinely in applications ranging from revenue management and medicine to bioinformatics.
+A decision tree takes the form of a binary tree. In each branching node of the tree (the nodes within the circles in Figure 1), a binary test is performed on a specific feature. Two branches emanate from each branching node, with each branch representing the outcome of the test. If a data point passes (resp. fails) the test, it is directed to the left (resp. right) branch. A predicted label is assigned to all leaf nodes (the nodes within the rectangle in Figure 1). Thus, each path from root to leaf represents a classification rule that assigns a unique label to all data points that reach that leaf. The goal in the design of optimal decision trees is to select the best tests to perform at each branching node and the best labels to assign to each leaf to maximize classification accuracy.</p>
+<img alt="A decision tree of depth 2" class="align-center" src="_images/classification_tree.png" style="width: 600px;"/>
+<p><strong>ODTlearn</strong> is a Python package for learning various types of decision trees, which is developed based on research out of University of Southern California. ODTlearn uses Mixed-Integer-Optimization (MIO) technology for modeling a variety of decision trees including:</p>
 <ul class="simple">
-<li><p><strong>StrongTrees</strong> for learning optimal classification trees.</p></li>
-<li><p><strong>FairTrees</strong> for learning optimal classification trees that can incorporate various notions of fairness such as statistical parity, conditional statistical parity, predictive equality, equal opportunity and equalized odds.</p></li>
-<li><p><strong>RobustTrees</strong> for learning optimal classification trees that are robust against distribution shift in the training data.</p></li>
-<li><p><strong>PrescriptiveTrees</strong> for learning optimal prescriptive trees which is a tree for prescription rather than classification where in the leaf nodes it prescribes a treatment.</p></li>
+<li><p><strong>StrongTrees</strong> for learning optimal classification trees (Aghaei et al. (2021))</p></li>
+<li><p><strong>FairTrees</strong> for learning optimal classification trees that can incorporate various notions of fairness such as statistical parity, conditional statistical parity, predictive equality, equal opportunity and equalized odds (Jo et al. (2021))</p></li>
+<li><p><strong>RobustTrees</strong> for learning optimal classification trees that are robust against distribution shift in the training data (Justin et al. (2021))</p></li>
+<li><p><strong>PrescriptiveTrees</strong> for learning optimal prescriptive trees which is a tree for prescription rather  than classification where in the leaf nodes it prescribes a treatment (Jo et al. (2021))</p></li>
 </ul>
 </div>
 <div class="section" id="resources-for-getting-started">
@@ -232,6 +237,7 @@
 <p>There are a few ways to get started with ODTlearn:</p>
 <ul class="simple">
 <li><p>Read the <a class="reference internal" href="installation.html"><span class="doc std std-doc">Installation Guide</span></a>.</p></li>
+<li><p>Read the <a class="reference external" href="https://scikit-learn.org/stable/user_guide.html#user-guide" title="(in scikit-learn v1.1)"><span class="xref myst">User Guide</span></a> for an overview of each of the algorithms in this package.</p></li>
 <li><p>Read the <a class="reference internal" href="auto_examples/index.html"><span class="doc std std-doc">introductory tutorials</span></a> for each of the methods implemented in ODTlearn.</p></li>
 </ul>
 </div>
