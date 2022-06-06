@@ -2,21 +2,31 @@
 
 # Introduction
 
-Welcome to odtlearn's documentation!
+Welcome to ODTlearn's documentation!
 
 ## What is ODTlearn?
-Decision trees are among the most popular and inherently interpretable machine learning models and are used routinely in applications ranging from revenue management and medicine to bioinformatics. **ODTlearn** is a python package for learning various types of decision trees including:
+Decision trees are among the most popular and inherently interpretable machine learning models and are used routinely in applications ranging from revenue management and medicine to bioinformatics. 
+A decision tree takes the form of a binary tree. In each branching node of the tree (the nodes within the circles in Figure 1), a binary test is performed on a specific feature. Two branches emanate from each branching node, with each branch representing the outcome of the test. If a data point passes (resp. fails) the test, it is directed to the left (resp. right) branch. A predicted label is assigned to all leaf nodes (the nodes within the rectangle in Figure 1). Thus, each path from root to leaf represents a classification rule that assigns a unique label to all data points that reach that leaf. The goal in the design of optimal decision trees is to select the best tests to perform at each branching node and the best labels to assign to each leaf to maximize classification accuracy.
 
-- **StrongTrees** for learning optimal classification trees.
-- **FairTrees** for learning optimal classification trees that can incorporate various notions of fairness such as statistical parity, conditional statistical parity, predictive equality, equal opportunity and equalized odds.
-- **RobustTrees** for learning optimal classification trees that are robust against distribution shift in the training data.
-- **PrescriptiveTrees** for learning optimal prescriptive trees which is a tree for prescription rather than classification where in the leaf nodes it prescribes a treatment.
+```{image} _static/img/classification_tree.png
+:alt: A decision tree of depth 2
+:width: 600px
+:align: center
+```
+
+**ODTlearn** is a Python package for learning various types of decision trees, which is developed based on research out of University of Southern California. ODTlearn uses Mixed-Integer-Optimization (MIO) technology for modeling a variety of decision trees including:
+
+- **StrongTrees** for learning optimal classification trees (Aghaei et al. (2021))
+- **FairTrees** for learning optimal classification trees that can incorporate various notions of fairness such as statistical parity, conditional statistical parity, predictive equality, equal opportunity and equalized odds (Jo et al. (2021))
+- **RobustTrees** for learning optimal classification trees that are robust against distribution shift in the training data (Justin et al. (2021))
+- **PrescriptiveTrees** for learning optimal prescriptive trees which is a tree for prescription rather  than classification where in the leaf nodes it prescribes a treatment (Jo et al. (2021))
 
 ## Resources for getting started
 
 There are a few ways to get started with ODTlearn:
 
 * Read the [Installation Guide](installation).
+* Read the [User Guide](user_guide) for an overview of each of the algorithms in this package.
 * Read the [introductory tutorials](auto_examples/index) for each of the methods implemented in ODTlearn.
 
 ## Documentation structure
@@ -75,7 +85,7 @@ print(
 :maxdepth: 2
 
 installation
-<!-- quick_start -->
+user_guide/index
 ```
 
 ```{toctree}
@@ -87,7 +97,7 @@ api
 ```
 
 ```{toctree}
-:caption: Tutorials
+:caption: Example Notebooks
 :hidden: true
 :maxdepth: 1
 
@@ -96,6 +106,7 @@ notebooks/FairTree
 notebooks/RobustTree
 notebooks/PrescriptiveTree
 ```
+
 
 ```{toctree}
 :caption: Developer Docs

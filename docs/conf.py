@@ -41,6 +41,8 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
+    "sphinx.ext.mathjax",
+    "sphinx_math_dollar",
     "myst_parser",
     "sphinx.ext.viewcode",
     "sphinx_copybutton",
@@ -375,7 +377,7 @@ sphinx_gallery_conf = {
     "doc_module": "odtlearn",
     "backreferences_dir": os.path.join("generated"),
     "reference_url": {"odtlearn": None},
-    "filename_pattern": r"fit_*",
+    # "filename_pattern": r"fit_*",
 }
 
 

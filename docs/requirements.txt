@@ -19,3 +19,4 @@ nbsphinx
 ipykernel
 myst-parser
 git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
+sphinx-math-dollar
