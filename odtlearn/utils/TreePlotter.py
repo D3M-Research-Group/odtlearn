@@ -247,8 +247,9 @@ class MPLPlotter(_MPLTreeExporter):
         # need to modify recurse for our purposes!!!
         self.recurse(draw_tree, ax, max_x, max_y)
 
-        anns = [ann for ann in ax.get_children() if isinstance(ann, Annotation)]
-
+        anns = [ann for ann in ax.get_children() if isinstance(ann, Annotation) and ann.get_text() not in ['yes', 'no']]
+        arrow_texts = [ann for ann in ax.get_children() if isinstance(ann, Annotation) and ann.get_text() in ['yes', 'no']]
+        
         # update sizes of all bboxes
         renderer = ax.figure.canvas.get_renderer()
 
@@ -268,6 +269,9 @@ class MPLPlotter(_MPLTreeExporter):
             )
             for ann in anns:
                 ann.set_fontsize(size)
+            
+            for arrow in arrow_texts:
+                arrow.set_fontsize(size * 0.8)
 
         # return anns
 
@@ -283,6 +287,20 @@ class MPLPlotter(_MPLTreeExporter):
             arrowprops=self.arrow_args.copy(),
         )
         kwargs["arrowprops"]["edgecolor"] = plt.rcParams["text.color"]
+
+        arrow_kwargs = dict(
+            bbox=dict(
+                facecolor="white",
+                edgecolor="black",
+                alpha=1,
+                mutation_scale=0.5,
+                # fill=False
+            ),
+            ha="center",
+            va="center",
+            zorder=100,
+            xycoords="axes fraction",
+        )
 
         if self.fontsize is not None:
             kwargs["fontsize"] = self.fontsize
@@ -316,16 +334,16 @@ class MPLPlotter(_MPLTreeExporter):
                     midpoint = [(xy_parent[0] + xy[0]) / 2, (xy_parent[1] + xy[1]) / 2]
                     # check if left-most sibling
                     if node._lmost_sibling is None:
-                        midpoint[0] = midpoint[0] - 0.08
+                        midpoint[0] = midpoint[0]
                         arrowtext = "yes"
                     else:
-                        midpoint[0] = midpoint[0] + 0.02
+                        midpoint[0] = midpoint[0]
                         arrowtext = "no"
                     # use text instead of annotation because we use annotations later for determining max extent of plot
-                    ax.text(midpoint[0], midpoint[1], arrowtext)
-                    # ax.annotate(arrowtext,
-                    #             xy=midpoint,
-                    #             xycoords="axes fraction")
+                    # ax.text(midpoint[0], midpoint[1], arrowtext)
+                    ax.annotate(arrowtext,
+                                xy=midpoint,
+                                **arrow_kwargs)
 
                 ax.annotate(node.tree.label, xy_parent, xy, **kwargs)
             for child in node.children:
