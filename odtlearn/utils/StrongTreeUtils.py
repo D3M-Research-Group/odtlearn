@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import time
 from gurobipy import LinExpr, quicksum, GRB
+from sklearn.preprocessing import OneHotEncoder
 
 
 def check_columns_match(original_columns, new_data):
@@ -171,7 +172,9 @@ def get_predicted_value(grb_model, X, b, w, p):
                 predicted_values.append(value)
                 break
             elif branching:
-                selected_feature_idx = np.where(grb_model.X_col_labels == selected_feature)
+                selected_feature_idx = np.where(
+                    grb_model.X_col_labels == selected_feature
+                )
                 # Raise assertion error we don't have a column that matches
                 # the selected feature or more than one column that matches
                 assert (
@@ -187,7 +190,6 @@ def get_predicted_value(grb_model, X, b, w, p):
 
 def get_left_exp_integer(main_grb_obj, n, i):
     lhs = quicksum(
-
         -1 * main_grb_obj.b[n, f]
         for f in main_grb_obj.X_col_labels
         if main_grb_obj.X.at[i, f] == 0
@@ -286,7 +288,6 @@ def benders_callback(model, where):
     """
     X = model._main_grb_obj.X
 
-    local_eps = 0.0001
     if where == GRB.Callback.MIPSOL:
         func_start_time = time.time()
         model._callback_counter_integer += 1
@@ -316,3 +317,64 @@ def benders_callback(model, where):
         if added_cut == 1:
             model._callback_counter_integer_success += 1
             model._total_callback_time_integer_success += func_time
+
+
+def binarize(df, categorical_cols, integer_cols):
+    """
+    parameters
+    ----------
+    df: pandas dataframe
+          A dataframe with only categorical/integer columns. There should not be any NA values.
+    categorical_cols: list
+                      a list consisting of the names of categorical columns of df
+    integer_cols: list
+                      a list consisting of the names of integer columns of df
+
+    return
+    ----------
+    the binarized version of the input dataframe.
+
+    This function encodes each categorical column as a one-hot vector, i.e.,
+    for each level of the feature, it creates a new binary column with a value
+    of one if and only if the original column has the corresponding level.
+    A similar approach for encoding integer features is used with a slight change.
+    The new binary column should have a value of one if and only if the main column
+     has the corresponding value or any value smaller than it.
+    """
+
+    X_cat = np.array(df[categorical_cols])
+    X_int = np.array(df[integer_cols])
+
+    enc = OneHotEncoder(handle_unknown="error", drop="if_binary")
+    X_cat_enc = enc.fit_transform(X_cat).toarray()
+    categorical_cols_enc = enc.get_feature_names_out(categorical_cols)
+
+    enc = OneHotEncoder(handle_unknown="error", drop="if_binary")
+    X_int_enc = enc.fit_transform(X_int).toarray()
+    integer_cols_enc = enc.get_feature_names_out(integer_cols)
+
+    X_cat_enc = X_cat_enc.astype(int)
+    X_int_enc = X_int_enc.astype(int)
+
+    for col in integer_cols:
+        col_enc_set = []
+        col_offset = None
+        for i, col_enc in enumerate(integer_cols_enc):
+            if col in col_enc:
+                col_enc_set.append(col_enc)
+                if col_offset is None:
+                    col_offset = i
+        if len(col_enc_set) < 3:
+            continue
+        for i, col_enc in enumerate(col_enc_set):
+            if i == 0:
+                continue
+            X_int_enc[:, (col_offset + i)] = (
+                X_int_enc[:, (col_offset + i)] | X_int_enc[:, (col_offset + i - 1)]
+            )
+
+    df_enc = pd.DataFrame(
+        np.c_[X_cat_enc, X_int_enc],
+        columns=list(categorical_cols_enc) + list(integer_cols_enc),
+    )
+    return df_enc
