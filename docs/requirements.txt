@@ -1,6 +1,6 @@
 pygments==2.7
-jinja2==3.0
-markupsafe==2.0
+jinja2<3.0
+markupsafe<2.0
 sphinx-gallery
 sphinx-rtd-theme
 numpydoc
