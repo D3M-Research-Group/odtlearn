@@ -26,7 +26,7 @@ A decision tree takes the form of a binary tree. In each branching node of the t
 There are a few ways to get started with ODTlearn:
 
 * Read the [Installation Guide](installation).
-* Read the [User Guide](user_guide) for an overview of each of the algorithms in this package.
+* Read the [User Guide](user_guide/index) for an overview of each of the algorithms in this package.
 * Read the [introductory tutorials](auto_examples/index) for each of the methods implemented in ODTlearn.
 
 ## Documentation structure
