@@ -230,41 +230,45 @@ to download the full example code</p>
 
 
 <span class="n">data_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./data/compas/compas_train_1.csv"</span><span class="p">)</span>
-<span class="n">dat_train_enc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./data/compas/compas_train_enc_1.csv"</span><span class="p">)</span> <span class="c1">#This is one-hot encoded version of data_train where every column is binary</span>
+<span class="n">dat_train_enc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="s2">"./data/compas/compas_train_enc_1.csv"</span>
+<span class="p">)</span>  <span class="c1"># This is one-hot encoded version of data_train where every column is binary</span>
 
 <span class="n">data_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./data/compas/compas_test_1.csv"</span><span class="p">)</span>
 <span class="n">dat_test_enc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./data/compas/compas_test_enc_1.csv"</span><span class="p">)</span>
 
 <span class="n">branching_features</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">"race.1"</span><span class="p">,</span>
-        <span class="s2">"race.2"</span><span class="p">,</span>
-        <span class="s2">"race.3"</span><span class="p">,</span>
-        <span class="s2">"race.4"</span><span class="p">,</span>
-        <span class="s2">"age_cat.1"</span><span class="p">,</span>
-        <span class="s2">"age_cat.2"</span><span class="p">,</span>
-        <span class="s2">"age_cat.3"</span><span class="p">,</span>
-        <span class="s2">"sex.1"</span><span class="p">,</span>
-        <span class="s2">"priors_count.1"</span><span class="p">,</span>
-        <span class="s2">"priors_count.2"</span><span class="p">,</span>
-        <span class="s2">"priors_count.3"</span><span class="p">,</span>
-        <span class="s2">"priors_count.4"</span><span class="p">,</span>
-        <span class="s2">"c_charge_degree.1"</span><span class="p">,</span>
-        <span class="s2">"length_of_stay.1"</span><span class="p">,</span>
-        <span class="s2">"length_of_stay.2"</span><span class="p">,</span>
-        <span class="s2">"length_of_stay.3"</span><span class="p">,</span>
-        <span class="s2">"length_of_stay.4"</span><span class="p">,</span>
-        <span class="s2">"length_of_stay.5"</span><span class="p">,</span>
-    <span class="p">]</span>
+    <span class="s2">"race.1"</span><span class="p">,</span>
+    <span class="s2">"race.2"</span><span class="p">,</span>
+    <span class="s2">"race.3"</span><span class="p">,</span>
+    <span class="s2">"race.4"</span><span class="p">,</span>
+    <span class="s2">"age_cat.1"</span><span class="p">,</span>
+    <span class="s2">"age_cat.2"</span><span class="p">,</span>
+    <span class="s2">"age_cat.3"</span><span class="p">,</span>
+    <span class="s2">"sex.1"</span><span class="p">,</span>
+    <span class="s2">"priors_count.1"</span><span class="p">,</span>
+    <span class="s2">"priors_count.2"</span><span class="p">,</span>
+    <span class="s2">"priors_count.3"</span><span class="p">,</span>
+    <span class="s2">"priors_count.4"</span><span class="p">,</span>
+    <span class="s2">"c_charge_degree.1"</span><span class="p">,</span>
+    <span class="s2">"length_of_stay.1"</span><span class="p">,</span>
+    <span class="s2">"length_of_stay.2"</span><span class="p">,</span>
+    <span class="s2">"length_of_stay.3"</span><span class="p">,</span>
+    <span class="s2">"length_of_stay.4"</span><span class="p">,</span>
+    <span class="s2">"length_of_stay.5"</span><span class="p">,</span>
+<span class="p">]</span>
 
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">dat_train_enc</span><span class="p">[</span> <span class="n">branching_features</span><span class="p">]</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">dat_train_enc</span><span class="p">[</span><span class="n">branching_features</span><span class="p">]</span>
 <span class="n">y_train</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">dat_train_enc</span><span class="p">[[</span><span class="s2">"target"</span><span class="p">]])</span>
 <span class="n">P_train</span> <span class="o">=</span> <span class="n">data_train</span><span class="p">[[</span><span class="s2">"race"</span><span class="p">,</span> <span class="s2">"sex"</span><span class="p">]]</span>  <span class="c1"># P could have multiple columns or only one</span>
-<span class="n">l_train</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">data_train</span><span class="p">[[</span><span class="s2">"priors_count"</span><span class="p">]]</span> <span class="p">)</span> <span class="c1"># For now we assume that L has only a single column</span>
+<span class="n">l_train</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span>
+    <span class="n">data_train</span><span class="p">[[</span><span class="s2">"priors_count"</span><span class="p">]]</span>
+<span class="p">)</span>  <span class="c1"># For now we assume that L has only a single column</span>
 
-<span class="n">X_test</span> <span class="o">=</span> <span class="n">dat_test_enc</span><span class="p">[</span> <span class="n">branching_features</span><span class="p">]</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">dat_test_enc</span><span class="p">[</span><span class="n">branching_features</span><span class="p">]</span>
 <span class="n">y_test</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">dat_test_enc</span><span class="p">[[</span><span class="s2">"target"</span><span class="p">]])</span>
 <span class="n">P_test</span> <span class="o">=</span> <span class="n">data_test</span><span class="p">[[</span><span class="s2">"race"</span><span class="p">,</span> <span class="s2">"sex"</span><span class="p">]]</span>
-<span class="n">l_test</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">data_test</span><span class="p">[[</span><span class="s2">"priors_count"</span><span class="p">]]</span> <span class="p">)</span>
+<span class="n">l_test</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ravel.html#numpy.ravel" title="numpy.ravel" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ravel</span></a><span class="p">(</span><span class="n">data_test</span><span class="p">[[</span><span class="s2">"priors_count"</span><span class="p">]])</span>
 
 
 <span class="n">fcl</span> <span class="o">=</span> <a href="../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier" title="odtlearn.FairTree.FairTreeClassifier" class="sphx-glr-backref-module-odtlearn-FairTree sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FairTreeClassifier</span></a><span class="p">(</span>
@@ -275,10 +279,10 @@ to download the full example code</p>
     <span class="n">fairness_type</span><span class="o">=</span><span class="s2">"CSP"</span><span class="p">,</span>
     <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">'balance'</span>
+    <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"balance"</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">P_train</span><span class="p">,</span> <span class="n">l_train</span><span class="p">,</span>  <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">P_train</span><span class="p">,</span> <span class="n">l_train</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">fcl</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 <span class="n">pred_test</span> <span class="o">=</span> <span class="n">fcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 <span class="n">sp_val</span> <span class="o">=</span> <span class="n">fcl</span><span class="o">.</span><span class="n">get_SP</span><span class="p">(</span><span class="n">P_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>

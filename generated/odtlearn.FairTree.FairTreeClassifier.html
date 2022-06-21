@@ -239,7 +239,8 @@ conditional statistical parity (CSP), predictive equality (PE), equal opportunit
 </dd>
 <dt><strong>fairness_type: [None, ‘SP’, ‘CSP’, ‘PE’, ‘EOpp’, ‘EOdds’], default=None</strong></dt><dd><p>The type of fairness criteria that we want to enforce</p>
 </dd>
-<dt><strong>fairness_bound: float (0,1], default=1</strong></dt><dd><p>The bound of the fairness constraint. The smaller the value the stricter the fairness constraint and 1 corresponds to no fairness at all</p>
+<dt><strong>fairness_bound: float (0,1], default=1</strong></dt><dd><p>The bound of the fairness constraint. The smaller the value the stricter
+the fairness constraint and 1 corresponds to no fairness at all</p>
 </dd>
 </dl>
 </dd>
@@ -249,11 +250,11 @@ conditional statistical parity (CSP), predictive equality (PE), equal opportunit
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">protect_feat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">legit_factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fcl</span> <span class="o">=</span> <span class="n">FairTreeClassifier</span><span class="p">(</span><span class="n">positive_class</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">_lambda</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
 <span class="go">    fairness_type = 'CSP', fairness_bound = 1, num_threads = None)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -263,13 +264,16 @@ conditional statistical parity (CSP), predictive equality (PE), equal opportunit
 </dd>
 <dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The labels passed during <a class="reference internal" href="#odtlearn.FairTree.FairTreeClassifier.fit" title="odtlearn.FairTree.FairTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
 </dd>
-<dt><strong>P_</strong><span class="classifier">ndarray</span></dt><dd><p>The protected feature columns passed during :meth: <cite>fit</cite>.</p>
+<dt><strong>protect_feat_</strong><span class="classifier">ndarray</span></dt><dd><p>The protected feature columns passed during :meth: <cite>fit</cite>.</p>
 </dd>
-<dt><strong>l_</strong><span class="classifier">ndarray</span></dt><dd><p>The legitimate factor column passed during :meth: <cite>fit</cite>.</p>
+<dt><strong>legit_factor_</strong><span class="classifier">ndarray</span></dt><dd><p>The legitimate factor column passed during :meth: <cite>fit</cite>.</p>
 </dd>
-<dt><strong>b_value</strong><span class="classifier">a dictionary containing the value of the decision variables b, where b_value[(n,f)] is the value of b at node n and feature f</span></dt><dd></dd>
-<dt><strong>w_value</strong><span class="classifier">a dictionary containing the value of the decision variables w, where w_value[(n,k)] is the value of w at node n and class label k</span></dt><dd></dd>
-<dt><strong>p_value</strong><span class="classifier">a dictionary containing the value of the decision variables p, where p_value[n] is the value of p at node n</span></dt><dd></dd>
+<dt><strong>b_value</strong><span class="classifier">a dictionary containing the value of the decision variables b,</span></dt><dd></dd>
+<dt><strong>where b_value[(n,f)] is the value of b at node n and feature f</strong></dt><dd></dd>
+<dt><strong>w_value</strong><span class="classifier">a dictionary containing the value of the decision variables w,</span></dt><dd></dd>
+<dt><strong>where w_value[(n,k)] is the value of w at node n and class label k</strong></dt><dd></dd>
+<dt><strong>p_value</strong><span class="classifier">a dictionary containing the value of the decision variables p,</span></dt><dd></dd>
+<dt><strong>where p_value[n] is the value of p at node n</strong></dt><dd></dd>
 <dt><strong>grb_model</strong><span class="classifier">gurobipy.Model</span></dt><dd><p>The fitted Gurobi model.</p>
 </dd>
 </dl>
@@ -281,13 +285,13 @@ conditional statistical parity (CSP), predictive equality (PE), equal opportunit
 <dd></dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.FairTree.FairTreeClassifier.extract_metadata">
-<span class="sig-name descname"><span class="pre">extract_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.extract_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.extract_metadata" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">extract_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.extract_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.extract_metadata" title="Permalink to this definition">#</a></dt>
 <dd><p>A function for extracting metadata from the inputs before converting
 them into numpy arrays to work with the sklearn API</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.FairTree.FairTreeClassifier.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.fit" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legit_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.fit" title="Permalink to this definition">#</a></dt>
 <dd><p>A reference implementation of a fitting function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -296,9 +300,9 @@ them into numpy arrays to work with the sklearn API</p>
 </dd>
 <dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The target values (class labels in classification).</p>
 </dd>
-<dt><strong>P</strong><span class="classifier">array-like, shape (n_samples,1) or (n_samples, n_p)</span></dt><dd><p>The protected feature columns (Race, gender, etc); We could have one or more columns</p>
+<dt><strong>protect_feat</strong><span class="classifier">array-like, shape (n_samples,1) or (n_samples, n_p)</span></dt><dd><p>The protected feature columns (Race, gender, etc); We could have one or more columns</p>
 </dd>
-<dt><strong>l</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The legitimate factor column(e.g., prior number of criminal acts)</p>
+<dt><strong>legit_factor</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The legitimate factor column(e.g., prior number of criminal acts)</p>
 </dd>
 <dt><strong>verbose</strong><span class="classifier">bool, default = True</span></dt><dd><p>Flag for logging Gurobi outputs</p>
 </dd>
@@ -314,15 +318,15 @@ them into numpy arrays to work with the sklearn API</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.FairTree.FairTreeClassifier.get_CSP">
-<span class="sig-name descname"><span class="pre">get_CSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.get_CSP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.get_CSP" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_CSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legit_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.get_CSP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.get_CSP" title="Permalink to this definition">#</a></dt>
 <dd><p>This function returns the conditional statistical parity value for any given
 protected level, legitimate feature value and outcome value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>P</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
+<li><p><strong>protect_feat</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
 The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
-<li><p><strong>l</strong> – array-like, shape (n_samples,)
+<li><p><strong>legit_fact</strong> – array-like, shape (n_samples,)
 The legitimate factor column(e.g., prior number of criminal acts)</p></li>
 <li><p><strong>y</strong> – array-like, shape (n_samples,)
 The target values (class labels in classification).</p></li>
@@ -336,15 +340,15 @@ and t is an outcome value and l is the value of the legitimate feature</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.FairTree.FairTreeClassifier.get_CondEqOdds">
-<span class="sig-name descname"><span class="pre">get_CondEqOdds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.get_CondEqOdds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.get_CondEqOdds" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_CondEqOdds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legit_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.get_CondEqOdds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.get_CondEqOdds" title="Permalink to this definition">#</a></dt>
 <dd><p>This function returns the conditional false negative and true positive rate value
 for any given protected level, outcome value, prediction value and legitimate feature value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>P</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
+<li><p><strong>protect_feat</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
 The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
-<li><p><strong>l</strong> – array-like, shape (n_samples,)
+<li><p><strong>legit_factor</strong> – array-like, shape (n_samples,)
 The legitimate factor column(e.g., prior number of criminal acts)</p></li>
 <li><p><strong>y</strong> – array-like, shape (n_samples,)
 The true target values (class labels in classification).</p></li>
@@ -359,13 +363,13 @@ The predicted values (class labels in classification).</p></li>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.FairTree.FairTreeClassifier.get_EqOdds">
-<span class="sig-name descname"><span class="pre">get_EqOdds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.get_EqOdds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.get_EqOdds" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_EqOdds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.get_EqOdds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.get_EqOdds" title="Permalink to this definition">#</a></dt>
 <dd><p>This function returns the false positive and true positive rate value
 for any given protected level, outcome value and prediction value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>P</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
+<li><p><strong>protect_feat</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
 The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
 <li><p><strong>y</strong> – array-like, shape (n_samples,)
 The true target values (class labels in classification).</p></li>
@@ -380,21 +384,22 @@ The predicted values (class labels in classification).</p></li>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.FairTree.FairTreeClassifier.get_SP">
-<span class="sig-name descname"><span class="pre">get_SP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.get_SP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.get_SP" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_SP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/FairTree.html#FairTreeClassifier.get_SP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.FairTree.FairTreeClassifier.get_SP" title="Permalink to this definition">#</a></dt>
 <dd><p>This function returns the statistical parity value for any given protected level and outcome value</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>P</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
+<li><p><strong>protect_feat</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
 The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
 <li><p><strong>y</strong> – array-like, shape (n_samples,)
 The target values (class labels in classification).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return sp_dict</dt>
-<dd class="field-even"><p>a dictionary with key =(p,t) and value = P(Y=t|P=p) where p is a protected level and t is an outcome value</p>
+<dd class="field-even"><p>a dictionary with key =(p,t) and value = P(Y=t|P=p)</p>
 </dd>
 </dl>
+<p>where p is a protected level and t is an outcome value</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.FairTree.FairTreeClassifier.predict">
