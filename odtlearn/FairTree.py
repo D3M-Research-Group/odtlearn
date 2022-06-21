@@ -395,27 +395,27 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             )
         if metric == "SP":
             sp_df = pd.DataFrame(
-                self.get_SP(self.P_, new_data), columns=["(p,y)", "P(Y=y|P=p)"]
+                self.get_SP(self.P_, new_data).items(), columns=["(p,y)", "P(Y=y|P=p)"]
             )
-            print(sp_df.to_string(index=False))
+            print(sp_df)
         elif metric == "CSP":
             csp_df = pd.DataFrame(
-                self.get_CSP(self.P_, self.l_, new_data),
+                self.get_CSP(self.P_, self.l_, new_data).items(),
                 columns=["(p, f, y)", "P(Y=y|P=p, L=f)"],
             )
-            print(csp_df.to_string(index=False))
+            print(csp_df)
         elif metric == "PE":
             pe_df = pd.DataFrame(
-                self.get_EqOdds(self.P_, self.y_, new_data),
+                self.get_EqOdds(self.P_, self.y_, new_data).items(),
                 columns=["(p, y, y_pred)", "P(Y_pred=y_pred|P=p, Y=y)"],
             )
-            print(pe_df.to_string(index=False))
+            print(pe_df)
         elif metric == "CPE":
             cpe_df = pd.DataFrame(
-                self.get_CondEqOdds(self.P_, self.l_, self.y_, new_data),
+                self.get_CondEqOdds(self.P_, self.l_, self.y_, new_data).items(),
                 columns=["(p, f, t, t_pred)" "P(Y_pred=y_pred|P=p, Y=y, L=f)"],
             )
-            print(cpe_df.to_string(index=False))
+            print(cpe_df)
 
     def get_EqOdds(self, P, y, y_pred):
         """
