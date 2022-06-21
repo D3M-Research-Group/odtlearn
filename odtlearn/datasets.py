@@ -15,8 +15,10 @@ def balance_scale_data():
 
 
 def example_1_data():
-    """Returns tuple with two numpy arrays containing the data used in example 1 of the example notebooks in the ODTlearn documentation.
-    The diagram within the code block shows the training dataset. Our dataset has two binary features (X1 and X2) and two class labels (+1 and -1).
+    """Returns tuple with two numpy arrays containing the data used in example 1
+     of the example notebooks in the ODTlearn documentation.
+     The diagram within the code block shows the training dataset. Our dataset has
+     two binary features (X1 and X2) and two class labels (+1 and -1).
 
     X2
     |               |
@@ -41,9 +43,12 @@ def example_1_data():
 
 
 def example_2_data():
-    """Returns tuple with two numpy arrays containing the data used in example 2 the example notebooks in the ODTlearn documentation.
-    The diagram within the code block shows the training dataset. Our dataset has two binary features (X1 and X2) and two class labels (+1 and -1). Here the data is imbalanced with the positive class being the minority class.
-    
+    """Returns tuple with two numpy arrays containing the data used in example 2
+    of the example notebooks in the ODTlearn documentation.
+    The diagram within the code block shows the training dataset. Our dataset has
+    two binary features (X1 and X2) and two class labels (+1 and -1). Here the data
+    is imbalanced with the positive class being the minority class.
+
     X2
     |               |
     |               |
