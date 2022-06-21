@@ -18,9 +18,12 @@ class MPLPlotter(_MPLTreeExporter):
         rounded=False,
         precision=3,
         fontsize=None,
-        color_dict={"node": None, "leaves": []},  # TO-DO: document behavior of this dict
+        color_dict={
+            "node": None,
+            "leaves": [],
+        },  # TO-DO: document behavior of this dict
         edge_annotation=True,
-        arrow_annotation_font_scale=0.5
+        arrow_annotation_font_scale=0.5,
     ):
         self.classes = classes
         self.max_depth = max_depth
@@ -74,6 +77,8 @@ class MPLPlotter(_MPLTreeExporter):
         )
         alpha = 1
         if leaf:
+            print(int(value - 1))
+            print(self.color_dict["leaves"])
             color = self.color_dict["leaves"][int(value - 1)]
         if branching:
             color = self.color_dict["node"]
@@ -190,7 +195,10 @@ class MPLPlotter(_MPLTreeExporter):
             if cutoff is not None:
                 node_string += "feature %s %s %s%s" % (
                     feature,
-                    "=" if self.grb_model.model.ModelName in ["FairOCT", "FlowOCT", "BendersOCT"] else characters[3],
+                    "="
+                    if self.grb_model.model.ModelName
+                    in ["FairOCT", "FlowOCT", "BendersOCT"]
+                    else characters[3],
                     round(cutoff, self.precision),
                     characters[4],
                 )
@@ -249,9 +257,17 @@ class MPLPlotter(_MPLTreeExporter):
         scale_y = ax_height / max_y
         self.recurse(draw_tree, ax, max_x, max_y)
 
-        anns = [ann for ann in ax.get_children() if isinstance(ann, Annotation) and ann.get_text() not in ['yes', 'no']]
-        arrow_texts = [ann for ann in ax.get_children() if isinstance(ann, Annotation) and ann.get_text() in ['yes', 'no']]
-        
+        anns = [
+            ann
+            for ann in ax.get_children()
+            if isinstance(ann, Annotation) and ann.get_text() not in ["yes", "no"]
+        ]
+        arrow_texts = [
+            ann
+            for ann in ax.get_children()
+            if isinstance(ann, Annotation) and ann.get_text() in ["yes", "no"]
+        ]
+
         # update sizes of all bboxes
         renderer = ax.figure.canvas.get_renderer()
 
@@ -271,7 +287,7 @@ class MPLPlotter(_MPLTreeExporter):
             )
             for ann in anns:
                 ann.set_fontsize(size)
-            
+
             for arrow in arrow_texts:
                 arrow.set_fontsize(size * self.arrow_annotation_font_scale)
 
@@ -346,9 +362,7 @@ class MPLPlotter(_MPLTreeExporter):
                         arrowtext = "no"
                     # use text instead of annotation because we use annotations later for determining max extent of plot
                     # ax.text(midpoint[0], midpoint[1], arrowtext)
-                    ax.annotate(arrowtext,
-                                xy=midpoint,
-                                **arrow_kwargs)
+                    ax.annotate(arrowtext, xy=midpoint, **arrow_kwargs)
 
                 ax.annotate(node.tree.label, xy_parent, xy, **kwargs)
             for child in node.children:
