@@ -144,7 +144,7 @@ def test_StrongTree_classifier():
 
 
 @pytest.mark.parametrize(
-    "d, l, benders, expected_pred",
+    "d, _lambda, benders, expected_pred",
     [
         (0, 0, False, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])),
         (1, 0, False, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0])),

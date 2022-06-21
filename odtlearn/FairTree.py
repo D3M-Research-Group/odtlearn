@@ -144,7 +144,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             Returns self.
         """
         # store column information and dtypes if any
-        self.extract_metadata(X, y, protect_feat, legit_factor)
+        self.extract_metadata(X, y, protect_feat)
         # this function returns converted X and y but we retain metadata
         X, y = check_X_y(X, y)
         # Raises ValueError if there is a column that has values other than 0 or 1
