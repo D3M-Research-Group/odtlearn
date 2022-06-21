@@ -24,6 +24,7 @@ class MPLPlotter(_MPLTreeExporter):
         },  # TO-DO: document behavior of this dict
         edge_annotation=True,
         arrow_annotation_font_scale=0.5,
+        debug=False,
     ):
         self.classes = classes
         self.max_depth = max_depth
@@ -43,6 +44,7 @@ class MPLPlotter(_MPLTreeExporter):
             self.color_dict["leaves"] = self.color_options[:-1]
         self.edge_annotation = edge_annotation
         self.arrow_annotation_font_scale = arrow_annotation_font_scale
+        self.debug = debug
 
         super().__init__(
             max_depth=self.max_depth,
@@ -77,8 +79,9 @@ class MPLPlotter(_MPLTreeExporter):
         )
         alpha = 1
         if leaf:
-            print(int(value - 1))
-            print(self.color_dict["leaves"])
+            if self.debug:
+                print(f"Leaf value: {value}")
+                print(f"value passed to color_dict: {int(value - 1)}")
             color = self.color_dict["leaves"][int(value - 1)]
         if branching:
             color = self.color_dict["node"]

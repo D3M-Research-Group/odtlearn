@@ -241,6 +241,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         color_dict={"node": None, "leaves": []},
         edge_annotation=True,
         arrow_annotation_font_scale=0.5,
+        debug=False,
     ):
         check_is_fitted(self, ["X_", "y_"])
         exporter = MPLPlotter(
@@ -259,5 +260,6 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             color_dict=color_dict,
             edge_annotation=edge_annotation,
             arrow_annotation_font_scale=arrow_annotation_font_scale,
+            debug=debug
         )
         return exporter.export(ax=ax)
