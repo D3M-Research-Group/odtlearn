@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 
 from odtlearn.utils.PrescriptiveTreeUtils import print_tree
-from numpy.testing import assert_array_equal
 from numpy.testing import assert_allclose
 
 from odtlearn.PrescriptiveTree import PrescriptiveTreeClassifier
@@ -11,7 +10,7 @@ from odtlearn.PrescriptiveTree import PrescriptiveTreeClassifier
 
 @pytest.fixture
 def data():
-    df = pd.read_csv("../../data/prescriptive_tree/train_50.csv")
+    df = pd.read_csv("../data/prescriptive_tree/train_50.csv")
     return df
 
 
@@ -102,17 +101,18 @@ def test_PrescriptiveTree_X_treatment_error():
 
 # fmt: off
 @pytest.mark.test_gurobi
-@pytest.mark.parametrize("method, expected_pred", [('DR', np.array([0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
-                                                                    1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0,
-                                                                    1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0,
-                                                                    1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0])),
-                                                   ('DM', np.array([0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1,
-                                                                    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1,
-                                                                    1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0])),
-                                                   ('IPW', np.array([1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1,
-                                                                     1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1,
-                                                                     1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-                                                                     0, 1]))])
+@pytest.mark.parametrize("method, expected_pred", [
+    ('DR', np.array([0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0,
+                    1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0,
+                    1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0])),
+    ('DM', np.array([0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1,
+                    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1,
+                    1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0])),
+    ('IPW', np.array([1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1,
+                     1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+                     1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                     0, 1]))])
 # fmt: on
 def test_PrescriptiveTree_classifier(data, method, expected_pred):
     df = data

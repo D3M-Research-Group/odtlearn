@@ -44,9 +44,12 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The input passed during :meth:`fit`.
     y_ : ndarray, shape (n_samples,)
         The labels passed during :meth:`fit`.
-    b_value : a dictionary containing the value of the decision variables b, where b_value[(n,f)] is the value of b at node n and feature f
-    w_value : a dictionary containing the value of the decision variables w, where w_value[(n,k)] is the value of w at node n and class label k
-    p_value : a dictionary containing the value of the decision variables p, where p_value[n] is the value of p at node n
+    b_value : a dictionary containing the value of the decision variables b,
+    where b_value[(n,f)] is the value of b at node n and feature f
+    w_value : a dictionary containing the value of the decision variables w,
+    where w_value[(n,k)] is the value of w at node n and class label k
+    p_value : a dictionary containing the value of the decision variables p,
+    where p_value[n] is the value of p at node n
     grb_model : gurobipy.Model
         The fitted Gurobi model
 
@@ -260,6 +263,6 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             color_dict=color_dict,
             edge_annotation=edge_annotation,
             arrow_annotation_font_scale=arrow_annotation_font_scale,
-            debug=debug
+            debug=debug,
         )
         return exporter.export(ax=ax)

@@ -24,7 +24,7 @@ class FairOCT:
         positive_class,
         P,
         P_col_labels,
-        l,
+        legit_factor,
         obj_mode,
         verbose,
     ):
@@ -44,7 +44,7 @@ class FairOCT:
         :param positive_class:
         :param P: P Is the np.array of the protected features. Its dimension is (n_sample, n_p) where n_p is number of
                   protected feaures.
-        :param l: numpy array or pandas series/data-frame of legitimate feature
+        :param legit_factor: numpy array or pandas series/data-frame of legitimate feature
         :param P_col_labels: Names of the protected columns
         :param obj_mode: if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
         :param verbose: Display Gurobi model output
@@ -53,12 +53,14 @@ class FairOCT:
         self.X = pd.DataFrame(X, columns=X_col_labels)
         self.y = y
         self.P = P
-        self.l = l
+        self.legit_factor = legit_factor
         self.obj_mode = obj_mode
 
         self.class_name = "class_label"
         self.legitimate_name = "legitimate_feature_name"
-        self.X_p = np.concatenate((P, l.reshape(-1, 1), y.reshape(-1, 1)), axis=1)
+        self.X_p = np.concatenate(
+            (P, legit_factor.reshape(-1, 1), y.reshape(-1, 1)), axis=1
+        )
         self.X_p = pd.DataFrame(
             self.X_p,
             columns=(P_col_labels.tolist() + [self.legitimate_name, self.class_name]),
@@ -378,6 +380,6 @@ class FairOCT:
             assert self.obj_mode not in [
                 "acc",
                 "balance",
-            ], f"Wrong objective mode. obj_mode should be one of acc or balance."
+            ], "Wrong objective mode. obj_mode should be one of acc or balance."
 
         self.model.setObjective(obj, GRB.MAXIMIZE)

@@ -36,7 +36,8 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
     fairness_type: [None, 'SP', 'CSP', 'PE', 'EOpp', 'EOdds'], default=None
         The type of fairness criteria that we want to enforce
     fairness_bound: float (0,1], default=1
-        The bound of the fairness constraint. The smaller the value the stricter the fairness constraint and 1 corresponds to no fairness at all
+        The bound of the fairness constraint. The smaller the value the stricter
+        the fairness constraint and 1 corresponds to no fairness at all
 
     Attributes
     ----------
@@ -44,13 +45,16 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         The input passed during :meth:`fit`.
     y_ : ndarray, shape (n_samples,)
         The labels passed during :meth:`fit`.
-    P_ : ndarray
+    protect_feat_ : ndarray
         The protected feature columns passed during :meth: `fit`.
-    l_ : ndarray
+    legit_factor_ : ndarray
         The legitimate factor column passed during :meth: `fit`.
-    b_value : a dictionary containing the value of the decision variables b, where b_value[(n,f)] is the value of b at node n and feature f
-    w_value : a dictionary containing the value of the decision variables w, where w_value[(n,k)] is the value of w at node n and class label k
-    p_value : a dictionary containing the value of the decision variables p, where p_value[n] is the value of p at node n
+    b_value : a dictionary containing the value of the decision variables b,
+    where b_value[(n,f)] is the value of b at node n and feature f
+    w_value : a dictionary containing the value of the decision variables w,
+    where w_value[(n,k)] is the value of w at node n and class label k
+    p_value : a dictionary containing the value of the decision variables p,
+    where p_value[n] is the value of p at node n
     grb_model : gurobipy.Model
         The fitted Gurobi model.
 
@@ -60,11 +64,11 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
     >>> import numpy as np
     >>> X = np.arange(200).reshape(100, 2)
     >>> y = np.random.randint(2, size=100)
-    >>> P = np.arange(200).reshape(100, 2)
-    >>> l = np.zeros((100, ))
+    >>> protect_feat = np.arange(200).reshape(100, 2)
+    >>> legit_factor = np.zeros((100, ))
     >>> fcl = FairTreeClassifier(positive_class = 1, depth = 1, _lambda = 0, time_limit = 60,
         fairness_type = 'CSP', fairness_bound = 1, num_threads = None)
-    >>> fcl.fit(X, y, P, l)
+    >>> fcl.fit(X, y, protect_feat, legit_factor)
     """
 
     def __init__(
@@ -93,11 +97,11 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         self.X_col_dtypes = None
         self.y_dtypes = None
 
-        self.P_col_labels = None
-        self.P_col_dtypes = None
-        self.l_dtypes = None
+        self.protect_feat_col_labels = None
+        self.protect_feat_col_dtypes = None
+        self.legit_factor_dtypes = None
 
-    def extract_metadata(self, X, y, P, l):
+    def extract_metadata(self, X, y, protect_feat):
         """A function for extracting metadata from the inputs before converting
         them into numpy arrays to work with the sklearn API
 
@@ -108,15 +112,17 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         else:
             self.X_col_labels = np.array([f"X_{i}" for i in np.arange(0, X.shape[1])])
 
-        if isinstance(P, pd.DataFrame):
-            self.P_col_labels = P.columns
-            self.P_col_dtypes = P.dtypes
+        if isinstance(protect_feat, pd.DataFrame):
+            self.protect_feat_col_labels = protect_feat.columns
+            self.protect_feat_col_dtypes = protect_feat.dtypes
         else:
-            self.P_col_labels = np.array([f"P_{i}" for i in np.arange(0, P.shape[1])])
+            self.protect_feat_col_labels = np.array(
+                [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
+            )
 
         self.labels = np.unique(y)
 
-    def fit(self, X, y, P, l, verbose=True):
+    def fit(self, X, y, protect_feat, legit_factor, verbose=True):
         """A reference implementation of a fitting function.
 
         Parameters
@@ -125,9 +131,9 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             The training input samples.
         y : array-like, shape (n_samples,)
             The target values (class labels in classification).
-        P : array-like, shape (n_samples,1) or (n_samples, n_p)
+        protect_feat : array-like, shape (n_samples,1) or (n_samples, n_p)
             The protected feature columns (Race, gender, etc); We could have one or more columns
-        l : array-like, shape (n_samples,)
+        legit_factor : array-like, shape (n_samples,)
             The legitimate factor column(e.g., prior number of criminal acts)
         verbose : bool, default = True
             Flag for logging Gurobi outputs
@@ -138,14 +144,14 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             Returns self.
         """
         # store column information and dtypes if any
-        self.extract_metadata(X, y, P, l)
+        self.extract_metadata(X, y, protect_feat, legit_factor)
         # this function returns converted X and y but we retain metadata
         X, y = check_X_y(X, y)
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
 
         # Here we need to convert P and l to np.arrays.
-        P, l = check_X_y(P, l)
+        protect_feat, legit_factor = check_X_y(protect_feat, legit_factor)
 
         # Store the classes seen during fit
         self.classes_ = unique_labels(y)
@@ -153,8 +159,8 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         # keep original data
         self.X_ = X
         self.y_ = y
-        self.P_ = P
-        self.l_ = l
+        self.protect_feat_ = protect_feat
+        self.legit_factor_ = legit_factor
 
         # Instantiate tree object here
         tree = Tree(self.depth)
@@ -171,9 +177,9 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             self.fairness_type,
             self.fairness_bound,
             self.positive_class,
-            P,
-            self.P_col_labels,
-            l,
+            protect_feat,
+            self.protect_feat_col_labels,
+            legit_factor,
             self.obj_mode,
             verbose,
         )
@@ -209,7 +215,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             seen during fit.
         """
         # Check is fit had been called
-        check_is_fitted(self, ["X_", "y_", "P_", "l_"])
+        check_is_fitted(self, ["X_", "y_", "protect_feat_", "legit_factor_"])
 
         if isinstance(X, pd.DataFrame):
             self.X_predict_col_names = X.columns
@@ -244,7 +250,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         """
 
         # Check is fit had been called
-        check_is_fitted(self, ["X_", "y_", "P_", "l_"])
+        check_is_fitted(self, ["X_", "y_", "protect_feat_", "legit_factor_"])
         print_tree_util(self.grb_model, self.b_value, self.w_value, self.p_value)
 
     def plot_tree(
@@ -260,7 +266,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         arrow_annotation_font_scale=0.5,
     ):
 
-        check_is_fitted(self, ["X_", "y_", "P_", "l_"])
+        check_is_fitted(self, ["X_", "y_", "protect_feat_", "legit_factor_"])
         exporter = MPLPlotter(
             self.grb_model,
             self.X_col_labels,
@@ -280,43 +286,43 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         )
         return exporter.export(ax=ax)
 
-    def get_SP(self, P, y):
+    def get_SP(self, protect_feat, y):
         """
         This function returns the statistical parity value for any given protected level and outcome value
 
-        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)
+        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
                 The protected feature columns (Race, gender, etc); We could have one or more columns
         :param y: array-like, shape (n_samples,)
                 The target values (class labels in classification).
 
-
-        :return sp_dict: a dictionary with key =(p,t) and value = P(Y=t|P=p) where p is a protected level and t is an outcome value
+        :return sp_dict: a dictionary with key =(p,t) and value = P(Y=t|P=p)
+        where p is a protected level and t is an outcome value
 
         """
-        if isinstance(P, pd.DataFrame):
-            self.P_test_col_names = P.columns
+        if isinstance(protect_feat, pd.DataFrame):
+            self.protect_feat_test_col_names = protect_feat.columns
         else:
-            self.P_test_col_names = np.array(
-                [f"P_{i}" for i in np.arange(0, P.shape[1])]
+            self.protect_feat_test_col_names = np.array(
+                [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
             )
 
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
-        P, y = check_X_y(P, y)
+        protect_feat, y = check_X_y(protect_feat, y)
 
-        check_columns_match(self.P_col_labels, P)
+        check_columns_match(self.protect_feat_col_labels, protect_feat)
 
         class_name = "class_label"
-        X_p = np.concatenate((P, y.reshape(-1, 1)), axis=1)
+        X_p = np.concatenate((protect_feat, y.reshape(-1, 1)), axis=1)
         X_p = pd.DataFrame(
             X_p,
-            columns=(self.P_test_col_names.tolist() + [class_name]),
+            columns=(self.protect_feat_test_col_names.tolist() + [class_name]),
         )
 
         sp_dict = {}
 
         for t in X_p[class_name].unique():
-            for protected_feature in self.P_test_col_names:
+            for protected_feature in self.protect_feat_test_col_names:
                 for p in X_p[protected_feature].unique():
                     p_df = X_p[X_p[protected_feature] == p]
                     sp_p_t = None
@@ -326,14 +332,14 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         return sp_dict
 
-    def get_CSP(self, P, l, y):
+    def get_CSP(self, protect_feat, legit_factor, y):
         """
         This function returns the conditional statistical parity value for any given
         protected level, legitimate feature value and outcome value
 
-        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)
+        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
                 The protected feature columns (Race, gender, etc); We could have one or more columns
-        :param l: array-like, shape (n_samples,)
+        :param legit_fact: array-like, shape (n_samples,)
             The legitimate factor column(e.g., prior number of criminal acts)
         :param y: array-like, shape (n_samples,)
                 The target values (class labels in classification).
@@ -344,32 +350,37 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         """
 
-        if isinstance(P, pd.DataFrame):
-            self.P_test_col_names = P.columns
+        if isinstance(protect_feat, pd.DataFrame):
+            self.protect_feat_test_col_names = protect_feat.columns
         else:
-            self.P_test_col_names = np.array(
-                [f"P_{i}" for i in np.arange(0, P.shape[1])]
+            self.protect_feat_test_col_names = np.array(
+                [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
             )
 
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
-        _, y = check_X_y(P, y)
-        P, l = check_X_y(P, l)
+        _, y = check_X_y(protect_feat, y)
+        protect_feat, legit_factor = check_X_y(protect_feat, legit_factor)
 
-        check_columns_match(self.P_col_labels, P)
+        check_columns_match(self.protect_feat_col_labels, protect_feat)
 
         class_name = "class_label"
         legitimate_name = "legitimate_feature_name"
-        X_p = np.concatenate((P, l.reshape(-1, 1), y.reshape(-1, 1)), axis=1)
+        X_p = np.concatenate(
+            (protect_feat, legit_factor.reshape(-1, 1), y.reshape(-1, 1)), axis=1
+        )
         X_p = pd.DataFrame(
             X_p,
-            columns=(self.P_test_col_names.tolist() + [legitimate_name, class_name]),
+            columns=(
+                self.protect_feat_test_col_names.tolist()
+                + [legitimate_name, class_name]
+            ),
         )
 
         csp_dict = {}
 
         for t in X_p[class_name].unique():
-            for protected_feature in self.P_test_col_names:
+            for protected_feature in self.protect_feat_test_col_names:
                 for p in X_p[protected_feature].unique():
                     for f in X_p[legitimate_name].unique():
                         p_f_df = X_p[
@@ -385,7 +396,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         return csp_dict
 
     def fairness_metric_summary(self, metric, new_data=None):
-        check_is_fitted(self, ["X_", "y_", "P_", "l_"])
+        check_is_fitted(self, ["X_", "y_", "protected_feat_", "legit_factor_"])
         metric_names = ["SP", "CSP", "PE", "CPE"]
         if new_data is None:
             new_data = self.predict(self.X_)
@@ -395,34 +406,37 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             )
         if metric == "SP":
             sp_df = pd.DataFrame(
-                self.get_SP(self.P_, new_data).items(), columns=["(p,y)", "P(Y=y|P=p)"]
+                self.get_SP(self.protect_feat_, new_data).items(),
+                columns=["(p,y)", "P(Y=y|P=p)"],
             )
             print(sp_df)
         elif metric == "CSP":
             csp_df = pd.DataFrame(
-                self.get_CSP(self.P_, self.l_, new_data).items(),
+                self.get_CSP(self.protect_feat_, self.legit_factor_, new_data).items(),
                 columns=["(p, f, y)", "P(Y=y|P=p, L=f)"],
             )
             print(csp_df)
         elif metric == "PE":
             pe_df = pd.DataFrame(
-                self.get_EqOdds(self.P_, self.y_, new_data).items(),
+                self.get_EqOdds(self.protect_feat_, self.y_, new_data).items(),
                 columns=["(p, y, y_pred)", "P(Y_pred=y_pred|P=p, Y=y)"],
             )
             print(pe_df)
         elif metric == "CPE":
             cpe_df = pd.DataFrame(
-                self.get_CondEqOdds(self.P_, self.l_, self.y_, new_data).items(),
+                self.get_CondEqOdds(
+                    self.protect_feat_, self.legit_factor_, self.y_, new_data
+                ).items(),
                 columns=["(p, f, t, t_pred)" "P(Y_pred=y_pred|P=p, Y=y, L=f)"],
             )
             print(cpe_df)
 
-    def get_EqOdds(self, P, y, y_pred):
+    def get_EqOdds(self, protect_feat, y, y_pred):
         """
         This function returns the false positive and true positive rate value
         for any given protected level, outcome value and prediction value
 
-        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)
+        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
                 The protected feature columns (Race, gender, etc); We could have one or more columns
 
         :param y: array-like, shape (n_samples,)
@@ -434,33 +448,37 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         """
 
-        if isinstance(P, pd.DataFrame):
-            self.P_test_col_names = P.columns
+        if isinstance(protect_feat, pd.DataFrame):
+            self.protect_feat_test_col_names = protect_feat.columns
         else:
-            self.P_test_col_names = np.array(
-                [f"P_{i}" for i in np.arange(0, P.shape[1])]
+            self.protect_feat_test_col_names = np.array(
+                [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
             )
 
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
-        _, y = check_X_y(P, y)
-        P, y_pred = check_X_y(P, y_pred)
+        _, y = check_X_y(protect_feat, y)
+        protect_feat, y_pred = check_X_y(protect_feat, y_pred)
 
-        check_columns_match(self.P_col_labels, P)
+        check_columns_match(self.protect_feat_col_labels, protect_feat)
 
         class_name = "class_label"
         pred_name = "pred_label"
-        X_p = np.concatenate((P, y.reshape(-1, 1), y_pred.reshape(-1, 1)), axis=1)
+        X_p = np.concatenate(
+            (protect_feat, y.reshape(-1, 1), y_pred.reshape(-1, 1)), axis=1
+        )
         X_p = pd.DataFrame(
             X_p,
-            columns=(self.P_test_col_names.tolist() + [class_name, pred_name]),
+            columns=(
+                self.protect_feat_test_col_names.tolist() + [class_name, pred_name]
+            ),
         )
 
         eq_dict = {}
 
         for t in X_p[class_name].unique():
             for t_pred in X_p[class_name].unique():
-                for protected_feature in self.P_test_col_names:
+                for protected_feature in self.protect_feat_test_col_names:
                     for p in X_p[protected_feature].unique():
                         p_t_df = X_p[
                             (X_p[protected_feature] == p) & (X_p[class_name] == t)
@@ -474,14 +492,14 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         return eq_dict
 
-    def get_CondEqOdds(self, P, l, y, y_pred):
+    def get_CondEqOdds(self, protect_feat, legit_factor, y, y_pred):
         """
         This function returns the conditional false negative and true positive rate value
         for any given protected level, outcome value, prediction value and legitimate feature value
 
-        :param P: array-like, shape (n_samples,1) or (n_samples, n_p)
+        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
                 The protected feature columns (Race, gender, etc); We could have one or more columns
-        :param l: array-like, shape (n_samples,)
+        :param legit_factor: array-like, shape (n_samples,)
             The legitimate factor column(e.g., prior number of criminal acts)
 
         :param y: array-like, shape (n_samples,)
@@ -493,31 +511,37 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         """
 
-        if isinstance(P, pd.DataFrame):
-            self.P_test_col_names = P.columns
+        if isinstance(protect_feat, pd.DataFrame):
+            self.protect_feat_test_col_names = protect_feat.columns
         else:
-            self.P_test_col_names = np.array(
-                [f"P_{i}" for i in np.arange(0, P.shape[1])]
+            self.protect_feat_test_col_names = np.array(
+                [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
             )
 
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
-        _, y = check_X_y(P, y)
-        _, y_pred = check_X_y(P, y_pred)
-        P, l = check_X_y(P, l)
+        _, y = check_X_y(protect_feat, y)
+        _, y_pred = check_X_y(protect_feat, y_pred)
+        protect_feat, legit_factor = check_X_y(protect_feat, legit_factor)
 
-        check_columns_match(self.P_col_labels, P)
+        check_columns_match(self.protect_feat_col_labels, protect_feat)
 
         class_name = "class_label"
         pred_name = "pred_label"
         legitimate_name = "legitimate_feature_name"
         X_p = np.concatenate(
-            (P, l.reshape(-1, 1), y.reshape(-1, 1), y_pred.reshape(-1, 1)), axis=1
+            (
+                protect_feat,
+                legit_factor.reshape(-1, 1),
+                y.reshape(-1, 1),
+                y_pred.reshape(-1, 1),
+            ),
+            axis=1,
         )
         X_p = pd.DataFrame(
             X_p,
             columns=(
-                self.P_test_col_names.tolist()
+                self.protect_feat_test_col_names.tolist()
                 + [legitimate_name, class_name, pred_name]
             ),
         )
@@ -526,7 +550,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         for t in X_p[class_name].unique():
             for t_pred in X_p[class_name].unique():
-                for protected_feature in self.P_test_col_names:
+                for protected_feature in self.protect_feat_test_col_names:
                     for p in X_p[protected_feature].unique():
                         for f in X_p[legitimate_name].unique():
                             p_f_t_df = X_p[
