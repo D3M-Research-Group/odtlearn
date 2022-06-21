@@ -30,7 +30,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The given time limit (in seconds) for solving the MIO problem
     _lambda : float, default= 0
         The regularization parameter in the objective. _lambda is in the interval [0,1)
-    benders_oct: bool, default=False
+    benders_oct: bool, default=True
         Use benders problem formulation.
     obj_mode: str, default="acc"
         Set objective priority. If "acc", maximize the accuracy, if "balance" maximize the balanced accuracy
@@ -66,7 +66,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         depth=1,
         time_limit=60,
         _lambda=0,
-        benders_oct=False,
+        benders_oct=True,
         obj_mode="acc",
         num_threads=None,
     ):
