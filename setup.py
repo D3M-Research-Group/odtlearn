@@ -58,5 +58,5 @@ setup(
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,
     include_package_data=True,
-    package_data={"": ['data/*.csv'], ['data/*.npz']}
+    package_data={"": ['data/*.csv', 'data/*.npz']}
 )
