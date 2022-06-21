@@ -57,4 +57,6 @@ setup(
     packages=find_packages(include=["odtlearn", "odtlearn.*"]),
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,
+    include_package_data=True,
+    package_data={"": ['data/*.csv']}
 )
