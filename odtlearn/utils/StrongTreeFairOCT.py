@@ -17,14 +17,14 @@ class FairOCT:
         X_col_labels,
         labels,
         _lambda,
-        time_limit,
-        num_threads,
         fairness_type,
         fairness_bound,
         positive_class,
-        P,
-        P_col_labels,
+        protect_feat,
+        protect_feat_col_labels,
         legit_factor,
+        time_limit,
+        num_threads,
         obj_mode,
         verbose,
     ):
@@ -37,39 +37,42 @@ class FairOCT:
         :param X_col_labels: The column names of matrix X
         :param labels: the unique values of y
         :param _lambda: The regularization parameter in the objective
-        :param time_limit: The given time limit for solving the MIP
-        :param num_threads: Number of threads for the solver to use
         :param fairness_type: The type of the fairness constraint you wish to enforce, e.g., SP
         :param fairness_bound: The fairness bound,  a real value between (0,1]
         :param positive_class:
-        :param P: P Is the np.array of the protected features. Its dimension is (n_sample, n_p) where n_p is number of
-                  protected feaures.
+        :param protect_feat: protect_feat Is the np.array of the protected features.
+            Its dimension is (n_sample, n_p) where n_p is number of protected feaures.
+        :param protect_feat_col_labels: Names of the protected columns
         :param legit_factor: numpy array or pandas series/data-frame of legitimate feature
-        :param P_col_labels: Names of the protected columns
+        :param time_limit: The given time limit for solving the MIP
+        :param num_threads: Number of threads for the solver to use
         :param obj_mode: if obj_mode=acc we maximize the acc; if obj_mode = balance we maximize the balanced acc
         :param verbose: Display Gurobi model output
         """
 
         self.X = pd.DataFrame(X, columns=X_col_labels)
         self.y = y
-        self.P = P
+        self.P = protect_feat
         self.legit_factor = legit_factor
         self.obj_mode = obj_mode
 
         self.class_name = "class_label"
         self.legitimate_name = "legitimate_feature_name"
         self.X_p = np.concatenate(
-            (P, legit_factor.reshape(-1, 1), y.reshape(-1, 1)), axis=1
+            (protect_feat, legit_factor.reshape(-1, 1), y.reshape(-1, 1)), axis=1
         )
         self.X_p = pd.DataFrame(
             self.X_p,
-            columns=(P_col_labels.tolist() + [self.legitimate_name, self.class_name]),
+            columns=(
+                protect_feat_col_labels.tolist()
+                + [self.legitimate_name, self.class_name]
+            ),
         )
 
         self.X_col_labels = X_col_labels
         self.labels = labels
 
-        self.P_col_labels = P_col_labels
+        self.P_col_labels = protect_feat_col_labels
 
         # datapoints contains the indicies of our training data
         self.datapoints = np.arange(0, self.X.shape[0])
