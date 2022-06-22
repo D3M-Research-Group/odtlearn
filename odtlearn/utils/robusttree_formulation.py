@@ -97,7 +97,6 @@ class RobustOCT(RobustTreeFormulation):
         labels,
         costs,
         budget,
-        model_name,
         time_limit,
         num_threads,
         verbose,
