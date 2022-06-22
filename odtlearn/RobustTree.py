@@ -7,7 +7,9 @@ from sklearn.utils.multiclass import unique_labels
 
 from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.Tree import Tree
-from odtlearn.utils.RobustOCT import RobustOCT
+from odtlearn.utils.robusttree_formulation import RobustOCT
+
+# from odtlearn.utils.RobustOCT import RobustOCT
 from odtlearn.utils.RobustTreeUtils import mycallback, check_integer, check_same_as_X
 import time
 

@@ -12,7 +12,7 @@ from odtlearn.utils.StrongTreeUtils import (
 
 from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.Tree import Tree
-from odtlearn.utils.StrongTreeFairOCT import FairOCT
+from odtlearn.utils.strongtree_formulation import FairOCT
 
 
 class FairTreeClassifier(ClassifierMixin, BaseEstimator):
@@ -172,14 +172,14 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             self.X_col_labels,
             self.labels,
             self._lambda,
-            self.time_limit,
-            self.num_threads,
             self.fairness_type,
             self.fairness_bound,
             self.positive_class,
             protect_feat,
             self.protect_feat_col_labels,
             legit_factor,
+            self.time_limit,
+            self.num_threads,
             self.obj_mode,
             verbose,
         )

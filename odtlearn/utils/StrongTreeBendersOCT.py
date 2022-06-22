@@ -1,5 +1,5 @@
 """
-This module formulate the BendersOCT problem in gurobipy.
+This module formulates the BendersOCT problem in gurobipy.
 """
 from gurobipy import Model, GRB, quicksum, LinExpr
 import numpy as np

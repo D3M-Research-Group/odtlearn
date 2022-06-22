@@ -10,11 +10,8 @@ from odtlearn.utils.StrongTreeUtils import (
     get_predicted_value,
     print_tree_util,
 )
-
-# Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
 from odtlearn.utils.Tree import Tree
-from odtlearn.utils.StrongTreeFlowOCT import FlowOCT
-from odtlearn.utils.StrongTreeBendersOCT import BendersOCT
+from odtlearn.utils.strongtree_formulation import FlowOCT, BendersOCT
 from odtlearn.utils.TreePlotter import MPLPlotter
 
 
@@ -145,9 +142,9 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.X_col_labels,
                 self.labels,
                 self._lambda,
+                self.obj_mode,
                 self.time_limit,
                 self.num_threads,
-                self.obj_mode,
                 verbose,
             )
             self.grb_model.create_main_problem()
@@ -161,9 +158,9 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.X_col_labels,
                 self.labels,
                 self._lambda,
+                self.obj_mode,
                 self.time_limit,
                 self.num_threads,
-                self.obj_mode,
                 verbose,
             )
             self.grb_model.create_primal_problem()
