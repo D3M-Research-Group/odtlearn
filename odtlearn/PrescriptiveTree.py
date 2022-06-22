@@ -16,7 +16,7 @@ from odtlearn.utils.StrongTreeUtils import (
 )
 from odtlearn.utils.PrescriptiveTreeUtils import get_predicted_value
 from odtlearn.utils.Tree import Tree
-from odtlearn.utils.PrescriptiveTreesMIP import FlowOPT_IPW, FlowOPT_Robust
+from odtlearn.utils.prescriptivetree_formulation import FlowOPT_IPW, FlowOPT_Robust
 
 
 class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
@@ -55,12 +55,15 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         The values of decision variable p -- whether or not a tree's nodes branch or assign treatment
     """
 
-    def __init__(self, depth, time_limit, method="IPW", num_threads=None):
+    def __init__(
+        self, depth, time_limit, method="IPW", num_threads=None, verbose=False
+    ):
         # this is where we will initialize the values we want users to provide
         self.depth = depth
         self.time_limit = time_limit
         self.num_threads = num_threads
         self.method = method
+        self.verbose = verbose
 
         self.X_col_labels = None
         self.X_col_dtypes = None
@@ -220,6 +223,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.X_col_labels,
                 self.time_limit,
                 self.num_threads,
+                self.verbose,
             )
 
         elif self.method == "DM":
@@ -235,6 +239,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.X_col_labels,
                 self.time_limit,
                 self.num_threads,
+                self.verbose,
             )
 
         elif self.method == "DR":
@@ -250,6 +255,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.X_col_labels,
                 self.time_limit,
                 self.num_threads,
+                self.verbose,
             )
 
         self.grb_model.create_main_problem()
