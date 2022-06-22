@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import check_is_fitted
 from odtlearn.utils.TreePlotter import MPLPlotter
@@ -13,6 +14,42 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
         self.X_col_labels = None
         self.X_col_dtypes = None
         self.y_dtypes = None
+
+    def extract_metadata(self, X, y, **kwargs):
+        """A function for extracting metadata from the inputs before converting
+        them into numpy arrays to work with the sklearn API
+
+        Additional variables that need to be processed for
+        different classifier types are passed through keyword arguments
+        """
+        if isinstance(X, pd.DataFrame):
+            self.X_col_labels = X.columns
+            self.X_col_dtypes = X.dtypes
+        else:
+            self.X_col_labels = np.array([f"X_{i}" for i in np.arange(0, X.shape[1])])
+            self.X = pd.DataFrame(X, columns=self.X_col_labels)
+
+        # Strip indices in training data into integers
+        self.X.set_index(pd.Index(range(X.shape[0])), inplace=True)
+
+        if isinstance(y, (pd.Series, pd.DataFrame)):
+            self.y = y.values
+        else:
+            self.y = y
+        self.labels = np.unique(y)
+
+        if kwargs.get("protect_feat", None) is not None:
+            protect_feat = kwargs.get("protect_feat")
+            if isinstance(protect_feat, pd.DataFrame):
+                self.protect_feat_col_labels = protect_feat.columns
+                self.protect_feat_col_dtypes = protect_feat.dtypes
+            else:
+                self.protect_feat_col_labels = np.array(
+                    [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
+                )
+        if kwargs.get("t", None) is not None:
+            t = kwargs.get("t")
+            self.treatments = np.unique(t)
 
     def get_node_status(self, grb_model, b, w, p, n):
         """
@@ -104,6 +141,11 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
         return pruned, branching, selected_feature, cutoff, leaf, value
 
     def print_tree(self):
+        """Print the fitted tree with the branching features, the threshold values for
+        each branching node's test, and the predictions asserted for each assignment node
+
+        The method uses the Gurobi model's name for determining how to generate the tree
+        """
         check_is_fitted(self, ["grb_model"])
         if self.grb_model.model.ModelName in ["FlowOPT", "IPW"]:
             raise NotImplementedError
