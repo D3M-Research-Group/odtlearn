@@ -6,11 +6,6 @@ from odtlearn.FairTree import FairTreeClassifier
 from odtlearn.StrongTree import StrongTreeClassifier
 
 
-# @pytest.fixture
-# def data():
-#     return load_iris(return_X_y=True)
-
-
 @pytest.fixture
 def synthetic_data_1():
     """

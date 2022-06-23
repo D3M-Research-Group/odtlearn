@@ -2,13 +2,7 @@ import pytest
 import numpy as np
 import pandas as pd
 from numpy.testing import assert_allclose
-from sklearn.datasets import load_iris
 from odtlearn.StrongTree import StrongTreeClassifier
-
-
-@pytest.fixture
-def data():
-    return load_iris(return_X_y=True)
 
 
 @pytest.fixture
