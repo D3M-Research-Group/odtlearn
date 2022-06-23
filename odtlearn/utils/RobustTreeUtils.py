@@ -28,11 +28,16 @@ def check_same_as_X(X, X_col_labels, G, G_label):
         return G
     else:
         # Check if X has default column labels or not
-        if not np.array_equal(X_col_labels, np.arange(0, G.shape[1])):
+        # if not np.array_equal(X_col_labels, np.arange(0, G.shape[1])):
+        if not np.array_equal(
+            X_col_labels, np.array([f"X_{i}" for i in np.arange(0, G.shape[1])])
+        ):
             raise TypeError(
                 f"{G_label} should be a Pandas DataFrame with the same columns as the input covariates"
             )
-        return pd.DataFrame(G, columns=np.arange(0, G.shape[1]))
+        return pd.DataFrame(
+            G, columns=np.array([f"X_{i}" for i in np.arange(0, G.shape[1])])
+        )
 
 
 def get_cut_expression(master, b, w, path, xi, v, i):
@@ -331,15 +336,15 @@ def subproblem(
     return target, xi, cost, v
 
 
-def mycallback(model, where):
+def robust_tree_callback(model, where):
     """
     This function is called by gurobi at every node through the branch-&-bound tree while we solve the model.
-    Using the argument "where" we can see where the callback has been called. We are specifically interested at nodes
-    where we get an integer solution for the master problem.
-    When we get an integer solution for b and p, for every datapoint we solve the subproblem which is a minimum cut and
-    check if g[i] <= value of subproblem[i]. If this is violated we add the corresponding benders constraint as lazy
-    constraint to the master problem and proceed. Whenever we have no violated constraint! It means that we have found
-    the optimal solution.
+    Using the argument "where" we can see where the callback has been called.
+    We are specifically interested at nodes where we get an integer solution for the master problem.
+    When we get an integer solution for b and p, for every datapoint we solve the subproblem
+    which is a minimum cut and check if g[i] <= value of subproblem[i].
+    If this is violated we add the corresponding benders constraint as lazy constraint to the master
+    problem and proceed. Whenever we have no violated constraint, it means that we have found the optimal solution.
     :param model: the gurobi model we are solving.
     :param where: the node where the callback function is called from
     :return:
