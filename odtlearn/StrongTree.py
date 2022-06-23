@@ -1,15 +1,16 @@
 import numpy as np
 import pandas as pd
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
+from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
+
+from odtlearn.tree_classifier import TreeClassifier
+from odtlearn.utils.strongtree_formulation import BendersOCT, FlowOCT
 from odtlearn.utils.StrongTreeUtils import (
-    check_columns_match,
-    check_binary,
     benders_callback,
+    check_binary,
+    check_columns_match,
 )
 from odtlearn.utils.Tree import _Tree
-from odtlearn.utils.strongtree_formulation import FlowOCT, BendersOCT
-from odtlearn.tree_classifier import TreeClassifier
 
 
 class StrongTreeClassifier(TreeClassifier):

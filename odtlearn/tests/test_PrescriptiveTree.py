@@ -1,8 +1,6 @@
 import pytest
 import numpy as np
 import pandas as pd
-
-from odtlearn.utils.PrescriptiveTreeUtils import print_tree
 from numpy.testing import assert_allclose
 
 from odtlearn.PrescriptiveTree import PrescriptiveTreeClassifier
@@ -132,7 +130,5 @@ def test_PrescriptiveTree_classifier(data, method, expected_pred):
     assert hasattr(clf, "b_value")
     assert hasattr(clf, "w_value")
     assert hasattr(clf, "p_value")
-
-    print_tree(clf.grb_model, clf.b_value, clf.w_value, clf.p_value)
 
     assert_allclose(clf.predict(X), expected_pred)

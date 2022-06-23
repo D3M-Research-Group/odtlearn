@@ -1,19 +1,18 @@
-from copy import deepcopy
-import pandas as pd
 import time
+from copy import deepcopy
 
-from sklearn.utils.validation import check_X_y, check_is_fitted
+import pandas as pd
 from sklearn.utils.multiclass import unique_labels
+from sklearn.utils.validation import check_is_fitted, check_X_y
 
-from odtlearn.utils.Tree import _Tree
+from odtlearn.tree_classifier import TreeClassifier
 from odtlearn.utils.robusttree_formulation import RobustOCT
-
 from odtlearn.utils.RobustTreeUtils import (
-    robust_tree_callback,
     check_integer,
     check_same_as_X,
+    robust_tree_callback,
 )
-from odtlearn.tree_classifier import TreeClassifier
+from odtlearn.utils.Tree import _Tree
 
 
 class RobustTreeClassifier(TreeClassifier):

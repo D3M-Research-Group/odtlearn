@@ -1,11 +1,12 @@
-import pytest
 import numpy as np
+import pytest
 from numpy.testing import assert_allclose
 
 from odtlearn.FairTree import FairTreeClassifier
 from odtlearn.StrongTree import StrongTreeClassifier
 
 
+# fmt: off
 @pytest.fixture
 def synthetic_data_1():
     """
@@ -25,98 +26,23 @@ def synthetic_data_1():
     """
     X = np.array(
         [
-            [0, 0],
-            [0, 0],
-            [0, 0],
-            [0, 0],
-            [0, 0],
-            [1, 0],
-            [1, 0],
-            [1, 0],
-            [1, 0],
-            [1, 0],
-            [1, 0],
-            [1, 0],
-            [1, 0],
-            [1, 0],
-            [1, 1],
-            [1, 1],
-            [1, 1],
-            [1, 1],
-            [1, 1],
-            [1, 1],
-            [1, 1],
-            [0, 1],
-            [0, 1],
-            [0, 1],
-            [0, 1],
-            [0, 1],
-            [0, 1],
-            [0, 1],
+            [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [1, 0],
+            [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0],
+            [1, 0], [1, 0], [1, 1], [1, 1], [1, 1], [1, 1],
+            [1, 1], [1, 1], [1, 1], [0, 1], [0, 1], [0, 1],
+            [0, 1], [0, 1], [0, 1], [0, 1]
         ]
     )
     protect_feat = np.array(
         [
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            1,
-            0,
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            1,
+            0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0,
+            0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1,
         ]
     )
     y = np.array(
         [
-            0,
-            0,
-            0,
-            1,
-            1,
-            0,
-            1,
-            1,
-            0,
-            1,
-            1,
-            1,
-            1,
-            1,
-            0,
-            1,
-            0,
-            0,
-            0,
-            1,
-            1,
-            0,
-            0,
-            0,
-            0,
-            1,
-            0,
-            0,
+            0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0,
+            1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0,
         ]
     )
 
@@ -127,6 +53,7 @@ def synthetic_data_1():
     return X, y, protect_feat, legit_factor
 
 
+# fmt: on
 def test_FairTree_same_predictions(synthetic_data_1):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairTreeClassifier(

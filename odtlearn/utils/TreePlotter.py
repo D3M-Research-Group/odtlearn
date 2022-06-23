@@ -1,6 +1,7 @@
-from sklearn.tree._export import _MPLTreeExporter, _color_brew
-from odtlearn.utils._reingold_tilford import Tree, buchheim
 import numpy as np
+from sklearn.tree._export import _color_brew, _MPLTreeExporter
+
+from odtlearn.utils._reingold_tilford import Tree, buchheim
 
 
 class MPLPlotter(_MPLTreeExporter):

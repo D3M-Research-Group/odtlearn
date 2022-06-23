@@ -1,7 +1,8 @@
-from gurobipy import GRB, quicksum, LinExpr
+from itertools import combinations
+
 import numpy as np
 import pandas as pd
-from itertools import combinations
+from gurobipy import GRB, LinExpr, quicksum
 from odtlearn.utils.problem_formulation import ProblemFormulation
 
 

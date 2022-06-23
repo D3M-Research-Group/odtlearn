@@ -1,4 +1,4 @@
-from gurobipy import GRB, quicksum, LinExpr
+from gurobipy import GRB, LinExpr, quicksum
 from odtlearn.utils.problem_formulation import ProblemFormulation
 
 

@@ -1,6 +1,6 @@
-from gurobipy import Model
 import numpy as np
 import pandas as pd
+from gurobipy import Model
 
 
 class ProblemFormulation:

@@ -1,36 +1,6 @@
 import numpy as np
 
 
-def print_tree(grb_model, b, w, p):
-    """
-    This function print the derived tree with the branching features and the predictions asserted for each node
-    Parameters
-    ----------
-    grb_model :
-        The gurobi model solved to optimality (or reached the time limit)
-    b :
-        The values of branching decision variable b
-    w :
-        The values of prediction decision variable w
-    p :
-        The values of decision variable p
-    Returns
-    -------
-    Print out the tree in the console
-    """
-    for n in grb_model.tree.Nodes + grb_model.tree.Leaves:
-        pruned, branching, selected_feature, leaf, value = get_node_status(
-            grb_model, b, w, p, n
-        )
-        print("#########node ", n)
-        if pruned:
-            print("pruned")
-        elif branching:
-            print("branch on {}".format(selected_feature))
-        elif leaf:
-            print("leaf {}".format(value))
-
-
 def get_node_status(grb_model, b, w, p, n):
     """
     This function give the status of a given node in a tree. By status we mean whether the node
