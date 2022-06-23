@@ -25,6 +25,7 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
         if isinstance(X, pd.DataFrame):
             self.X_col_labels = X.columns
             self.X_col_dtypes = X.dtypes
+            self.X = X
         else:
             self.X_col_labels = np.array([f"X_{i}" for i in np.arange(0, X.shape[1])])
             self.X = pd.DataFrame(X, columns=self.X_col_labels)
@@ -103,7 +104,12 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
                 p_sum = p_sum + p[m]
             if p[n] > 0.5:  # leaf
                 leaf = True
-                for k in grb_model.labels:
+                labels = (
+                    grb_model.treatments_set
+                    if model_type in ["FlowOPT", "IPW"]
+                    else grb_model.labels
+                )
+                for k in labels:
                     if w[n, k] > 0.5:
                         value = k
             elif p_sum == 1:  # Pruned
@@ -151,8 +157,15 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
             raise NotImplementedError
         if self.grb_model.model.ModelName in ["FlowOCT", "FairOCT", "BendersOCT"]:
             for n in self.grb_model.tree.Nodes + self.grb_model.tree.Leaves:
-                pruned, branching, selected_feature, leaf, value = self.get_node_status(
-                    self.grb_model, self.b, self.w, self.p, n
+                (
+                    pruned,
+                    branching,
+                    selected_feature,
+                    _,
+                    leaf,
+                    value,
+                ) = self.get_node_status(
+                    self.grb_model, self.b_value, self.w_value, self.p_value, n
                 )
                 print("#########node ", n)
                 if pruned:
@@ -197,8 +210,19 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
             for i in range(X.shape[0]):
                 current = 1
                 while True:
-                    _, branching, selected_feature, leaf, value = self.get_node_status(
-                        self.grb_model, self.b, self.w, self.p, current
+                    (
+                        _,
+                        branching,
+                        selected_feature,
+                        _,
+                        leaf,
+                        value,
+                    ) = self.get_node_status(
+                        self.grb_model,
+                        self.b_value,
+                        self.w_value,
+                        self.p_value,
+                        current,
                     )
                     if leaf:
                         prediction.append(value)
