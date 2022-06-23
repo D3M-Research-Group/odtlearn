@@ -13,7 +13,7 @@ from odtlearn.utils.StrongTreeUtils import (
     check_columns_match,
     check_binary,
 )
-from odtlearn.utils.Tree import Tree
+from odtlearn.utils.Tree import _Tree
 from odtlearn.utils.prescriptivetree_formulation import FlowOPT_IPW, FlowOPT_Robust
 from odtlearn.tree_classifier import TreeClassifier
 
@@ -144,7 +144,6 @@ class PrescriptiveTreeClassifier(TreeClassifier):
         self : object
             Returns self.
         """
-        # check if self.method is one of the three options
 
         # store column information and dtypes if any
         self.extract_metadata(X, y, t=t)
@@ -178,7 +177,7 @@ class PrescriptiveTreeClassifier(TreeClassifier):
         self.t_ = t
 
         # Instantiate tree object here
-        self.tree = Tree(self.depth)
+        self.tree = _Tree(self.depth)
 
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects

@@ -6,7 +6,7 @@ from odtlearn.utils.StrongTreeUtils import (
     check_binary,
     check_columns_match,
 )
-from odtlearn.utils.Tree import Tree
+from odtlearn.utils.Tree import _Tree
 from odtlearn.utils.strongtree_formulation import FairOCT
 from odtlearn.tree_classifier import TreeClassifier
 
@@ -132,7 +132,7 @@ class FairTreeClassifier(TreeClassifier):
         self.legit_factor_ = legit_factor
 
         # Instantiate tree object here
-        tree = Tree(self.depth)
+        tree = _Tree(self.depth)
 
         self.grb_model = FairOCT(
             X,

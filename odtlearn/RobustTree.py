@@ -5,7 +5,7 @@ import time
 from sklearn.utils.validation import check_X_y, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
 
-from odtlearn.utils.Tree import Tree
+from odtlearn.utils.Tree import _Tree
 from odtlearn.utils.robusttree_formulation import RobustOCT
 
 from odtlearn.utils.RobustTreeUtils import (
@@ -87,7 +87,7 @@ class RobustTreeClassifier(TreeClassifier):
         self.y_ = y
 
         # Instantiate tree object here
-        tree = Tree(self.depth)
+        tree = _Tree(self.depth)
 
         # Set default for costs of uncertainty if needed
         if costs is not None:

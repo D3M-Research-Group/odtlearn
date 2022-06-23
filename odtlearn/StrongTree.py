@@ -7,7 +7,7 @@ from odtlearn.utils.StrongTreeUtils import (
     check_binary,
     benders_callback,
 )
-from odtlearn.utils.Tree import Tree
+from odtlearn.utils.Tree import _Tree
 from odtlearn.utils.strongtree_formulation import FlowOCT, BendersOCT
 from odtlearn.tree_classifier import TreeClassifier
 
@@ -106,7 +106,7 @@ class StrongTreeClassifier(TreeClassifier):
         self.y_ = y
 
         # Instantiate tree object here
-        tree = Tree(self.depth)
+        tree = _Tree(self.depth)
 
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
