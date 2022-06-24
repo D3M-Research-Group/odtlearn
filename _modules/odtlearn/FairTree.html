@@ -220,18 +220,18 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">check_X_y</span>
+
+<span class="kn">from</span> <span class="nn">odtlearn.utils.StrongTreeFairOCT</span> <span class="kn">import</span> <span class="n">FairOCT</span>
 <span class="kn">from</span> <span class="nn">odtlearn.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">check_binary</span><span class="p">,</span>
     <span class="n">check_columns_match</span><span class="p">,</span>
     <span class="n">get_predicted_value</span><span class="p">,</span>
     <span class="n">print_tree_util</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">odtlearn.utils.TreePlotter</span> <span class="kn">import</span> <span class="n">MPLPlotter</span>
 <span class="kn">from</span> <span class="nn">odtlearn.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.StrongTreeFairOCT</span> <span class="kn">import</span> <span class="n">FairOCT</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.TreePlotter</span> <span class="kn">import</span> <span class="n">MPLPlotter</span>
 
 
 <div class="viewcode-block" id="FairTreeClassifier"><a class="viewcode-back" href="../../generated/odtlearn.FairTree.FairTreeClassifier.html#odtlearn.FairTree.FairTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">FairTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
@@ -391,14 +391,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fairness_type</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fairness_bound</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">positive_class</span><span class="p">,</span>
             <span class="n">protect_feat</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">protect_feat_col_labels</span><span class="p">,</span>
             <span class="n">legit_factor</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span><span class="p">,</span>
             <span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span>

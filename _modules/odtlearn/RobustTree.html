@@ -292,6 +292,50 @@
         <span class="c1"># Strip indices in training data into integers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="RobustTreeClassifier.probabilities_to_robust_parameters"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.probabilities_to_robust_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">probabilities_to_robust_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prob</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">"""Convert probabilities of certainty and levels of robustness</span>
+<span class="sd">        to costs and budget values for fitting a robust tree</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        prob : array-like, shape (n_samples, n_features)</span>
+<span class="sd">            A 2D matrix of probabilities where the value of row i and column f</span>
+<span class="sd">            is the probability that the value for sample i and feature f is</span>
+<span class="sd">            certain. Each entry must be between 0 and 1 (inclusive).</span>
+<span class="sd">        threshold : float, default = 1</span>
+<span class="sd">            The threshold that tunes the level of robustness, between 0 (exclusive,</span>
+<span class="sd">            complete robustness) and 1 (inclusive, no robustness).</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        costs : pandas DataFrame</span>
+<span class="sd">            The costs of uncertainty to use for training</span>
+<span class="sd">        budget: float</span>
+<span class="sd">            The budget of uncertainty based on the given threshold information</span>
+<span class="sd">            and number of training samples</span>
+<span class="sd">        """</span>
+        <span class="n">costs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">prob</span><span class="p">)</span>  <span class="c1"># Deepcopy probabilities</span>
+
+        <span class="c1"># costs calculation</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">costs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">costs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">col_labels</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">costs</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">costs</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"Probabilities must be between 0 (inclusive) and 1 (inclusive)"</span>
+                <span class="p">)</span>
+        <span class="c1"># budget calculation</span>
+        <span class="k">if</span> <span class="n">threshold</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">threshold</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"Threshold must be between 0 (exclusive) and 1 (inclusive)"</span>
+            <span class="p">)</span>
+        <span class="n">budget</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">costs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">threshold</span><span class="p">)</span>
+
+        <span class="c1"># Default probability of certainty of 1 as budget + 1</span>
+        <span class="n">costs</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">budget</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">costs</span><span class="p">,</span> <span class="n">budget</span></div>
+
 <div class="viewcode-block" id="RobustTreeClassifier.fit"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">budget</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">"""Fit an optimal robust classification tree given data, labels,</span>
 <span class="sd">        costs of uncertainty, and budget of uncertainty</span>

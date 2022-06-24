@@ -324,6 +324,32 @@ seen during fit.</p>
 <dd><p>Print the fitted tree with the branching features, the threshold values for
 each branching node’s test, and the predictions asserted for each assignment node</p>
 </dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.RobustTree.RobustTreeClassifier.probabilities_to_robust_parameters">
+<span class="sig-name descname"><span class="pre">probabilities_to_robust_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prob</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/RobustTree.html#RobustTreeClassifier.probabilities_to_robust_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.RobustTree.RobustTreeClassifier.probabilities_to_robust_parameters" title="Permalink to this definition">#</a></dt>
+<dd><p>Convert probabilities of certainty and levels of robustness
+to costs and budget values for fitting a robust tree</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>prob</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>A 2D matrix of probabilities where the value of row i and column f
+is the probability that the value for sample i and feature f is
+certain. Each entry must be between 0 and 1 (inclusive).</p>
+</dd>
+<dt><strong>threshold</strong><span class="classifier">float, default = 1</span></dt><dd><p>The threshold that tunes the level of robustness, between 0 (exclusive,
+complete robustness) and 1 (inclusive, no robustness).</p>
+</dd>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>costs</strong><span class="classifier">pandas DataFrame</span></dt><dd><p>The costs of uncertainty to use for training</p>
+</dd>
+<dt><strong>budget: float</strong></dt><dd><p>The budget of uncertainty based on the given threshold information
+and number of training samples</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 </dd></dl>
 <div class="section" id="examples-using-odtlearn-robusttree-robusttreeclassifier">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">odtlearn.RobustTree.RobustTreeClassifier</span></code><a class="headerlink" href="#examples-using-odtlearn-robusttree-robusttreeclassifier" title="Permalink to this headline">#</a></h2>
