@@ -100,10 +100,20 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         if not isinstance(costs, pd.DataFrame):
             col_labels = np.arange(0, costs.shape[1])
             costs = pd.DataFrame(costs, columns=col_labels)
-        conversion = lambda x : -1 * np.log(1 - x)
-
+        for col in costs.columns:
+            if not costs[col].between(0,1).all():
+                raise ValueError(
+                    f"Probabilities must be between 0 (inclusive) and 1 (inclusive)"
+                )
         # budget calculation
+        if threshold <= 0 or threshold > 1:
+            raise ValueError(
+                f"Threshold must be between 0 (exclusive) and 1 (inclusive)"
+            )
         budget = -1 * costs.shape[0] * np.log(threshold)
+
+        # Default probability of certainty of 1 as budget + 1
+        conversion = lambda x : budget+1 if x==1 else -1 * np.log(1 - x)
 
         return costs.applymap(conversion), budget
 
