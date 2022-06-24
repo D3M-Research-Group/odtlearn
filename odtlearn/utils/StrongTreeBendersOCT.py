@@ -177,6 +177,6 @@ class BendersOCT:
             assert self.obj_mode not in [
                 "acc",
                 "balance",
-            ], f"Wrong objective mode. obj_mode should be one of acc or balance."
+            ], "Wrong objective mode. obj_mode should be one of acc or balance."
 
         self.model.setObjective(obj, GRB.MAXIMIZE)

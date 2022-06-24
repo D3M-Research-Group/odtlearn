@@ -2,10 +2,11 @@
 
 [run]
 branch = True
-source = skltemplate
-include = */skltemplate/*
+source = odtlearn
+include = */odtlearn/*
 omit =
     */setup.py
+    is_number/_version.py
 
 [report]
 exclude_lines =

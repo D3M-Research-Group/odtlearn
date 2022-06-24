@@ -78,9 +78,8 @@ class FlowOCT:
         self.p = self.model.addVars(
             self.tree.Nodes + self.tree.Leaves, vtype=GRB.BINARY, name="p"
         )
-        """
-        For classification w[n,k]=1 iff at node n we predict class k
-        """
+
+        # For classification w[n,k]=1 iff at node n we predict class k
         self.w = self.model.addVars(
             self.tree.Nodes + self.tree.Leaves,
             self.labels,
@@ -88,10 +87,8 @@ class FlowOCT:
             lb=0,
             name="w",
         )
-        """
-        zeta[i,n] is the amount of flow through the edge connecting node n
-        to sink node t for data-point i
-        """
+        # zeta[i,n] is the amount of flow through the edge connecting node n
+        # to sink node t for data-point i
         self.zeta = self.model.addVars(
             self.datapoints,
             self.tree.Nodes + self.tree.Leaves,
@@ -206,6 +203,6 @@ class FlowOCT:
             assert self.obj_mode not in [
                 "acc",
                 "balance",
-            ], f"Wrong objective mode. obj_mode should be one of acc or balance."
+            ], "Wrong objective mode. obj_mode should be one of acc or balance."
 
         self.model.setObjective(obj, GRB.MAXIMIZE)

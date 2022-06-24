@@ -287,6 +287,8 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         ax=None,
         fontsize=None,
         color_dict={"node": None, "leaves": []},
+        edge_annotation=True,
+        arrow_annotation_font_scale=0.5,
     ):
         check_is_fitted(self, ["grb_model"])
         exporter = MPLPlotter(
@@ -303,5 +305,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             precision=precision,
             fontsize=fontsize,
             color_dict=color_dict,
+            edge_annotation=edge_annotation,
+            arrow_annotation_font_scale=arrow_annotation_font_scale,
         )
         return exporter.export(ax=ax)

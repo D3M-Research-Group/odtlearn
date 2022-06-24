@@ -2,7 +2,6 @@
 """A package for decision tree methods."""
 
 import codecs
-import os
 
 from setuptools import find_packages, setup
 
@@ -57,4 +56,6 @@ setup(
     packages=find_packages(include=["odtlearn", "odtlearn.*"]),
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,
+    include_package_data=True,
+    package_data={"": ["data/*.csv", "data/*.npz"]},
 )

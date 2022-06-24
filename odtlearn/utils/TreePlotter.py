@@ -18,8 +18,13 @@ class MPLPlotter(_MPLTreeExporter):
         rounded=False,
         precision=3,
         fontsize=None,
-        color_dict={"node": None, "leaves": []},
-        edge_annotation=True
+        color_dict={
+            "node": None,
+            "leaves": [],
+        },  # TO-DO: document behavior of this dict
+        edge_annotation=True,
+        arrow_annotation_font_scale=0.5,
+        debug=False,
     ):
         self.classes = classes
         self.max_depth = max_depth
@@ -38,6 +43,8 @@ class MPLPlotter(_MPLTreeExporter):
         if len(self.color_dict["leaves"]) == 0:
             self.color_dict["leaves"] = self.color_options[:-1]
         self.edge_annotation = edge_annotation
+        self.arrow_annotation_font_scale = arrow_annotation_font_scale
+        self.debug = debug
 
         super().__init__(
             max_depth=self.max_depth,
@@ -72,6 +79,9 @@ class MPLPlotter(_MPLTreeExporter):
         )
         alpha = 1
         if leaf:
+            if self.debug:
+                print(f"Leaf value: {value}")
+                print(f"value passed to color_dict: {int(value - 1)}")
             color = self.color_dict["leaves"][int(value - 1)]
         if branching:
             color = self.color_dict["node"]
@@ -126,6 +136,7 @@ class MPLPlotter(_MPLTreeExporter):
 
         # Node status for StrongTree and FairTree
         if model_type in ["FairOCT", "FlowOCT", "BendersOCT"]:
+            cutoff = 0
             p_sum = 0
             for m in grb_model.tree.get_ancestors(n):
                 p_sum = p_sum + p[m]
@@ -187,7 +198,10 @@ class MPLPlotter(_MPLTreeExporter):
             if cutoff is not None:
                 node_string += "feature %s %s %s%s" % (
                     feature,
-                    characters[3],
+                    "="
+                    if self.grb_model.model.ModelName
+                    in ["FairOCT", "FlowOCT", "BendersOCT"]
+                    else characters[3],
                     round(cutoff, self.precision),
                     characters[4],
                 )
@@ -244,12 +258,19 @@ class MPLPlotter(_MPLTreeExporter):
 
         scale_x = ax_width / max_x
         scale_y = ax_height / max_y
-        # need to modify recurse for our purposes!!!
         self.recurse(draw_tree, ax, max_x, max_y)
 
-        anns = [ann for ann in ax.get_children() if isinstance(ann, Annotation) and ann.get_text() not in ['yes', 'no']]
-        arrow_texts = [ann for ann in ax.get_children() if isinstance(ann, Annotation) and ann.get_text() in ['yes', 'no']]
-        
+        anns = [
+            ann
+            for ann in ax.get_children()
+            if isinstance(ann, Annotation) and ann.get_text() not in ["yes", "no"]
+        ]
+        arrow_texts = [
+            ann
+            for ann in ax.get_children()
+            if isinstance(ann, Annotation) and ann.get_text() in ["yes", "no"]
+        ]
+
         # update sizes of all bboxes
         renderer = ax.figure.canvas.get_renderer()
 
@@ -269,9 +290,9 @@ class MPLPlotter(_MPLTreeExporter):
             )
             for ann in anns:
                 ann.set_fontsize(size)
-            
+
             for arrow in arrow_texts:
-                arrow.set_fontsize(size * 0.8)
+                arrow.set_fontsize(size * self.arrow_annotation_font_scale)
 
         # return anns
 
@@ -291,9 +312,11 @@ class MPLPlotter(_MPLTreeExporter):
         arrow_kwargs = dict(
             bbox=dict(
                 facecolor="white",
-                edgecolor="black",
+                # edgecolor="black",
+                edgecolor="none",
                 alpha=1,
                 mutation_scale=0.5,
+                pad=0.5
                 # fill=False
             ),
             ha="center",
@@ -304,6 +327,7 @@ class MPLPlotter(_MPLTreeExporter):
 
         if self.fontsize is not None:
             kwargs["fontsize"] = self.fontsize
+            arrow_kwargs["fontsize"] = self.fontsize * self.arrow_annotation_font_scale
 
         # offset things by .5 to center them in plot
         offset_amt = 0.5
@@ -341,9 +365,7 @@ class MPLPlotter(_MPLTreeExporter):
                         arrowtext = "no"
                     # use text instead of annotation because we use annotations later for determining max extent of plot
                     # ax.text(midpoint[0], midpoint[1], arrowtext)
-                    ax.annotate(arrowtext,
-                                xy=midpoint,
-                                **arrow_kwargs)
+                    ax.annotate(arrowtext, xy=midpoint, **arrow_kwargs)
 
                 ax.annotate(node.tree.label, xy_parent, xy, **kwargs)
             for child in node.children:

@@ -70,7 +70,7 @@ def get_cut_expression(master, b, w, path, xi, v, i):
             expr += master.w[n, master.y[i]]
         else:
             expr += quicksum(
-                master.w[n, l] for l in master.labels if (l != master.y[i])
+                master.w[n, lab] for lab in master.labels if (lab != master.y[i])
             )
     return expr
 

@@ -16,6 +16,16 @@ pip install git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
 
 A release version of the package will be available on PyPI shortly.
 
+## Developing
+This project uses ``black`` to format code and ``flake8`` for linting. We also support ``pre-commit`` to ensure
+these have been run. To configure your local environment please install these development dependencies and set up
+the commit hooks.
+
+``` bash
+pip install black flake8 pre-commit
+pre-commit install
+```
+
 
 ## References
 * [1] Aghaei, S., Gómez, A., & Vayanos, P. (2021). Strong optimal classification trees. arXiv preprint arXiv:2103.15965. https://arxiv.org/abs/2103.15965.

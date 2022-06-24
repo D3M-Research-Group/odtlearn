@@ -80,8 +80,8 @@ class RobustOCT:
         self.model.params.LazyConstraints = 1
 
         """
-        To compare all approaches in a fair setting 
-        we limit the solver to use only one thread to merely evaluate 
+        To compare all approaches in a fair setting
+        we limit the solver to use only one thread to merely evaluate
         the strength of the formulation.
         """
         if threads is not None:
@@ -91,16 +91,14 @@ class RobustOCT:
 
         """
         The following variables are used for the Benders problem to keep track of the times we call the callback.
-        
+
         - counter_integer tracks number of times we call the callback from an integer node in the branch-&-bound tree
             - time_integer tracks the associated time spent in the callback for these calls
         - counter_general tracks number of times we call the callback from a non-integer node in the branch-&-bound tree
             - time_general tracks the associated time spent in the callback for these calls
-        
-        the ones ending with success are related to success calls. By success we mean ending up adding a lazy constraint 
+
+        the ones ending with success are related to success calls. By success we mean ending up adding a lazy constraint
         to the model
-        
-        
         """
         self.model._total_callback_time_integer = 0
         self.model._total_callback_time_integer_success = 0

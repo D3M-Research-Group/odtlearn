@@ -30,7 +30,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The given time limit (in seconds) for solving the MIO problem
     _lambda : float, default= 0
         The regularization parameter in the objective. _lambda is in the interval [0,1)
-    benders_oct: bool, default=False
+    benders_oct: bool, default=True
         Use benders problem formulation.
     obj_mode: str, default="acc"
         Set objective priority. If "acc", maximize the accuracy, if "balance" maximize the balanced accuracy
@@ -44,9 +44,12 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         The input passed during :meth:`fit`.
     y_ : ndarray, shape (n_samples,)
         The labels passed during :meth:`fit`.
-    b_value : a dictionary containing the value of the decision variables b, where b_value[(n,f)] is the value of b at node n and feature f
-    w_value : a dictionary containing the value of the decision variables w, where w_value[(n,k)] is the value of w at node n and class label k
-    p_value : a dictionary containing the value of the decision variables p, where p_value[n] is the value of p at node n
+    b_value : a dictionary containing the value of the decision variables b,
+    where b_value[(n,f)] is the value of b at node n and feature f
+    w_value : a dictionary containing the value of the decision variables w,
+    where w_value[(n,k)] is the value of w at node n and class label k
+    p_value : a dictionary containing the value of the decision variables p,
+    where p_value[n] is the value of p at node n
     grb_model : gurobipy.Model
         The fitted Gurobi model
 
@@ -66,7 +69,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         depth=1,
         time_limit=60,
         _lambda=0,
-        benders_oct=False,
+        benders_oct=True,
         obj_mode="acc",
         num_threads=None,
     ):
@@ -239,6 +242,9 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         ax=None,
         fontsize=None,
         color_dict={"node": None, "leaves": []},
+        edge_annotation=True,
+        arrow_annotation_font_scale=0.5,
+        debug=False,
     ):
         check_is_fitted(self, ["X_", "y_"])
         exporter = MPLPlotter(
@@ -255,5 +261,8 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             precision=precision,
             fontsize=fontsize,
             color_dict=color_dict,
+            edge_annotation=edge_annotation,
+            arrow_annotation_font_scale=arrow_annotation_font_scale,
+            debug=debug,
         )
         return exporter.export(ax=ax)

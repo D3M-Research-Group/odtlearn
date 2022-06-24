@@ -6,41 +6,69 @@ from numpy.testing import assert_allclose
 
 from odtlearn.RobustTree import RobustTreeClassifier
 
+
 @pytest.fixture
 def synthetic_data_1():
-    '''
+    """
     X2              |
     |               |
     1    + +        |    -
-    |               |   
+    |               |
     |---------------|-------------
     |               |
     0    - - - -    |    + + +
     |    - - -      |
     |______0________|_______1_______X1
-    '''
-    X = np.array([[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],
-                  [1,0],[1,0],[1,0],
-                  [1,1],
-                  [0,1],[0,1]])
-    y = np.array([0,0,0,0,0,0,0,1,1,1,0,1,1])
+    """
+    X = np.array(
+        [
+            [0, 0],
+            [0, 0],
+            [0, 0],
+            [0, 0],
+            [0, 0],
+            [0, 0],
+            [0, 0],
+            [1, 0],
+            [1, 0],
+            [1, 0],
+            [1, 1],
+            [0, 1],
+            [0, 1],
+        ]
+    )
+    y = np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])
 
     return X, y
 
 
 @pytest.fixture
 def synthetic_costs_1():
-    """ Uncertainty in 5 points at [0,0] on X1 can cause it to flip
-        to [1,0] if needed to misclassify
-        Uncertainty in 1 point at [1,1] on X2 can cause it to flip
-        to [1,0] if needed to misclassify
-        All other points certain
+    """Uncertainty in 5 points at [0,0] on X1 can cause it to flip
+    to [1,0] if needed to misclassify
+    Uncertainty in 1 point at [1,1] on X2 can cause it to flip
+    to [1,0] if needed to misclassify
+    All other points certain
     """
-    costs = np.array([[1,4],[1,4],[1,4],[1,4],[1,4],[4,4],[4,4],
-                      [4,4],[4,4],[4,4],
-                      [4,1],
-                      [4,4],[4,4]])
+    costs = np.array(
+        [
+            [1, 4],
+            [1, 4],
+            [1, 4],
+            [1, 4],
+            [1, 4],
+            [4, 4],
+            [4, 4],
+            [4, 4],
+            [4, 4],
+            [4, 4],
+            [4, 1],
+            [4, 4],
+            [4, 4],
+        ]
+    )
     return costs
+
 
 def test_RobustTree_X_noninteger_error():
     """Test whether X is integer-valued"""
@@ -225,37 +253,49 @@ def test_RobustTree_no_uncertainty_success():
     y_pred = clf.predict(test)
     assert y_pred.shape[0] == test.shape[0]
 
-@pytest.mark.parametrize("d, expected_pred", [(0, np.array([0,0,0,0,0,0,0,0,0,0,0,0,0])), 
-                                              (1, np.array([0,0,0,0,0,0,0,1,1,1,1,0,0])),
-                                              (2, np.array([0,0,0,0,0,0,0,1,1,1,0,1,1]))
-                                              ])
+
+@pytest.mark.parametrize(
+    "d, expected_pred",
+    [
+        (0, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])),
+        (1, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0])),
+        (2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])),
+    ],
+)
 def test_RobustTree_correctness(synthetic_data_1, d, expected_pred):
     X, y = synthetic_data_1
     robust_classifier = RobustTreeClassifier(
-        depth = d, 
-        time_limit = 100,
+        depth=d,
+        time_limit=100,
     )
 
     robust_classifier.fit(X, y, verbose=False)
     assert_allclose(robust_classifier.predict(X), expected_pred)
 
-@pytest.mark.parametrize("d, budget, expected_pred",[(0, 2, np.array([0,0,0,0,0,0,0,0,0,0,0,0,0])), 
-                                                     (1, 2, np.array([0,0,0,0,0,0,0,0,0,0,1,1,1])),
-                                                     (2, 2, np.array([0,0,0,0,0,0,0,1,1,1,0,1,1])),
-                                                     (2, 5, np.array([0,0,0,0,0,0,0,0,0,0,0,1,1])),
-                                                    ])
-def test_RobustTree_uncertainty_correctness(synthetic_data_1, synthetic_costs_1, d, budget, expected_pred):
+
+@pytest.mark.parametrize(
+    "d, budget, expected_pred",
+    [
+        (0, 2, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])),
+        (1, 2, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1])),
+        (2, 2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])),
+        (2, 5, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1])),
+    ],
+)
+def test_RobustTree_uncertainty_correctness(
+    synthetic_data_1, synthetic_costs_1, d, budget, expected_pred
+):
     """
-        Scenario 0: Root assigns 0
-        Scenario 1: Split on X2 (X1 causes too many worst-case misclassifications)
-        Scenario 2: Perfect split (uncertainty budget not large enough)
-        Scenario 3: Split X2, split X1 at node 3 but assign 0 at node 2 (because uncertainty in X1)
+    Scenario 0: Root assigns 0
+    Scenario 1: Split on X2 (X1 causes too many worst-case misclassifications)
+    Scenario 2: Perfect split (uncertainty budget not large enough)
+    Scenario 3: Split X2, split X1 at node 3 but assign 0 at node 2 (because uncertainty in X1)
     """
     X, y = synthetic_data_1
     costs = synthetic_costs_1
     robust_classifier = RobustTreeClassifier(
-        depth = d, 
-        time_limit = 100,
+        depth=d,
+        time_limit=100,
     )
     robust_classifier.fit(X, y, costs=costs, budget=budget, verbose=False)
     assert_allclose(robust_classifier.predict(X), expected_pred)
