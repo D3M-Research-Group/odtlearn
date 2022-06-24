@@ -103,19 +103,19 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         for col in costs.columns:
             if not costs[col].between(0, 1).all():
                 raise ValueError(
-                    f"Probabilities must be between 0 (inclusive) and 1 (inclusive)"
+                    "Probabilities must be between 0 (inclusive) and 1 (inclusive)"
                 )
         # budget calculation
         if threshold <= 0 or threshold > 1:
             raise ValueError(
-                f"Threshold must be between 0 (exclusive) and 1 (inclusive)"
+                "Threshold must be between 0 (exclusive) and 1 (inclusive)"
             )
         budget = -1 * costs.shape[0] * np.log(threshold)
 
         # Default probability of certainty of 1 as budget + 1
-        conversion = lambda x: budget + 1 if x == 1 else -1 * np.log(1 - x)
+        costs = costs.applymap(lambda x: budget + 1 if x == 1 else -1 * np.log(1 - x))
 
-        return costs.applymap(conversion), budget
+        return costs, budget
 
     def fit(self, X, y, costs=None, budget=-1, verbose=True):
         """Fit an optimal robust classification tree given data, labels,
