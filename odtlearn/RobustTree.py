@@ -73,6 +73,34 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         # Strip indices in training data into integers
         self.X.set_index(pd.Index(range(X.shape[0])), inplace=True)
 
+    def probabilities_to_cost(self, prob, threshold=1):
+        """Convert probabilities of certainty and levels of robustness
+        to costs and budget values for fitting a robust tree
+
+        Parameters
+        ----------
+        prob : array-like, shape (n_samples, n_features)
+            A 2D matrix of probabilities where the value of row i and column f
+            is the probability that the value for sample i and feature f is 
+            certain. Each entry must be between 0 and 1 (inclusive).
+        threshold : float, default = 1
+            The threshold that tunes the level of robustness, between 0 (exclusive,
+            complete robustness) and 1 (inclusive, no robustness).
+        Returns
+        -------
+        self : object
+            Returns self.
+        """
+        costs = deepcopy(prob) # Deepcopy probabilities
+        # Convert to a dataframe
+        if not isinstance(costs, pd.DataFrame):
+            col_labels = np.arange(0, costs.shape[1])
+            costs = pd.DataFrame(costs, columns=col_labels)
+
+        # Use conversion
+        conversion = lambda x : -1 * np.log(1 - x)
+        return costs.applymap(conversion)
+
     def fit(self, X, y, costs=None, budget=-1, verbose=True):
         """Fit an optimal robust classification tree given data, labels,
         costs of uncertainty, and budget of uncertainty
