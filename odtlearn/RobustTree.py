@@ -73,7 +73,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         # Strip indices in training data into integers
         self.X.set_index(pd.Index(range(X.shape[0])), inplace=True)
 
-    def probabilities_to_cost(self, prob, threshold=1):
+    def probabilities_to_robust_parameters(self, prob, threshold=1):
         """Convert probabilities of certainty and levels of robustness
         to costs and budget values for fitting a robust tree
 
@@ -81,7 +81,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         ----------
         prob : array-like, shape (n_samples, n_features)
             A 2D matrix of probabilities where the value of row i and column f
-            is the probability that the value for sample i and feature f is 
+            is the probability that the value for sample i and feature f is
             certain. Each entry must be between 0 and 1 (inclusive).
         threshold : float, default = 1
             The threshold that tunes the level of robustness, between 0 (exclusive,
@@ -94,14 +94,14 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             The budget of uncertainty based on the given threshold information
             and number of training samples
         """
-        costs = deepcopy(prob) # Deepcopy probabilities
+        costs = deepcopy(prob)  # Deepcopy probabilities
 
         # costs calculation
         if not isinstance(costs, pd.DataFrame):
             col_labels = np.arange(0, costs.shape[1])
             costs = pd.DataFrame(costs, columns=col_labels)
         for col in costs.columns:
-            if not costs[col].between(0,1).all():
+            if not costs[col].between(0, 1).all():
                 raise ValueError(
                     f"Probabilities must be between 0 (inclusive) and 1 (inclusive)"
                 )
@@ -113,7 +113,7 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
         budget = -1 * costs.shape[0] * np.log(threshold)
 
         # Default probability of certainty of 1 as budget + 1
-        conversion = lambda x : budget+1 if x==1 else -1 * np.log(1 - x)
+        conversion = lambda x: budget + 1 if x == 1 else -1 * np.log(1 - x)
 
         return costs.applymap(conversion), budget
 
