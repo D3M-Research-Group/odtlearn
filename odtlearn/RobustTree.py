@@ -88,18 +88,24 @@ class RobustTreeClassifier(ClassifierMixin, BaseEstimator):
             complete robustness) and 1 (inclusive, no robustness).
         Returns
         -------
-        self : object
-            Returns self.
+        costs : pandas DataFrame
+            The costs of uncertainty to use for training
+        budget: float
+            The budget of uncertainty based on the given threshold information
+            and number of training samples
         """
         costs = deepcopy(prob) # Deepcopy probabilities
-        # Convert to a dataframe
+
+        # costs calculation
         if not isinstance(costs, pd.DataFrame):
             col_labels = np.arange(0, costs.shape[1])
             costs = pd.DataFrame(costs, columns=col_labels)
-
-        # Use conversion
         conversion = lambda x : -1 * np.log(1 - x)
-        return costs.applymap(conversion)
+
+        # budget calculation
+        budget = -1 * costs.shape[0] * np.log(threshold)
+
+        return costs.applymap(conversion), budget
 
     def fit(self, X, y, costs=None, budget=-1, verbose=True):
         """Fit an optimal robust classification tree given data, labels,
