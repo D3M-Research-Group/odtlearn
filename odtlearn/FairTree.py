@@ -1,18 +1,18 @@
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
+from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
+
+from odtlearn.utils.StrongTreeFairOCT import FairOCT
 from odtlearn.utils.StrongTreeUtils import (
     check_binary,
     check_columns_match,
     get_predicted_value,
     print_tree_util,
 )
-
-from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.Tree import Tree
-from odtlearn.utils.StrongTreeFairOCT import FairOCT
+from odtlearn.utils.TreePlotter import MPLPlotter
 
 
 class FairTreeClassifier(ClassifierMixin, BaseEstimator):
@@ -172,14 +172,14 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             self.X_col_labels,
             self.labels,
             self._lambda,
-            self.time_limit,
-            self.num_threads,
             self.fairness_type,
             self.fairness_bound,
             self.positive_class,
             protect_feat,
             self.protect_feat_col_labels,
             legit_factor,
+            self.time_limit,
+            self.num_threads,
             self.obj_mode,
             verbose,
         )
