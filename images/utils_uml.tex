@@ -1,0 +1,74 @@
+\documentclass[10pt,margin=1cm]{standalone}
+\usepackage[usenames]{color} %used for font color
+\usepackage{amssymb} %maths
+\usepackage{amsmath,tikz} %maths
+\usepackage[utf8]{inputenc} %useful to type directly diacritic characters
+\usepackage{pgf-umlcd}
+\begin{document}
+\begin {tikzpicture}
+\begin {class}[text width=4.5cm]{ProblemFormulation}{0 ,0}
+\attribute {\texttt{X}}
+\attribute {\texttt{y}}
+\attribute {\texttt{tree}}
+\attribute {\texttt{$\dots$}}
+\end {class}
+
+\begin {class}[text width=4.5cm]{StrongTreeFormulation}{-7.5 ,-5}
+\inherit{ProblemFormulation}
+\attribute {\texttt{$\dots$}}
+\end {class}
+
+\begin {class}[text width=4.5cm]{FlowOCT}{-15 ,-10}
+\inherit{StrongTreeFormulation}
+\attribute {\texttt{$\dots$}}
+\operation {\texttt{create\_main\_problem()} }
+\end {class}
+
+\begin {class}[text width=4.5cm]{BendersOCT}{-10 ,-10}
+\inherit{StrongTreeFormulation}
+\attribute {\texttt{$\dots$}}
+\operation {\texttt{create\_main\_problem()} }
+\end {class}
+
+\begin {class}[text width=4.5cm]{FairOCT}{-5,-10}
+\inherit{StrongTreeFormulation}
+\attribute {\texttt{$\dots$}}
+\operation {\texttt{create\_main\_problem()} }
+\end {class}
+
+
+
+\begin {class}[text width=4.5cm]{RobustTreeFormulation}{0 ,-5}
+\inherit{ProblemFormulation}
+\attribute {\texttt{$\dots$}}
+\end {class}
+
+
+\begin {class}[text width=4.5cm]{RobustOCT}{0,-10}
+\inherit{RobustTreeFormulation}
+\attribute {\texttt{$\dots$}}
+\operation {\texttt{create\_main\_problem()} }
+\end {class}
+
+\begin {class}[text width=5.5cm]{PrescriptiveTreeFormulation}{7.5, -5}
+\inherit{ProblemFormulation}
+\attribute {\texttt{$\dots$}}
+\end{class}
+
+\begin {class}[text width=4.5cm]{FlowOPTIPW}{5,-10}
+\inherit{PrescriptiveTreeFormulation}
+\attribute {\texttt{$\dots$}}
+\operation {\texttt{create\_main\_problem()} }
+\end {class}
+
+\begin {class}[text width=4.5cm]{FlowOPTRobust}{10,-10}
+\inherit{PrescriptiveTreeFormulation}
+\attribute {\texttt{$\dots$}}
+\operation {\texttt{create\_main\_problem()} }
+\end {class}
+
+
+\end {tikzpicture}
+
+
+\end{document}
