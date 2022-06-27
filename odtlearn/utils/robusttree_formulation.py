@@ -1,4 +1,5 @@
 from gurobipy import GRB, LinExpr, quicksum
+
 from odtlearn.utils.problem_formulation import ProblemFormulation
 
 
@@ -116,10 +117,7 @@ class RobustOCT(RobustTreeFormulation):
             verbose,
         )
 
-    ###########################################################
-    # Create the master problem
-    ###########################################################
-    def create_main_problem(self):
+    def define_variables(self):
         # define variables
 
         # t is the objective value of the problem
@@ -139,6 +137,7 @@ class RobustOCT(RobustTreeFormulation):
         self.model._vars_b = self.b
         self.model._vars_w = self.w
 
+    def define_constraints(self):
         # define constraints
 
         # sum(b[n,f,theta], f, theta) + sum(w[n,k], k) = 1 for all n in nodes
@@ -156,6 +155,7 @@ class RobustOCT(RobustTreeFormulation):
             (quicksum(self.w[n, k] for k in self.labels) == 1) for n in self.tree.Leaves
         )
 
+    def define_objective(self):
         # define objective function
         obj = LinExpr(0)
         for i in self.datapoints:

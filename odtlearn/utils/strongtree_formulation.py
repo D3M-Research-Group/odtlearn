@@ -3,6 +3,7 @@ from itertools import combinations
 import numpy as np
 import pandas as pd
 from gurobipy import GRB, LinExpr, quicksum
+
 from odtlearn.utils.problem_formulation import ProblemFormulation
 
 
@@ -118,13 +119,7 @@ class FlowOCT(StrongTreeFormulation):
             verbose,
         )
 
-    def create_primal_problem(self):
-        """
-        This function create and return a gurobi model formulating
-        the FlowOCT problem
-        :return:  gurobi model object with the FlowOCT formulation
-        """
-
+    def define_variables(self):
         ###########################################################
         # Define Variables
         ###########################################################
@@ -165,6 +160,7 @@ class FlowOCT(StrongTreeFormulation):
             name="z",
         )
 
+    def define_constraints(self):
         ###########################################################
         # Define Constraints
         ###########################################################
@@ -241,6 +237,7 @@ class FlowOCT(StrongTreeFormulation):
                 self.zeta[i, n] == self.z[i, n] for i in self.datapoints
             )
 
+    def define_objective(self):
         ###########################################################
         # Define the Objective
         ###########################################################
@@ -266,6 +263,17 @@ class FlowOCT(StrongTreeFormulation):
             ], "Wrong objective mode. obj_mode should be one of acc or balance."
 
         self.model.setObjective(obj, GRB.MAXIMIZE)
+
+    def create_main_problem(self):
+        """
+        This function create and return a gurobi model formulating
+        the FlowOCT problem
+        :return:  gurobi model object with the FlowOCT formulation
+        """
+
+        self.define_variables()
+        self.define_constraints()
+        self.define_objective()
 
 
 class BendersOCT(StrongTreeFormulation):
@@ -305,13 +313,7 @@ class BendersOCT(StrongTreeFormulation):
             verbose,
         )
 
-    def create_main_problem(self):
-        """
-        This function create and return a gurobi model
-        formulating the BendersOCT problem
-        :return:  gurobi model object with the BendersOCT formulation
-        """
-
+    def define_variables(self):
         ###########################################################
         # Define Variables
         ###########################################################
@@ -343,6 +345,7 @@ class BendersOCT(StrongTreeFormulation):
         self.model._vars_p = self.p
         self.model._vars_w = self.w
 
+    def define_constraints(self):
         ###########################################################
         # Define Constraints
         ###########################################################
@@ -370,6 +373,7 @@ class BendersOCT(StrongTreeFormulation):
             for n in self.tree.Leaves
         )
 
+    def define_objective(self):
         ###########################################################
         # Define the Objective
         ###########################################################
@@ -530,12 +534,7 @@ class FairOCT(StrongTreeFormulation):
 
         return constraint_added
 
-    def create_primal_problem(self):
-        """
-        This function create and return a gurobi model formulating the FairOCT problem
-        :return:  gurobi model object with the FairOCT formulation
-        """
-
+    def define_variables(self):
         ###########################################################
         # Define Variables
         ###########################################################
@@ -574,6 +573,7 @@ class FairOCT(StrongTreeFormulation):
             name="z",
         )
 
+    def define_constraints(self):
         ###########################################################
         # Define Constraints
         ###########################################################
@@ -729,6 +729,8 @@ class FairOCT(StrongTreeFormulation):
                             & (self.X_p[self.legitimate_name] == l_value)
                         ]
                         self.add_fairness_constraint(p_df, p_prime_df)
+
+    def define_objective(self):
         ###########################################################
         # Define Objective
         ###########################################################

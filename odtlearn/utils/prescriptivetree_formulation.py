@@ -1,4 +1,5 @@
 from gurobipy import GRB, LinExpr, quicksum
+
 from odtlearn.utils.problem_formulation import ProblemFormulation
 
 
@@ -82,15 +83,7 @@ class FlowOPT_Robust(PrescriptiveTreeFormulation):
             verbose,
         )
 
-    ###########################################################
-    # Create the MIP formulation
-    ###########################################################
-    def create_main_problem(self):
-        """
-        This function creates and return a gurobi model formulating
-        the FlowOPT_Robust problem
-        :return:  gurobi model object with the FlowOPT_Robust formulation
-        """
+    def define_variables(self):
         self.b = self.model.addVars(
             self.tree.Nodes, self.X_col_labels, vtype=GRB.BINARY, name="b"
         )
@@ -120,6 +113,7 @@ class FlowOPT_Robust(PrescriptiveTreeFormulation):
             name="z",
         )
 
+    def define_constraints(self):
         # define constraints
         # z[i,n] = z[i,l(n)] + z[i,r(n)] + zeta[i,n]    forall i, n in Nodes
         for n in self.tree.Nodes:
@@ -198,6 +192,7 @@ class FlowOPT_Robust(PrescriptiveTreeFormulation):
 
         self.model.addConstrs(self.z[i, 1] == 1 for i in self.datapoints)
 
+    def define_objective(self):
         # define objective function
         obj = LinExpr(0)
         for i in self.datapoints:
@@ -247,15 +242,7 @@ class FlowOPT_IPW(PrescriptiveTreeFormulation):
             verbose,
         )
 
-    ###########################################################
-    # Create the MIP formulation
-    ###########################################################
-    def create_main_problem(self):
-        """
-        This function creates and return a gurobi model formulating
-        the FlowOPT_IPW problem
-        :return:  gurobi model object with the FlowOPT_IPW formulation
-        """
+    def define_variables(self):
         # define variables
 
         self.b = self.model.addVars(
@@ -286,6 +273,7 @@ class FlowOPT_IPW(PrescriptiveTreeFormulation):
             name="z",
         )
 
+    def define_constraints(self):
         # define constraints
 
         # z[i,n] = z[i,l(n)] + z[i,r(n)] + zeta[i,n]    forall i, n in Nodes
@@ -358,6 +346,7 @@ class FlowOPT_IPW(PrescriptiveTreeFormulation):
                 self.zeta[i, n] == self.z[i, n] for i in self.datapoints
             )
 
+    def define_objective(self):
         # define objective function
         obj = LinExpr(0)
         for i in self.datapoints:

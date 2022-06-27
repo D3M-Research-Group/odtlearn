@@ -1,9 +1,11 @@
+from abc import ABC, abstractmethod
+
 import numpy as np
 import pandas as pd
 from gurobipy import Model
 
 
-class ProblemFormulation:
+class ProblemFormulation(ABC):
     def __init__(
         self, X, y, tree, X_col_labels, model_name, time_limit, num_threads, verbose
     ) -> None:
@@ -34,3 +36,24 @@ class ProblemFormulation:
         if num_threads is not None:
             self.model.params.Threads = num_threads
         self.model.params.TimeLimit = time_limit
+
+    @abstractmethod
+    def define_variables(self):
+        pass
+
+    @abstractmethod
+    def define_constraints(self):
+        pass
+
+    @abstractmethod
+    def define_objective(self):
+        pass
+
+    def create_main_problem(self):
+        """
+        This function creates and return a gurobi model based on the
+        variables, constraints, and objective defined within a subclass
+        """
+        self.define_variables()
+        self.define_constraints()
+        self.define_objective()
