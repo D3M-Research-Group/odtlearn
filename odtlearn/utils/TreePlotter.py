@@ -1,4 +1,3 @@
-import numpy as np
 from sklearn.tree._export import _color_brew, _MPLTreeExporter
 
 from odtlearn.utils._reingold_tilford import Tree, buchheim
@@ -14,6 +13,7 @@ class MPLPlotter(_MPLTreeExporter):
         p,
         max_depth,
         classes,
+        get_node_status,
         label="all",
         filled=False,
         rounded=False,
@@ -46,6 +46,7 @@ class MPLPlotter(_MPLTreeExporter):
         self.edge_annotation = edge_annotation
         self.arrow_annotation_font_scale = arrow_annotation_font_scale
         self.debug = debug
+        self.get_node_status = get_node_status
 
         super().__init__(
             max_depth=self.max_depth,
@@ -91,95 +92,6 @@ class MPLPlotter(_MPLTreeExporter):
         # Return html color code in #RRGGBB format
         return "#%2x%2x%2x" % tuple(color)
 
-    def get_node_status(self, grb_model, b, w, p, n):
-        """
-        This function give the status of a given node in a tree. By status we mean whether the node
-            1- is pruned? i.e., we have made a prediction at one of its ancestors
-            2- is a branching node? If yes, what feature do we branch on
-            3- is a leaf? If yes, what is the prediction at this node?
-
-        Parameters
-        ----------
-        grb_model :
-            The gurobi model solved to optimality (or reached to the time limit).
-        b :
-            The values of branching decision variable b.
-        w :
-            The values of prediction decision variable w.
-        p :
-            The values of decision variable p
-        n :
-            A valid node index in the tree
-
-        Returns
-        -------
-        pruned : int
-            pruned=1 iff the node is pruned
-        branching : int
-            branching = 1 iff the node branches at some feature f
-        selected_feature : str
-            The feature that the node branch on
-        leaf : int
-            leaf = 1 iff node n is a leaf in the tree
-        value :  double
-            if node n is a leaf, value represent the prediction at this node
-        """
-
-        pruned = False
-        branching = False
-        leaf = False
-        value = None
-        selected_feature = None
-        cutoff = None
-
-        model_type = grb_model.model.ModelName
-        assert len(model_type) > 0
-
-        # Node status for StrongTree and FairTree
-        if model_type in ["FairOCT", "FlowOCT", "BendersOCT"]:
-            cutoff = 0
-            p_sum = 0
-            for m in grb_model.tree.get_ancestors(n):
-                p_sum = p_sum + p[m]
-            if p[n] > 0.5:  # leaf
-                leaf = True
-                for k in grb_model.labels:
-                    if w[n, k] > 0.5:
-                        value = k
-            elif p_sum == 1:  # Pruned
-                pruned = True
-
-            if n in grb_model.tree.Nodes:
-                if (pruned is False) and (leaf is False):  # branching
-                    for f in grb_model.X_col_labels:
-                        if b[n, f] > 0.5:
-                            selected_feature = f
-                            branching = True
-        elif model_type == "RobustOCT":
-            p_sum = 0
-            for m in grb_model.tree.get_ancestors(n):
-                # need to sum over all w values for a given n
-                p_sum += sum(w[m, k] for k in grb_model.labels)
-            # to determine if a leaf, we look at its w value
-            # and find for which label the value > 0.5
-            col_idx = np.asarray([w[n, k] > 0.5 for k in grb_model.labels]).nonzero()[0]
-            # col_idx = np.asarray(w[n, :] > 0.5).nonzero().flatten()
-            # assuming here that we can only have one column > 0.5
-            if len(col_idx) > 0:
-                leaf = True
-                value = grb_model.labels[int(col_idx[0])]
-            elif p_sum == 1:
-                pruned = True
-
-            if not pruned and not leaf:
-                for f, theta in grb_model.f_theta_indices:
-                    if b[n, f, theta] > 0.5:
-                        selected_feature = f
-                        cutoff = theta
-                        branching = True
-
-        return pruned, branching, selected_feature, cutoff, leaf, value
-
     def node_to_str(self, node_id, leaf, selected_feature, cutoff, value):
         characters = self.characters
         node_string = characters[-1]
@@ -210,7 +122,10 @@ class MPLPlotter(_MPLTreeExporter):
                 node_string += "%s" % (feature)
         else:
             if labels:
-                node_string += "class = "
+                if self.grb_model.model.ModelName in ["FlowOPT", "IPW"]:
+                    node_string += "treatment = "
+                else:
+                    node_string += "class = "
             class_name = "%s" % (name)
             node_string += class_name
         # Clean up any trailing newlines

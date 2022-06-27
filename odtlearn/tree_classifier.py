@@ -154,9 +154,13 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
         The method uses the Gurobi model's name for determining how to generate the tree
         """
         check_is_fitted(self, ["grb_model"])
-        if self.grb_model.model.ModelName in ["FlowOPT", "IPW"]:
-            raise NotImplementedError
-        if self.grb_model.model.ModelName in ["FlowOCT", "FairOCT", "BendersOCT"]:
+        if self.grb_model.model.ModelName in [
+            "FlowOCT",
+            "FairOCT",
+            "BendersOCT",
+            "FlowOPT",
+            "IPW",
+        ]:
             for n in self.grb_model.tree.Nodes + self.grb_model.tree.Leaves:
                 (
                     pruned,
@@ -278,8 +282,6 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
         debug=False,
     ):
         check_is_fitted(self, ["grb_model"])
-        if self.grb_model.model.ModelName in ["FlowOPT", "IPW"]:
-            raise NotImplementedError
         exporter = MPLPlotter(
             self.grb_model,
             self.X_col_labels,
@@ -287,7 +289,9 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
             self.w_value,
             None if self.grb_model.model.ModelName in ["RobustOCT"] else self.p_value,
             self.grb_model.tree.depth,
-            self.classes_,
+            self.treatments
+            if self.grb_model.model.ModelName in ["FlowOPT", "IPW"]
+            else self.classes_,
             label=label,
             filled=filled,
             rounded=rounded,
@@ -297,5 +301,6 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
             edge_annotation=edge_annotation,
             arrow_annotation_font_scale=arrow_annotation_font_scale,
             debug=debug,
+            get_node_status=self.get_node_status,
         )
         return exporter.export(ax=ax)
