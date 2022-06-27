@@ -141,7 +141,7 @@ class StrongTreeClassifier(TreeClassifier):
                 self.num_threads,
                 verbose,
             )
-            self.grb_model.create_primal_problem()
+            self.grb_model.create_main_problem()
             self.grb_model.model.update()
             self.grb_model.model.optimize()
 

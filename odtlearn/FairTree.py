@@ -150,7 +150,7 @@ class FairTreeClassifier(TreeClassifier):
             self.obj_mode,
             verbose,
         )
-        self.grb_model.create_primal_problem()
+        self.grb_model.create_main_problem()
         self.grb_model.model.update()
         self.grb_model.model.optimize()
 
