@@ -12,10 +12,6 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
         self.time_limit = time_limit
         self.num_threads = num_threads
 
-        self.X_col_labels = None
-        self.X_col_dtypes = None
-        self.y_dtypes = None
-
     def extract_metadata(self, X, y, **kwargs):
         """A function for extracting metadata from the inputs before converting
         them into numpy arrays to work with the sklearn API

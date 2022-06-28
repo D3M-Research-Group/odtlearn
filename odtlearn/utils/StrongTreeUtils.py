@@ -1,7 +1,8 @@
+import time
+
 import numpy as np
 import pandas as pd
-import time
-from gurobipy import LinExpr, quicksum, GRB
+from gurobipy import GRB, LinExpr, quicksum
 from sklearn.preprocessing import OneHotEncoder
 
 
@@ -260,39 +261,53 @@ def binarize(df, categorical_cols, integer_cols):
      has the corresponding value or any value smaller than it.
     """
 
-    X_cat = np.array(df[categorical_cols])
-    X_int = np.array(df[integer_cols])
+    assert (
+        len(categorical_cols) > 0 or len(integer_cols) > 0
+    ), "Must provide at least one of the two options of a list of categorical columns or binary columns to binarize."
 
-    enc = OneHotEncoder(handle_unknown="error", drop="if_binary")
-    X_cat_enc = enc.fit_transform(X_cat).toarray()
-    categorical_cols_enc = enc.get_feature_names_out(categorical_cols)
+    if len(categorical_cols) > 0:
+        X_cat = np.array(df[categorical_cols])
+        enc = OneHotEncoder(handle_unknown="error", drop="if_binary")
+        X_cat_enc = enc.fit_transform(X_cat).toarray()
+        categorical_cols_enc = enc.get_feature_names_out(categorical_cols)
+        X_cat_enc = X_cat_enc.astype(int)
 
-    enc = OneHotEncoder(handle_unknown="error", drop="if_binary")
-    X_int_enc = enc.fit_transform(X_int).toarray()
-    integer_cols_enc = enc.get_feature_names_out(integer_cols)
+    if len(integer_cols) > 0:
+        X_int = np.array(df[integer_cols])
+        enc = OneHotEncoder(handle_unknown="error", drop="if_binary")
+        X_int_enc = enc.fit_transform(X_int).toarray()
+        integer_cols_enc = enc.get_feature_names_out(integer_cols)
+        X_int_enc = X_int_enc.astype(int)
 
-    X_cat_enc = X_cat_enc.astype(int)
-    X_int_enc = X_int_enc.astype(int)
-
-    for col in integer_cols:
-        col_enc_set = []
-        col_offset = None
-        for i, col_enc in enumerate(integer_cols_enc):
-            if col in col_enc:
-                col_enc_set.append(col_enc)
-                if col_offset is None:
-                    col_offset = i
-        if len(col_enc_set) < 3:
-            continue
-        for i, col_enc in enumerate(col_enc_set):
-            if i == 0:
+        for col in integer_cols:
+            col_enc_set = []
+            col_offset = None
+            for i, col_enc in enumerate(integer_cols_enc):
+                if col in col_enc:
+                    col_enc_set.append(col_enc)
+                    if col_offset is None:
+                        col_offset = i
+            if len(col_enc_set) < 3:
                 continue
-            X_int_enc[:, (col_offset + i)] = (
-                X_int_enc[:, (col_offset + i)] | X_int_enc[:, (col_offset + i - 1)]
-            )
-
-    df_enc = pd.DataFrame(
-        np.c_[X_cat_enc, X_int_enc],
-        columns=list(categorical_cols_enc) + list(integer_cols_enc),
-    )
+            for i, col_enc in enumerate(col_enc_set):
+                if i == 0:
+                    continue
+                X_int_enc[:, (col_offset + i)] = (
+                    X_int_enc[:, (col_offset + i)] | X_int_enc[:, (col_offset + i - 1)]
+                )
+    if len(categorical_cols) > 0 and len(integer_cols) > 0:
+        df_enc = pd.DataFrame(
+            np.c_[X_cat_enc, X_int_enc],
+            columns=list(categorical_cols_enc) + list(integer_cols_enc),
+        )
+    elif len(categorical_cols) > 0 and len(integer_cols) == 0:
+        df_enc = pd.DataFrame(
+            X_cat_enc,
+            columns=list(categorical_cols_enc),
+        )
+    elif len(categorical_cols) == 0 and len(integer_cols) > 0:
+        df_enc = pd.DataFrame(
+            X_int_enc,
+            columns=list(integer_cols_enc),
+        )
     return df_enc
