@@ -96,7 +96,7 @@ def test_binarize_need_lists(example_data):
     df = example_data
     with pytest.raises(
         AssertionError,
-        match="Must provide at least one of the two options of a list"
+        match="Must provide at least one of the two options of a list "
         "of categorical columns or binary columns to binarize.",
     ):
         binarize(df, categorical_cols=[], integer_cols=[])
