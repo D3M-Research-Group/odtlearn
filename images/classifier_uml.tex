@@ -1,4 +1,4 @@
-\documentclass[10pt,margin=1cm]{standalone}
+\documentclass[12pt,margin=0.2cm]{standalone}
 \usepackage[usenames]{color} %used for font color
 \usepackage{amssymb} %maths
 \usepackage{amsmath,tikz} %maths
@@ -6,6 +6,7 @@
 \usepackage[simplified]{pgf-umlcd}
 \begin{document}
 \begin {tikzpicture}
+% \begin{tikzpicture} [show background grid ]
 \begin {class}[text width=4.5cm]{TreeClassifier}{0 ,0}
 \attribute {\texttt{X}}
 \attribute {\texttt{y}}
@@ -47,7 +48,7 @@
 
 \end {class}
 
-\begin {class}[text width=4.5cm]{PrescriptiveTreeClassifier}{7.5 ,-5}
+\begin {class}[text width=5.5cm]{PrescriptiveTreeClassifier}{8 ,-5}
 \inherit{TreeClassifier}
 \attribute {\texttt{ipw}}
 \attribute {\texttt{robust}}

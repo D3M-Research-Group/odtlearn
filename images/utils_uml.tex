@@ -1,74 +1,77 @@
-\documentclass[10pt,margin=1cm]{standalone}
+\documentclass[12pt,margin=0.2cm]{standalone}
 \usepackage[usenames]{color} %used for font color
 \usepackage{amssymb} %maths
 \usepackage{amsmath,tikz} %maths
 \usepackage[utf8]{inputenc} %useful to type directly diacritic characters
-\usepackage{pgf-umlcd}
+\usepackage[simplified]{pgf-umlcd}
 \begin{document}
-\begin {tikzpicture}
-\begin {class}[text width=4.5cm]{ProblemFormulation}{0 ,0}
-\attribute {\texttt{X}}
-\attribute {\texttt{y}}
-\attribute {\texttt{tree}}
-\attribute {\texttt{$\dots$}}
-\end {class}
+\def\stshiftdown{3}
+\def\rtshiftdown{0}
+% \begin{tikzpicture} [show background grid ]
+\begin{tikzpicture}
+    % \tikzstyle{every node}=[font=\large]
+    \begin{class}{ProblemFormulation}{0 ,0}
+        \attribute {\texttt{X}}
+        \attribute {\texttt{y}}
+        \attribute {\texttt{tree}}
+        \attribute {\texttt{$\dots$}}
+        \operation[0] {\texttt{create\_main\_problem()} }
+        \operation[0] {\texttt{define\_constraints()} }
+        \operation[0] {\texttt{define\_variables()} }
+        \operation[0] {\texttt{define\_objective()} }
+    \end{class}
 
-\begin {class}[text width=4.5cm]{StrongTreeFormulation}{-7.5 ,-5}
-\inherit{ProblemFormulation}
-\attribute {\texttt{$\dots$}}
-\end {class}
+    \begin{class}{StrongTreeFormulation}{6 ,5-1-\stshiftdown}
+        \inherit{ProblemFormulation}
+        \attribute {\texttt{$\dots$}}
+    \end{class}
 
-\begin {class}[text width=4.5cm]{FlowOCT}{-15 ,-10}
-\inherit{StrongTreeFormulation}
-\attribute {\texttt{$\dots$}}
-\operation {\texttt{create\_main\_problem()} }
-\end {class}
+    \begin{class}[text width=3cm]{FlowOCT}{11 ,7-\stshiftdown}
+        \inherit{StrongTreeFormulation}
+        \attribute {\texttt{$\dots$}}
+    \end{class}
 
-\begin {class}[text width=4.5cm]{BendersOCT}{-10 ,-10}
-\inherit{StrongTreeFormulation}
-\attribute {\texttt{$\dots$}}
-\operation {\texttt{create\_main\_problem()} }
-\end {class}
+    \begin{class}[text width=3cm]{BendersOCT}{11,5.5-\stshiftdown}
+        \inherit{StrongTreeFormulation}
+        \attribute {\texttt{$\dots$}}
+    \end{class}
 
-\begin {class}[text width=4.5cm]{FairOCT}{-5,-10}
-\inherit{StrongTreeFormulation}
-\attribute {\texttt{$\dots$}}
-\operation {\texttt{create\_main\_problem()} }
-\end {class}
-
-
-
-\begin {class}[text width=4.5cm]{RobustTreeFormulation}{0 ,-5}
-\inherit{ProblemFormulation}
-\attribute {\texttt{$\dots$}}
-\end {class}
-
-
-\begin {class}[text width=4.5cm]{RobustOCT}{0,-10}
-\inherit{RobustTreeFormulation}
-\attribute {\texttt{$\dots$}}
-\operation {\texttt{create\_main\_problem()} }
-\end {class}
-
-\begin {class}[text width=5.5cm]{PrescriptiveTreeFormulation}{7.5, -5}
-\inherit{ProblemFormulation}
-\attribute {\texttt{$\dots$}}
-\end{class}
-
-\begin {class}[text width=4.5cm]{FlowOPTIPW}{5,-10}
-\inherit{PrescriptiveTreeFormulation}
-\attribute {\texttt{$\dots$}}
-\operation {\texttt{create\_main\_problem()} }
-\end {class}
-
-\begin {class}[text width=4.5cm]{FlowOPTRobust}{10,-10}
-\inherit{PrescriptiveTreeFormulation}
-\attribute {\texttt{$\dots$}}
-\operation {\texttt{create\_main\_problem()} }
-\end {class}
+    \begin{class}[text width=5.5cm]{FairOCT}{12.2,4-\stshiftdown}
+        \inherit{StrongTreeFormulation}
+        \attribute {\texttt{$\dots$}}
+        \operation{\texttt{add\_fairness\_constraint()}}
+    \end{class}
 
 
-\end {tikzpicture}
+    \begin{class}{RobustTreeFormulation}{6 ,-2-\rtshiftdown}
+        \inherit{ProblemFormulation}
+        \attribute {\texttt{$\dots$}}
+    \end{class}
 
+    \begin{class}[text width=3cm]{RobustOCT}{11,-2-\rtshiftdown}
+        \inherit{RobustTreeFormulation}
+        \attribute {\texttt{$\dots$}}
+    \end{class}
+
+
+    \begin{class}[text width=6cm]{PrescriptiveTreeFormulation}{6.5, -4}
+        \inherit{ProblemFormulation}
+        \attribute {\texttt{IPW}}
+        \attribute {\texttt{treatments\_set}}
+        \attribute {\texttt{$\dots$}}
+    \end{class}
+
+    \begin{class}[text width=3.2cm]{FlowOPTIPW}{12,-4}
+        \inherit{PrescriptiveTreeFormulation}
+        \attribute {\texttt{$\dots$}}
+    \end{class}
+
+    \begin{class}[text width=3.5cm]{FlowOPTRobust}{12,-5.5}
+        \inherit{PrescriptiveTreeFormulation}
+        \attribute {\texttt{$\dots$}}
+    \end{class}
+
+
+\end{tikzpicture}
 
 \end{document}
