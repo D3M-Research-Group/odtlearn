@@ -3,7 +3,7 @@ from gurobipy import GRB, LinExpr, quicksum
 from odtlearn.utils.problem_formulation import ProblemFormulation
 
 
-class RobustTreeFormulation(ProblemFormulation):
+class RobustOCT(ProblemFormulation):
     def __init__(
         self,
         X,
@@ -13,13 +13,13 @@ class RobustTreeFormulation(ProblemFormulation):
         labels,
         costs,
         budget,
-        model_name,
         time_limit,
         num_threads,
         verbose,
     ) -> None:
+        self.model_name = "RobustOCT"
         super().__init__(
-            X, y, tree, X_col_labels, model_name, time_limit, num_threads, verbose
+            X, y, tree, X_col_labels, self.model_name, time_limit, num_threads, verbose
         )
         self.cat_features = X_col_labels
         self.labels = labels
@@ -86,36 +86,6 @@ class RobustTreeFormulation(ProblemFormulation):
 
         # We also pass the following information to the model as we need them in the callback
         self.model._master = self
-
-
-class RobustOCT(RobustTreeFormulation):
-    def __init__(
-        self,
-        X,
-        y,
-        tree,
-        X_col_labels,
-        labels,
-        costs,
-        budget,
-        time_limit,
-        num_threads,
-        verbose,
-    ) -> None:
-        self.model_name = "RobustOCT"
-        super().__init__(
-            X,
-            y,
-            tree,
-            X_col_labels,
-            labels,
-            costs,
-            budget,
-            self.model_name,
-            time_limit,
-            num_threads,
-            verbose,
-        )
 
     def define_variables(self):
         # define variables

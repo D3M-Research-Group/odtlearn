@@ -3,39 +3,7 @@ from gurobipy import GRB, LinExpr, quicksum
 from odtlearn.utils.problem_formulation import ProblemFormulation
 
 
-class PrescriptiveTreeFormulation(ProblemFormulation):
-    def __init__(
-        self,
-        X,
-        t,
-        y,
-        ipw,
-        treatments_set,
-        tree,
-        X_col_labels,
-        model_name,
-        time_limit,
-        num_threads,
-        verbose,
-    ) -> None:
-
-        self.t = t
-        self.ipw = ipw
-        self.treatments_set = treatments_set
-
-        # Decision Variables
-        self.b = 0
-        self.p = 0
-        self.w = 0
-        self.zeta = 0
-        self.z = 0
-
-        super().__init__(
-            X, y, tree, X_col_labels, model_name, time_limit, num_threads, verbose
-        )
-
-
-class FlowOPT_Robust(PrescriptiveTreeFormulation):
+class FlowOPT_Robust(ProblemFormulation):
     def __init__(
         self,
         X,
@@ -69,18 +37,19 @@ class FlowOPT_Robust(PrescriptiveTreeFormulation):
         self.y_hat = y_hat
         self.robust = robust
 
+        self.t = t
+        self.ipw = ipw
+        self.treatments_set = treatments_set
+
+        # Decision Variables
+        self.b = 0
+        self.p = 0
+        self.w = 0
+        self.zeta = 0
+        self.z = 0
+
         super().__init__(
-            X,
-            t,
-            y,
-            ipw,
-            treatments_set,
-            tree,
-            X_col_labels,
-            self.model_name,
-            time_limit,
-            num_threads,
-            verbose,
+            X, y, tree, X_col_labels, self.model_name, time_limit, num_threads, verbose
         )
 
     def define_variables(self):
@@ -213,7 +182,7 @@ class FlowOPT_Robust(PrescriptiveTreeFormulation):
         self.model.setObjective(obj, GRB.MAXIMIZE)
 
 
-class FlowOPT_IPW(PrescriptiveTreeFormulation):
+class FlowOPT_IPW(ProblemFormulation):
     def __init__(
         self,
         X,
@@ -228,18 +197,19 @@ class FlowOPT_IPW(PrescriptiveTreeFormulation):
         verbose,
     ) -> None:
         self.model_name = "IPW"
+        self.t = t
+        self.ipw = ipw
+        self.treatments_set = treatments_set
+
+        # Decision Variables
+        self.b = 0
+        self.p = 0
+        self.w = 0
+        self.zeta = 0
+        self.z = 0
+
         super().__init__(
-            X,
-            t,
-            y,
-            ipw,
-            treatments_set,
-            tree,
-            X_col_labels,
-            self.model_name,
-            time_limit,
-            num_threads,
-            verbose,
+            X, y, tree, X_col_labels, self.model_name, time_limit, num_threads, verbose
         )
 
     def define_variables(self):
