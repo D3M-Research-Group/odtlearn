@@ -3,13 +3,24 @@ import pandas as pd
 import pkg_resources
 
 
+def prescriptive_example_data():
+    """Return tuple of the train and test dataframes from the prescriptive tree example notebook"""
+    train_stream = pkg_resources.resource_stream(
+        "odtlearn", "data/prescriptive_tree/train_v2_100.csv"
+    )
+    test_stream = pkg_resources.resource_stream(
+        "odtlearn", "data/prescriptive_tree/test_v2_200.csv"
+    )
+    train = pd.read_csv(train_stream)
+    test = pd.read_csv(test_stream)
+
+    return train, test
+
+
 def balance_scale_data():
     """Return a dataframe containing the balance-scale data set from the UCI ML repository.
-    See the URL below for attribute information :https://archive.ics.uci.edu/ml/datasets/Balance+Scale
+    See the following URL for attribute information :https://archive.ics.uci.edu/ml/datasets/Balance+Scale
     """
-
-    # This is a stream-like object. If you want the actual info, call
-    # stream.read()
     stream = pkg_resources.resource_stream("odtlearn", "data/balance-scale_enc.csv")
     return pd.read_csv(stream)
 
