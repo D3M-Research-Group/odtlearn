@@ -7,78 +7,7 @@ from gurobipy import GRB, LinExpr, quicksum
 from odtlearn.utils.problem_formulation import ProblemFormulation
 
 
-class StrongTreeFormulation(ProblemFormulation):
-    def __init__(
-        self,
-        X,
-        y,
-        tree,
-        X_col_labels,
-        labels,
-        _lambda,
-        obj_mode,
-        model_name,
-        time_limit,
-        num_threads,
-        verbose,
-    ) -> None:
-        self.model_name = model_name
-        self._lambda = _lambda
-        self.obj_mode = obj_mode
-        self.labels = labels
-        super().__init__(
-            X, y, tree, X_col_labels, self.model_name, time_limit, num_threads, verbose
-        )
-
-        # Decision Variables
-        if self.model_name in ["FlowOCT", "FairOCT"]:
-            self.b = 0
-            self.p = 0
-            self.w = 0
-            self.zeta = 0
-            self.z = 0
-        elif self.model_name in ["BendersOCT"]:
-            self.g = 0
-            self.b = 0
-            self.p = 0
-            self.w = 0
-            # The cuts we add in the callback function would be treated as lazy constraints
-            self.model.params.LazyConstraints = 1
-            """
-            The following variables are used for the Benders problem to keep track
-            of the times we call the callback.
-
-            - counter_integer tracks number of times we call the callback from an
-            integer node in the branch-&-bound tree
-                - time_integer tracks the associated time spent in the
-                callback for these calls
-            - counter_general tracks number of times we call the callback from
-            a non-integer node in the branch-&-bound tree
-                - time_general tracks the associated time spent in the callback for
-                these calls
-
-            the ones ending with success are related to success calls.
-            By success we mean ending up adding a lazy constraint
-            to the model
-
-            """
-            self.model._total_callback_time_integer = 0
-            self.model._total_callback_time_integer_success = 0
-
-            self.model._total_callback_time_general = 0
-            self.model._total_callback_time_general_success = 0
-
-            self.model._callback_counter_integer = 0
-            self.model._callback_counter_integer_success = 0
-
-            self.model._callback_counter_general = 0
-            self.model._callback_counter_general_success = 0
-
-            # We also pass the following information to the model as we need them in the callback
-            self.model._main_grb_obj = self
-
-
-class FlowOCT(StrongTreeFormulation):
+class FlowOCT(ProblemFormulation):
     def __init__(
         self,
         X,
@@ -104,19 +33,19 @@ class FlowOCT(StrongTreeFormulation):
         """
         self.model_name = "FlowOCT"
 
-        # initialize the StrongTreeFormulation
+        self.b = 0
+        self.p = 0
+        self.w = 0
+        self.zeta = 0
+        self.z = 0
+
+        self._lambda = _lambda
+        self.obj_mode = obj_mode
+        self.labels = labels
+
+        # Initialize ProblemFormulation
         super().__init__(
-            X,
-            y,
-            tree,
-            X_col_labels,
-            labels,
-            _lambda,
-            obj_mode,
-            self.model_name,
-            time_limit,
-            num_threads,
-            verbose,
+            X, y, tree, X_col_labels, self.model_name, time_limit, num_threads, verbose
         )
 
     def define_variables(self):
@@ -276,7 +205,7 @@ class FlowOCT(StrongTreeFormulation):
         self.define_objective()
 
 
-class BendersOCT(StrongTreeFormulation):
+class BendersOCT(ProblemFormulation):
     def __init__(
         self,
         X,
@@ -299,19 +228,54 @@ class BendersOCT(StrongTreeFormulation):
         :param verbose: Display Gurobi model output
         """
         self.model_name = "BendersOCT"
+
+        self.g = 0
+        self.b = 0
+        self.p = 0
+        self.w = 0
+
         super().__init__(
-            X,
-            y,
-            tree,
-            X_col_labels,
-            labels,
-            _lambda,
-            obj_mode,
-            self.model_name,
-            time_limit,
-            num_threads,
-            verbose,
+            X, y, tree, X_col_labels, self.model_name, time_limit, num_threads, verbose
         )
+
+        # The cuts we add in the callback function would be treated as lazy constraints
+        self.model.params.LazyConstraints = 1
+        """
+        The following variables are used for the Benders problem to keep track
+        of the times we call the callback.
+
+        - counter_integer tracks number of times we call the callback from an
+        integer node in the branch-&-bound tree
+            - time_integer tracks the associated time spent in the
+            callback for these calls
+        - counter_general tracks number of times we call the callback from
+        a non-integer node in the branch-&-bound tree
+            - time_general tracks the associated time spent in the callback for
+            these calls
+
+        the ones ending with success are related to success calls.
+        By success we mean ending up adding a lazy constraint
+        to the model
+
+        """
+        self.model._total_callback_time_integer = 0
+        self.model._total_callback_time_integer_success = 0
+
+        self.model._total_callback_time_general = 0
+        self.model._total_callback_time_general_success = 0
+
+        self.model._callback_counter_integer = 0
+        self.model._callback_counter_integer_success = 0
+
+        self.model._callback_counter_general = 0
+        self.model._callback_counter_general_success = 0
+
+        # We also pass the following information to the model as we need them in the callback
+        self.model._main_grb_obj = self
+
+        self._lambda = _lambda
+        self.obj_mode = obj_mode
+        self.labels = labels
 
     def define_variables(self):
         ###########################################################
@@ -400,7 +364,7 @@ class BendersOCT(StrongTreeFormulation):
         self.model.setObjective(obj, GRB.MAXIMIZE)
 
 
-class FairOCT(StrongTreeFormulation):
+class FairOCT(ProblemFormulation):
     def __init__(
         self,
         X,
@@ -443,19 +407,20 @@ class FairOCT(StrongTreeFormulation):
         :param verbose: Display Gurobi model output
         """
         self.model_name = "FairOCT"
+
+        self.b = 0
+        self.p = 0
+        self.w = 0
+        self.zeta = 0
+        self.z = 0
+
+        self._lambda = _lambda
+        self.obj_mode = obj_mode
+        self.labels = labels
         super().__init__(
-            X,
-            y,
-            tree,
-            X_col_labels,
-            labels,
-            _lambda,
-            obj_mode,
-            self.model_name,
-            time_limit,
-            num_threads,
-            verbose,
+            X, y, tree, X_col_labels, self.model_name, time_limit, num_threads, verbose
         )
+
         self.P = protect_feat
         self.legit_factor = legit_factor
 
