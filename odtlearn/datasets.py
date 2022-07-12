@@ -3,7 +3,7 @@ import pandas as pd
 import pkg_resources
 
 
-def prescriptive_example_data():
+def prescrip_tree_data():
     """Return tuple of the train and test dataframes from the prescriptive tree example notebook"""
     train_stream = pkg_resources.resource_stream(
         "odtlearn", "data/prescriptive_tree/train_v2_100.csv"
