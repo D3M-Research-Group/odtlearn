@@ -7,6 +7,11 @@ from odtlearn.utils.TreePlotter import MPLPlotter
 
 
 class TreeClassifier(ClassifierMixin, BaseEstimator):
+    """A base class for all other classifiers in the ODTlearn package
+    that contains some universal methods for preprocessing data as well as
+    printing and plotting fitted optimal decision trees.
+    """
+
     def __init__(self, depth=1, time_limit=60, num_threads=None) -> None:
         self.depth = depth
         self.time_limit = time_limit
@@ -277,6 +282,43 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
         arrow_annotation_font_scale=0.5,
         debug=False,
     ):
+        """Plot the fitted tree with the branching features, the threshold values for
+        each branching node's test, and the predictions asserted for each assignment node
+        using matplotlib. The method uses the Gurobi model's name for determining how
+        to generate the tree. It does some preprocessing before passing the tree to the
+        `_MPLTreeExporter` class from the sklearn package. The arguments for the
+        `plot_tree` method are based on the arguments of the sklearn `plot_tree` function.
+
+        Parameters
+        ----------
+        label : {'all', 'root', 'none'}, default='all'
+        Whether to show informative labels for impurity, etc.
+        Options include 'all' to show at every node, 'root' to show only at
+        the top root node, or 'none' to not show at any node.
+
+        filled : bool, default=False
+            When set to ``True``, paint nodes to indicate majority class for
+            classification, extremity of values for regression, or purity of node
+            for multi-output.
+
+        rounded : bool, default=False
+            When set to ``True``, draw node boxes with rounded corners and use
+            Helvetica fonts instead of Times-Roman.
+
+        precision: int, default=3
+            Number of digits of precision for floating point in the values of
+            impurity, threshold and value attributes of each node.
+        ax : matplotlib axis, default=None
+            Axes to plot to. If None, use current axis. Any previous content
+        is cleared.
+
+        fontsize : int, default=None
+            Size of text font. If None, determined automatically to fit figure.
+
+        color_dict: dict, default={"node": None, "leaves": []}
+            A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
+            If None, the colors are chosen using the sklearn `plot_tree` color palette
+        """
         check_is_fitted(self, ["grb_model"])
         exporter = MPLPlotter(
             self.grb_model,
