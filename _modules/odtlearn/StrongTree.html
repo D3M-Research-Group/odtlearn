@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>odtlearn.StrongTree - odtlearn 0.0.1 documentation</title>
+        <title>odtlearn.StrongTree - odtlearn 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -125,7 +125,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">odtlearn 0.0.1 documentation</div></a>
+      <a href="../../index.html"><div class="brand">odtlearn 0.1.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -148,7 +148,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.0.1 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 0.1.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -219,25 +219,17 @@
           <h1>Source code for odtlearn.StrongTree</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.StrongTreeUtils</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">check_columns_match</span><span class="p">,</span>
-    <span class="n">check_binary</span><span class="p">,</span>
-    <span class="n">benders_callback</span><span class="p">,</span>
-    <span class="n">get_predicted_value</span><span class="p">,</span>
-    <span class="n">print_tree_util</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">check_X_y</span>
 
-<span class="c1"># Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.StrongTreeFlowOCT</span> <span class="kn">import</span> <span class="n">FlowOCT</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.StrongTreeBendersOCT</span> <span class="kn">import</span> <span class="n">BendersOCT</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.TreePlotter</span> <span class="kn">import</span> <span class="n">MPLPlotter</span>
+<span class="kn">from</span> <span class="nn">odtlearn.tree_classifier</span> <span class="kn">import</span> <span class="n">TreeClassifier</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.callbacks</span> <span class="kn">import</span> <span class="n">benders_callback</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.strongtree_formulation</span> <span class="kn">import</span> <span class="n">BendersOCT</span><span class="p">,</span> <span class="n">FlowOCT</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.Tree</span> <span class="kn">import</span> <span class="n">_Tree</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_binary</span><span class="p">,</span> <span class="n">check_columns_match</span>
 
 
-<div class="viewcode-block" id="StrongTreeClassifier"><a class="viewcode-back" href="../../generated/odtlearn.StrongTree.StrongTreeClassifier.html#odtlearn.StrongTree.StrongTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">StrongTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+<div class="viewcode-block" id="StrongTreeClassifier"><a class="viewcode-back" href="../../generated/odtlearn.StrongTree.StrongTreeClassifier.html#odtlearn.StrongTree.StrongTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">StrongTreeClassifier</span><span class="p">(</span><span class="n">TreeClassifier</span><span class="p">):</span>
     <span class="sd">"""A strong optimal classification tree fitted on a given binary-valued</span>
 <span class="sd">    data set.</span>
 
@@ -291,31 +283,11 @@
         <span class="n">benders_oct</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span>
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="c1"># this is where we will initialize the values we want users to provide</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="n">_lambda</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span> <span class="o">=</span> <span class="n">num_threads</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">benders_oct</span> <span class="o">=</span> <span class="n">benders_oct</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">X_col_dtypes</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">y_dtypes</span> <span class="o">=</span> <span class="kc">None</span></div>
-
-<div class="viewcode-block" id="StrongTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/odtlearn.StrongTree.StrongTreeClassifier.html#odtlearn.StrongTree.StrongTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="sd">"""A function for extracting metadata from the inputs before converting</span>
-<span class="sd">        them into numpy arrays to work with the sklearn API</span>
-
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_dtypes</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">dtypes</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="n">_lambda</span></div>
 
 <div class="viewcode-block" id="StrongTreeClassifier.fit"><a class="viewcode-back" href="../../generated/odtlearn.StrongTree.StrongTreeClassifier.html#odtlearn.StrongTree.StrongTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">"""Fit a StrongTree using the supplied data.</span>
@@ -351,7 +323,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">y_</span> <span class="o">=</span> <span class="n">y</span>
 
         <span class="c1"># Instantiate tree object here</span>
-        <span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">_Tree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
 
         <span class="c1"># Code for setting up and running the MIP goes here.</span>
         <span class="c1"># Note that we are taking X and y as array-like objects</span>
@@ -364,9 +336,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_node_status</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span><span class="p">,</span>
                 <span class="n">verbose</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_main_problem</span><span class="p">()</span>
@@ -380,12 +353,12 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span><span class="p">,</span>
                 <span class="n">verbose</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_primal_problem</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_main_problem</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 
@@ -416,7 +389,7 @@
 <span class="sd">            seen during fit.</span>
 <span class="sd">        """</span>
         <span class="c1"># Check is fit had been called</span>
-        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"X_"</span><span class="p">,</span> <span class="s2">"y_"</span><span class="p">])</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"grb_model"</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X_predict_col_names</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
@@ -429,62 +402,10 @@
 
         <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 
-        <span class="n">prediction</span> <span class="o">=</span> <span class="n">get_predicted_value</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span>
-            <span class="n">X</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">prediction</span></div>
+        <span class="c1"># private function from TreeClassifier</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_prediction</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
-<div class="viewcode-block" id="StrongTreeClassifier.print_tree"><a class="viewcode-back" href="../../generated/odtlearn.StrongTree.StrongTreeClassifier.html#odtlearn.StrongTree.StrongTreeClassifier.print_tree">[docs]</a>    <span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""</span>
-<span class="sd">        This function print the derived tree with the branching features and the predictions asserted for each node</span>
-
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Print out the tree in the console</span>
-<span class="sd">        """</span>
-
-        <span class="c1"># Check is fit had been called</span>
-        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"X_"</span><span class="p">,</span> <span class="s2">"y_"</span><span class="p">])</span>
-        <span class="n">print_tree_util</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">)</span></div>
-
-    <span class="k">def</span> <span class="nf">plot_tree</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="s2">"all"</span><span class="p">,</span>
-        <span class="n">filled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">rounded</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-        <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">fontsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">color_dict</span><span class="o">=</span><span class="p">{</span><span class="s2">"node"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"leaves"</span><span class="p">:</span> <span class="p">[]},</span>
-        <span class="n">edge_annotation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">arrow_annotation_font_scale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-        <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"X_"</span><span class="p">,</span> <span class="s2">"y_"</span><span class="p">])</span>
-        <span class="n">exporter</span> <span class="o">=</span> <span class="n">MPLPlotter</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-            <span class="n">filled</span><span class="o">=</span><span class="n">filled</span><span class="p">,</span>
-            <span class="n">rounded</span><span class="o">=</span><span class="n">rounded</span><span class="p">,</span>
-            <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">,</span>
-            <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
-            <span class="n">color_dict</span><span class="o">=</span><span class="n">color_dict</span><span class="p">,</span>
-            <span class="n">edge_annotation</span><span class="o">=</span><span class="n">edge_annotation</span><span class="p">,</span>
-            <span class="n">arrow_annotation_font_scale</span><span class="o">=</span><span class="n">arrow_annotation_font_scale</span><span class="p">,</span>
-            <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">prediction</span></div></div>
 </pre></div>
         </article>
       </div>

@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>odtlearn.RobustTree - odtlearn 0.0.1 documentation</title>
+        <title>odtlearn.RobustTree - odtlearn 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -125,7 +125,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">odtlearn 0.0.1 documentation</div></a>
+      <a href="../../index.html"><div class="brand">odtlearn 0.1.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -148,7 +148,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.0.1 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 0.1.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -217,21 +217,22 @@
         </div>
         <article role="main">
           <h1>Source code for odtlearn.RobustTree</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">check_X_y</span>
 
-<span class="kn">from</span> <span class="nn">odtlearn.utils.TreePlotter</span> <span class="kn">import</span> <span class="n">MPLPlotter</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.Tree</span> <span class="kn">import</span> <span class="n">Tree</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.RobustOCT</span> <span class="kn">import</span> <span class="n">RobustOCT</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.RobustTreeUtils</span> <span class="kn">import</span> <span class="n">mycallback</span><span class="p">,</span> <span class="n">check_integer</span><span class="p">,</span> <span class="n">check_same_as_X</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">odtlearn.tree_classifier</span> <span class="kn">import</span> <span class="n">TreeClassifier</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.callbacks</span> <span class="kn">import</span> <span class="n">robust_tree_callback</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.robusttree_formulation</span> <span class="kn">import</span> <span class="n">RobustOCT</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.Tree</span> <span class="kn">import</span> <span class="n">_Tree</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_integer</span><span class="p">,</span> <span class="n">check_same_as_X</span>
 
 
-<div class="viewcode-block" id="RobustTreeClassifier"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">RobustTreeClassifier</span><span class="p">(</span><span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustTreeClassifier"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">RobustTreeClassifier</span><span class="p">(</span><span class="n">TreeClassifier</span><span class="p">):</span>
     <span class="sd">"""An optimal robust decision tree classifier, fitted on a given integer-valued</span>
 <span class="sd">    data set and a given cost-and-budget uncertainty set to produce a tree robust</span>
 <span class="sd">    against distribution shifts.</span>
@@ -268,29 +269,8 @@
 <span class="sd">        `w` for assignment variables)</span>
 <span class="sd">    """</span>
 
-<div class="viewcode-block" id="RobustTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">1800</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_limit</span> <span class="o">=</span> <span class="n">time_limit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_threads</span> <span class="o">=</span> <span class="n">num_threads</span></div>
-
-<div class="viewcode-block" id="RobustTreeClassifier.extract_metadata"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.extract_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="sd">"""A function for extracting metadata from the inputs before converting</span>
-<span class="sd">        them into numpy arrays to work with the sklearn API</span>
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
-
-        <span class="c1"># Strip indices in training data into integers</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+<div class="viewcode-block" id="RobustTreeClassifier.__init__"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">1800</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobustTreeClassifier.probabilities_to_robust_parameters"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.probabilities_to_robust_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">probabilities_to_robust_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prob</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">"""Convert probabilities of certainty and levels of robustness</span>
@@ -367,7 +347,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">y_</span> <span class="o">=</span> <span class="n">y</span>
 
         <span class="c1"># Instantiate tree object here</span>
-        <span class="n">tree</span> <span class="o">=</span> <span class="n">Tree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">_Tree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depth</span><span class="p">)</span>
 
         <span class="c1"># Set default for costs of uncertainty if needed</span>
         <span class="k">if</span> <span class="n">costs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -410,7 +390,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">create_main_problem</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">mycallback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">robust_tree_callback</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solving_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
 
@@ -420,30 +400,6 @@
 
         <span class="c1"># `fit` should always return `self`</span>
         <span class="k">return</span> <span class="bp">self</span></div>
-
-    <span class="k">def</span> <span class="nf">get_prediction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-        <span class="n">prediction</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
-            <span class="c1"># Get prediction value</span>
-            <span class="n">node</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">terminal</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">[</span><span class="n">node</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># w[n,k] == 1</span>
-                        <span class="n">prediction</span> <span class="o">+=</span> <span class="p">[</span><span class="n">k</span><span class="p">]</span>
-                        <span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
-                        <span class="k">break</span>
-                <span class="k">if</span> <span class="n">terminal</span><span class="p">:</span>
-                    <span class="k">break</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">f_theta_indices</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">[</span><span class="n">node</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># b[n,f]== 1</span>
-                            <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">theta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
-                                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_right_children</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-                            <span class="k">else</span><span class="p">:</span>
-                                <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_left_children</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-                            <span class="k">break</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RobustTreeClassifier.predict"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">"""Given the input covariates, predict the class labels of each sample</span>
@@ -466,68 +422,7 @@
         <span class="n">df_test</span> <span class="o">=</span> <span class="n">check_same_as_X</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"test covariates"</span><span class="p">)</span>
         <span class="n">check_integer</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_prediction</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="RobustTreeClassifier.print_tree"><a class="viewcode-back" href="../../generated/odtlearn.RobustTree.RobustTreeClassifier.html#odtlearn.RobustTree.RobustTreeClassifier.print_tree">[docs]</a>    <span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">"""Print the fitted tree with the branching features, the threshold values for</span>
-<span class="sd">        each branching node's test, and the predictions asserted for each assignment node"""</span>
-
-        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"grb_model"</span><span class="p">])</span>
-
-        <span class="n">assignment_nodes</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">"#########node "</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-            <span class="n">terminal</span> <span class="o">=</span> <span class="kc">False</span>
-
-            <span class="c1"># Check if pruned</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">get_parent</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="ow">in</span> <span class="n">assignment_nodes</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">"pruned"</span><span class="p">)</span>
-                <span class="n">assignment_nodes</span> <span class="o">+=</span> <span class="p">[</span><span class="n">n</span><span class="p">]</span>
-                <span class="k">continue</span>
-
-            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">"leaf </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
-                    <span class="n">terminal</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="n">assignment_nodes</span> <span class="o">+=</span> <span class="p">[</span><span class="n">n</span><span class="p">]</span>
-                    <span class="k">break</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">terminal</span><span class="p">:</span>
-                <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">f_theta_indices</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># b[n,f]== 1</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">"Feature: "</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="s2">", Cutoff: "</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
-                        <span class="k">break</span></div>
-
-    <span class="k">def</span> <span class="nf">plot_tree</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="s2">"all"</span><span class="p">,</span>
-        <span class="n">filled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">rounded</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-        <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">fontsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">color_dict</span><span class="o">=</span><span class="p">{</span><span class="s2">"node"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"leaves"</span><span class="p">:</span> <span class="p">[]},</span>
-        <span class="n">edge_annotation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">arrow_annotation_font_scale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"grb_model"</span><span class="p">])</span>
-        <span class="n">exporter</span> <span class="o">=</span> <span class="n">MPLPlotter</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span>
-            <span class="kc">None</span><span class="p">,</span>  <span class="c1"># we will calculate p within get_node_status</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-            <span class="n">filled</span><span class="o">=</span><span class="n">filled</span><span class="p">,</span>
-            <span class="n">rounded</span><span class="o">=</span><span class="n">rounded</span><span class="p">,</span>
-            <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">,</span>
-            <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">,</span>
-            <span class="n">color_dict</span><span class="o">=</span><span class="n">color_dict</span><span class="p">,</span>
-            <span class="n">edge_annotation</span><span class="o">=</span><span class="n">edge_annotation</span><span class="p">,</span>
-            <span class="n">arrow_annotation_font_scale</span><span class="o">=</span><span class="n">arrow_annotation_font_scale</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_prediction</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span></div></div>
 </pre></div>
         </article>
       </div>
