@@ -2,10 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="odtlearn.tree_classifier.TreeClassifier" href="odtlearn.tree_classifier.TreeClassifier.html" /><link rel="prev" title="odtlearn.RobustTree.RobustTreeClassifier" href="odtlearn.RobustTree.RobustTreeClassifier.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Optimal Strong Classification Trees" href="../notebooks/StrongTree.html" /><link rel="prev" title="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier" href="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier - odtlearn 0.1.0 documentation</title>
+        <title>odtlearn.tree_classifier.TreeClassifier - odtlearn 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -170,8 +170,8 @@
 <li class="toctree-l2"><a class="reference internal" href="odtlearn.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.StrongTree</span></code>.StrongTreeClassifier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="odtlearn.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.FairTree</span></code>.FairTreeClassifier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="odtlearn.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.RobustTree</span></code>.RobustTreeClassifier</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="odtlearn.tree_classifier.TreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.tree_classifier</span></code>.TreeClassifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.tree_classifier</span></code>.TreeClassifier</a></li>
 </ul>
 </li>
 </ul>
@@ -217,122 +217,110 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="odtlearn-prescriptivetree-prescriptivetreeclassifier">
-<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier<a class="headerlink" href="#odtlearn-prescriptivetree-prescriptivetreeclassifier" title="Permalink to this headline">#</a></h1>
+          <div class="section" id="odtlearn-tree-classifier-treeclassifier">
+<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.tree_classifier</span></code>.TreeClassifier<a class="headerlink" href="#odtlearn-tree-classifier-treeclassifier" title="Permalink to this headline">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.PrescriptiveTree.</span></span><span class="sig-name descname"><span class="pre">PrescriptiveTreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'IPW'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/PrescriptiveTree.html#PrescriptiveTreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier" title="Permalink to this definition">#</a></dt>
-<dd><p>An optimal decision tree that prescribes treatments (as opposed to predicting class labels),
-fitted on a binary-valued observational data set.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>depth</strong><span class="classifier">int</span></dt><dd><p>A parameter specifying the depth of the tree</p>
-</dd>
-<dt><strong>time_limit</strong><span class="classifier">int</span></dt><dd><p>The given time limit for solving the MIP in seconds</p>
-</dd>
-<dt><strong>method</strong><span class="classifier">str, default=’IPW’</span></dt><dd><p>The method of Prescriptive Trees to run. Choices in (‘IPW’, ‘DM’, ‘DR), which represents the
-inverse propensity weighting, direct method, and doubly robust methods, respectively</p>
-</dd>
-<dt><strong>num_threads: int, default=None</strong></dt><dd><p>The number of threads the solver should use</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>X_</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>The input passed during <a class="reference internal" href="#odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
-</dd>
-<dt><strong>y_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The observed outcomes passed during <a class="reference internal" href="#odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
-</dd>
-<dt><strong>t_</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The treatments passed during :meth: <cite>fit</cite>.</p>
-</dd>
-<dt><strong>treatments</strong><span class="classifier">set, shape (n_treatments,)</span></dt><dd><p>The set of unique treatments seen at <a class="reference internal" href="#odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a>.</p>
-</dd>
-<dt><strong>solving_time</strong><span class="classifier">float</span></dt><dd><p>The amount of time the mixed-integer program took to solve</p>
-</dd>
-<dt><strong>b_value</strong><span class="classifier">nddict, shape (tree_internal_nodes, X_features)</span></dt><dd><p>The values of decision variable b – the branching decisions of the tree</p>
-</dd>
-<dt><strong>w_value</strong><span class="classifier">nddict, shape (tree_nodes, treatments_set)</span></dt><dd><p>The values of decision variable w – the treatment decisions at the tree’s nodes</p>
-</dd>
-<dt><strong>p_value</strong><span class="classifier">nddict, shape (tree_nodes,)</span></dt><dd><p>The values of decision variable p – whether or not a tree’s nodes branch or assign treatment</p>
-</dd>
-</dl>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="odtlearn.tree_classifier.TreeClassifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.tree_classifier.</span></span><span class="sig-name descname"><span class="pre">TreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/tree_classifier.html#TreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.tree_classifier.TreeClassifier" title="Permalink to this definition">#</a></dt>
+<dd><p>A base class for all other classifiers in the ODTlearn package
+that contains some universal methods for preprocessing data as well as
+printing and plotting fitted optimal decision trees.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'IPW'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/odtlearn/PrescriptiveTree.html#PrescriptiveTreeClassifier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.__init__" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="odtlearn.tree_classifier.TreeClassifier.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/odtlearn/tree_classifier.html#TreeClassifier.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.tree_classifier.TreeClassifier.__init__" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.check_helpers">
-<span class="sig-name descname"><span class="pre">check_helpers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_hat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/PrescriptiveTree.html#PrescriptiveTreeClassifier.check_helpers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.check_helpers" title="Permalink to this definition">#</a></dt>
-<dd><p>This function checks the propensity weights and counterfactual predictions</p>
+<dt class="sig sig-object py" id="odtlearn.tree_classifier.TreeClassifier.extract_metadata">
+<span class="sig-name descname"><span class="pre">extract_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/tree_classifier.html#TreeClassifier.extract_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.tree_classifier.TreeClassifier.extract_metadata" title="Permalink to this definition">#</a></dt>
+<dd><p>A function for extracting metadata from the inputs before converting
+them into numpy arrays to work with the sklearn API</p>
+<p>Additional variables that need to be processed for
+different classifier types are passed through keyword arguments</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.tree_classifier.TreeClassifier.get_node_status">
+<span class="sig-name descname"><span class="pre">get_node_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grb_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/tree_classifier.html#TreeClassifier.get_node_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.tree_classifier.TreeClassifier.get_node_status" title="Permalink to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>This function give the status of a given node in a tree. By status we mean whether the node</dt><dd><p>1- is pruned? i.e., we have made a prediction at one of its ancestors
+2- is a branching node? If yes, what feature do we branch on
+3- is a leaf? If yes, what is the prediction at this node?</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X: The input/training data</strong></dt><dd></dd>
-<dt><strong>ipw: A vector or array-like object for inverse propensity weights. Only needed when running IPW/DR</strong></dt><dd></dd>
-<dt><strong>y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR</strong></dt><dd></dd>
-<dt><strong>:return: The converted versions of ipw and y_hat after passing the series of checks</strong></dt><dd></dd>
-</dl>
+<dt><strong>grb_model</strong></dt><dd><p>The gurobi model solved to optimality (or reached to the time limit).</p>
 </dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.check_y">
-<span class="sig-name descname"><span class="pre">check_y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/PrescriptiveTree.html#PrescriptiveTreeClassifier.check_y"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.check_y" title="Permalink to this definition">#</a></dt>
-<dd><p>This function checks the shape and contents of the observed outcomes
-:param X: The input/training data
-:param y: A vector or array-like object for the observed outcomes corresponding to treatment t
-:return: The converted version of y after passing the series of checks</p>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_hat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/PrescriptiveTree.html#PrescriptiveTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.fit" title="Permalink to this definition">#</a></dt>
-<dd><p>Method to fit the PrescriptiveTree class on the data</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The training input samples.</p>
+<dt><strong>b</strong></dt><dd><p>The values of branching decision variable b.</p>
 </dd>
-<dt><strong>t</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The treatment values. An array of int.</p>
+<dt><strong>w</strong></dt><dd><p>The values of prediction decision variable w.</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The observed outcomes upon given treatment t. An array of int.</p>
+<dt><strong>p</strong></dt><dd><p>The values of decision variable p</p>
 </dd>
-<dt><strong>ipw</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The inverse propensity weight estimates. An array of floats in [0, 1].</p>
-</dd>
-<dt><strong>y_hat: array-like, shape (n_samples, n_treatments)</strong></dt><dd><p>The counterfactual predictions.</p>
-</dd>
-<dt><strong>verbose: bool, default=False</strong></dt><dd><p>Display Gurobi output.</p>
+<dt><strong>n</strong></dt><dd><p>A valid node index in the tree</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>Returns self.</p>
+<dt><strong>pruned</strong><span class="classifier">int</span></dt><dd><p>pruned=1 iff the node is pruned</p>
+</dd>
+<dt><strong>branching</strong><span class="classifier">int</span></dt><dd><p>branching = 1 iff the node branches at some feature f</p>
+</dd>
+<dt><strong>selected_feature</strong><span class="classifier">str</span></dt><dd><p>The feature that the node branch on</p>
+</dd>
+<dt><strong>leaf</strong><span class="classifier">int</span></dt><dd><p>leaf = 1 iff node n is a leaf in the tree</p>
+</dd>
+<dt><strong>value</strong><span class="classifier">double</span></dt><dd><p>if node n is a leaf, value represent the prediction at this node</p>
 </dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/PrescriptiveTree.html#PrescriptiveTreeClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>Method for making predictions using a PrescriptiveTree classifier</p>
+<dt class="sig sig-object py" id="odtlearn.tree_classifier.TreeClassifier.plot_tree">
+<span class="sig-name descname"><span class="pre">plot_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rounded</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'leaves':</span> <span class="pre">[],</span> <span class="pre">'node':</span> <span class="pre">None}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrow_annotation_font_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/tree_classifier.html#TreeClassifier.plot_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.tree_classifier.TreeClassifier.plot_tree" title="Permalink to this definition">#</a></dt>
+<dd><p>Plot the fitted tree with the branching features, the threshold values for
+each branching node’s test, and the predictions asserted for each assignment node
+using matplotlib. The method uses the Gurobi model’s name for determining how
+to generate the tree. It does some preprocessing before passing the tree to the
+<cite>_MPLTreeExporter</cite> class from the sklearn package. The arguments for the
+<cite>plot_tree</cite> method are based on the arguments of the sklearn <cite>plot_tree</cite> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input samples.</p>
+<dt><strong>label</strong><span class="classifier">{‘all’, ‘root’, ‘none’}, default=’all’</span></dt><dd></dd>
+<dt><strong>Whether to show informative labels for impurity, etc.</strong></dt><dd></dd>
+<dt><strong>Options include ‘all’ to show at every node, ‘root’ to show only at</strong></dt><dd></dd>
+<dt><strong>the top root node, or ‘none’ to not show at any node.</strong></dt><dd></dd>
+<dt><strong>filled</strong><span class="classifier">bool, default=False</span></dt><dd><p>When set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, paint nodes to indicate majority class for
+classification, extremity of values for regression, or purity of node
+for multi-output.</p>
+</dd>
+<dt><strong>rounded</strong><span class="classifier">bool, default=False</span></dt><dd><p>When set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, draw node boxes with rounded corners and use
+Helvetica fonts instead of Times-Roman.</p>
+</dd>
+<dt><strong>precision: int, default=3</strong></dt><dd><p>Number of digits of precision for floating point in the values of
+impurity, threshold and value attributes of each node.</p>
+</dd>
+<dt><strong>ax</strong><span class="classifier">matplotlib axis, default=None</span></dt><dd><p>Axes to plot to. If None, use current axis. Any previous content</p>
+</dd>
+<dt><strong>is cleared.</strong></dt><dd></dd>
+<dt><strong>fontsize</strong><span class="classifier">int, default=None</span></dt><dd><p>Size of text font. If None, determined automatically to fit figure.</p>
+</dd>
+<dt><strong>color_dict: dict, default={“node”: None, “leaves”: []}</strong></dt><dd><p>A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
+If None, the colors are chosen using the sklearn <cite>plot_tree</cite> color palette</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>t</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The predicted treatment for the input samples.</p>
-</dd>
 </dl>
-</dd>
-</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.tree_classifier.TreeClassifier.print_tree">
+<span class="sig-name descname"><span class="pre">print_tree</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/odtlearn/tree_classifier.html#TreeClassifier.print_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.tree_classifier.TreeClassifier.print_tree" title="Permalink to this definition">#</a></dt>
+<dd><p>Print the fitted tree with the branching features, the threshold values for
+each branching node’s test, and the predictions asserted for each assignment node</p>
+<p>The method uses the Gurobi model’s name for determining how to generate the tree</p>
 </dd></dl>
 </dd></dl>
 <div style="clear:both"></div></div>
@@ -342,23 +330,23 @@ inverse propensity weighting, direct method, and doubly robust methods, respecti
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="odtlearn.tree_classifier.TreeClassifier.html">
+          <a class="next-page" href="../notebooks/StrongTree.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.tree_classifier</span></code>.TreeClassifier</div>
+                <div class="title">Optimal Strong Classification Trees</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="odtlearn.RobustTree.RobustTreeClassifier.html">
+          <a class="prev-page" href="odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.RobustTree</span></code>.RobustTreeClassifier</div>
+                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</div>
                 
               </div>
             </a>
