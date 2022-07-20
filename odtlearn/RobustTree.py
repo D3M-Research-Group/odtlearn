@@ -55,6 +55,50 @@ class RobustTreeClassifier(TreeClassifier):
     def __init__(self, depth=1, time_limit=1800, num_threads=None) -> None:
         super().__init__(depth, time_limit, num_threads)
 
+    def probabilities_to_robust_parameters(self, prob, threshold=1):
+        """Convert probabilities of certainty and levels of robustness
+        to costs and budget values for fitting a robust tree
+
+        Parameters
+        ----------
+        prob : array-like, shape (n_samples, n_features)
+            A 2D matrix of probabilities where the value of row i and column f
+            is the probability that the value for sample i and feature f is
+            certain. Each entry must be between 0 and 1 (inclusive).
+        threshold : float, default = 1
+            The threshold that tunes the level of robustness, between 0 (exclusive,
+            complete robustness) and 1 (inclusive, no robustness).
+        Returns
+        -------
+        costs : pandas DataFrame
+            The costs of uncertainty to use for training
+        budget: float
+            The budget of uncertainty based on the given threshold information
+            and number of training samples
+        """
+        costs = deepcopy(prob)  # Deepcopy probabilities
+
+        # costs calculation
+        if not isinstance(costs, pd.DataFrame):
+            col_labels = np.arange(0, costs.shape[1])
+            costs = pd.DataFrame(costs, columns=col_labels)
+        for col in costs.columns:
+            if not costs[col].between(0, 1).all():
+                raise ValueError(
+                    "Probabilities must be between 0 (inclusive) and 1 (inclusive)"
+                )
+        # budget calculation
+        if threshold <= 0 or threshold > 1:
+            raise ValueError(
+                "Threshold must be between 0 (exclusive) and 1 (inclusive)"
+            )
+        budget = -1 * costs.shape[0] * np.log(threshold)
+
+        # Default probability of certainty of 1 as budget + 1
+        costs = costs.applymap(lambda x: budget + 1 if x == 1 else -1 * np.log(1 - x))
+
+        return costs, budget
+
     def fit(self, X, y, costs=None, budget=-1, verbose=True):
         """Fit an optimal robust classification tree given data, labels,
         costs of uncertainty, and budget of uncertainty
