@@ -1,6 +1,7 @@
 import time
 from copy import deepcopy
 
+import numpy as np
 import pandas as pd
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_is_fitted, check_X_y
