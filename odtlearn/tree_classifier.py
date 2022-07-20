@@ -279,7 +279,7 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
         fontsize=None,
         color_dict={"node": None, "leaves": []},
         edge_annotation=True,
-        arrow_annotation_font_scale=0.5,
+        arrow_annotation_font_scale=0.8,
         debug=False,
     ):
         """Plot the fitted tree with the branching features, the threshold values for
