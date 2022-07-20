@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 
-from odtlearn.utils.StrongTreeUtils import binarize
+from odtlearn.utils.binarize import binarize
 
 
 @pytest.fixture

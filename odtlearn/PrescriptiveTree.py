@@ -13,8 +13,8 @@ from sklearn.utils.validation import (
 
 from odtlearn.tree_classifier import TreeClassifier
 from odtlearn.utils.prescriptivetree_formulation import FlowOPT_IPW, FlowOPT_Robust
-from odtlearn.utils.StrongTreeUtils import check_binary, check_columns_match
 from odtlearn.utils.Tree import _Tree
+from odtlearn.utils.validation import check_binary, check_columns_match
 
 
 class PrescriptiveTreeClassifier(TreeClassifier):

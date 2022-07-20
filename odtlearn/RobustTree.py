@@ -6,13 +6,10 @@ from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_is_fitted, check_X_y
 
 from odtlearn.tree_classifier import TreeClassifier
+from odtlearn.utils.callbacks import robust_tree_callback
 from odtlearn.utils.robusttree_formulation import RobustOCT
-from odtlearn.utils.RobustTreeUtils import (
-    check_integer,
-    check_same_as_X,
-    robust_tree_callback,
-)
 from odtlearn.utils.Tree import _Tree
+from odtlearn.utils.validation import check_integer, check_same_as_X
 
 
 class RobustTreeClassifier(TreeClassifier):

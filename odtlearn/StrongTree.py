@@ -4,13 +4,10 @@ from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 from odtlearn.tree_classifier import TreeClassifier
+from odtlearn.utils.callbacks import benders_callback
 from odtlearn.utils.strongtree_formulation import BendersOCT, FlowOCT
-from odtlearn.utils.StrongTreeUtils import (
-    benders_callback,
-    check_binary,
-    check_columns_match,
-)
 from odtlearn.utils.Tree import _Tree
+from odtlearn.utils.validation import check_binary, check_columns_match
 
 
 class StrongTreeClassifier(TreeClassifier):
@@ -121,6 +118,7 @@ class StrongTreeClassifier(TreeClassifier):
                 self.labels,
                 self._lambda,
                 self.obj_mode,
+                self.get_node_status,
                 self.time_limit,
                 self.num_threads,
                 verbose,

@@ -215,6 +215,7 @@ class BendersOCT(ProblemFormulation):
         labels,
         _lambda,
         obj_mode,
+        get_node_status,
         time_limit,
         num_threads,
         verbose,
@@ -225,6 +226,7 @@ class BendersOCT(ProblemFormulation):
         :param tree: Tree object
         :param _lambda: The regularization parameter in the objective
         :param time_limit: The given time limit for solving the MIP
+        :param num_threads: Specify number of threads for Gurobi to use when solving
         :param verbose: Display Gurobi model output
         """
         self.model_name = "BendersOCT"
@@ -271,6 +273,7 @@ class BendersOCT(ProblemFormulation):
         self.model._callback_counter_general_success = 0
 
         # We also pass the following information to the model as we need them in the callback
+        self.get_node_status = get_node_status
         self.model._main_grb_obj = self
 
         self._lambda = _lambda
