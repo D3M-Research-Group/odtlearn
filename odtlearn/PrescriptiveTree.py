@@ -1,25 +1,23 @@
+import time
+
 import numpy as np
 import pandas as pd
-from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.utils.validation import (
-    check_X_y,
-    check_array,
     _assert_all_finite,
-    check_is_fitted,
-    column_or_1d,
+    check_array,
     check_consistent_length,
+    check_is_fitted,
+    check_X_y,
+    column_or_1d,
 )
-import time
-from odtlearn.utils.StrongTreeUtils import (
-    check_columns_match,
-    check_binary,
-)
-from odtlearn.utils.PrescriptiveTreeUtils import get_predicted_value
-from odtlearn.utils.Tree import Tree
-from odtlearn.utils.PrescriptiveTreesMIP import FlowOPT_IPW, FlowOPT_Robust
+
+from odtlearn.tree_classifier import TreeClassifier
+from odtlearn.utils.prescriptivetree_formulation import FlowOPT_IPW, FlowOPT_Robust
+from odtlearn.utils.Tree import _Tree
+from odtlearn.utils.validation import check_binary, check_columns_match
 
 
-class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
+class PrescriptiveTreeClassifier(TreeClassifier):
     """An optimal decision tree that prescribes treatments (as opposed to predicting class labels),
     fitted on a binary-valued observational data set.
 
@@ -55,40 +53,14 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         The values of decision variable p -- whether or not a tree's nodes branch or assign treatment
     """
 
-    def __init__(self, depth, time_limit, method="IPW", num_threads=None):
-        # this is where we will initialize the values we want users to provide
-        self.depth = depth
-        self.time_limit = time_limit
-        self.num_threads = num_threads
+    def __init__(self, depth=1, time_limit=60, method="IPW", num_threads=None) -> None:
+        # initialize base tree classifier
+        super().__init__(depth, time_limit, num_threads)
+
         self.method = method
-
-        self.X_col_labels = None
-        self.X_col_dtypes = None
-        self.y_dtypes = None
-
         self.treatments = None
         self.ipw = None
         self.y_hat = None
-
-    def extract_metadata(self, X, t):
-        """A function for extracting metadata from the inputs before converting
-        them into numpy arrays to work with the sklearn API
-
-        Parameters
-        ----------
-        X :
-            The input/training data
-        t :
-            A vector or array-like object for the treatment assignments
-
-        """
-        if isinstance(X, pd.DataFrame):
-            self.X_col_labels = X.columns
-            self.X_col_dtypes = X.dtypes
-        else:
-            self.X_col_labels = np.arange(0, X.shape[1])
-
-        self.treatments = np.unique(t)
 
     def check_helpers(self, X, ipw, y_hat):
         """
@@ -148,7 +120,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         check_consistent_length(X, y)
         return y
 
-    def fit(self, X, t, y, ipw=None, y_hat=None):
+    def fit(self, X, t, y, ipw=None, y_hat=None, verbose=False):
         """Method to fit the PrescriptiveTree class on the data
 
         Parameters
@@ -163,16 +135,17 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
             The inverse propensity weight estimates. An array of floats in [0, 1].
         y_hat: array-like, shape (n_samples, n_treatments)
             The counterfactual predictions.
+        verbose: bool, default=False
+            Display Gurobi output.
 
         Returns
         -------
         self : object
             Returns self.
         """
-        # check if self.method is one of the three options
 
         # store column information and dtypes if any
-        self.extract_metadata(X, t)
+        self.extract_metadata(X, y, t=t)
 
         # this function returns converted X and t but we retain metadata
         X, t = check_X_y(X, t)
@@ -203,7 +176,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
         self.t_ = t
 
         # Instantiate tree object here
-        self.tree = Tree(self.depth)
+        self.tree = _Tree(self.depth)
 
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
@@ -220,6 +193,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.X_col_labels,
                 self.time_limit,
                 self.num_threads,
+                verbose,
             )
 
         elif self.method == "DM":
@@ -235,6 +209,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.X_col_labels,
                 self.time_limit,
                 self.num_threads,
+                verbose,
             )
 
         elif self.method == "DR":
@@ -250,6 +225,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.X_col_labels,
                 self.time_limit,
                 self.num_threads,
+                verbose,
             )
 
         self.grb_model.create_main_problem()
@@ -284,7 +260,7 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
             The predicted treatment for the input samples.
         """
         # Check if fit had been called
-        check_is_fitted(self, ["X_", "y_", "t_"])
+        check_is_fitted(self, ["grb_model"])
 
         if isinstance(X, pd.DataFrame):
             self.X_predict_col_names = X.columns
@@ -297,11 +273,5 @@ class PrescriptiveTreeClassifier(ClassifierMixin, BaseEstimator):
 
         check_columns_match(self.X_col_labels, X)
 
-        prediction = get_predicted_value(
-            self.grb_model,
-            X,
-            self.b_value,
-            self.w_value,
-            self.p_value,
-        )
+        prediction = self._get_prediction(X)
         return prediction

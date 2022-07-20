@@ -1,21 +1,16 @@
 import numpy as np
 import pandas as pd
-from sklearn.base import BaseEstimator, ClassifierMixin
+
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
-from odtlearn.utils.StrongTreeFairOCT import FairOCT
-from odtlearn.utils.StrongTreeUtils import (
-    check_binary,
-    check_columns_match,
-    get_predicted_value,
-    print_tree_util,
-)
-from odtlearn.utils.Tree import Tree
-from odtlearn.utils.TreePlotter import MPLPlotter
+from odtlearn.tree_classifier import TreeClassifier
+from odtlearn.utils.strongtree_formulation import FairOCT
+from odtlearn.utils.Tree import _Tree
+from odtlearn.utils.validation import check_binary, check_columns_match
 
 
-class FairTreeClassifier(ClassifierMixin, BaseEstimator):
+class FairTreeClassifier(TreeClassifier):
     """An optimal and fair classification tree fitted on a given binary-valued
     data set. The fairness criteria enforced in the training step is one of statistical parity (SP),
     conditional statistical parity (CSP), predictive equality (PE), equal opportunity (EOpp) or equalized odds (EOdds).
@@ -81,46 +76,19 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         fairness_bound=1,
         num_threads=None,
         obj_mode="acc",
-    ):
-        # this is where we will initialize the values we want users to provide
-        self.depth = depth
-        self.time_limit = time_limit
+    ) -> None:
+        super().__init__(depth, time_limit, num_threads)
+
         self._lambda = _lambda
-        self.num_threads = num_threads
         self.obj_mode = obj_mode
 
         self.fairness_type = fairness_type
         self.fairness_bound = fairness_bound
         self.positive_class = positive_class
 
-        self.X_col_labels = None
-        self.X_col_dtypes = None
-        self.y_dtypes = None
-
         self.protect_feat_col_labels = None
         self.protect_feat_col_dtypes = None
         self.legit_factor_dtypes = None
-
-    def extract_metadata(self, X, y, protect_feat):
-        """A function for extracting metadata from the inputs before converting
-        them into numpy arrays to work with the sklearn API
-
-        """
-        if isinstance(X, pd.DataFrame):
-            self.X_col_labels = X.columns
-            self.X_col_dtypes = X.dtypes
-        else:
-            self.X_col_labels = np.array([f"X_{i}" for i in np.arange(0, X.shape[1])])
-
-        if isinstance(protect_feat, pd.DataFrame):
-            self.protect_feat_col_labels = protect_feat.columns
-            self.protect_feat_col_dtypes = protect_feat.dtypes
-        else:
-            self.protect_feat_col_labels = np.array(
-                [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
-            )
-
-        self.labels = np.unique(y)
 
     def fit(self, X, y, protect_feat, legit_factor, verbose=True):
         """A reference implementation of a fitting function.
@@ -144,7 +112,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             Returns self.
         """
         # store column information and dtypes if any
-        self.extract_metadata(X, y, protect_feat)
+        self.extract_metadata(X, y, protect_feat=protect_feat)
         # this function returns converted X and y but we retain metadata
         X, y = check_X_y(X, y)
         # Raises ValueError if there is a column that has values other than 0 or 1
@@ -163,7 +131,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
         self.legit_factor_ = legit_factor
 
         # Instantiate tree object here
-        tree = Tree(self.depth)
+        tree = _Tree(self.depth)
 
         self.grb_model = FairOCT(
             X,
@@ -183,7 +151,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             self.obj_mode,
             verbose,
         )
-        self.grb_model.create_primal_problem()
+        self.grb_model.create_main_problem()
         self.grb_model.model.update()
         self.grb_model.model.optimize()
 
@@ -215,7 +183,7 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
             seen during fit.
         """
         # Check is fit had been called
-        check_is_fitted(self, ["X_", "y_", "protect_feat_", "legit_factor_"])
+        check_is_fitted(self, ["grb_model"])
 
         if isinstance(X, pd.DataFrame):
             self.X_predict_col_names = X.columns
@@ -229,62 +197,9 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
 
         check_columns_match(self.X_col_labels, X)
 
-        prediction = get_predicted_value(
-            self.grb_model,
-            X,
-            self.b_value,
-            self.w_value,
-            self.p_value,
-        )
+        prediction = self._get_prediction(X)
 
         return prediction
-
-    def print_tree(self):
-        """
-        This function print the derived tree with the branching features and the predictions asserted for each node
-
-
-        Returns
-        -------
-        Print out the tree in the console
-        """
-
-        # Check is fit had been called
-        check_is_fitted(self, ["X_", "y_", "protect_feat_", "legit_factor_"])
-        print_tree_util(self.grb_model, self.b_value, self.w_value, self.p_value)
-
-    def plot_tree(
-        self,
-        label="all",
-        filled=True,
-        rounded=False,
-        precision=3,
-        ax=None,
-        fontsize=None,
-        color_dict={"node": None, "leaves": []},
-        edge_annotation=True,
-        arrow_annotation_font_scale=0.5,
-    ):
-
-        check_is_fitted(self, ["X_", "y_", "protect_feat_", "legit_factor_"])
-        exporter = MPLPlotter(
-            self.grb_model,
-            self.X_col_labels,
-            self.b_value,
-            self.w_value,
-            self.p_value,
-            self.grb_model.tree.depth,
-            self.classes_,
-            label=label,
-            filled=filled,
-            rounded=rounded,
-            precision=precision,
-            fontsize=fontsize,
-            color_dict=color_dict,
-            edge_annotation=edge_annotation,
-            arrow_annotation_font_scale=arrow_annotation_font_scale,
-        )
-        return exporter.export(ax=ax)
 
     def get_SP(self, protect_feat, y):
         """
@@ -394,42 +309,6 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
                         csp_dict[(p, f, t)] = csp_p_f_t
 
         return csp_dict
-
-    def fairness_metric_summary(self, metric, new_data=None):
-        check_is_fitted(self, ["X_", "y_", "protected_feat_", "legit_factor_"])
-        metric_names = ["SP", "CSP", "PE", "CPE"]
-        if new_data is None:
-            new_data = self.predict(self.X_)
-        if metric not in metric_names:
-            raise ValueError(
-                f"metric argument: '{metric}' does not match any of the options: {metric_names}"
-            )
-        if metric == "SP":
-            sp_df = pd.DataFrame(
-                self.get_SP(self.protect_feat_, new_data).items(),
-                columns=["(p,y)", "P(Y=y|P=p)"],
-            )
-            print(sp_df)
-        elif metric == "CSP":
-            csp_df = pd.DataFrame(
-                self.get_CSP(self.protect_feat_, self.legit_factor_, new_data).items(),
-                columns=["(p, f, y)", "P(Y=y|P=p, L=f)"],
-            )
-            print(csp_df)
-        elif metric == "PE":
-            pe_df = pd.DataFrame(
-                self.get_EqOdds(self.protect_feat_, self.y_, new_data).items(),
-                columns=["(p, y, y_pred)", "P(Y_pred=y_pred|P=p, Y=y)"],
-            )
-            print(pe_df)
-        elif metric == "CPE":
-            cpe_df = pd.DataFrame(
-                self.get_CondEqOdds(
-                    self.protect_feat_, self.legit_factor_, self.y_, new_data
-                ).items(),
-                columns=["(p, f, t, t_pred)" "P(Y_pred=y_pred|P=p, Y=y, L=f)"],
-            )
-            print(cpe_df)
 
     def get_EqOdds(self, protect_feat, y, y_pred):
         """
@@ -566,3 +445,39 @@ class FairTreeClassifier(ClassifierMixin, BaseEstimator):
                             ceq_dict[(p, f, t, t_pred)] = ceq_p_f_t_t_pred
 
         return ceq_dict
+
+    def fairness_metric_summary(self, metric, new_data=None):
+        check_is_fitted(self, ["X_", "y_", "protected_feat_", "legit_factor_"])
+        metric_names = ["SP", "CSP", "PE", "CPE"]
+        if new_data is None:
+            new_data = self.predict(self.X_)
+        if metric not in metric_names:
+            raise ValueError(
+                f"metric argument: '{metric}' does not match any of the options: {metric_names}"
+            )
+        if metric == "SP":
+            sp_df = pd.DataFrame(
+                self.get_SP(self.protect_feat_, new_data).items(),
+                columns=["(p,y)", "P(Y=y|P=p)"],
+            )
+            print(sp_df)
+        elif metric == "CSP":
+            csp_df = pd.DataFrame(
+                self.get_CSP(self.protect_feat_, self.legit_factor_, new_data).items(),
+                columns=["(p, f, y)", "P(Y=y|P=p, L=f)"],
+            )
+            print(csp_df)
+        elif metric == "PE":
+            pe_df = pd.DataFrame(
+                self.get_EqOdds(self.protect_feat_, self.y_, new_data).items(),
+                columns=["(p, y, y_pred)", "P(Y_pred=y_pred|P=p, Y=y)"],
+            )
+            print(pe_df)
+        elif metric == "CPE":
+            cpe_df = pd.DataFrame(
+                self.get_CondEqOdds(
+                    self.protect_feat_, self.legit_factor_, self.y_, new_data
+                ).items(),
+                columns=["(p, f, t, t_pred)" "P(Y_pred=y_pred|P=p, Y=y, L=f)"],
+            )
+            print(cpe_df)

@@ -1,38 +1,55 @@
-from gurobipy import GRB, LinExpr, quicksum
-import time
-import numpy as np
-import pandas as pd
 import copy
-import heapq
+
+import numpy as np
+from gurobipy import LinExpr, quicksum
+
+# helper functions for BenderOCT callback
 
 
-def check_integer(df):
-    if not np.array_equal(df.values, df.values.astype(int)):
-        raise ValueError("Found non-integer values.")
+def get_left_exp_integer(main_grb_obj, n, i):
+    lhs = quicksum(
+        -1 * main_grb_obj.b[n, f]
+        for f in main_grb_obj.X_col_labels
+        if main_grb_obj.X.at[i, f] == 0
+    )
+
+    return lhs
 
 
-def check_same_as_X(X, X_col_labels, G, G_label):
-    """Check if a DataFrame G has the columns of X"""
-    # Check if X has shape of G
-    if X.shape[1] != G.shape[1]:
-        raise ValueError(
-            f"Input covariates has {X.shape[1]} columns but {G_label} has {G.shape[1]} columns"
-        )
+def get_right_exp_integer(main_grb_obj, n, i):
+    lhs = quicksum(
+        -1 * main_grb_obj.b[n, f]
+        for f in main_grb_obj.X_col_labels
+        if main_grb_obj.X.at[i, f] == 1
+    )
 
-    # Check if X has same columns as G
-    if isinstance(G, pd.DataFrame):
-        if not np.array_equal(np.sort(X_col_labels), np.sort(G.columns)):
-            raise KeyError(
-                f"{G_label} should have the same columns as the input covariates"
-            )
-        return G
-    else:
-        # Check if X has default column labels or not
-        if not np.array_equal(X_col_labels, np.arange(0, G.shape[1])):
-            raise TypeError(
-                f"{G_label} should be a Pandas DataFrame with the same columns as the input covariates"
-            )
-        return pd.DataFrame(G, columns=np.arange(0, G.shape[1]))
+    return lhs
+
+
+def get_target_exp_integer(main_grb_obj, n, i):
+    label_i = main_grb_obj.y[i]
+    lhs = -1 * main_grb_obj.w[n, label_i]
+    return lhs
+
+
+def get_cut_integer(main_grb_obj, left, right, target, i):
+    lhs = LinExpr(0) + main_grb_obj.g[i]
+    for n in left:
+        tmp_lhs = get_left_exp_integer(main_grb_obj, n, i)
+        lhs = lhs + tmp_lhs
+
+    for n in right:
+        tmp_lhs = get_right_exp_integer(main_grb_obj, n, i)
+        lhs = lhs + tmp_lhs
+
+    for n in target:
+        tmp_lhs = get_target_exp_integer(main_grb_obj, n, i)
+        lhs = lhs + tmp_lhs
+
+    return lhs
+
+
+# helper functions for RobustTree callback
 
 
 def get_cut_expression(master, b, w, path, xi, v, i):
@@ -296,172 +313,3 @@ def shortest_path_solver(
             v = curr_v
 
     return best_path, best_cost, xi, v
-
-
-def subproblem(
-    master,
-    i,
-    terminal_nodes,
-    terminal_path_dict,
-    terminal_features_dict,
-    terminal_assignments_dict,
-    terminal_cutoffs_dict,
-    initial_xi={},
-    initial_mins={},
-    initial_maxes={},
-):
-    label_i = master.y[i]
-    target = []  # list of nodes whose edge to the sink is part of the min cut
-
-    # Solve shortest path problem via DFS w/ pruning
-    target, cost, xi, v = shortest_path_solver(
-        master,
-        i,
-        label_i,
-        terminal_nodes,
-        terminal_path_dict,
-        terminal_features_dict,
-        terminal_assignments_dict,
-        terminal_cutoffs_dict,
-        initial_xi,
-        initial_mins,
-        initial_maxes,
-    )
-
-    return target, xi, cost, v
-
-
-def mycallback(model, where):
-    """
-    This function is called by gurobi at every node through the branch-&-bound tree while we solve the model.
-    Using the argument "where" we can see where the callback has been called. We are specifically interested at nodes
-    where we get an integer solution for the master problem.
-    When we get an integer solution for b and p, for every datapoint we solve the subproblem which is a minimum cut and
-    check if g[i] <= value of subproblem[i]. If this is violated we add the corresponding benders constraint as lazy
-    constraint to the master problem and proceed. Whenever we have no violated constraint! It means that we have found
-    the optimal solution.
-    :param model: the gurobi model we are solving.
-    :param where: the node where the callback function is called from
-    :return:
-    """
-    if where == GRB.Callback.MIPSOL:
-        func_start_time = time.time()
-        model._callback_counter_integer += 1
-        # we need the value of b, w, and t
-        b = model.cbGetSolution(model._vars_b)
-        w = model.cbGetSolution(model._vars_w)
-        t = model.cbGetSolution(model._vars_t)
-
-        # Initialize a blank-slate xi
-        initial_xi = {}
-        for c in model._master.cat_features:
-            initial_xi[c] = 0
-
-        # Initialize dictionaries to store min and max values of each feature:
-        initial_mins = {}
-        initial_maxes = {}
-        for c in model._master.cat_features:
-            initial_mins[c] = model._master.min_values[c]
-            initial_maxes[c] = model._master.max_values[c]
-
-        whole_expr = LinExpr(0)  # Constraint RHS expression
-        priority_queue = []  # Stores elements of form (path_cost, index)
-        path_dict = {}  # Stores all paths from shortest path problem
-        xi_dict = (
-            {}
-        )  # Stores set of xi's from shortest path problem (feature perturbations)
-        v_dict = (
-            {}
-        )  # Stores set of v's from shortest path problem (label perturbations)
-        nom_path_dict = {}  # Stores set of nominal paths
-        correct_points = []  # List of indices of nominally correctly classified points
-
-        # Find nominal path for every data point
-        for i in model._master.datapoints:
-            nom_path, k = get_nominal_path(model._master, b, w, i)
-            if k != model._master.y[i]:
-                # Misclassified nominally - no need to check for shortest path
-                curr_expr = get_cut_expression(
-                    model._master, b, w, nom_path, initial_xi, False, i
-                )
-                whole_expr.add(curr_expr)
-                model.cbLazy(model._master.t[i] <= curr_expr)
-                model._total_cuts += 1
-            else:
-                # Correctly classified - put into pool of problems for shortest path
-                correct_points += [i]
-                nom_path_dict[i] = nom_path
-
-        # Solve shortest path problem for every data point
-        # Get all paths
-        (
-            terminal_nodes,
-            terminal_path_dict,
-            terminal_features_dict,
-            terminal_assignments_dict,
-            terminal_cutoffs_dict,
-        ) = get_all_terminal_paths(model._master, b, w)
-        for i in correct_points:
-            path, xi, cost, v = subproblem(
-                model._master,
-                i,
-                terminal_nodes,
-                terminal_path_dict,
-                terminal_features_dict,
-                terminal_assignments_dict,
-                terminal_cutoffs_dict,
-                initial_xi=copy.deepcopy(initial_xi),
-                initial_mins=copy.deepcopy(initial_mins),
-                initial_maxes=copy.deepcopy(initial_maxes),
-            )
-            heapq.heappush(priority_queue, (cost, i))
-            path_dict[i] = path
-            xi_dict[i] = xi
-            v_dict[i] = v
-
-        # Add points that are misclassified to the constraint RHS
-        total_cost = 0
-        while True:
-            if len(priority_queue) == 0:
-                break
-
-            # Get next least-cost point and see if still under epsilon budget
-            current_point = heapq.heappop(priority_queue)
-            curr_cost = current_point[0]
-            if curr_cost + total_cost > model._master.epsilon:
-                # Push point back into queue
-                heapq.heappush(priority_queue, current_point)
-                break
-            # Add RHS expression for point if still under budget
-            i = current_point[1]
-            whole_expr.add(
-                get_cut_expression(
-                    model._master, b, w, path_dict[i], xi_dict[i], v_dict[i], i
-                )
-            )
-            total_cost += curr_cost
-
-        added_cut = round(sum(t)) > len(
-            priority_queue
-        )  # current sum of t is larger than RHS -> violated constraint(s)
-        if added_cut:
-            while len(priority_queue) != 0:
-                current_point = heapq.heappop(priority_queue)
-                i = current_point[1]
-                whole_expr.add(
-                    get_cut_expression(
-                        model._master, b, w, nom_path_dict[i], initial_xi, False, i
-                    )
-                )
-            model.cbLazy(
-                quicksum(model._master.t[i] for i in model._master.datapoints)
-                <= whole_expr
-            )
-            model._total_cuts += 1
-
-        func_end_time = time.time()
-        func_time = func_end_time - func_start_time
-        model._total_callback_time_integer += func_time
-        if added_cut:
-            model._callback_counter_integer_success += 1
-            model._total_callback_time_integer_success += func_time

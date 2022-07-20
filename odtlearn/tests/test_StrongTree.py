@@ -1,16 +1,12 @@
-import pytest
 import numpy as np
 import pandas as pd
+import pytest
 from numpy.testing import assert_allclose
-from sklearn.datasets import load_iris
+
 from odtlearn.StrongTree import StrongTreeClassifier
 
 
-@pytest.fixture
-def data():
-    return load_iris(return_X_y=True)
-
-
+# fmt: off
 @pytest.fixture
 def synthetic_data_1():
     """
@@ -83,9 +79,9 @@ def synthetic_data_2():
     return X, y
 
 
-# Test that we raise a ValueError if X matrix has values other than zero or one
+# fmt: on
 def test_StrongTree_X_nonbinary_error():
-
+    # Test that we raise a ValueError if X matrix has values other than zero or one
     clf = StrongTreeClassifier(depth=1, time_limit=2, _lambda=1)
 
     with pytest.raises(

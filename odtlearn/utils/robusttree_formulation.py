@@ -1,8 +1,9 @@
-from gurobipy import Model, LinExpr, GRB, quicksum
-import numpy as np
+from gurobipy import GRB, LinExpr, quicksum
+
+from odtlearn.utils.problem_formulation import ProblemFormulation
 
 
-class RobustOCT:
+class RobustOCT(ProblemFormulation):
     def __init__(
         self,
         X,
@@ -13,32 +14,19 @@ class RobustOCT:
         costs,
         budget,
         time_limit,
-        threads,
+        num_threads,
         verbose,
-    ):
-        """
-        :param data: The training data
-        :param label: Name of the column representing the class label
-        :param tree: Tree object
-        :param time_limit: The given time limit for solving the MIP
-        :param costs: The costs of uncertainty
-        :param budget: The budget of uncertainty
-        """
+    ) -> None:
+        self.model_name = "RobustOCT"
+        super().__init__(
+            X, y, tree, X_col_labels, self.model_name, time_limit, num_threads, verbose
+        )
         self.cat_features = X_col_labels
-        self.X = X
-        self.y = y
         self.labels = labels
-
-        # datapoints contains the indicies of our training data
-        self.datapoints = np.arange(0, self.X.shape[0])
-        self.tree = tree
-
         # Regularization term: encourage less branching without sacrificing accuracy
         self.reg = 1 / (len(tree.Nodes) + 1)
 
-        """
-        Get range of data, and store indices of branching variables based on range
-        """
+        # Get range of data, and store indices of branching variables based on range
         min_values = X.min(axis=0)
         max_values = X.max(axis=0)
         f_theta_indices = []
@@ -57,9 +45,7 @@ class RobustOCT:
         self.f_theta_indices = f_theta_indices
         self.b_indices = b_indices
 
-        """
-        Create uncertainty set
-        """
+        # Create uncertainty set
         self.epsilon = budget  # Budget of uncertainty
         self.gammas = costs  # Cost of feature uncertainty
         self.eta = budget + 1  # Cost of label uncertainty - future work
@@ -68,37 +54,21 @@ class RobustOCT:
         self.t = 0
         self.b = 0
         self.w = 0
-
-        # Gurobi model
-        self.model = Model("RobustOCT")
-
-        if not verbose:
-            # supress all logging
-            self.model.params.OutputFlag = 0
-
         # The cuts we add in the callback function would be treated as lazy constraints
         self.model.params.LazyConstraints = 1
 
         """
-        To compare all approaches in a fair setting
-        we limit the solver to use only one thread to merely evaluate
-        the strength of the formulation.
-        """
-        if threads is not None:
-            self.model.params.Threads = threads
-
-        self.model.params.TimeLimit = time_limit
-
-        """
         The following variables are used for the Benders problem to keep track of the times we call the callback.
 
-        - counter_integer tracks number of times we call the callback from an integer node in the branch-&-bound tree
+        - counter_integer tracks number of times we call the callback from an integer node
+         in the branch-&-bound tree
             - time_integer tracks the associated time spent in the callback for these calls
-        - counter_general tracks number of times we call the callback from a non-integer node in the branch-&-bound tree
+        - counter_general tracks number of times we call the callback from a non-integer node
+         in the branch-&-bound tree
             - time_general tracks the associated time spent in the callback for these calls
 
-        the ones ending with success are related to success calls. By success we mean ending up adding a lazy constraint
-        to the model
+        the ones ending with success are related to success calls. By success we mean ending
+        up adding a lazy constraint to the model
         """
         self.model._total_callback_time_integer = 0
         self.model._total_callback_time_integer_success = 0
@@ -117,10 +87,7 @@ class RobustOCT:
         # We also pass the following information to the model as we need them in the callback
         self.model._master = self
 
-    ###########################################################
-    # Create the master problem
-    ###########################################################
-    def create_main_problem(self):
+    def define_variables(self):
         # define variables
 
         # t is the objective value of the problem
@@ -140,6 +107,7 @@ class RobustOCT:
         self.model._vars_b = self.b
         self.model._vars_w = self.w
 
+    def define_constraints(self):
         # define constraints
 
         # sum(b[n,f,theta], f, theta) + sum(w[n,k], k) = 1 for all n in nodes
@@ -157,6 +125,7 @@ class RobustOCT:
             (quicksum(self.w[n, k] for k in self.labels) == 1) for n in self.tree.Leaves
         )
 
+    def define_objective(self):
         # define objective function
         obj = LinExpr(0)
         for i in self.datapoints:

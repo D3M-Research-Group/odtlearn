@@ -1,24 +1,16 @@
 import numpy as np
 import pandas as pd
-from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.utils.multiclass import unique_labels
-from odtlearn.utils.StrongTreeUtils import (
-    check_columns_match,
-    check_binary,
-    benders_callback,
-    get_predicted_value,
-    print_tree_util,
-)
+from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
-# Include Tree.py, FlowOCT.py and BendersOCT.py in StrongTrees folder
-from odtlearn.utils.Tree import Tree
-from odtlearn.utils.StrongTreeFlowOCT import FlowOCT
-from odtlearn.utils.StrongTreeBendersOCT import BendersOCT
-from odtlearn.utils.TreePlotter import MPLPlotter
+from odtlearn.tree_classifier import TreeClassifier
+from odtlearn.utils.callbacks import benders_callback
+from odtlearn.utils.strongtree_formulation import BendersOCT, FlowOCT
+from odtlearn.utils.Tree import _Tree
+from odtlearn.utils.validation import check_binary, check_columns_match
 
 
-class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
+class StrongTreeClassifier(TreeClassifier):
     """A strong optimal classification tree fitted on a given binary-valued
     data set.
 
@@ -72,31 +64,11 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         benders_oct=True,
         obj_mode="acc",
         num_threads=None,
-    ):
-        # this is where we will initialize the values we want users to provide
-        self.depth = depth
-        self.time_limit = time_limit
-        self._lambda = _lambda
-        self.num_threads = num_threads
+    ) -> None:
+        super().__init__(depth, time_limit, num_threads)
         self.benders_oct = benders_oct
         self.obj_mode = obj_mode
-
-        self.X_col_labels = None
-        self.X_col_dtypes = None
-        self.y_dtypes = None
-
-    def extract_metadata(self, X, y):
-        """A function for extracting metadata from the inputs before converting
-        them into numpy arrays to work with the sklearn API
-
-        """
-        if isinstance(X, pd.DataFrame):
-            self.X_col_labels = X.columns
-            self.X_col_dtypes = X.dtypes
-        else:
-            self.X_col_labels = np.arange(0, X.shape[1])
-
-        self.labels = np.unique(y)
+        self._lambda = _lambda
 
     def fit(self, X, y, verbose=False):
         """Fit a StrongTree using the supplied data.
@@ -132,7 +104,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
         self.y_ = y
 
         # Instantiate tree object here
-        tree = Tree(self.depth)
+        tree = _Tree(self.depth)
 
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
@@ -145,9 +117,10 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.X_col_labels,
                 self.labels,
                 self._lambda,
+                self.obj_mode,
+                self.get_node_status,
                 self.time_limit,
                 self.num_threads,
-                self.obj_mode,
                 verbose,
             )
             self.grb_model.create_main_problem()
@@ -161,12 +134,12 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
                 self.X_col_labels,
                 self.labels,
                 self._lambda,
+                self.obj_mode,
                 self.time_limit,
                 self.num_threads,
-                self.obj_mode,
                 verbose,
             )
-            self.grb_model.create_primal_problem()
+            self.grb_model.create_main_problem()
             self.grb_model.model.update()
             self.grb_model.model.optimize()
 
@@ -197,7 +170,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
             seen during fit.
         """
         # Check is fit had been called
-        check_is_fitted(self, ["X_", "y_"])
+        check_is_fitted(self, ["grb_model"])
 
         if isinstance(X, pd.DataFrame):
             self.X_predict_col_names = X.columns
@@ -210,59 +183,7 @@ class StrongTreeClassifier(ClassifierMixin, BaseEstimator):
 
         check_columns_match(self.X_col_labels, X)
 
-        prediction = get_predicted_value(
-            self.grb_model,
-            X,
-            self.b_value,
-            self.w_value,
-            self.p_value,
-        )
+        # private function from TreeClassifier
+        prediction = self._get_prediction(X)
+
         return prediction
-
-    def print_tree(self):
-        """
-        This function print the derived tree with the branching features and the predictions asserted for each node
-
-
-        Returns
-        -------
-        Print out the tree in the console
-        """
-
-        # Check is fit had been called
-        check_is_fitted(self, ["X_", "y_"])
-        print_tree_util(self.grb_model, self.b_value, self.w_value, self.p_value)
-
-    def plot_tree(
-        self,
-        label="all",
-        filled=True,
-        rounded=False,
-        precision=3,
-        ax=None,
-        fontsize=None,
-        color_dict={"node": None, "leaves": []},
-        edge_annotation=True,
-        arrow_annotation_font_scale=0.5,
-        debug=False,
-    ):
-        check_is_fitted(self, ["X_", "y_"])
-        exporter = MPLPlotter(
-            self.grb_model,
-            self.X_col_labels,
-            self.b_value,
-            self.w_value,
-            self.p_value,
-            self.grb_model.tree.depth,
-            self.classes_,
-            label=label,
-            filled=filled,
-            rounded=rounded,
-            precision=precision,
-            fontsize=fontsize,
-            color_dict=color_dict,
-            edge_annotation=edge_annotation,
-            arrow_annotation_font_scale=arrow_annotation_font_scale,
-            debug=debug,
-        )
-        return exporter.export(ax=ax)

@@ -1,12 +1,9 @@
-"""
-This module formulate the FlowOCT problem in gurobipy.
-"""
-from gurobipy import Model, GRB, quicksum, LinExpr
-import numpy as np
-import pandas as pd
+from gurobipy import GRB, LinExpr, quicksum
+
+from odtlearn.utils.problem_formulation import ProblemFormulation
 
 
-class FlowOPT_Robust:
+class FlowOPT_Robust(ProblemFormulation):
     def __init__(
         self,
         X,
@@ -20,7 +17,8 @@ class FlowOPT_Robust:
         X_col_labels,
         time_limit,
         num_threads,
-    ):
+        verbose,
+    ) -> None:
         """
         :param X: numpy matrix or pandas dataframe of covariates
         :param t: numpy array or pandas series/dataframe of treatment assignments
@@ -35,19 +33,13 @@ class FlowOPT_Robust:
         :param time_limit: The given time limit for solving the MIP
         :param num_threads: Number of threads for the solver to use
         """
-        # self.mode = mode
-        self.X = pd.DataFrame(X, columns=X_col_labels)
-        self.y = y
-        self.t = t
-        self.ipw = ipw
+        self.model_name = "FlowOPT"
         self.y_hat = y_hat
         self.robust = robust
+
+        self.t = t
+        self.ipw = ipw
         self.treatments_set = treatments_set
-        self.X_col_labels = X_col_labels
-
-        self.datapoints = np.arange(0, self.X.shape[0])
-
-        self.tree = tree
 
         # Decision Variables
         self.b = 0
@@ -56,21 +48,11 @@ class FlowOPT_Robust:
         self.zeta = 0
         self.z = 0
 
-        # Gurobi model
-        self.model = Model("FlowOPT")
-        if num_threads is not None:
-            self.model.params.Threads = num_threads
-        self.model.params.TimeLimit = time_limit
+        super().__init__(
+            X, y, tree, X_col_labels, self.model_name, time_limit, num_threads, verbose
+        )
 
-    ###########################################################
-    # Create the MIP formulation
-    ###########################################################
-    def create_main_problem(self):
-        """
-        This function creates and return a gurobi model formulating
-        the FlowOPT_Robust problem
-        :return:  gurobi model object with the FlowOPT_Robust formulation
-        """
+    def define_variables(self):
         self.b = self.model.addVars(
             self.tree.Nodes, self.X_col_labels, vtype=GRB.BINARY, name="b"
         )
@@ -100,6 +82,7 @@ class FlowOPT_Robust:
             name="z",
         )
 
+    def define_constraints(self):
         # define constraints
         # z[i,n] = z[i,l(n)] + z[i,r(n)] + zeta[i,n]    forall i, n in Nodes
         for n in self.tree.Nodes:
@@ -178,6 +161,7 @@ class FlowOPT_Robust:
 
         self.model.addConstrs(self.z[i, 1] == 1 for i in self.datapoints)
 
+    def define_objective(self):
         # define objective function
         obj = LinExpr(0)
         for i in self.datapoints:
@@ -198,32 +182,24 @@ class FlowOPT_Robust:
         self.model.setObjective(obj, GRB.MAXIMIZE)
 
 
-class FlowOPT_IPW:
+class FlowOPT_IPW(ProblemFormulation):
     def __init__(
-        self, X, t, y, ipw, treatments_set, tree, X_col_labels, time_limit, num_threads
-    ):
-        """
-        :param X: numpy matrix or pandas dataframe of covariates
-        :param t: numpy array or pandas series/dataframe of treatment assignments
-        :param y: numpy array or pandas series/dataframe of observed outcomes
-        :param ipw: numpy array or pandas series/dataframe of inverse propensity weights
-        :param treatments_set: a list or set of all possible treatments
-        :param tree: Tree object
-        :param X_col_labels: a list of features in the covariate space X
-        :param time_limit: The given time limit for solving the MIP
-        :param num_threads: Number of threads for the solver to use
-        """
-        self.X = pd.DataFrame(X, columns=X_col_labels)
-        self.y = y
+        self,
+        X,
+        t,
+        y,
+        ipw,
+        treatments_set,
+        tree,
+        X_col_labels,
+        time_limit,
+        num_threads,
+        verbose,
+    ) -> None:
+        self.model_name = "IPW"
         self.t = t
         self.ipw = ipw
         self.treatments_set = treatments_set
-        self.X_col_labels = X_col_labels
-
-        # datapoints contains the indicies of our training data
-        self.datapoints = np.arange(0, self.X.shape[0])
-
-        self.tree = tree
 
         # Decision Variables
         self.b = 0
@@ -232,21 +208,11 @@ class FlowOPT_IPW:
         self.zeta = 0
         self.z = 0
 
-        # Gurobi model
-        self.model = Model("IPW")
-        if num_threads is not None:
-            self.model.params.Threads = num_threads
-        self.model.params.TimeLimit = time_limit
+        super().__init__(
+            X, y, tree, X_col_labels, self.model_name, time_limit, num_threads, verbose
+        )
 
-    ###########################################################
-    # Create the MIP formulation
-    ###########################################################
-    def create_main_problem(self):
-        """
-        This function creates and return a gurobi model formulating
-        the FlowOPT_IPW problem
-        :return:  gurobi model object with the FlowOPT_IPW formulation
-        """
+    def define_variables(self):
         # define variables
 
         self.b = self.model.addVars(
@@ -277,6 +243,7 @@ class FlowOPT_IPW:
             name="z",
         )
 
+    def define_constraints(self):
         # define constraints
 
         # z[i,n] = z[i,l(n)] + z[i,r(n)] + zeta[i,n]    forall i, n in Nodes
@@ -349,6 +316,7 @@ class FlowOPT_IPW:
                 self.zeta[i, n] == self.z[i, n] for i in self.datapoints
             )
 
+    def define_objective(self):
         # define objective function
         obj = LinExpr(0)
         for i in self.datapoints:

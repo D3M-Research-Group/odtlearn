@@ -11,7 +11,7 @@ In this class we assume that we have a complete binary tree; we only receive the
 import numpy as np
 
 
-class Tree:
+class _Tree:
     def __init__(self, d):
         self.depth = d
         self.Nodes = [i for i in range(1, np.power(2, d))]
