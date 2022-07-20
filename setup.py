@@ -57,5 +57,12 @@ setup(
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,
     include_package_data=True,
-    package_data={"": ["data/*.csv", "data/*.npz"]},
+    package_data={
+        "": [
+            "data/*.csv",
+            "data/*.npz",
+            "data/prescriptive_tree/test_v2_200.csv",
+            "data/prescriptive_tree/train_v2_100.csv",
+        ]
+    },
 )
