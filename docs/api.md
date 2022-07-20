@@ -14,8 +14,6 @@ as the class and function raw specifications may not be enough to give full guid
    :template: class.rst
 
    odtlearn.StrongTree.StrongTreeClassifier
-
-
 ```
 
 ## FairTree
@@ -46,4 +44,14 @@ as the class and function raw specifications may not be enough to give full guid
    :template: class.rst
 
    odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier
+```
+
+## TreeClassifier
+
+```{eval-rst}
+.. autosummary::
+   :toctree: generated/
+   :template: class.rst
+
+   odtlearn.tree_classifier.TreeClassifier
 ```
