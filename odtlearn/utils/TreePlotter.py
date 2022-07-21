@@ -85,6 +85,7 @@ class MPLPlotter(_MPLTreeExporter):
                 print(f"Node id: {node_id}")
                 print(f"Leaf value: {value}")
                 print(f"value passed to color_dict: {int(value - 1)}")
+                print(self.color_dict)
             color = self.color_dict["leaves"][int(value - 1)]
         if branching:
             color = self.color_dict["node"]
