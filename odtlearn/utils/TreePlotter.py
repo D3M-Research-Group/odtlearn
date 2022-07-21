@@ -22,7 +22,7 @@ class MPLPlotter(_MPLTreeExporter):
         color_dict={
             "node": None,
             "leaves": [],
-        },  # TO-DO: document behavior of this dict
+        },
         edge_annotation=True,
         arrow_annotation_font_scale=0.5,
         debug=False,
@@ -40,6 +40,7 @@ class MPLPlotter(_MPLTreeExporter):
         self.color_options = _color_brew(len(self.classes) + 1)
         print(self.color_options)
         self.color_dict = color_dict
+        print(self.color_dict)
         if self.color_dict["node"] is None:
             self.color_dict["node"] = self.color_options[-1]
         if len(self.color_dict["leaves"]) == 0:
