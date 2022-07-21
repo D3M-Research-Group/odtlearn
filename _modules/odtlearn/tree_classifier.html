@@ -540,6 +540,7 @@
 <span class="sd">            If None, the colors are chosen using the sklearn `plot_tree` color palette</span>
 <span class="sd">        """</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"grb_model"</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">color_dict</span><span class="p">)</span>
         <span class="n">exporter</span> <span class="o">=</span> <span class="n">MPLPlotter</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
@@ -550,6 +551,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">treatments</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">ModelName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"FlowOPT"</span><span class="p">,</span> <span class="s2">"IPW"</span><span class="p">]</span>
             <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_node_status</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
             <span class="n">filled</span><span class="o">=</span><span class="n">filled</span><span class="p">,</span>
             <span class="n">rounded</span><span class="o">=</span><span class="n">rounded</span><span class="p">,</span>
@@ -559,7 +561,6 @@
             <span class="n">edge_annotation</span><span class="o">=</span><span class="n">edge_annotation</span><span class="p">,</span>
             <span class="n">arrow_annotation_font_scale</span><span class="o">=</span><span class="n">arrow_annotation_font_scale</span><span class="p">,</span>
             <span class="n">debug</span><span class="o">=</span><span class="n">debug</span><span class="p">,</span>
-            <span class="n">get_node_status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_node_status</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span></div></div>
 </pre></div>
