@@ -320,7 +320,7 @@ class TreeClassifier(ClassifierMixin, BaseEstimator):
             If None, the colors are chosen using the sklearn `plot_tree` color palette
         """
         check_is_fitted(self, ["grb_model"])
-        print(color_dict)
+        print(f"color dict in tree_classifier: {color_dict}")
         exporter = MPLPlotter(
             self.grb_model,
             self.X_col_labels,
