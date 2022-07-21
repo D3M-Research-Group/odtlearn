@@ -38,14 +38,11 @@ class MPLPlotter(_MPLTreeExporter):
         self.w = w
         self.p = p
         self.color_options = _color_brew(len(self.classes) + 1)
-        print(f"color options: {self.color_options}")
         self.color_dict = color_dict
-        print(f"color dict before: {self.color_dict}")
         if self.color_dict["node"] is None:
             self.color_dict["node"] = self.color_options[-1]
         if len(self.color_dict["leaves"]) == 0:
             self.color_dict["leaves"] = self.color_options[:-1]
-        print(f"color dict after: {self.color_dict}")
         self.edge_annotation = edge_annotation
         self.arrow_annotation_font_scale = arrow_annotation_font_scale
         self.debug = debug
