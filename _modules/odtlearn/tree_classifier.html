@@ -540,7 +540,7 @@
 <span class="sd">            If None, the colors are chosen using the sklearn `plot_tree` color palette</span>
 <span class="sd">        """</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"grb_model"</span><span class="p">])</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">color_dict</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"color dict in tree_classifier: </span><span class="si">{</span><span class="n">color_dict</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">exporter</span> <span class="o">=</span> <span class="n">MPLPlotter</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">grb_model</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">X_col_labels</span><span class="p">,</span>
