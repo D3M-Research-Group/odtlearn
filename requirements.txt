@@ -6,3 +6,4 @@ pytest
 pytest-cov
 pandas
 gurobipy
+seaborn
