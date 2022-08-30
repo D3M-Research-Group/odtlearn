@@ -101,10 +101,12 @@ def get_all_terminal_paths(
     feature_path_dict={},
     assignment_dict={},
     cutoff_dict={},
+    cat_dict={},
     curr_node=1,
     curr_path=[1],
     curr_feature_path=[],
     curr_cutoff_path=[],
+    curr_cat_path=[],
 ):
     """find all terminal paths"""
     new_path_dict = copy.deepcopy(path_dict)
@@ -112,6 +114,7 @@ def get_all_terminal_paths(
     new_feature_path_dict = copy.deepcopy(feature_path_dict)
     new_assignment_dict = copy.deepcopy(assignment_dict)
     new_cutoff_dict = copy.deepcopy(cutoff_dict)
+    new_cat_dict = copy.deepcopy(cat_dict)
 
     for k in master.labels:
         if w[curr_node, k] > 0.5:  # w[n,k] == 1
@@ -121,21 +124,28 @@ def get_all_terminal_paths(
             new_feature_path_dict[curr_node] = curr_feature_path
             new_assignment_dict[curr_node] = k
             new_cutoff_dict[curr_node] = curr_cutoff_path
+            new_cat_dict[curr_node] = curr_cat_path
             return (
                 new_terminal_nodes,
                 new_path_dict,
                 new_feature_path_dict,
                 new_assignment_dict,
                 new_cutoff_dict,
+                new_cat_dict,
             )
 
     # b[n,f,theta]== 1
     curr_feature = None
     curr_theta = None
+    curr_cat = False
     for (f, theta) in master.f_theta_indices:
         if b[curr_node, f, theta] > 0.5:
             curr_feature = f
             curr_theta = theta
+            if f in master.inverse_categories.keys():
+                curr_cat = master.inverse_categories[f]
+            else:
+                curr_cat = ""
             break
 
     # Go left
@@ -147,6 +157,7 @@ def get_all_terminal_paths(
         left_feature,
         left_assign,
         left_cutoff,
+        left_cat,
     ) = get_all_terminal_paths(
         master,
         b,
@@ -156,10 +167,12 @@ def get_all_terminal_paths(
         feature_path_dict=feature_path_dict,
         assignment_dict=assignment_dict,
         cutoff_dict=cutoff_dict,
+        cat_dict=cat_dict,
         curr_node=left_node,
         curr_path=left_path,
         curr_feature_path=curr_feature_path + [curr_feature],
         curr_cutoff_path=curr_cutoff_path + [curr_theta],
+        curr_cat_path=curr_cat_path + [curr_cat],
     )
 
     # Go right
@@ -171,6 +184,7 @@ def get_all_terminal_paths(
         right_feature,
         right_assign,
         right_cutoff,
+        right_cat,
     ) = get_all_terminal_paths(
         master,
         b,
@@ -180,10 +194,12 @@ def get_all_terminal_paths(
         feature_path_dict=feature_path_dict,
         assignment_dict=assignment_dict,
         cutoff_dict=cutoff_dict,
+        cat_dict=cat_dict,
         curr_node=right_node,
         curr_path=right_path,
         curr_feature_path=curr_feature_path + [curr_feature],
         curr_cutoff_path=curr_cutoff_path + [curr_theta],
+        curr_cat_path=curr_cat_path + [curr_cat],
     )
 
     new_path_dict.update(left_paths)
@@ -196,6 +212,8 @@ def get_all_terminal_paths(
     new_assignment_dict.update(right_assign)
     new_cutoff_dict.update(left_cutoff)
     new_cutoff_dict.update(right_cutoff)
+    new_cat_dict.update(left_cat)
+    new_cat_dict.update(right_cat)
 
     return (
         new_terminal_nodes,
@@ -203,6 +221,7 @@ def get_all_terminal_paths(
         new_feature_path_dict,
         new_assignment_dict,
         new_cutoff_dict,
+        new_cat_dict,
     )
 
 
@@ -237,6 +256,7 @@ def shortest_path_solver(
     terminal_features_dict,
     terminal_assignments_dict,
     terminal_cutoffs_dict,
+    terminal_cat_dict,
     initial_xi,
     initial_mins,
     initial_maxes,
@@ -250,6 +270,7 @@ def shortest_path_solver(
         # Get cost of path
         curr_features = terminal_features_dict[j]
         curr_cutoffs = terminal_cutoffs_dict[j]
+        curr_cat = terminal_cat_dict[j]
         curr_xi = copy.deepcopy(initial_xi)
         curr_v = terminal_assignments_dict[j] == label
         curr_mins = copy.deepcopy(initial_mins)
@@ -265,6 +286,7 @@ def shortest_path_solver(
             theta = curr_cutoffs[x]
             min_f = curr_mins[f]
             max_f = curr_maxes[f]
+            cat_f = curr_cat[x]
 
             curr_value = master.X.at[i, f] + curr_xi[f]
             # Went right
@@ -275,12 +297,43 @@ def shortest_path_solver(
                         # Impossible path
                         best_so_far = False
                         break
-                    # x + delta_x = theta + 1
-                    delta_x = theta - master.X.at[i, f] + 1  # positive value
+                    if cat_f != "":
+                        # Categorical Feature
+                        incur_cost = True
+                        for cat_value in master.model.categories[cat_f]:
+                            if curr_xi[cat_value] != 0:
+                                # Don't need to add additional cost
+                                incur_cost = False
+                            if cat_value == f:
+                                # Changing from 0 -> 1
+                                curr_xi[f] = 1
+                                curr_mins[cat_value] = 1
+                            elif master.X.at[i, cat_value] == 1:
+                                # Current value of category
+                                if curr_mins[cat_value] == 0:
+                                    # Impossible path
+                                    best_so_far = False
+                                    break
+                                curr_maxes[cat_value] = 0
+                                curr_xi[cat_value] = -1
+                            else:
+                                # Not current value of category
+                                if curr_mins[cat_value] == 1:
+                                    # Impossible path
+                                    best_so_far = False
+                                    break
+                                curr_maxes[cat_value] = 0
+                        if not best_so_far:
+                            break
+                        if incur_cost:
+                            curr_cost += 2 * master.gammas.loc[i][f]
+                    else:
+                        # x + delta_x = theta + 1
+                        delta_x = theta - master.X.at[i, f] + 1  # positive value
 
-                    # cost increases by gamma per unit increase of xi
-                    curr_cost += master.gammas.loc[i][f] * (delta_x - curr_xi[f])
-                    curr_xi[f] = delta_x
+                        # cost increases by gamma per unit increase of xi
+                        curr_cost += master.gammas.loc[i][f] * (delta_x - curr_xi[f])
+                        curr_xi[f] = delta_x
 
                 # Update bounds
                 curr_mins[f] = max(curr_mins[f], theta + 1)
@@ -292,6 +345,29 @@ def shortest_path_solver(
                         # Impossible path
                         best_so_far = False
                         break
+                    if cat_f != "":
+                        # Categorical Feature
+                        incur_cost = True
+                        changed = False
+                        for cat_value in master.model.categories[cat_f]:
+                            if curr_xi[cat_value] != 0:
+                                # Don't need to add additional cost
+                                incur_cost = False
+                            if cat_value == f:
+                                # Changing from 1 -> 0
+                                curr_xi[f] = -1
+                                curr_maxes[cat_value] = 0
+                            elif not changed and curr_maxes[cat_value] == 1:
+                                # Select this as new value
+                                # Do NOT update mins in case want to change later
+                                curr_xi[f] = 1
+                                changed = True
+                        if not changed:
+                            # Could not find a value to set the categorical feature
+                            best_so_far = False
+                            break
+                        if incur_cost:
+                            curr_cost += 2 * master.gammas.loc[i][f]
                     # x + delta_x = theta
                     delta_x = theta - master.X.at[i, f]  # negative value
 
