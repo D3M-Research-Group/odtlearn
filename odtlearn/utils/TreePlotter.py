@@ -1,4 +1,5 @@
-from sklearn.tree._export import _color_brew, _MPLTreeExporter
+from seaborn import color_palette
+from sklearn.tree._export import _MPLTreeExporter
 
 from odtlearn.utils._reingold_tilford import Tree, buchheim
 
@@ -37,7 +38,11 @@ class MPLPlotter(_MPLTreeExporter):
         self.b = b
         self.w = w
         self.p = p
-        self.color_options = _color_brew(len(self.classes) + 1)
+        self.color_options = [
+            [int(value * 255) for value in color]
+            for color in color_palette("husl", len(self.classes) + 1)
+        ]
+        # self.color_options = _color_brew(len(self.classes) + 1)
         self.color_dict = color_dict
         if self.color_dict["node"] is None:
             self.color_dict["node"] = self.color_options[-1]
