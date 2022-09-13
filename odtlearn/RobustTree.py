@@ -53,7 +53,9 @@ class RobustTreeClassifier(TreeClassifier):
     def __init__(self, depth=1, time_limit=1800, num_threads=None) -> None:
         super().__init__(depth, time_limit, num_threads)
 
-    def probabilities_to_robust_parameters(self, prob, threshold=1):
+    def probabilities_to_robust_parameters(
+        self, prob, binary=[], categories={}, threshold=1
+    ):
         """Convert probabilities of certainty and levels of robustness
         to costs and budget values for fitting a robust tree
 
@@ -63,6 +65,10 @@ class RobustTreeClassifier(TreeClassifier):
             A 2D matrix of probabilities where the value of row i and column f
             is the probability that the value for sample i and feature f is
             certain. Each entry must be between 0 and 1 (inclusive).
+        binary: array-like
+            A list of all binary features
+        categories: dict of str: array-like
+            The mapping of categorical features to their corresponding feature names
         threshold : float, default = 1
             The threshold that tunes the level of robustness, between 0 (exclusive,
             complete robustness) and 1 (inclusive, no robustness).
@@ -76,6 +82,25 @@ class RobustTreeClassifier(TreeClassifier):
         """
         costs = deepcopy(prob)  # Deepcopy probabilities
 
+        all_cat_values = []
+        for cat_f in categories.keys():
+            cat_values = categories[cat_f]
+            all_cat_values += cat_values
+
+            # Ensure that all probabilities for each categorical feature is the same
+            subset_costs = costs[cat_values]
+            if not subset_costs.eq(subset_costs.iloc[:, 0], axis=0).all().all():
+                raise ValueError(
+                    "Probabilities must be equal across all values of categoricals"
+                )
+
+        # budget calculation
+        if threshold <= 0 or threshold > 1:
+            raise ValueError(
+                "Threshold must be between 0 (exclusive) and 1 (inclusive)"
+            )
+        budget = -1 * costs.shape[0] * np.log(threshold)
+
         # costs calculation
         if not isinstance(costs, pd.DataFrame):
             col_labels = np.arange(0, costs.shape[1])
@@ -85,19 +110,22 @@ class RobustTreeClassifier(TreeClassifier):
                 raise ValueError(
                     "Probabilities must be between 0 (inclusive) and 1 (inclusive)"
                 )
-        # budget calculation
-        if threshold <= 0 or threshold > 1:
-            raise ValueError(
-                "Threshold must be between 0 (exclusive) and 1 (inclusive)"
-            )
-        budget = -1 * costs.shape[0] * np.log(threshold)
-
-        # Default probability of certainty of 1 as budget + 1
-        costs = costs.applymap(lambda x: budget + 1 if x == 1 else -1 * np.log(1 - x))
+            if col in binary:
+                costs[col].apply(
+                    lambda x: budget + 1 if x == 1 else -1 * np.log(2 * (1 - x))
+                )
+            elif col in all_cat_values:
+                costs[col].apply(
+                    lambda x: budget + 1 if x == 1 else -0.5 * np.log(2 * (1 - x))
+                )
+            else:  # Integer-valued feature
+                costs[col] = costs[col].apply(
+                    lambda x: budget + 1 if x == 1 else -1 * np.log(1 - x)
+                )
 
         return costs, budget
 
-    def fit(self, X, y, costs=None, budget=-1, verbose=True):
+    def fit(self, X, y, costs=None, budget=-1, categories={}, verbose=True):
         """Fit an optimal robust classification tree given data, labels,
         costs of uncertainty, and budget of uncertainty
 
@@ -111,6 +139,8 @@ class RobustTreeClassifier(TreeClassifier):
             The costs of uncertainty
         budget : float, default = -1
             The budget of uncertainty
+        categories: dict, (key, value) = (str, array-like)
+            The mapping of categorical features to their corresponding feature names
         verbose : bool, default = True
             Flag for logging Gurobi outputs
 
@@ -154,6 +184,8 @@ class RobustTreeClassifier(TreeClassifier):
         # Budget of uncertainty
         self.budget = budget
 
+        self.categories = categories
+
         # Code for setting up and running the MIP goes here.
         # Note that we are taking X and y as array-like objects
         self.start_time = time.time()
@@ -165,6 +197,7 @@ class RobustTreeClassifier(TreeClassifier):
             self.classes_,
             self.costs,
             self.budget,
+            self.categories,
             self.time_limit,
             self.num_threads,
             verbose,

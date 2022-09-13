@@ -109,6 +109,7 @@ def robust_tree_subproblem(
     terminal_features_dict,
     terminal_assignments_dict,
     terminal_cutoffs_dict,
+    terminal_cat_dict,
     initial_xi={},
     initial_mins={},
     initial_maxes={},
@@ -126,6 +127,7 @@ def robust_tree_subproblem(
         terminal_features_dict,
         terminal_assignments_dict,
         terminal_cutoffs_dict,
+        terminal_cat_dict,
         initial_xi,
         initial_mins,
         initial_maxes,
@@ -203,6 +205,7 @@ def robust_tree_callback(model, where):
             terminal_features_dict,
             terminal_assignments_dict,
             terminal_cutoffs_dict,
+            terminal_cat_dict,
         ) = get_all_terminal_paths(model._master, b, w)
         for i in correct_points:
             path, xi, cost, v = robust_tree_subproblem(
@@ -213,6 +216,7 @@ def robust_tree_callback(model, where):
                 terminal_features_dict,
                 terminal_assignments_dict,
                 terminal_cutoffs_dict,
+                terminal_cat_dict,
                 initial_xi=copy.deepcopy(initial_xi),
                 initial_mins=copy.deepcopy(initial_mins),
                 initial_maxes=copy.deepcopy(initial_maxes),

@@ -70,6 +70,58 @@ def synthetic_costs_1():
     return costs
 
 
+@pytest.fixture
+def synthetic_data_2():
+    X = np.array(
+        [
+            [0, 0, 0, 1],
+            [0, 0, 1, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+            [0, 0, 1, 0],
+            [0, 0, 1, 0],
+            [0, 0, 1, 0],
+            [1, 0, 0, 1],
+            [1, 0, 1, 0],
+            [1, 0, 0, 1],
+            [1, 1, 0, 0],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+        ]
+    )
+    y = np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])
+
+    return X, y
+
+
+@pytest.fixture
+def synthetic_costs_2():
+    """Uncertainty in 5 points at [0,0] on X1 can cause it to flip
+    to [1,0] if needed to misclassify
+    Uncertainty in 1 point at [1,1] on X2 can cause it to flip
+    to another value if needed to misclassify
+    All other points certain
+    """
+    costs = np.array(
+        [
+            [1, 4, 4, 4],
+            [1, 4, 4, 4],
+            [1, 4, 4, 4],
+            [1, 4, 4, 4],
+            [1, 4, 4, 4],
+            [4, 4, 4, 4],
+            [4, 4, 4, 4],
+            [4, 4, 4, 4],
+            [4, 4, 4, 4],
+            [4, 4, 4, 4],
+            [4, 1, 1, 1],
+            [4, 4, 4, 4],
+            [4, 4, 4, 4],
+        ]
+    )
+    return costs
+
+
 def test_RobustTree_X_noninteger_error():
     """Test whether X is integer-valued"""
 
@@ -299,3 +351,35 @@ def test_RobustTree_uncertainty_correctness(
     )
     robust_classifier.fit(X, y, costs=costs, budget=budget, verbose=False)
     assert_allclose(robust_classifier.predict(X), expected_pred)
+
+
+@pytest.mark.parametrize(
+    "d, budget",
+    [
+        (0, 2),
+        (1, 2),
+        (2, 2),
+        (2, 5),
+    ],
+)
+@pytest.mark.test_gurobi
+def test_RobustTree_categoricals_success(
+    synthetic_data_2, synthetic_costs_2, d, budget
+):
+    X, y = synthetic_data_2
+    X = pd.DataFrame(X, columns=["x1", "x2.1", "x2.2", "x2.3"])
+    costs = pd.DataFrame(synthetic_costs_2, columns=["x1", "x2.1", "x2.2", "x2.3"])
+    robust_classifier = RobustTreeClassifier(
+        depth=d,
+        time_limit=100,
+    )
+    categories = {"x2": ["x2.1", "x2.2", "x2.3"]}
+    robust_classifier.fit(
+        X,
+        y,
+        costs=costs,
+        budget=budget,
+        categories=categories,
+        verbose=False,
+    )
+    assert hasattr(robust_classifier, "grb_model")

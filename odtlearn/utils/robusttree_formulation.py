@@ -13,6 +13,7 @@ class RobustOCT(ProblemFormulation):
         labels,
         costs,
         budget,
+        categories,
         time_limit,
         num_threads,
         verbose,
@@ -25,6 +26,13 @@ class RobustOCT(ProblemFormulation):
         self.labels = labels
         # Regularization term: encourage less branching without sacrificing accuracy
         self.reg = 1 / (len(tree.Nodes) + 1)
+
+        self.categories = categories
+        # Make an inverse of categories for faster lookup
+        self.inverse_categories = {}
+        for k in categories.keys():
+            for f in k:
+                self.inverse_categories[f] = k
 
         # Get range of data, and store indices of branching variables based on range
         min_values = X.min(axis=0)
