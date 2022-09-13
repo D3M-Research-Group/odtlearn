@@ -364,12 +364,21 @@ def test_RobustTree_uncertainty_correctness(
 )
 @pytest.mark.test_gurobi
 def test_RobustTree_categoricals_success(
-    synthetic_data_1, synthetic_costs_1, d, budget
+    synthetic_data_2, synthetic_costs_2, d, budget
 ):
-    X, y = synthetic_data_1
+    X, y = synthetic_data_2
+    X = pd.DataFrame(X, columns=["x1", "x2.1", "x2.2", "x2.3"])
     robust_classifier = RobustTreeClassifier(
         depth=d,
         time_limit=100,
     )
-    robust_classifier.fit(X, y, costs=synthetic_costs_1, budget=budget, verbose=False)
+    categories = {"x2": ["x2.1", "x2.2", "x2.3"]}
+    robust_classifier.fit(
+        X,
+        y,
+        costs=synthetic_costs_2,
+        budget=budget,
+        categories=categories,
+        verbose=False,
+    )
     assert hasattr(robust_classifier, "grb_model")
