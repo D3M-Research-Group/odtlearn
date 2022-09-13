@@ -220,7 +220,6 @@
           <h1>Source code for odtlearn.FairTree</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">check_X_y</span>
 
@@ -667,7 +666,7 @@
         <span class="k">return</span> <span class="n">ceq_dict</span></div>
 
     <span class="k">def</span> <span class="nf">fairness_metric_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">new_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"X_"</span><span class="p">,</span> <span class="s2">"y_"</span><span class="p">,</span> <span class="s2">"protected_feat_"</span><span class="p">,</span> <span class="s2">"legit_factor_"</span><span class="p">])</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"X_"</span><span class="p">,</span> <span class="s2">"y_"</span><span class="p">,</span> <span class="s2">"protect_feat_"</span><span class="p">,</span> <span class="s2">"legit_factor_"</span><span class="p">])</span>
         <span class="n">metric_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"SP"</span><span class="p">,</span> <span class="s2">"CSP"</span><span class="p">,</span> <span class="s2">"PE"</span><span class="p">,</span> <span class="s2">"CPE"</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">new_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">new_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_</span><span class="p">)</span>
