@@ -368,6 +368,7 @@ def test_RobustTree_categoricals_success(
 ):
     X, y = synthetic_data_2
     X = pd.DataFrame(X, columns=["x1", "x2.1", "x2.2", "x2.3"])
+    costs = pd.DataFrame(synthetic_costs_2, columns=["x1", "x2.1", "x2.2", "x2.3"])
     robust_classifier = RobustTreeClassifier(
         depth=d,
         time_limit=100,
@@ -376,7 +377,7 @@ def test_RobustTree_categoricals_success(
     robust_classifier.fit(
         X,
         y,
-        costs=synthetic_costs_2,
+        costs=costs,
         budget=budget,
         categories=categories,
         verbose=False,
