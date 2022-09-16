@@ -5,7 +5,7 @@ from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 from odtlearn.tree_classifier import TreeClassifier
 from odtlearn.utils.callbacks import benders_callback
-from odtlearn.utils.strongtree_formulation import BendersOCT, FlowOCT
+from odtlearn.utils.classification_formulation import BendersOCT, FlowOCT
 from odtlearn.utils.Tree import _Tree
 from odtlearn.utils.validation import check_binary, check_columns_match
 
