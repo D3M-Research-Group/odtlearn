@@ -13,9 +13,10 @@ class ProblemFormulation(ABC):
         :param X: numpy matrix of covariates
         :param y: numpy array of class labels
         :param tree: Tree object
-        :param _lambda: The regularization parameter in the objective
+        :param X_col_labels: a list of features in the covariate space X
         :param model_name: str name of Gurobi model
         :param time_limit: The given time limit for solving the MIP
+        :param num_threads: Number of threads for the solver to use
         :param verbose: Display Gurobi model output
         """
         self.X = pd.DataFrame(X, columns=X_col_labels)
