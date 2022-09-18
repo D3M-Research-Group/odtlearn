@@ -36,19 +36,13 @@ class FlowOCTMultipleNode(ClassificationProblem):
         X_col_labels,
         labels,
         _lambda,
+        model_name,
         time_limit,
         num_threads,
         verbose,
     ) -> None:
 
-        self.b = 0
-        self.p = 0
-        self.w = 0
-        self.zeta = 0
-        self.z = 0
         self._lambda = _lambda
-
-        self.model_name = "FairOCT"
 
         super().__init__(
             X,
@@ -56,7 +50,7 @@ class FlowOCTMultipleNode(ClassificationProblem):
             tree,
             X_col_labels,
             labels,
-            self.model_name,
+            model_name,
             time_limit,
             num_threads,
             verbose,
@@ -226,6 +220,7 @@ class FairOCT(FlowOCTMultipleNode):
         if obj_mode = balance we maximize the balanced acc
         :param verbose: Display Gurobi model output
         """
+        self.model_name = "FairOCT"
         super().__init__(
             X,
             y,
@@ -233,6 +228,7 @@ class FairOCT(FlowOCTMultipleNode):
             X_col_labels,
             labels,
             _lambda,
+            self.model_name,
             time_limit,
             num_threads,
             verbose,
@@ -437,28 +433,21 @@ class FlowOCTSingleNode(ClassificationProblem):
         X_col_labels,
         labels,
         _lambda,
+        model_name,
         time_limit,
         num_threads,
         verbose,
     ) -> None:
 
-        self.b = 0
-        self.p = 0
-        self.w = 0
-        self.zeta = 0
-        self.z = 0
-
         self._lambda = _lambda
-        # self.labels = labels
 
-        self.model_name = "FlowOCT"
         super().__init__(
             X,
             y,
             tree,
             X_col_labels,
             labels,
-            self.model_name,
+            model_name,
             time_limit,
             num_threads,
             verbose,
@@ -597,17 +586,19 @@ class FlowOCT(FlowOCTSingleNode):
         num_threads,
         verbose,
     ) -> None:
-        self.b = 0
-        self.p = 0
-        self.w = 0
-        self.zeta = 0
-        self.z = 0
-
-        self._lambda = _lambda
+        self.model_name = "FlowOCT"
         self.obj_mode = obj_mode
-        self.labels = labels
         super().__init__(
-            X, y, tree, X_col_labels, labels, _lambda, time_limit, num_threads, verbose
+            X,
+            y,
+            tree,
+            X_col_labels,
+            labels,
+            _lambda,
+            self.model_name,
+            time_limit,
+            num_threads,
+            verbose,
         )
 
     def define_objective(self):
@@ -678,9 +669,6 @@ class BendersOCT(ClassificationProblem):
         )
 
         self.g = 0
-        self.b = 0
-        self.p = 0
-        self.w = 0
 
         # The cuts we add in the callback function would be treated as lazy constraints
         self.model.params.LazyConstraints = 1
@@ -865,10 +853,8 @@ class RobustOCT(ClassificationProblem):
         self.gammas = costs  # Cost of feature uncertainty
         self.eta = budget + 1  # Cost of label uncertainty - future work
 
-        # Decision Variables
+        # Decision Variables (b,w inherited from problem formulation)
         self.t = 0
-        self.b = 0
-        self.w = 0
         # The cuts we add in the callback function would be treated as lazy constraints
         self.model.params.LazyConstraints = 1
 

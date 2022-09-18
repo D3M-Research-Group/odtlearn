@@ -23,6 +23,13 @@ class ProblemFormulation(ABC):
         self.y = y
         self.X_col_labels = X_col_labels
 
+        # decision variables
+        self.b = 0
+        self.p = 0
+        self.w = 0
+        self.zeta = 0
+        self.z = 0
+
         # datapoints contains the indicies of our training data
         self.datapoints = np.arange(0, self.X.shape[0])
 

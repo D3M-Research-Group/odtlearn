@@ -49,13 +49,6 @@ class FlowOPTMultipleNode(PrescriptiveProblem):
         verbose,
     ) -> None:
 
-        # Decision Variables
-        self.b = 0
-        self.p = 0
-        self.w = 0
-        self.zeta = 0
-        self.z = 0
-
         super().__init__(
             X,
             t,
@@ -276,13 +269,6 @@ class FlowOPTSingleNode(PrescriptiveProblem):
             num_threads,
             verbose,
         )
-
-        # Decision Variables
-        self.b = 0
-        self.p = 0
-        self.w = 0
-        self.zeta = 0
-        self.z = 0
 
     def define_variables(self):
         # define variables
