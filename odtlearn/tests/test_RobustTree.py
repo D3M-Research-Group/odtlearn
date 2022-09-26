@@ -4,7 +4,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 # from odtlearn.RobustTree import RobustTreeClassifier
-from odtlearn.utils.RobustOCT import RobustOCT
+from odtlearn.RobustOCT import RobustOCT
 
 
 @pytest.fixture

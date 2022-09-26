@@ -1,6 +1,6 @@
 from gurobipy import GRB, quicksum
 
-from odtlearn.utils.classification_formulation import ClassificationProblem
+from odtlearn.classification_formulation import ClassificationProblem
 
 
 class FlowOCTSingleNode(ClassificationProblem):

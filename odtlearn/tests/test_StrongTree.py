@@ -4,8 +4,8 @@ import pytest
 from numpy.testing import assert_allclose
 
 # from odtlearn.StrongTree import StrongTreeClassifier
-from odtlearn.utils.BendersOCT import BendersOCT
-from odtlearn.utils.FlowOCT import FlowOCT
+from odtlearn.BendersOCT import BendersOCT
+from odtlearn.FlowOCT import FlowOCT
 
 
 # fmt: off

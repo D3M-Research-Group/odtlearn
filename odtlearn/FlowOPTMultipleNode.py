@@ -1,6 +1,6 @@
 from gurobipy import GRB, quicksum
 
-from odtlearn.utils.prescriptive_formulation import PrescriptiveProblem
+from odtlearn.prescriptive_formulation import PrescriptiveProblem
 
 
 class FlowOPTMultipleNode(PrescriptiveProblem):

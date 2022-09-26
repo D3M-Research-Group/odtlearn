@@ -4,7 +4,7 @@ from gurobipy import GRB, LinExpr
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
-from odtlearn.utils.FlowOCTSingleNode import FlowOCTSingleNode
+from odtlearn.FlowOCTSingleNode import FlowOCTSingleNode
 from odtlearn.utils.validation import check_binary, check_columns_match
 
 

@@ -6,8 +6,8 @@ from gurobipy import GRB, LinExpr, quicksum
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_is_fitted, check_X_y
 
+from odtlearn.classification_formulation import ClassificationProblem
 from odtlearn.utils.callbacks import robust_tree_callback
-from odtlearn.utils.classification_formulation import ClassificationProblem
 from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.validation import check_integer, check_same_as_X
 

@@ -3,8 +3,8 @@ import pandas as pd
 from gurobipy import GRB, LinExpr
 from sklearn.utils.validation import check_is_fitted, check_X_y
 
-from odtlearn.utils.FlowOPTMultipleNode import FlowOPTMultipleNode
-from odtlearn.utils.FlowOPTSingleNode import FlowOPTSingleNode
+from odtlearn.FlowOPTMultipleNode import FlowOPTMultipleNode
+from odtlearn.FlowOPTSingleNode import FlowOPTSingleNode
 from odtlearn.utils.validation import (
     check_array,
     check_binary,

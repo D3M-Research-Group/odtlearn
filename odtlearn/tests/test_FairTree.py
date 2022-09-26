@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from odtlearn.utils.FairOCT import FairOCT
-from odtlearn.utils.FlowOCT import FlowOCT
+from odtlearn.FairOCT import FairOCT
+from odtlearn.FlowOCT import FlowOCT
 
 
 # fmt: off

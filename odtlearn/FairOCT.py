@@ -6,7 +6,7 @@ from gurobipy import GRB, LinExpr, quicksum
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
-from odtlearn.utils.FlowOCTMultipleNode import FlowOCTMultipleNode
+from odtlearn.FlowOCTMultipleNode import FlowOCTMultipleNode
 from odtlearn.utils.validation import check_binary, check_columns_match
 
 

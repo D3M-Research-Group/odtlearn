@@ -4,7 +4,7 @@ import pytest
 from numpy.testing import assert_allclose
 
 # from odtlearn.PrescriptiveTree import PrescriptiveTreeClassifier
-from odtlearn.utils.FlowOPT import FlowOPT_DM, FlowOPT_DR, FlowOPT_IPW
+from odtlearn.FlowOPT import FlowOPT_DM, FlowOPT_DR, FlowOPT_IPW
 
 
 @pytest.fixture

@@ -2,11 +2,11 @@ import numpy as np
 import pandas as pd
 from sklearn.utils.validation import check_is_fitted
 
-from odtlearn.utils.problem_formulation import ProblemFormulation
+from odtlearn.problem_formulation import ProblemFormulation
 from odtlearn.utils.TreePlotter import MPLPlotter
 
 
-class ClassificationProblem(ProblemFormulation):
+class PrescriptiveProblem(ProblemFormulation):
     def __init__(
         self,
         depth,
@@ -14,9 +14,18 @@ class ClassificationProblem(ProblemFormulation):
         num_threads,
         verbose,
     ) -> None:
+        """
+        :param t: numpy array or pandas series/dataframe of treatment assignments
+        :param ipw: numpy array or pandas series/dataframe of inverse propensity weights
+        :param treatments_set: a list or set of all possible treatments
+
+        """
         super().__init__(depth, time_limit, num_threads, verbose)
 
-    def _extract_metadata(self, X, y):
+        # self.t = t
+        # self.ipw = ipw
+
+    def _extract_metadata(self, X, y, t):
         """A function for extracting metadata from the inputs before converting
         them into numpy arrays to work with the sklearn API
 
@@ -40,6 +49,9 @@ class ClassificationProblem(ProblemFormulation):
         else:
             self.y = y
         self.labels = np.unique(self.y)
+
+        self.t = t
+        self.treatments = np.unique(t)
 
     def _get_node_status(self, b, w, p, n):
         """
@@ -86,7 +98,7 @@ class ClassificationProblem(ProblemFormulation):
             p_sum = p_sum + p[m]
         if p[n] > 0.5:  # leaf
             leaf = True
-            labels = self.labels
+            labels = self.treatments
             for k in labels:
                 if w[n, k] > 0.5:
                     value = k
@@ -224,7 +236,7 @@ class ClassificationProblem(ProblemFormulation):
             node_dict,
             self.X_col_labels,
             self.tree.depth,
-            self.classes_,
+            self.treatments,
             type(self).__name__,
             label=label,
             filled=filled,
