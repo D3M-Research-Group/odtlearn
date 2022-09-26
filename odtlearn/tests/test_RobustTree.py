@@ -1,10 +1,10 @@
-import pytest
 import numpy as np
 import pandas as pd
+import pytest
 from numpy.testing import assert_allclose
 
-
-from odtlearn.RobustTree import RobustTreeClassifier
+# from odtlearn.RobustTree import RobustTreeClassifier
+from odtlearn.utils.RobustOCT import RobustOCT
 
 
 @pytest.fixture
@@ -73,7 +73,8 @@ def synthetic_costs_1():
 def test_RobustTree_X_noninteger_error():
     """Test whether X is integer-valued"""
 
-    clf = RobustTreeClassifier(depth=1, time_limit=20)
+    # clf = RobustTreeClassifier(depth=1, time_limit=20)
+    clf = RobustOCT(depth=1, time_limit=20)
 
     with pytest.raises(
         ValueError,
@@ -88,7 +89,8 @@ def test_RobustTree_X_noninteger_error():
 
 def test_RobustTree_cost_shape_error():
     """Test whether X and cost have the same size and columns"""
-    clf = RobustTreeClassifier(depth=1, time_limit=20)
+    # clf = RobustTreeClassifier(depth=1, time_limit=20)
+    clf = RobustOCT(depth=1, time_limit=20)
     data = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -103,7 +105,7 @@ def test_RobustTree_cost_shape_error():
         costs = pd.DataFrame(
             {"x1": [1, 2, 2, 2], "x2": [1, 2, 1, 1]}, index=["A", "B", "C", "D"]
         )
-        clf.fit(data, y, costs=costs, budget=5, verbose=False)
+        clf.fit(data, y, costs=costs, budget=5)
 
     # Different number of features
     with pytest.raises(
@@ -114,7 +116,7 @@ def test_RobustTree_cost_shape_error():
             {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 7, 1], "x3": [1, 1, 1, 1, 1]},
             index=["A", "B", "C", "D", "E"],
         )
-        clf.fit(data, y, costs=costs, budget=5, verbose=False)
+        clf.fit(data, y, costs=costs, budget=5)
 
     # Different column names
     with pytest.raises(
@@ -125,7 +127,7 @@ def test_RobustTree_cost_shape_error():
             {"x1": [1, 2, 2, 2, 3], "x3": [1, 2, 1, 7, 1]},
             index=["A", "B", "C", "D", "E"],
         )
-        clf.fit(data, y, costs=costs, budget=5, verbose=False)
+        clf.fit(data, y, costs=costs, budget=5)
 
     # When X is not a dataframe, but costs is a dataframe with column names
     with pytest.raises(
@@ -137,7 +139,7 @@ def test_RobustTree_cost_shape_error():
             {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 7, 1]},
             index=["A", "B", "C", "D", "E"],
         )
-        clf.fit(data_np, y, costs=costs, budget=5, verbose=False)
+        clf.fit(data_np, y, costs=costs, budget=5)
 
     # When X is a dataframe, but costs are not
     with pytest.raises(
@@ -145,20 +147,20 @@ def test_RobustTree_cost_shape_error():
         match="uncertainty costs should be a Pandas DataFrame with the same columns as the input covariates",
     ):
         costs = np.transpose([[1, 2, 2, 2, 3], [1, 2, 1, 7, 1]])
-        clf.fit(data, y, costs=costs, budget=5, verbose=False)
+        clf.fit(data, y, costs=costs, budget=5)
 
 
 @pytest.mark.test_gurobi
 def test_RobustTree_prediction_shape_error():
     """Test whether X and cost have the same size and columns"""
     # Run some quick model that finishes in 1 second
-    clf = RobustTreeClassifier(depth=1, time_limit=20)
+    clf = RobustOCT(depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
     )
     y = train.pop("y")
-    clf.fit(train, y, verbose=False)
+    clf.fit(train, y)
 
     # Non-integer data
     with pytest.raises(
@@ -211,13 +213,13 @@ def test_RobustTree_prediction_shape_error():
             index=["F", "G", "H", "I", "J"],
         )
         train_nodf = np.transpose([[1, 2, 2, 2, 3], [1, 2, 1, 0, 1]])
-        clf.fit(train_nodf, y, verbose=False)
+        clf.fit(train_nodf, y)
         clf.predict(test)
 
 
 @pytest.mark.test_gurobi
 def test_RobustTree_with_uncertainty_success():
-    clf = RobustTreeClassifier(depth=1, time_limit=20)
+    clf = RobustOCT(depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -229,8 +231,9 @@ def test_RobustTree_with_uncertainty_success():
     costs = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 7, 1]}, index=["A", "B", "C", "D", "E"]
     )
-    clf.fit(train, y, costs=costs, budget=5, verbose=False)
-    assert hasattr(clf, "grb_model")
+    clf.fit(train, y, costs=costs, budget=5)
+    assert hasattr(clf, "b_value")
+    assert hasattr(clf, "w_value")
 
     y_pred = clf.predict(test)
     assert y_pred.shape[0] == test.shape[0]
@@ -238,7 +241,7 @@ def test_RobustTree_with_uncertainty_success():
 
 @pytest.mark.test_gurobi
 def test_RobustTree_no_uncertainty_success():
-    clf = RobustTreeClassifier(depth=1, time_limit=20)
+    clf = RobustOCT(depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -247,8 +250,9 @@ def test_RobustTree_no_uncertainty_success():
         {"x1": [1, 2, 2, 2], "x2": [1, 2, 1, 7]}, index=["F", "G", "H", "I"]
     )
     y = train.pop("y")
-    clf.fit(train, y, verbose=False)
-    assert hasattr(clf, "grb_model")
+    clf.fit(train, y)
+    assert hasattr(clf, "b_value")
+    assert hasattr(clf, "w_value")
 
     y_pred = clf.predict(test)
     assert y_pred.shape[0] == test.shape[0]
@@ -264,12 +268,12 @@ def test_RobustTree_no_uncertainty_success():
 )
 def test_RobustTree_correctness(synthetic_data_1, d, expected_pred):
     X, y = synthetic_data_1
-    robust_classifier = RobustTreeClassifier(
+    robust_classifier = RobustOCT(
         depth=d,
         time_limit=100,
     )
 
-    robust_classifier.fit(X, y, verbose=False)
+    robust_classifier.fit(X, y)
     assert_allclose(robust_classifier.predict(X), expected_pred)
 
 
@@ -293,9 +297,9 @@ def test_RobustTree_uncertainty_correctness(
     """
     X, y = synthetic_data_1
     costs = synthetic_costs_1
-    robust_classifier = RobustTreeClassifier(
+    robust_classifier = RobustOCT(
         depth=d,
         time_limit=100,
     )
-    robust_classifier.fit(X, y, costs=costs, budget=budget, verbose=False)
+    robust_classifier.fit(X, y, costs=costs, budget=budget)
     assert_allclose(robust_classifier.predict(X), expected_pred)

@@ -3,7 +3,9 @@ import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 
-from odtlearn.StrongTree import StrongTreeClassifier
+# from odtlearn.StrongTree import StrongTreeClassifier
+from odtlearn.utils.BendersOCT import BendersOCT
+from odtlearn.utils.FlowOCT import FlowOCT
 
 
 # fmt: off
@@ -82,7 +84,8 @@ def synthetic_data_2():
 # fmt: on
 def test_StrongTree_X_nonbinary_error():
     # Test that we raise a ValueError if X matrix has values other than zero or one
-    clf = StrongTreeClassifier(depth=1, time_limit=2, _lambda=1)
+    # clf = StrongTreeClassifier(depth=1, time_limit=2, _lambda=1)
+    clf = FlowOCT(depth=1, time_limit=2, _lambda=1)
 
     with pytest.raises(
         AssertionError,
@@ -107,7 +110,7 @@ def test_StrongTree_X_nonbinary_error():
 def test_StrongTree_X_data_shape_error():
     X = np.ones(100).reshape(100, 1)
 
-    clf = StrongTreeClassifier(depth=1, time_limit=2, _lambda=1)
+    clf = FlowOCT(depth=1, time_limit=2, _lambda=1)
 
     with pytest.raises(
         ValueError, match="Found input variables with inconsistent numbers of samples"
@@ -125,12 +128,10 @@ def test_StrongTree_classifier():
     )
     y = train.pop("y")
     test = pd.DataFrame({"x1": [1, 1, 0, 0, 1], "x2": [1, 1, 1, 0, 1]})
-    clf = StrongTreeClassifier(depth=1, time_limit=20, _lambda=0.2)
+    clf = FlowOCT(depth=1, time_limit=20, _lambda=0.2)
 
     clf.fit(train, y)
     # Test that after running the fit method we have b, w, and p
-    assert hasattr(clf, "X_")
-    assert hasattr(clf, "y_")
     assert hasattr(clf, "b_value")
     assert hasattr(clf, "w_value")
     assert hasattr(clf, "p_value")
@@ -156,16 +157,24 @@ def test_StrongTree_same_predictions(
     synthetic_data_1, d, _lambda, benders, expected_pred
 ):
     X, y = synthetic_data_1
-    stcl = StrongTreeClassifier(
-        depth=d,
-        time_limit=100,
-        _lambda=_lambda,
-        benders_oct=benders,
-        num_threads=None,
-        obj_mode="acc",
-    )
+    if benders:
+        stcl = BendersOCT(
+            depth=d,
+            time_limit=100,
+            _lambda=_lambda,
+            num_threads=None,
+            obj_mode="acc",
+        )
+    else:
+        stcl = FlowOCT(
+            depth=d,
+            time_limit=100,
+            _lambda=_lambda,
+            num_threads=None,
+            obj_mode="acc",
+        )
     stcl.fit(X, y)
-    stcl.print_tree()
+    # stcl.print_tree()
     assert_allclose(stcl.predict(X), expected_pred)
 
 
@@ -180,14 +189,22 @@ def test_StrongTree_same_predictions(
 )
 def test_StrongTree_obj_mode(synthetic_data_2, benders, obj_mode, expected_pred):
     X, y = synthetic_data_2
-    stcl = StrongTreeClassifier(
-        depth=2,
-        time_limit=100,
-        _lambda=0,
-        benders_oct=benders,
-        num_threads=None,
-        obj_mode=obj_mode,
-    )
+    if benders:
+        stcl = BendersOCT(
+            depth=2,
+            time_limit=100,
+            _lambda=0,
+            num_threads=None,
+            obj_mode=obj_mode,
+        )
+    else:
+        stcl = FlowOCT(
+            depth=2,
+            time_limit=100,
+            _lambda=0,
+            num_threads=None,
+            obj_mode=obj_mode,
+        )
     stcl.fit(X, y)
-    stcl.print_tree()
+    # stcl.print_tree()
     assert_allclose(stcl.predict(X), expected_pred)

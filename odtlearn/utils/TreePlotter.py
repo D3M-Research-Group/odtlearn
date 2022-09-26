@@ -7,14 +7,12 @@ from odtlearn.utils._reingold_tilford import Tree, buchheim
 class MPLPlotter(_MPLTreeExporter):
     def __init__(
         self,
-        grb_model,
+        tree,
+        node_dict,
         column_names,
-        b,
-        w,
-        p,
         max_depth,
         classes,
-        get_node_status,
+        model_name,
         label="all",
         filled=False,
         rounded=False,
@@ -30,14 +28,11 @@ class MPLPlotter(_MPLTreeExporter):
     ):
         self.classes = classes
         self.max_depth = max_depth
-        self.tree = grb_model.tree
-        self.grb_model = grb_model
+        self.tree = tree
+        self.node_dict = node_dict
         self.column_names = column_names
         self.feature_names = column_names
         self.class_names = classes
-        self.b = b
-        self.w = w
-        self.p = p
         self.color_options = [
             [int(value * 255) for value in color]
             for color in color_palette("husl", len(self.classes) + 1)
@@ -51,7 +46,7 @@ class MPLPlotter(_MPLTreeExporter):
         self.edge_annotation = edge_annotation
         self.arrow_annotation_font_scale = arrow_annotation_font_scale
         self.debug = debug
-        self.get_node_status = get_node_status
+        self.model_name = model_name
 
         super().__init__(
             max_depth=self.max_depth,
@@ -81,9 +76,7 @@ class MPLPlotter(_MPLTreeExporter):
         # Fetch appropriate color for node
         # get value for particular node and see if that works?
         # pruned, branching, selected_feature, cutoff, leaf, value
-        _, branching, _, _, leaf, value = self.get_node_status(
-            self.grb_model, self.b, self.w, self.p, node_id
-        )
+        _, branching, _, _, leaf, value = self.node_dict[node_id]
         alpha = 1
         if leaf:
             if self.debug:
@@ -119,8 +112,7 @@ class MPLPlotter(_MPLTreeExporter):
                 node_string += "feature %s %s %s%s" % (
                     feature,
                     "="
-                    if self.grb_model.model.ModelName
-                    in ["FairOCT", "FlowOCT", "BendersOCT"]
+                    if self.model_name in ["FairOCT", "FlowOCT", "BendersOCT"]
                     else characters[3],
                     round(cutoff, self.precision),
                     characters[4],
@@ -129,7 +121,7 @@ class MPLPlotter(_MPLTreeExporter):
                 node_string += "%s" % (feature)
         else:
             if labels:
-                if self.grb_model.model.ModelName in ["FlowOPT", "IPW"]:
+                if "OPT" in self.model_name:
                     node_string += "treatment = "
                 else:
                     node_string += "class = "
@@ -145,9 +137,7 @@ class MPLPlotter(_MPLTreeExporter):
     def _make_tree(self, node_id, depth=0):
         # traverses _tree.Tree recursively, builds intermediate
         # "_reingold_tilford.Tree" object
-        _, _, selected_feature, cutoff, leaf, value = self.get_node_status(
-            self.grb_model, self.b, self.w, self.p, node_id
-        )
+        _, _, selected_feature, cutoff, leaf, value = self.node_dict[node_id]
         # print(leaf, selected_feature, cutoff, value)
         label = self.node_to_str(node_id, leaf, selected_feature, cutoff, value)
         if not leaf and depth <= self.max_depth:

@@ -1,19 +1,15 @@
-from gurobipy import GRB, LinExpr, quicksum
+import numpy as np
+import pandas as pd
+from sklearn.utils.validation import check_is_fitted
 
 from odtlearn.utils.problem_formulation import ProblemFormulation
+from odtlearn.utils.TreePlotter import MPLPlotter
 
 
 class PrescriptiveProblem(ProblemFormulation):
     def __init__(
         self,
-        X,
-        t,
-        y,
-        ipw,
-        treatments_set,
-        tree,
-        X_col_labels,
-        model_name,
+        depth,
         time_limit,
         num_threads,
         verbose,
@@ -24,406 +20,232 @@ class PrescriptiveProblem(ProblemFormulation):
         :param treatments_set: a list or set of all possible treatments
 
         """
-        super().__init__(
-            X, y, tree, X_col_labels, model_name, time_limit, num_threads, verbose
-        )
+        super().__init__(depth, time_limit, num_threads, verbose)
+
+        # self.t = t
+        # self.ipw = ipw
+
+    def _extract_metadata(self, X, y, t):
+        """A function for extracting metadata from the inputs before converting
+        them into numpy arrays to work with the sklearn API
+
+        Additional variables that need to be processed for
+        different classifier types are passed through keyword arguments
+        """
+        if isinstance(X, pd.DataFrame):
+            self.X_col_labels = X.columns
+            self.X_col_dtypes = X.dtypes
+            self.X = X
+        else:
+            self.X_col_labels = np.array([f"X_{i}" for i in np.arange(0, X.shape[1])])
+            self.X = pd.DataFrame(X, columns=self.X_col_labels)
+
+        # Strip indices in training data into integers
+        self.X.set_index(pd.Index(range(self.X.shape[0])), inplace=True)
+        self.datapoints = np.arange(0, self.X.shape[0])
+
+        if isinstance(y, (pd.Series, pd.DataFrame)):
+            self.y = y.values
+        else:
+            self.y = y
+        self.labels = np.unique(self.y)
 
         self.t = t
-        self.ipw = ipw
-        self.treatments_set = treatments_set
+        self.treatments = np.unique(t)
 
-
-class FlowOPTMultipleNode(PrescriptiveProblem):
-    def __init__(
-        self,
-        X,
-        t,
-        y,
-        ipw,
-        treatments_set,
-        tree,
-        X_col_labels,
-        model_name,
-        time_limit,
-        num_threads,
-        verbose,
-    ) -> None:
-
-        super().__init__(
-            X,
-            t,
-            y,
-            ipw,
-            treatments_set,
-            tree,
-            X_col_labels,
-            model_name,
-            time_limit,
-            num_threads,
-            verbose,
-        )
-
-    def define_variables(self):
-        self.b = self.model.addVars(
-            self.tree.Nodes, self.X_col_labels, vtype=GRB.BINARY, name="b"
-        )
-        self.p = self.model.addVars(
-            self.tree.Nodes + self.tree.Leaves, vtype=GRB.BINARY, name="p"
-        )
-        self.w = self.model.addVars(
-            self.tree.Nodes + self.tree.Leaves,
-            self.treatments_set,
-            vtype=GRB.CONTINUOUS,
-            lb=0,
-            name="w",
-        )
-        self.zeta = self.model.addVars(
-            self.datapoints,
-            self.tree.Nodes + self.tree.Leaves,
-            self.treatments_set,
-            vtype=GRB.CONTINUOUS,
-            lb=0,
-            name="zeta",
-        )
-        self.z = self.model.addVars(
-            self.datapoints,
-            self.tree.Nodes + self.tree.Leaves,
-            vtype=GRB.CONTINUOUS,
-            lb=0,
-            name="z",
-        )
-
-    def define_constraints(self):
-        # define constraints
-        # z[i,n] = z[i,l(n)] + z[i,r(n)] + zeta[i,n]    forall i, n in Nodes
-        for n in self.tree.Nodes:
-            n_left = int(self.tree.get_left_children(n))
-            n_right = int(self.tree.get_right_children(n))
-            self.model.addConstrs(
-                (
-                    self.z[i, n]
-                    == self.z[i, n_left]
-                    + self.z[i, n_right]
-                    + quicksum(self.zeta[i, n, k] for k in self.treatments_set)
-                )
-                for i in self.datapoints
-            )
-
-        # z[i,l(n)] <= sum(b[n,f], f if x[i,f]<=0)    forall i, n in Nodes
-        for i in self.datapoints:
-            self.model.addConstrs(
-                (
-                    self.z[i, int(self.tree.get_left_children(n))]
-                    <= quicksum(
-                        self.b[n, f] for f in self.X_col_labels if self.X.at[i, f] <= 0
-                    )
-                )
-                for n in self.tree.Nodes
-            )
-
-        # z[i,r(n)] <= sum(b[n,f], f if x[i,f]=1)    forall i, n in Nodes
-        for i in self.datapoints:
-            self.model.addConstrs(
-                (
-                    self.z[i, int(self.tree.get_right_children(n))]
-                    <= quicksum(
-                        self.b[n, f] for f in self.X_col_labels if self.X.at[i, f] == 1
-                    )
-                )
-                for n in self.tree.Nodes
-            )
-
-        # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
-        self.model.addConstrs(
-            (
-                quicksum(self.b[n, f] for f in self.X_col_labels)
-                + self.p[n]
-                + quicksum(self.p[m] for m in self.tree.get_ancestors(n))
-                == 1
-            )
-            for n in self.tree.Nodes
-        )
-
-        # p[n] + sum(p[m], m in A(n)) = 1   forall n in Leaves
-        self.model.addConstrs(
-            (self.p[n] + quicksum(self.p[m] for m in self.tree.get_ancestors(n)) == 1)
-            for n in self.tree.Leaves
-        )
-
-        # zeta[i,n] <= w[n,T[i]] for all n in N+L, i
-        for n in self.tree.Nodes + self.tree.Leaves:
-            for k in self.treatments_set:
-                self.model.addConstrs(
-                    self.zeta[i, n, k] <= self.w[n, k] for i in self.datapoints
-                )
-
-        # sum(w[n,k], k in treatments) = p[n]
-        self.model.addConstrs(
-            (quicksum(self.w[n, k] for k in self.treatments_set) == self.p[n])
-            for n in self.tree.Nodes + self.tree.Leaves
-        )
-
-        for n in self.tree.Leaves:
-            self.model.addConstrs(
-                quicksum(self.zeta[i, n, k] for k in self.treatments_set)
-                == self.z[i, n]
-                for i in self.datapoints
-            )
-
-        self.model.addConstrs(self.z[i, 1] == 1 for i in self.datapoints)
-
-
-class FlowOPT_Robust(FlowOPTMultipleNode):
-    def __init__(
-        self,
-        X,
-        t,
-        y,
-        ipw,
-        y_hat,
-        robust,
-        treatments_set,
-        tree,
-        X_col_labels,
-        time_limit,
-        num_threads,
-        verbose,
-    ) -> None:
+    def _get_node_status(self, b, w, p, n):
         """
-        :param X: numpy matrix or pandas dataframe of covariates
-        :param t: numpy array or pandas series/dataframe of treatment assignments
-        :param y: numpy array or pandas series/dataframe of observed outcomes
-        :param ipw: numpy array or pandas series/dataframe of inverse propensity weights
-        :param y_hat: numpy matrix or pandas dataframe of counterfactual estimates
-        :param robust: Boolean indicating whether or not the FlowOPT method should be Doubly Robust (True)
-                        or Direct Method (False)
-        :param treatments_set: a list or set of all possible treatments
-        :param tree: Tree object
-        :param X_col_labels: a list of features in the covariate space X
-        :param time_limit: The given time limit for solving the MIP
-        :param num_threads: Number of threads for the solver to use
+        This function give the status of a given node in a tree. By status we mean whether the node
+            1- is pruned? i.e., we have made a prediction at one of its ancestors
+            2- is a branching node? If yes, what feature do we branch on
+            3- is a leaf? If yes, what is the prediction at this node?
+
+        Parameters
+        ----------
+        b :
+            The values of branching decision variable b.
+        w :
+            The values of prediction decision variable w.
+        p :
+            The values of decision variable p
+        n :
+            A valid node index in the tree
+
+        Returns
+        -------
+        pruned : int
+            pruned=1 iff the node is pruned
+        branching : int
+            branching = 1 iff the node branches at some feature f
+        selected_feature : str
+            The feature that the node branch on
+        leaf : int
+            leaf = 1 iff node n is a leaf in the tree
+        value :  double
+            if node n is a leaf, value represent the prediction at this node
         """
-        self.model_name = "FlowOPT"
-        self.y_hat = y_hat
-        self.robust = robust
-        super().__init__(
-            X,
-            t,
-            y,
-            ipw,
-            treatments_set,
-            tree,
-            X_col_labels,
-            self.model_name,
-            time_limit,
-            num_threads,
-            verbose,
-        )
 
-    def define_objective(self):
-        # define objective function
-        obj = LinExpr(0)
-        for i in self.datapoints:
-            for n in self.tree.Nodes + self.tree.Leaves:
-                for k in self.treatments_set:
-                    obj.add(
-                        self.zeta[i, n, k] * (self.y_hat[i][int(k)])
-                    )  # we assume that each column corresponds to an ordered list t, which might be problematic
-                    treat = self.t[i]
-                    if self.robust:
-                        if int(treat) == int(k):
-                            obj.add(
-                                self.zeta[i, n, k]
-                                * (self.y[i] - self.y_hat[i][int(k)])
-                                / self.ipw[i]
-                            )
+        pruned = False
+        branching = False
+        leaf = False
+        value = None
+        selected_feature = None
+        cutoff = None
 
-        self.model.setObjective(obj, GRB.MAXIMIZE)
+        cutoff = 0
+        p_sum = 0
+        for m in self.tree.get_ancestors(n):
+            p_sum = p_sum + p[m]
+        if p[n] > 0.5:  # leaf
+            leaf = True
+            labels = self.treatments
+            for k in labels:
+                if w[n, k] > 0.5:
+                    value = k
+        elif p_sum == 1:  # Pruned
+            pruned = True
 
+        if n in self.tree.Nodes:
+            if (pruned is False) and (leaf is False):  # branching
+                for f in self.X_col_labels:
+                    if b[n, f] > 0.5:
+                        selected_feature = f
+                        branching = True
+        return pruned, branching, selected_feature, cutoff, leaf, value
 
-class FlowOPTSingleNode(PrescriptiveProblem):
-    def __init__(
-        self,
-        X,
-        t,
-        y,
-        ipw,
-        treatments_set,
-        tree,
-        X_col_labels,
-        model_name,
-        time_limit,
-        num_threads,
-        verbose,
-    ) -> None:
-        super().__init__(
-            X,
-            t,
-            y,
-            ipw,
-            treatments_set,
-            tree,
-            X_col_labels,
-            model_name,
-            time_limit,
-            num_threads,
-            verbose,
-        )
-
-    def define_variables(self):
-        # define variables
-
-        self.b = self.model.addVars(
-            self.tree.Nodes, self.X_col_labels, vtype=GRB.BINARY, name="b"
-        )
-        self.p = self.model.addVars(
-            self.tree.Nodes + self.tree.Leaves, vtype=GRB.BINARY, name="p"
-        )
-        self.w = self.model.addVars(
-            self.tree.Nodes + self.tree.Leaves,
-            self.treatments_set,
-            vtype=GRB.CONTINUOUS,
-            lb=0,
-            name="w",
-        )
-        self.zeta = self.model.addVars(
-            self.datapoints,
-            self.tree.Nodes + self.tree.Leaves,
-            vtype=GRB.CONTINUOUS,
-            lb=0,
-            name="zeta",
-        )
-        self.z = self.model.addVars(
-            self.datapoints,
-            self.tree.Nodes + self.tree.Leaves,
-            vtype=GRB.CONTINUOUS,
-            lb=0,
-            name="z",
-        )
-
-    def define_constraints(self):
-        # define constraints
-
-        # z[i,n] = z[i,l(n)] + z[i,r(n)] + zeta[i,n]    forall i, n in Nodes
-        for n in self.tree.Nodes:
-            n_left = int(self.tree.get_left_children(n))
-            n_right = int(self.tree.get_right_children(n))
-            self.model.addConstrs(
+    def _make_prediction(self, X):
+        prediction = []
+        for i in range(X.shape[0]):
+            current = 1
+            while True:
                 (
-                    self.z[i, n]
-                    == self.z[i, n_left] + self.z[i, n_right] + self.zeta[i, n]
+                    _,
+                    branching,
+                    selected_feature,
+                    _,
+                    leaf,
+                    value,
+                ) = self._get_node_status(
+                    self.b_value,
+                    self.w_value,
+                    self.p_value,
+                    current,
                 )
-                for i in self.datapoints
-            )
-
-        # z[i,l(n)] <= sum(b[n,f], f if x[i,f]<=0)    forall i, n in Nodes
-        for i in self.datapoints:
-            self.model.addConstrs(
-                (
-                    self.z[i, int(self.tree.get_left_children(n))]
-                    <= quicksum(
-                        self.b[n, f] for f in self.X_col_labels if self.X.at[i, f] <= 0
+                if leaf:
+                    prediction.append(value)
+                    break
+                elif branching:
+                    selected_feature_idx = np.where(
+                        self.X_col_labels == selected_feature
                     )
-                )
-                for n in self.tree.Nodes
-            )
+                    # Raise assertion error we don't have a column that matches
+                    # the selected feature or more than one column that matches
+                    assert (
+                        len(selected_feature_idx) == 1
+                    ), f"Found {len(selected_feature_idx)} columns matching the selected feature {selected_feature}"
+                    if X[i, selected_feature_idx] == 1:  # going right on the branch
+                        current = self.tree.get_right_children(current)
+                    else:  # going left on the branch
+                        current = self.tree.get_left_children(current)
+        return np.array(prediction)
 
-        # z[i,r(n)] <= sum(b[n,f], f if x[i,f]=1)    forall i, n in Nodes
-        for i in self.datapoints:
-            self.model.addConstrs(
-                (
-                    self.z[i, int(self.tree.get_right_children(n))]
-                    <= quicksum(
-                        self.b[n, f] for f in self.X_col_labels if self.X.at[i, f] == 1
-                    )
-                )
-                for n in self.tree.Nodes
-            )
+    def print_tree(self):
+        """Print the fitted tree with the branching features, the threshold values for
+        each branching node's test, and the predictions asserted for each assignment node
 
-        # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
-        self.model.addConstrs(
-            (
-                quicksum(self.b[n, f] for f in self.X_col_labels)
-                + self.p[n]
-                + quicksum(self.p[m] for m in self.tree.get_ancestors(n))
-                == 1
-            )
-            for n in self.tree.Nodes
-        )
-
-        # p[n] + sum(p[m], m in A(n)) = 1   forall n in Leaves
-        self.model.addConstrs(
-            (self.p[n] + quicksum(self.p[m] for m in self.tree.get_ancestors(n)) == 1)
-            for n in self.tree.Leaves
-        )
-
-        # zeta[i,n] <= w[n,T[i]] for all n in N+L, i
+        The method uses the Gurobi model's name for determining how to generate the tree
+        """
+        check_is_fitted(self, ["b_value", "w_value", "p_value"])
         for n in self.tree.Nodes + self.tree.Leaves:
-            self.model.addConstrs(
-                self.zeta[i, n] <= self.w[n, self.t[i]] for i in self.datapoints
-            )
+            (
+                pruned,
+                branching,
+                selected_feature,
+                _,
+                leaf,
+                value,
+            ) = self._get_node_status(self.b_value, self.w_value, self.p_value, n)
+            print("#########node ", n)
+            if pruned:
+                print("pruned")
+            elif branching:
+                print("branch on {}".format(selected_feature))
+            elif leaf:
+                print("leaf {}".format(value))
 
-        # sum(w[n,k], k in treatments) = p[n]
-        self.model.addConstrs(
-            (quicksum(self.w[n, k] for k in self.treatments_set) == self.p[n])
-            for n in self.tree.Nodes + self.tree.Leaves
-        )
-
-        for n in self.tree.Leaves:
-            self.model.addConstrs(
-                self.zeta[i, n] == self.z[i, n] for i in self.datapoints
-            )
-
-    def define_objective(self):
-        # define objective function
-        obj = LinExpr(0)
-        for i in self.datapoints:
-            obj.add(self.z[i, 1] * (self.y[i]) / self.ipw[i])
-
-        self.model.setObjective(obj, GRB.MAXIMIZE)
-
-
-class FlowOPT_IPW(FlowOPTSingleNode):
-    """
-    Pass through class for FlowOPTSingleNode
-
-    :param X: numpy matrix or pandas dataframe of covariates
-    :param t: numpy array or pandas series/dataframe of treatment assignments
-    :param y: numpy array or pandas series/dataframe of observed outcomes
-    :param ipw: numpy array or pandas series/dataframe of inverse propensity weights
-    :param treatments_set: a list or set of all possible treatments
-    :param tree: Tree object
-    :param X_col_labels: a list of features in the covariate space X
-    :param time_limit: The given time limit for solving the MIP
-    :param num_threads: Number of threads for the solver to use
-    :param verbose: Display Gurobi model output
-
-    """
-
-    def __init__(
+    def plot_tree(
         self,
-        X,
-        t,
-        y,
-        ipw,
-        treatments_set,
-        tree,
-        X_col_labels,
-        time_limit,
-        num_threads,
-        verbose,
-    ) -> None:
-        self.model_name = "IPW"
-        super().__init__(
-            X,
-            t,
-            y,
-            ipw,
-            treatments_set,
-            tree,
-            X_col_labels,
-            self.model_name,
-            time_limit,
-            num_threads,
-            verbose,
+        label="all",
+        filled=True,
+        rounded=False,
+        precision=3,
+        ax=None,
+        fontsize=None,
+        color_dict={"node": None, "leaves": []},
+        edge_annotation=True,
+        arrow_annotation_font_scale=0.8,
+        debug=False,
+    ):
+        """Plot the fitted tree with the branching features, the threshold values for
+        each branching node's test, and the predictions asserted for each assignment node
+        using matplotlib. The method uses the Gurobi model's name for determining how
+        to generate the tree. It does some preprocessing before passing the tree to the
+        `_MPLTreeExporter` class from the sklearn package. The arguments for the
+        `plot_tree` method are based on the arguments of the sklearn `plot_tree` function.
+
+        Parameters
+        ----------
+        label : {'all', 'root', 'none'}, default='all'
+        Whether to show informative labels for impurity, etc.
+        Options include 'all' to show at every node, 'root' to show only at
+        the top root node, or 'none' to not show at any node.
+
+        filled : bool, default=False
+            When set to ``True``, paint nodes to indicate majority class for
+            classification, extremity of values for regression, or purity of node
+            for multi-output.
+
+        rounded : bool, default=False
+            When set to ``True``, draw node boxes with rounded corners and use
+            Helvetica fonts instead of Times-Roman.
+
+        precision: int, default=3
+            Number of digits of precision for floating point in the values of
+            impurity, threshold and value attributes of each node.
+        ax : matplotlib axis, default=None
+            Axes to plot to. If None, use current axis. Any previous content
+        is cleared.
+
+        fontsize : int, default=None
+            Size of text font. If None, determined automatically to fit figure.
+
+        color_dict: dict, default={"node": None, "leaves": []}
+            A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
+            If None, the colors are chosen using the sklearn `plot_tree` color palette
+        """
+        check_is_fitted(self, ["b_value", "w_value", "p_value"])
+
+        node_dict = {}
+        for node in np.arange(1, self.tree.total_nodes + 1):
+            node_dict[node] = self._get_node_status(
+                self.b_value, self.w_value, self.p_value, node
+            )
+
+        exporter = MPLPlotter(
+            self.tree,
+            node_dict,
+            self.X_col_labels,
+            self.tree.depth,
+            self.treatments,
+            type(self).__name__,
+            label=label,
+            filled=filled,
+            rounded=rounded,
+            precision=precision,
+            fontsize=fontsize,
+            color_dict=color_dict,
+            edge_annotation=edge_annotation,
+            arrow_annotation_font_scale=arrow_annotation_font_scale,
+            debug=debug,
         )
+        return exporter.export(ax=ax)

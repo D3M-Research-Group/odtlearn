@@ -1,9 +1,10 @@
-import pytest
 import numpy as np
 import pandas as pd
+import pytest
 from numpy.testing import assert_allclose
 
-from odtlearn.PrescriptiveTree import PrescriptiveTreeClassifier
+# from odtlearn.PrescriptiveTree import PrescriptiveTreeClassifier
+from odtlearn.utils.FlowOPT import FlowOPT_DM, FlowOPT_DR, FlowOPT_IPW
 
 
 @pytest.fixture
@@ -15,7 +16,8 @@ def data():
 # Test that we raise a ValueError if X matrix has values other than zero or one
 def test_PrescriptiveTree_X_nonbinary_error():
 
-    clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
+    # clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
+    clf = FlowOPT_IPW(depth=1, time_limit=300)
 
     with pytest.raises(
         AssertionError,
@@ -33,7 +35,8 @@ def test_PrescriptiveTree_X_nonbinary_error():
 def test_PrescriptiveTree_X_data_shape_error():
     X = np.ones(10).reshape(10, 1)
 
-    clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
+    # clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
+    clf = FlowOPT_IPW(depth=1, time_limit=300)
 
     with pytest.raises(
         ValueError, match="Found input variables with inconsistent numbers of samples"
@@ -51,23 +54,13 @@ def test_PrescriptiveTree_X_helpers_error(data):
     t = np.random.randint(2, size=X.shape[0])
     y = np.random.rand(10)
 
-    # what if we pass None for different permutations of IPW, DM, DR
-    with pytest.raises(
-        AssertionError, match="Inverse propensity weights cannot be None"
-    ):
-        clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
-        clf.fit(X, t, y)
-
-    with pytest.raises(AssertionError, match="Counterfactual estimates cannot be None"):
-        clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="DM")
-        clf.fit(X, t, y)
-
     # what if we pass ipw outside of range (0, 1]
     with pytest.raises(
         AssertionError, match=r"Inverse propensity weights must be in the range \(0, 1]"
     ):
         ipw = np.random.rand(10) + 1
-        clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
+        # clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
+        clf = FlowOPT_IPW(depth=1, time_limit=300)
         clf.fit(X, t, y, ipw)
 
     # what if we pass y_hat with columns that don't match up to # of treatments
@@ -78,13 +71,15 @@ def test_PrescriptiveTree_X_helpers_error(data):
         # df = pd.read_csv("../../data/prescriptive_tree/train_50.csv")
         df = data
         y_hat = df[["lasso0", "lasso1", "lasso1"]]
-        clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="DM")
-        clf.fit(X=X, t=t, y=y, y_hat=y_hat)
+        # clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="DM")
+        clf = FlowOPT_DM(depth=1, time_limit=300)
+        clf.fit(X=X, t=t, y=y, y_hat=y_hat, ipw=None)
 
 
 # Test that we raise an error if t isn't discrete and starts from 0
 def test_PrescriptiveTree_X_treatment_error():
-    clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
+    # clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
+    clf = FlowOPT_IPW(depth=1, time_limit=300)
 
     with pytest.raises(
         AssertionError,
@@ -114,19 +109,24 @@ def test_PrescriptiveTree_X_treatment_error():
 # fmt: on
 def test_PrescriptiveTree_classifier(data, method, expected_pred):
     df = data
-    clf = PrescriptiveTreeClassifier(depth=2, time_limit=300, method=method)
-
+    # clf = PrescriptiveTreeClassifier(depth=2, time_limit=300, method=method)
     X = df.iloc[:, :20]
     t = df["t"]
     y = df["y"]
     ipw = df["prob_t_pred_tree"]
     y_hat = df[["linear0", "linear1"]]
 
-    clf.fit(X, t, y, ipw, y_hat)
+    if method == "DR":
+        clf = FlowOPT_DR(depth=2, time_limit=300)
+        clf.fit(X, t, y, ipw, y_hat)
+    elif method == "DM":
+        clf = FlowOPT_DM(depth=2, time_limit=300)
+        clf.fit(X, t, y, ipw, y_hat)
+    else:
+        clf = FlowOPT_IPW(depth=2, time_limit=300)
+        clf.fit(X, t, y, ipw)
+
     # Test that after running the fit method we have b, w, and p
-    assert hasattr(clf, "X_")
-    assert hasattr(clf, "t_")
-    assert hasattr(clf, "y_")
     assert hasattr(clf, "b_value")
     assert hasattr(clf, "w_value")
     assert hasattr(clf, "p_value")

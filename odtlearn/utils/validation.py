@@ -1,5 +1,125 @@
 import numpy as np
 import pandas as pd
+from sklearn.utils.validation import (
+    _assert_all_finite,
+    check_array,
+    check_consistent_length,
+    column_or_1d,
+)
+
+
+def check_ipw(X, ipw):
+    """
+    This function checks the propensity weights and counterfactual predictions
+
+    Parameters
+    ----------
+    X: The input/training data
+    ipw: A vector or array-like object for inverse propensity weights. Only needed when running IPW/DR
+
+    :return: The converted version of ipw after passing the series of checks
+    """
+    if ipw is not None:
+        ipw = column_or_1d(ipw, warn=True)
+
+        if ipw.dtype.kind == "O":
+            ipw = ipw.astype(np.float64)
+
+        assert (
+            min(ipw) > 0 and max(ipw) <= 1
+        ), "Inverse propensity weights must be in the range (0, 1]"
+
+        check_consistent_length(X, ipw)
+    return ipw
+
+
+def check_y_hat(X, treatments, y_hat):
+    """
+    This function checks the propensity weights and counterfactual predictions
+
+    Parameters
+    ----------
+    X: The input/training data
+    treatments: A vector of the unique treatment values in the dataset.
+    y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR
+
+    :return: The converted versions of ipw and y_hat after passing the series of checks
+    """
+    if y_hat is not None:
+        y_hat = check_array(y_hat)
+
+        # y_hat has to have as many columns as there are treatments
+
+        assert y_hat.shape[1] == len(
+            treatments
+        ), f"Found counterfactual estimates for {y_hat.shape[1]} treatments. \
+        There are {len(treatments)} unique treatments in the data"
+
+        check_consistent_length(X, y_hat)
+    else:
+        assert y_hat is not None, "Counterfactual estimates cannot be None"
+
+    return y_hat
+
+
+def check_helpers(X, treatments, **kwargs):
+    """
+    This function checks the propensity weights and counterfactual predictions
+
+    Parameters
+    ----------
+    X: The input/training data
+    treatments: A vector of the unique treatment values in the dataset.
+    y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR
+
+    :return: The converted versions of ipw and y_hat after passing the series of checks
+    """
+    if (ipw := kwargs.get("ipw", None)) is not None:
+        ipw = column_or_1d(ipw, warn=True)
+
+        if ipw.dtype.kind == "O":
+            ipw = ipw.astype(np.float64)
+
+        assert (
+            min(ipw) > 0 and max(ipw) <= 1
+        ), "Inverse propensity weights must be in the range (0, 1]"
+
+        check_consistent_length(X, ipw)
+    else:
+        assert ipw is not None, "Inverse propensity weights cannot be None"
+
+    if (y_hat := kwargs.get("y_hat", None)) is not None:
+        y_hat = check_array(y_hat)
+
+        # y_hat has to have as many columns as there are treatments
+
+        assert y_hat.shape[1] == len(
+            treatments
+        ), f"Found counterfactual estimates for {y_hat.shape[1]} treatments. \
+        There are {len(treatments)} unique treatments in the data"
+
+        check_consistent_length(X, y_hat)
+    else:
+        assert y_hat is not None, "Counterfactual estimates cannot be None"
+
+    return ipw, y_hat
+
+
+def check_y(X, y):
+    """
+    This function checks the shape and contents of the observed outcomes
+    :param X: The input/training data
+    :param y: A vector or array-like object for the observed outcomes corresponding to treatment t
+    :return: The converted version of y after passing the series of checks
+    """
+    # check consistent length
+    y = column_or_1d(y, warn=True)
+    _assert_all_finite(y)
+    if y.dtype.kind == "O":
+        y = y.astype(np.float64)
+
+    check_consistent_length(X, y)
+    return y
 
 
 def check_columns_match(original_columns, new_data):

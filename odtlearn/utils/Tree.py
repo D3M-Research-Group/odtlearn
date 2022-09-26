@@ -16,6 +16,7 @@ class _Tree:
         self.depth = d
         self.Nodes = [i for i in range(1, np.power(2, d))]
         self.Leaves = [i for i in range(np.power(2, d), np.power(2, d + 1))]
+        self.total_nodes = len(self.Nodes) + len(self.Leaves)
 
     def get_left_children(self, n):
         if n in self.Nodes:

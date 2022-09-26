@@ -7,9 +7,9 @@ from gurobipy import GRB, LinExpr, quicksum
 from odtlearn.utils.callback_helpers import (
     get_all_terminal_paths,
     get_cut_expression,
+    get_cut_integer,
     get_nominal_path,
     shortest_path_solver,
-    get_cut_integer,
 )
 
 
@@ -22,8 +22,8 @@ def benders_subproblem(main_grb_obj, b, p, w, i):
     subproblem_value = 0
 
     while True:
-        _, branching, selected_feature, _, terminal, _ = main_grb_obj.get_node_status(
-            main_grb_obj, b, w, p, current
+        _, branching, selected_feature, _, terminal, _ = main_grb_obj._get_node_status(
+            b, w, p, current
         )
         if terminal:
             target.append(current)

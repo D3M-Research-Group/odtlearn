@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 from numpy.testing import assert_allclose
 
-from odtlearn.FairTree import FairTreeClassifier
-from odtlearn.StrongTree import StrongTreeClassifier
+from odtlearn.utils.FairOCT import FairOCT
+from odtlearn.utils.FlowOCT import FlowOCT
 
 
 # fmt: off
@@ -56,7 +56,7 @@ def synthetic_data_1():
 # fmt: on
 def test_FairTree_same_predictions(synthetic_data_1):
     X, y, protect_feat, legit_factor = synthetic_data_1
-    fcl = FairTreeClassifier(
+    fcl = FairOCT(
         positive_class=1,
         depth=2,
         _lambda=0,
@@ -67,11 +67,10 @@ def test_FairTree_same_predictions(synthetic_data_1):
         obj_mode="acc",
     )
 
-    stcl = StrongTreeClassifier(
+    stcl = FlowOCT(
         depth=2,
         time_limit=100,
         _lambda=0,
-        benders_oct=False,
         num_threads=None,
         obj_mode="acc",
     )
@@ -91,7 +90,7 @@ def test_FairTree_same_predictions(synthetic_data_1):
 )
 def test_FairTree_metrics(synthetic_data_1, f, b, g0_value):
     X, y, protect_feat, legit_factor = synthetic_data_1
-    fcl = FairTreeClassifier(
+    fcl = FairOCT(
         positive_class=1,
         depth=2,
         _lambda=0,
