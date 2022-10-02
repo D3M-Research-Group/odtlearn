@@ -87,9 +87,3 @@ class ProblemFormulation(ABC):
     @abstractmethod
     def predict(self):
         pass
-
-    def print_tree(self):
-        pass
-
-    def plot_tree(self):
-        pass

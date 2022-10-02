@@ -317,12 +317,6 @@ class FairOCT(FlowOCTMultipleNode):
         # Check is fit had been called
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
 
-        if isinstance(X, pd.DataFrame):
-            self.X_predict_col_names = X.columns
-        else:
-            self.X_predict_col_names = np.array(
-                [f"X_{i}" for i in np.arange(0, X.shape[1])]
-            )
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         X = check_array(X)

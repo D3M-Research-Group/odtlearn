@@ -1,5 +1,3 @@
-import numpy as np
-import pandas as pd
 from gurobipy import GRB, LinExpr, quicksum
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
@@ -199,11 +197,6 @@ class BendersOCT(ClassificationProblem):
         # Check is fit had been called
         # for now we are assuming the model has been fit successfully if the fitted values for b, w, and p exist
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
-
-        if isinstance(X, pd.DataFrame):
-            self.X_predict_col_names = X.columns
-        else:
-            self.X_predict_col_names = np.arange(0, X.shape[1])
 
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
