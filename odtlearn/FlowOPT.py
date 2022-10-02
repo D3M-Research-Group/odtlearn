@@ -92,12 +92,12 @@ class FlowOPT_IPW(FlowOPTSingleNode):
         check_binary(X)
 
         self._create_main_problem()
-        self.model.update()
-        self.model.optimize()
+        self._model.update()
+        self._model.optimize()
 
-        self.b_value = self.model.getAttr("X", self.b)
-        self.w_value = self.model.getAttr("X", self.w)
-        self.p_value = self.model.getAttr("X", self.p)
+        self.b_value = self._model.getAttr("X", self._b)
+        self.w_value = self._model.getAttr("X", self._w)
+        self.p_value = self._model.getAttr("X", self.p)
 
         # Return the classifier
         return self
@@ -123,7 +123,7 @@ class FlowOPT_IPW(FlowOPTSingleNode):
         # but we have the column information from when we called fit
         X = check_array(X)
 
-        check_columns_match(self.X_col_labels, X)
+        check_columns_match(self._X_col_labels, X)
 
         return self._make_prediction(X)
 
@@ -163,11 +163,11 @@ class FlowOPT_DM(FlowOPTMultipleNode):
     def _define_objective(self):
         # define objective function
         obj = LinExpr(0)
-        for i in self.datapoints:
-            for n in self.tree.Nodes + self.tree.Leaves:
-                for k in self.treatments:
+        for i in self._datapoints:
+            for n in self._tree.Nodes + self._tree.Leaves:
+                for k in self._treatments:
                     obj.add(
-                        self.zeta[i, n, k] * (self.y_hat[i][int(k)])
+                        self._zeta[i, n, k] * (self.y_hat[i][int(k)])
                     )  # we assume that each column corresponds to an ordered list t, which might be problematic
                     # treat = self.t[i]
                     # if self.robust:
@@ -178,7 +178,7 @@ class FlowOPT_DM(FlowOPTMultipleNode):
                     #             / self.ipw[i]
                     #         )
 
-        self.model.setObjective(obj, GRB.MAXIMIZE)
+        self._model.setObjective(obj, GRB.MAXIMIZE)
 
     def fit(self, X, t, y, ipw, y_hat):
         """Method to fit the PrescriptiveTree class on the data
@@ -223,18 +223,18 @@ class FlowOPT_DM(FlowOPTMultipleNode):
         y = check_y(X, y)
         # self.ipw, self.y_hat = check_helpers(X, self.treatments, ipw=ipw, y_hat=y_hat)
         self.ipw = check_ipw(X, ipw)
-        self.y_hat = check_y_hat(X, self.treatments, y_hat)
+        self.y_hat = check_y_hat(X, self._treatments, y_hat)
 
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
 
         self._create_main_problem()
-        self.model.update()
-        self.model.optimize()
+        self._model.update()
+        self._model.optimize()
 
-        self.b_value = self.model.getAttr("X", self.b)
-        self.w_value = self.model.getAttr("X", self.w)
-        self.p_value = self.model.getAttr("X", self.p)
+        self.b_value = self._model.getAttr("X", self._b)
+        self.w_value = self._model.getAttr("X", self._w)
+        self.p_value = self._model.getAttr("X", self._p)
 
         # Return the classifier
         return self
@@ -261,7 +261,7 @@ class FlowOPT_DM(FlowOPTMultipleNode):
         # but we have the column information from when we called fit
         X = check_array(X)
 
-        check_columns_match(self.X_col_labels, X)
+        check_columns_match(self._X_col_labels, X)
 
         return self._make_prediction(X)
 
@@ -273,16 +273,16 @@ class FlowOPT_DR(FlowOPT_DM):
     def _define_objective(self):
         # define objective function
         obj = LinExpr(0)
-        for i in self.datapoints:
-            for n in self.tree.Nodes + self.tree.Leaves:
-                for k in self.treatments:
+        for i in self._datapoints:
+            for n in self._tree.Nodes + self._tree.Leaves:
+                for k in self._treatments:
                     obj.add(
-                        self.zeta[i, n, k] * (self.y_hat[i][int(k)])
+                        self._zeta[i, n, k] * (self.y_hat[i][int(k)])
                     )  # we assume that each column corresponds to an ordered list t, which might be problematic
-                    if self.t[i] == int(k):
+                    if self._t[i] == int(k):
                         obj.add(
-                            self.zeta[i, n, k]
-                            * (self.y[i] - self.y_hat[i][int(k)])
+                            self._zeta[i, n, k]
+                            * (self._y[i] - self.y_hat[i][int(k)])
                             / self.ipw[i]
                         )
-        self.model.setObjective(obj, GRB.MAXIMIZE)
+        self._model.setObjective(obj, GRB.MAXIMIZE)

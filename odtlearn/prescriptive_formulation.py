@@ -33,25 +33,25 @@ class PrescriptiveProblem(ProblemFormulation):
         different classifier types are passed through keyword arguments
         """
         if isinstance(X, pd.DataFrame):
-            self.X_col_labels = X.columns
-            self.X_col_dtypes = X.dtypes
-            self.X = X
+            self._X_col_labels = X.columns
+            self._X_col_dtypes = X.dtypes
+            self._X = X
         else:
-            self.X_col_labels = np.array([f"X_{i}" for i in np.arange(0, X.shape[1])])
-            self.X = pd.DataFrame(X, columns=self.X_col_labels)
+            self._X_col_labels = np.array([f"X_{i}" for i in np.arange(0, X.shape[1])])
+            self._X = pd.DataFrame(X, columns=self._X_col_labels)
 
         # Strip indices in training data into integers
-        self.X.set_index(pd.Index(range(self.X.shape[0])), inplace=True)
-        self.datapoints = np.arange(0, self.X.shape[0])
+        self._X.set_index(pd.Index(range(self._X.shape[0])), inplace=True)
+        self._datapoints = np.arange(0, self._X.shape[0])
 
         if isinstance(y, (pd.Series, pd.DataFrame)):
-            self.y = y.values
+            self._y = y.values
         else:
-            self.y = y
-        self.labels = np.unique(self.y)
+            self._y = y
+        self._labels = np.unique(self._y)
 
-        self.t = t
-        self.treatments = np.unique(t)
+        self._t = t
+        self._treatments = np.unique(t)
 
     def _get_node_status(self, b, w, p, n):
         """
@@ -94,20 +94,20 @@ class PrescriptiveProblem(ProblemFormulation):
 
         cutoff = 0
         p_sum = 0
-        for m in self.tree.get_ancestors(n):
+        for m in self._tree.get_ancestors(n):
             p_sum = p_sum + p[m]
         if p[n] > 0.5:  # leaf
             leaf = True
-            labels = self.treatments
+            labels = self._treatments
             for k in labels:
                 if w[n, k] > 0.5:
                     value = k
         elif p_sum == 1:  # Pruned
             pruned = True
 
-        if n in self.tree.Nodes:
+        if n in self._tree.Nodes:
             if (pruned is False) and (leaf is False):  # branching
-                for f in self.X_col_labels:
+                for f in self._X_col_labels:
                     if b[n, f] > 0.5:
                         selected_feature = f
                         branching = True
@@ -136,7 +136,7 @@ class PrescriptiveProblem(ProblemFormulation):
                     break
                 elif branching:
                     selected_feature_idx = np.where(
-                        self.X_col_labels == selected_feature
+                        self._X_col_labels == selected_feature
                     )
                     # Raise assertion error we don't have a column that matches
                     # the selected feature or more than one column that matches
@@ -144,9 +144,9 @@ class PrescriptiveProblem(ProblemFormulation):
                         len(selected_feature_idx) == 1
                     ), f"Found {len(selected_feature_idx)} columns matching the selected feature {selected_feature}"
                     if X[i, selected_feature_idx] == 1:  # going right on the branch
-                        current = self.tree.get_right_children(current)
+                        current = self._tree.get_right_children(current)
                     else:  # going left on the branch
-                        current = self.tree.get_left_children(current)
+                        current = self._tree.get_left_children(current)
         return np.array(prediction)
 
     def print_tree(self):
@@ -156,7 +156,7 @@ class PrescriptiveProblem(ProblemFormulation):
         The method uses the Gurobi model's name for determining how to generate the tree
         """
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
-        for n in self.tree.Nodes + self.tree.Leaves:
+        for n in self._tree.Nodes + self._tree.Leaves:
             (
                 pruned,
                 branching,
@@ -226,17 +226,17 @@ class PrescriptiveProblem(ProblemFormulation):
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
 
         node_dict = {}
-        for node in np.arange(1, self.tree.total_nodes + 1):
+        for node in np.arange(1, self._tree.total_nodes + 1):
             node_dict[node] = self._get_node_status(
                 self.b_value, self.w_value, self.p_value, node
             )
 
         exporter = MPLPlotter(
-            self.tree,
+            self._tree,
             node_dict,
-            self.X_col_labels,
-            self.tree.depth,
-            self.treatments,
+            self._X_col_labels,
+            self._tree.depth,
+            self._treatments,
             type(self).__name__,
             label=label,
             filled=filled,

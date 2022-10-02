@@ -14,7 +14,7 @@ from odtlearn.utils.callback_helpers import (
 
 
 def benders_subproblem(main_grb_obj, b, p, w, i):
-    label_i = main_grb_obj.y[i]
+    label_i = main_grb_obj._y[i]
     current = 1
     right = []
     left = []
@@ -27,21 +27,23 @@ def benders_subproblem(main_grb_obj, b, p, w, i):
         )
         if terminal:
             target.append(current)
-            if current in main_grb_obj.tree.Nodes:
+            if current in main_grb_obj._tree.Nodes:
                 left.append(current)
                 right.append(current)
             if w[current, label_i] > 0.5:
                 subproblem_value = 1
             break
         elif branching:
-            if main_grb_obj.X.at[i, selected_feature] == 1:  # going right on the branch
+            if (
+                main_grb_obj._X.at[i, selected_feature] == 1
+            ):  # going right on the branch
                 left.append(current)
                 target.append(current)
-                current = main_grb_obj.tree.get_right_children(current)
+                current = main_grb_obj._tree.get_right_children(current)
             else:  # going left on the branch
                 right.append(current)
                 target.append(current)
-                current = main_grb_obj.tree.get_left_children(current)
+                current = main_grb_obj._tree.get_left_children(current)
 
     return subproblem_value, left, right, target
 
@@ -68,7 +70,7 @@ def benders_callback(model, where):
     :param where: the node where the callback function is called from
     :return:
     """
-    X = model._main_grb_obj.X
+    X = model._main_grb_obj._X
 
     if where == GRB.Callback.MIPSOL:
         func_start_time = time.time()
@@ -113,7 +115,7 @@ def robust_tree_subproblem(
     initial_mins={},
     initial_maxes={},
 ):
-    label_i = master.y[i]
+    label_i = master._y[i]
     target = []  # list of nodes whose edge to the sink is part of the min cut
 
     # Solve shortest path problem via DFS w/ pruning
@@ -157,15 +159,15 @@ def robust_tree_callback(model, where):
 
         # Initialize a blank-slate xi
         initial_xi = {}
-        for c in model._master.cat_features:
+        for c in model._master._cat_features:
             initial_xi[c] = 0
 
         # Initialize dictionaries to store min and max values of each feature:
         initial_mins = {}
         initial_maxes = {}
-        for c in model._master.cat_features:
-            initial_mins[c] = model._master.min_values[c]
-            initial_maxes[c] = model._master.max_values[c]
+        for c in model._master._cat_features:
+            initial_mins[c] = model._master._min_values[c]
+            initial_maxes[c] = model._master._max_values[c]
 
         whole_expr = LinExpr(0)  # Constraint RHS expression
         priority_queue = []  # Stores elements of form (path_cost, index)
@@ -180,15 +182,15 @@ def robust_tree_callback(model, where):
         correct_points = []  # List of indices of nominally correctly classified points
 
         # Find nominal path for every data point
-        for i in model._master.datapoints:
+        for i in model._master._datapoints:
             nom_path, k = get_nominal_path(model._master, b, w, i)
-            if k != model._master.y[i]:
+            if k != model._master._y[i]:
                 # Misclassified nominally - no need to check for shortest path
                 curr_expr = get_cut_expression(
                     model._master, b, w, nom_path, initial_xi, False, i
                 )
                 whole_expr.add(curr_expr)
-                model.cbLazy(model._master.t[i] <= curr_expr)
+                model.cbLazy(model._master._t[i] <= curr_expr)
                 model._total_cuts += 1
             else:
                 # Correctly classified - put into pool of problems for shortest path
@@ -231,7 +233,7 @@ def robust_tree_callback(model, where):
             # Get next least-cost point and see if still under epsilon budget
             current_point = heapq.heappop(priority_queue)
             curr_cost = current_point[0]
-            if curr_cost + total_cost > model._master.epsilon:
+            if curr_cost + total_cost > model._master._epsilon:
                 # Push point back into queue
                 heapq.heappush(priority_queue, current_point)
                 break
@@ -257,7 +259,7 @@ def robust_tree_callback(model, where):
                     )
                 )
             model.cbLazy(
-                quicksum(model._master.t[i] for i in model._master.datapoints)
+                quicksum(model._master._t[i] for i in model._master._datapoints)
                 <= whole_expr
             )
             model._total_cuts += 1

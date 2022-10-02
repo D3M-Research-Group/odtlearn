@@ -8,9 +8,9 @@ from gurobipy import LinExpr, quicksum
 
 def get_left_exp_integer(main_grb_obj, n, i):
     lhs = quicksum(
-        -1 * main_grb_obj.b[n, f]
-        for f in main_grb_obj.X_col_labels
-        if main_grb_obj.X.at[i, f] == 0
+        -1 * main_grb_obj._b[n, f]
+        for f in main_grb_obj._X_col_labels
+        if main_grb_obj._X.at[i, f] == 0
     )
 
     return lhs
@@ -18,22 +18,22 @@ def get_left_exp_integer(main_grb_obj, n, i):
 
 def get_right_exp_integer(main_grb_obj, n, i):
     lhs = quicksum(
-        -1 * main_grb_obj.b[n, f]
-        for f in main_grb_obj.X_col_labels
-        if main_grb_obj.X.at[i, f] == 1
+        -1 * main_grb_obj._b[n, f]
+        for f in main_grb_obj._X_col_labels
+        if main_grb_obj._X.at[i, f] == 1
     )
 
     return lhs
 
 
 def get_target_exp_integer(main_grb_obj, n, i):
-    label_i = main_grb_obj.y[i]
-    lhs = -1 * main_grb_obj.w[n, label_i]
+    label_i = main_grb_obj._y[i]
+    lhs = -1 * main_grb_obj._w[n, label_i]
     return lhs
 
 
 def get_cut_integer(main_grb_obj, left, right, target, i):
-    lhs = LinExpr(0) + main_grb_obj.g[i]
+    lhs = LinExpr(0) + main_grb_obj._g[i]
     for n in left:
         tmp_lhs = get_left_exp_integer(main_grb_obj, n, i)
         lhs = lhs + tmp_lhs
@@ -55,7 +55,7 @@ def get_cut_integer(main_grb_obj, left, right, target, i):
 def get_cut_expression(master, b, w, path, xi, v, i):
     expr = LinExpr(0)
     node_leaf_cutoff = np.power(
-        2, master.tree.depth
+        2, master._tree.depth
     )  # anything at or above this number is a leaf
 
     # Add expressions to rhs where q = 1
@@ -65,29 +65,29 @@ def get_cut_expression(master, b, w, path, xi, v, i):
             if x == len(path) - 1:
                 # Assigned a value at an internal node
                 expr += quicksum(
-                    master.b[n, f, theta] for (f, theta) in master.f_theta_indices
+                    master._b[n, f, theta] for (f, theta) in master._f_theta_indices
                 )
             # Add to expr if we went right according to our shortest path
             elif (2 * n) + 1 == path[x + 1]:
                 expr += quicksum(
-                    master.b[n, f, theta]
-                    for (f, theta) in master.f_theta_indices
-                    if (master.X.at[i, f] + xi[f] <= theta)
+                    master._b[n, f, theta]
+                    for (f, theta) in master._f_theta_indices
+                    if (master._X.at[i, f] + xi[f] <= theta)
                 )
             # Add to expr if we went left according to our shortest path
             else:
                 expr += quicksum(
-                    master.b[n, f, theta]
-                    for (f, theta) in master.f_theta_indices
-                    if (master.X.at[i, f] + xi[f] >= theta + 1)
+                    master._b[n, f, theta]
+                    for (f, theta) in master._f_theta_indices
+                    if (master._X.at[i, f] + xi[f] >= theta + 1)
                 )
         # Add to expr the node going to the sink
         if not (x == len(path) - 1 and v):
             # Don't add edge to sink if at assignment node and label is changed
-            expr += master.w[n, master.y[i]]
+            expr += master._w[n, master._y[i]]
         else:
             expr += quicksum(
-                master.w[n, lab] for lab in master.labels if (lab != master.y[i])
+                master._w[n, lab] for lab in master._labels if (lab != master._y[i])
             )
     return expr
 
@@ -113,7 +113,7 @@ def get_all_terminal_paths(
     new_assignment_dict = copy.deepcopy(assignment_dict)
     new_cutoff_dict = copy.deepcopy(cutoff_dict)
 
-    for k in master.labels:
+    for k in master._labels:
         if w[curr_node, k] > 0.5:  # w[n,k] == 1
             # assignment node
             new_path_dict[curr_node] = curr_path
@@ -132,14 +132,14 @@ def get_all_terminal_paths(
     # b[n,f,theta]== 1
     curr_feature = None
     curr_theta = None
-    for (f, theta) in master.f_theta_indices:
+    for (f, theta) in master._f_theta_indices:
         if b[curr_node, f, theta] > 0.5:
             curr_feature = f
             curr_theta = theta
             break
 
     # Go left
-    left_node = master.tree.get_left_children(curr_node)
+    left_node = master._tree.get_left_children(curr_node)
     left_path = curr_path + [left_node]
     (
         left_terminal,
@@ -163,7 +163,7 @@ def get_all_terminal_paths(
     )
 
     # Go right
-    right_node = master.tree.get_right_children(curr_node)
+    right_node = master._tree.get_right_children(curr_node)
     right_path = curr_path + [right_node]
     (
         right_terminal,
@@ -214,14 +214,14 @@ def get_nominal_path(master, b, w, i):
     while True:
         path += [curr_node]
         # Find whether a terminal node
-        for k in master.labels:
+        for k in master._labels:
             if w[curr_node, k] > 0.5:
                 return path, k
 
         # braching node - find which feature to branch on
-        for (f, theta) in master.f_theta_indices:
+        for (f, theta) in master._f_theta_indices:
             if b[curr_node, f, theta] > 0.5:
-                if master.X.at[i, f] >= theta + 1:
+                if master._X.at[i, f] >= theta + 1:
                     curr_node = (2 * curr_node) + 1  # go right
                 else:
                     curr_node = 2 * curr_node  # go left
@@ -241,7 +241,7 @@ def shortest_path_solver(
     initial_mins,
     initial_maxes,
 ):
-    best_cost = (master.epsilon + 1) * master.tree.depth
+    best_cost = (master._epsilon + 1) * master._tree.depth
     best_path = []
     xi = copy.deepcopy(initial_xi)
     v = False
@@ -255,7 +255,7 @@ def shortest_path_solver(
         curr_mins = copy.deepcopy(initial_mins)
         curr_maxes = copy.deepcopy(initial_maxes)
         curr_path = terminal_path_dict[j]
-        curr_cost = master.eta * int(
+        curr_cost = master._eta * int(
             curr_v
         )  # Start with cost if correctly classify point
         best_so_far = True
@@ -266,7 +266,7 @@ def shortest_path_solver(
             min_f = curr_mins[f]
             max_f = curr_maxes[f]
 
-            curr_value = master.X.at[i, f] + curr_xi[f]
+            curr_value = master._X.at[i, f] + curr_xi[f]
             # Went right
             if (2 * n) + 1 == curr_path[x + 1]:  # Path goes right
                 if curr_value <= theta:
@@ -276,10 +276,10 @@ def shortest_path_solver(
                         best_so_far = False
                         break
                     # x + delta_x = theta + 1
-                    delta_x = theta - master.X.at[i, f] + 1  # positive value
+                    delta_x = theta - master._X.at[i, f] + 1  # positive value
 
                     # cost increases by gamma per unit increase of xi
-                    curr_cost += master.gammas.loc[i][f] * (delta_x - curr_xi[f])
+                    curr_cost += master._gammas.loc[i][f] * (delta_x - curr_xi[f])
                     curr_xi[f] = delta_x
 
                 # Update bounds
@@ -293,10 +293,10 @@ def shortest_path_solver(
                         best_so_far = False
                         break
                     # x + delta_x = theta
-                    delta_x = theta - master.X.at[i, f]  # negative value
+                    delta_x = theta - master._X.at[i, f]  # negative value
 
                     # cost increases by gamma per unit decrease of xi
-                    curr_cost += master.gammas.loc[i][f] * (curr_xi[f] - delta_x)
+                    curr_cost += master._gammas.loc[i][f] * (curr_xi[f] - delta_x)
                     curr_xi[f] = delta_x
 
                 # Update bounds

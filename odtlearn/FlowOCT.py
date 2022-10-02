@@ -31,19 +31,23 @@ class FlowOCT(FlowOCTSingleNode):
         # Define the Objective
         ###########################################################
         obj = LinExpr(0)
-        for n in self.tree.Nodes:
-            for f in self.X_col_labels:
-                obj.add(-1 * self._lambda * self.b[n, f])
+        for n in self._tree.Nodes:
+            for f in self._X_col_labels:
+                obj.add(-1 * self._lambda * self._b[n, f])
         if self.obj_mode == "acc":
-            for i in self.datapoints:
-                obj.add((1 - self._lambda) * self.z[i, 1])
+            for i in self._datapoints:
+                obj.add((1 - self._lambda) * self._z[i, 1])
 
         elif self.obj_mode == "balance":
-            for i in self.datapoints:
+            for i in self._datapoints:
                 obj.add(
                     (1 - self._lambda)
-                    * (1 / self.y[self.y == self.y[i]].shape[0] / self.labels.shape[0])
-                    * self.z[i, 1]
+                    * (
+                        1
+                        / self._y[self._y == self._y[i]].shape[0]
+                        / self._labels.shape[0]
+                    )
+                    * self._z[i, 1]
                 )
         else:
             assert self.obj_mode not in [
@@ -51,7 +55,7 @@ class FlowOCT(FlowOCTSingleNode):
                 "balance",
             ], "Wrong objective mode. obj_mode should be one of acc or balance."
 
-        self.model.setObjective(obj, GRB.MAXIMIZE)
+        self._model.setObjective(obj, GRB.MAXIMIZE)
 
     def fit(self, X, y):
 
@@ -64,15 +68,15 @@ class FlowOCT(FlowOCTSingleNode):
         X, y = check_X_y(X, y)
 
         # Store the classes seen during fit
-        self.classes_ = unique_labels(y)
+        self._classes = unique_labels(y)
 
         self._create_main_problem()
-        self.model.update()
-        self.model.optimize()
+        self._model.update()
+        self._model.optimize()
 
-        self.b_value = self.model.getAttr("X", self.b)
-        self.w_value = self.model.getAttr("X", self.w)
-        self.p_value = self.model.getAttr("X", self.p)
+        self.b_value = self._model.getAttr("X", self._b)
+        self.w_value = self._model.getAttr("X", self._w)
+        self.p_value = self._model.getAttr("X", self._p)
 
         return self
 
@@ -98,6 +102,6 @@ class FlowOCT(FlowOCTSingleNode):
         # but we have the column information from when we called fit
         X = check_array(X)
 
-        check_columns_match(self.X_col_labels, X)
+        check_columns_match(self._X_col_labels, X)
 
         return self._make_prediction(X)

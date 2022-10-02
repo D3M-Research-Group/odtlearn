@@ -46,12 +46,12 @@ class RobustOCT(ClassificationProblem):
         )
 
         # Regularization term: encourage less branching without sacrificing accuracy
-        self.reg = 1 / (len(self.tree.Nodes) + 1)
+        self.reg = 1 / (len(self._tree.Nodes) + 1)
 
         # Decision Variables (b,w inherited from problem formulation)
-        self.t = 0
+        self._t = 0
         # The cuts we add in the callback function would be treated as lazy constraints
-        self.model.params.LazyConstraints = 1
+        self._model.params.LazyConstraints = 1
 
         """
         The following variables are used for the Benders problem to keep track of the times we call the callback.
@@ -66,22 +66,22 @@ class RobustOCT(ClassificationProblem):
         the ones ending with success are related to success calls. By success we mean ending
         up adding a lazy constraint to the model
         """
-        self.model._total_callback_time_integer = 0
-        self.model._total_callback_time_integer_success = 0
+        self._model._total_callback_time_integer = 0
+        self._model._total_callback_time_integer_success = 0
 
-        self.model._total_callback_time_general = 0
-        self.model._total_callback_time_general_success = 0
+        self._model._total_callback_time_general = 0
+        self._model._total_callback_time_general_success = 0
 
-        self.model._callback_counter_integer = 0
-        self.model._callback_counter_integer_success = 0
+        self._model._callback_counter_integer = 0
+        self._model._callback_counter_integer_success = 0
 
-        self.model._callback_counter_general = 0
-        self.model._callback_counter_general_success = 0
+        self._model._callback_counter_general = 0
+        self._model._callback_counter_general_success = 0
 
-        self.model._total_cuts = 0
+        self._model._total_cuts = 0
 
         # We also pass the following information to the model as we need them in the callback
-        self.model._master = self
+        self._model._master = self
 
     def _get_node_status(self, b, w, n):
         """
@@ -124,22 +124,22 @@ class RobustOCT(ClassificationProblem):
         cutoff = None
 
         p_sum = 0
-        for m in self.tree.get_ancestors(n):
+        for m in self._tree.get_ancestors(n):
             # need to sum over all w values for a given n
-            p_sum += sum(w[m, k] for k in self.labels)
+            p_sum += sum(w[m, k] for k in self._labels)
         # to determine if a leaf, we look at its w value
         # and find for which label the value > 0.5
-        col_idx = np.asarray([w[n, k] > 0.5 for k in self.labels]).nonzero()[0]
+        col_idx = np.asarray([w[n, k] > 0.5 for k in self._labels]).nonzero()[0]
         # col_idx = np.asarray(w[n, :] > 0.5).nonzero().flatten()
         # assuming here that we can only have one column > 0.5
         if len(col_idx) > 0:
             leaf = True
-            value = self.labels[int(col_idx[0])]
+            value = self._labels[int(col_idx[0])]
         elif p_sum == 1:
             pruned = True
 
         if not pruned and not leaf:
-            for f, theta in self.f_theta_indices:
+            for f, theta in self._f_theta_indices:
                 if b[n, f, theta] > 0.5:
                     selected_feature = f
                     cutoff = theta
@@ -153,7 +153,7 @@ class RobustOCT(ClassificationProblem):
             node = 1
             while True:
                 terminal = False
-                for k in self.labels:
+                for k in self._labels:
                     if self.w_value[node, k] > 0.5:  # w[n,k] == 1
                         prediction += [k]
                         terminal = True
@@ -161,12 +161,12 @@ class RobustOCT(ClassificationProblem):
                 if terminal:
                     break
                 else:
-                    for (f, theta) in self.f_theta_indices:
+                    for (f, theta) in self._f_theta_indices:
                         if self.b_value[node, f, theta] > 0.5:  # b[n,f]== 1
                             if X.at[i, f] >= theta + 1:
-                                node = self.tree.get_right_children(node)
+                                node = self._tree.get_right_children(node)
                             else:
-                                node = self.tree.get_left_children(node)
+                                node = self._tree.get_left_children(node)
                             break
         return np.array(prediction)
 
@@ -174,54 +174,58 @@ class RobustOCT(ClassificationProblem):
         # define variables
 
         # t is the objective value of the problem
-        self.t = self.model.addVars(
-            self.datapoints, vtype=GRB.CONTINUOUS, ub=1, name="t"
+        self._t = self._model.addVars(
+            self._datapoints, vtype=GRB.CONTINUOUS, ub=1, name="t"
         )
         # w[n,k] == 1 iff at node n we do not branch and we make the prediction k
-        self.w = self.model.addVars(
-            self.tree.Nodes + self.tree.Leaves, self.labels, vtype=GRB.BINARY, name="w"
+        self._w = self._model.addVars(
+            self._tree.Nodes + self._tree.Leaves,
+            self._labels,
+            vtype=GRB.BINARY,
+            name="w",
         )
 
         # b[n,f,theta] ==1 iff at node n we branch on feature f with cutoff theta
-        self.b = self.model.addVars(self.b_indices, vtype=GRB.BINARY, name="b")
+        self._b = self._model.addVars(self._b_indices, vtype=GRB.BINARY, name="b")
 
         # we need these in the callback to have access to the value of the decision variables
-        self.model._vars_t = self.t
-        self.model._vars_b = self.b
-        self.model._vars_w = self.w
+        self._model._vars_t = self._t
+        self._model._vars_b = self._b
+        self._model._vars_w = self._w
 
     def _define_constraints(self):
         # define constraints
 
         # sum(b[n,f,theta], f, theta) + sum(w[n,k], k) = 1 for all n in nodes
-        self.model.addConstrs(
+        self._model.addConstrs(
             (
-                quicksum(self.b[n, f, theta] for (f, theta) in self.f_theta_indices)
-                + quicksum(self.w[n, k] for k in self.labels)
+                quicksum(self._b[n, f, theta] for (f, theta) in self._f_theta_indices)
+                + quicksum(self._w[n, k] for k in self._labels)
                 == 1
             )
-            for n in self.tree.Nodes
+            for n in self._tree.Nodes
         )
 
         # sum(w[n,k], k) = 1 for all n in leaves
-        self.model.addConstrs(
-            (quicksum(self.w[n, k] for k in self.labels) == 1) for n in self.tree.Leaves
+        self._model.addConstrs(
+            (quicksum(self._w[n, k] for k in self._labels) == 1)
+            for n in self._tree.Leaves
         )
 
     def _define_objective(self):
         # define objective function
         obj = LinExpr(0)
-        for i in self.datapoints:
-            obj.add(self.t[i])
+        for i in self._datapoints:
+            obj.add(self._t[i])
         # Add regularization term so that in case of tie in objective function,
         # encourage less branching
         obj.add(
             -1
             * self.reg
-            * quicksum(self.b[n, f, theta] for (n, f, theta) in self.b_indices)
+            * quicksum(self._b[n, f, theta] for (n, f, theta) in self._b_indices)
         )
 
-        self.model.setObjective(obj, GRB.MAXIMIZE)
+        self._model.setObjective(obj, GRB.MAXIMIZE)
 
     def fit(self, X, y, costs=None, budget=-1):
         """Fit an optimal robust classification tree given data, labels,
@@ -248,67 +252,67 @@ class RobustOCT(ClassificationProblem):
             y,
         )
         X, y = check_X_y(X, y)
-        check_integer(self.X)
+        check_integer(self._X)
 
-        self.classes_ = unique_labels(y)
+        self._classes = unique_labels(y)
 
-        self.cat_features = self.X_col_labels
+        self._cat_features = self._X_col_labels
 
         # Get range of data, and store indices of branching variables based on range
-        min_values = self.X.min(axis=0)
-        max_values = self.X.max(axis=0)
+        min_values = self._X.min(axis=0)
+        max_values = self._X.max(axis=0)
         f_theta_indices = []
         b_indices = []
-        for f in self.cat_features:
+        for f in self._cat_features:
             min_value = min_values[f]
             max_value = max_values[f]
 
             # cutoffs are from min_value to max_value - 1
             for theta in range(min_value, max_value):
                 f_theta_indices += [(f, theta)]
-                b_indices += [(n, f, theta) for n in self.tree.Nodes]
+                b_indices += [(n, f, theta) for n in self._tree.Nodes]
 
-        self.min_values = self.X.min(axis=0)
-        self.max_values = self.X.max(axis=0)
-        self.f_theta_indices = f_theta_indices
-        self.b_indices = b_indices
+        self._min_values = self._X.min(axis=0)
+        self._max_values = self._X.max(axis=0)
+        self._f_theta_indices = f_theta_indices
+        self._b_indices = b_indices
 
         # Set default for costs of uncertainty if needed
         if costs is not None:
-            self.costs = check_same_as_X(
-                self.X, self.X_col_labels, costs, "uncertainty costs"
+            self._costs = check_same_as_X(
+                self._X, self._X_col_labels, costs, "uncertainty costs"
             )
-            self.costs.set_index(pd.Index(range(costs.shape[0])), inplace=True)
+            self._costs.set_index(pd.Index(range(costs.shape[0])), inplace=True)
             # Also check if indices are the same
-            if self.X.shape[0] != self.costs.shape[0]:
+            if self._X.shape[0] != self._costs.shape[0]:
                 raise ValueError(
                     (
-                        f"Input covariates has {self.X.shape[0]} samples, "
-                        f"but uncertainty costs has {self.costs.shape[0]}"
+                        f"Input covariates has {self._X.shape[0]} samples, "
+                        f"but uncertainty costs has {self._costs.shape[0]}"
                     )
                 )
         else:
             # By default, set costs to be budget + 1 (i.e. no uncertainty)
-            gammas_df = deepcopy(self.X).astype("float")
+            gammas_df = deepcopy(self._X).astype("float")
             for col in gammas_df.columns:
                 gammas_df[col].values[:] = budget + 1
-            self.costs = gammas_df
+            self._costs = gammas_df
 
         # Budget of uncertainty
-        self.budget = budget
+        self._budget = budget
 
         # Create uncertainty set
-        self.epsilon = self.budget  # Budget of uncertainty
-        self.gammas = self.costs  # Cost of feature uncertainty
-        self.eta = self.budget + 1  # Cost of label uncertainty - future work
+        self._epsilon = self._budget  # Budget of uncertainty
+        self._gammas = self._costs  # Cost of feature uncertainty
+        self._eta = self._budget + 1  # Cost of label uncertainty - future work
 
         self._create_main_problem()
-        self.model.update()
-        self.model.optimize(robust_tree_callback)
+        self._model.update()
+        self._model.optimize(robust_tree_callback)
 
         # Store fitted Gurobi model
-        self.b_value = self.model.getAttr("X", self.b)
-        self.w_value = self.model.getAttr("X", self.w)
+        self.b_value = self._model.getAttr("X", self._b)
+        self.w_value = self._model.getAttr("X", self._w)
 
         # `fit` should always return `self`
         return self
@@ -330,7 +334,7 @@ class RobustOCT(ClassificationProblem):
         """
         check_is_fitted(self, ["b_value", "w_value"])
         # Convert to dataframe
-        df_test = check_same_as_X(self.X, self.X_col_labels, X, "test covariates")
+        df_test = check_same_as_X(self._X, self._X_col_labels, X, "test covariates")
         check_integer(df_test)
 
         return self._make_prediction(df_test)
@@ -338,24 +342,24 @@ class RobustOCT(ClassificationProblem):
     def print_tree(self):
         check_is_fitted(self, ["b_value", "w_value"])
         assignment_nodes = []
-        for n in self.tree.Nodes + self.tree.Leaves:
+        for n in self._tree.Nodes + self._tree.Leaves:
             print("#########node ", n)
             terminal = False
 
             # Check if pruned
-            if self.tree.get_parent(n) in assignment_nodes:
+            if self._tree.get_parent(n) in assignment_nodes:
                 print("pruned")
                 assignment_nodes += [n]
                 continue
 
-            for k in self.labels:
+            for k in self._labels:
                 if self.w_value[n, k] > 0.5:
                     print("leaf {}".format(k))
                     terminal = True
                     assignment_nodes += [n]
                     break
             if not terminal:
-                for (f, theta) in self.f_theta_indices:
+                for (f, theta) in self._f_theta_indices:
                     if self.b_value[n, f, theta] > 0.5:  # b[n,f]== 1
                         print("Feature: ", f, ", Cutoff: ", theta)
                         break
@@ -413,15 +417,15 @@ class RobustOCT(ClassificationProblem):
         check_is_fitted(self, ["b_value", "w_value"])
 
         node_dict = {}
-        for node in np.arange(1, self.tree.total_nodes + 1):
+        for node in np.arange(1, self._tree.total_nodes + 1):
             node_dict[node] = self._get_node_status(self.b_value, self.w_value, node)
 
         exporter = MPLPlotter(
-            self.tree,
+            self._tree,
             node_dict,
-            self.X_col_labels,
-            self.tree.depth,
-            self.classes_,
+            self._X_col_labels,
+            self._tree.depth,
+            self._classes,
             type(self).__name__,
             label=label,
             filled=filled,

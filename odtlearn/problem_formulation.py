@@ -8,11 +8,6 @@ from odtlearn.utils.Tree import _Tree
 class ProblemFormulation(ABC):
     def __init__(self, depth=1, time_limit=60, num_threads=None, verbose=False) -> None:
         """
-        :param X: numpy matrix of covariates
-        :param y: numpy array of class labels
-        :param X_col_labels: a list of features in the covariate space X
-        :param model_name: str name of Gurobi model
-
         Parameters
         ----------
         X : ndarray, pd.DataFrame
@@ -32,32 +27,32 @@ class ProblemFormulation(ABC):
         # self.y = y
         # self.X_col_labels = X_col_labels
 
-        self.depth = depth
-        self.time_limit = time_limit
-        self.num_threads = num_threads
-        self.verbose = verbose
+        self._depth = depth
+        self._time_limit = time_limit
+        self._num_threads = num_threads
+        self._verbose = verbose
 
         # decision variables
-        self.b = 0
-        self.p = 0
-        self.w = 0
-        self.zeta = 0  # rename?
-        self.z = 0
+        self._b = 0
+        self._p = 0
+        self._w = 0
+        self._zeta = 0  # rename?
+        self._z = 0
 
         # datapoints contains the indicies of our training data
         # self.datapoints = np.arange(0, self.X.shape[0])
 
-        self.tree = _Tree(self.depth)
-        self.time_limit = time_limit
+        self._tree = _Tree(self._depth)
+        self._time_limit = time_limit
         # self.model_name = model_name
         # Gurobi model
-        self.model = Model()
+        self._model = Model()
         if not verbose:
             # supress all logging
-            self.model.params.OutputFlag = 0
+            self._model.params.OutputFlag = 0
         if num_threads is not None:
-            self.model.params.Threads = num_threads
-        self.model.params.TimeLimit = time_limit
+            self._model.params.Threads = num_threads
+        self._model.params.TimeLimit = time_limit
 
     @abstractmethod
     def _define_variables(self):

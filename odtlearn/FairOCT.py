@@ -80,13 +80,13 @@ class FairOCT(FlowOCTMultipleNode):
         constraint_added = False
         if count_p != 0 and count_p_prime != 0:
             constraint_added = True
-            self.model.addConstr(
+            self._model.addConstr(
                 (
                     (1 / count_p)
                     * quicksum(
                         quicksum(
-                            self.zeta[i, n, self.positive_class]
-                            for n in self.tree.Leaves + self.tree.Nodes
+                            self._zeta[i, n, self.positive_class]
+                            for n in self._tree.Leaves + self._tree.Nodes
                         )
                         for i in p_df.index
                     )
@@ -94,8 +94,8 @@ class FairOCT(FlowOCTMultipleNode):
                         (1 / count_p_prime)
                         * quicksum(
                             quicksum(
-                                self.zeta[i, n, self.positive_class]
-                                for n in self.tree.Leaves + self.tree.Nodes
+                                self._zeta[i, n, self.positive_class]
+                                for n in self._tree.Leaves + self._tree.Nodes
                             )
                             for i in p_prime_df.index
                         )
@@ -104,13 +104,13 @@ class FairOCT(FlowOCTMultipleNode):
                 <= self.fairness_bound
             )
 
-            self.model.addConstr(
+            self._model.addConstr(
                 (
                     (1 / count_p)
                     * quicksum(
                         quicksum(
-                            self.zeta[i, n, self.positive_class]
-                            for n in (self.tree.Leaves + self.tree.Nodes)
+                            self._zeta[i, n, self.positive_class]
+                            for n in (self._tree.Leaves + self._tree.Nodes)
                         )
                         for i in p_df.index
                     )
@@ -119,8 +119,8 @@ class FairOCT(FlowOCTMultipleNode):
                     (1 / count_p_prime)
                     * quicksum(
                         quicksum(
-                            self.zeta[i, n, self.positive_class]
-                            for n in self.tree.Leaves + self.tree.Nodes
+                            self._zeta[i, n, self.positive_class]
+                            for n in self._tree.Leaves + self._tree.Nodes
                         )
                         for i in p_prime_df.index
                     )
@@ -213,24 +213,24 @@ class FairOCT(FlowOCTMultipleNode):
         ###########################################################
         # Max sum(sum(zeta[i,n,y(i)]))
         obj = LinExpr(0)
-        for n in self.tree.Nodes:
-            for f in self.X_col_labels:
-                obj.add(-1 * self._lambda * self.b[n, f])
+        for n in self._tree.Nodes:
+            for f in self._X_col_labels:
+                obj.add(-1 * self._lambda * self._b[n, f])
         if self.obj_mode == "acc":
-            for i in self.datapoints:
-                for n in self.tree.Nodes + self.tree.Leaves:
-                    obj.add((1 - self._lambda) * (self.zeta[i, n, self.y[i]]))
+            for i in self._datapoints:
+                for n in self._tree.Nodes + self._tree.Leaves:
+                    obj.add((1 - self._lambda) * (self._zeta[i, n, self._y[i]]))
         elif self.obj_mode == "balance":
-            for i in self.datapoints:
-                for n in self.tree.Nodes + self.tree.Leaves:
+            for i in self._datapoints:
+                for n in self._tree.Nodes + self._tree.Leaves:
                     obj.add(
                         (1 - self._lambda)
                         * (
                             1
-                            / self.y[self.y == self.y[i]].shape[0]
-                            / self.labels.shape[0]
+                            / self._y[self._y == self._y[i]].shape[0]
+                            / self._labels.shape[0]
                         )
-                        * (self.zeta[i, n, self.y[i]])
+                        * (self._zeta[i, n, self._y[i]])
                     )
         else:
             assert self.obj_mode not in [
@@ -238,7 +238,7 @@ class FairOCT(FlowOCTMultipleNode):
                 "balance",
             ], "Wrong objective mode. obj_mode should be one of acc or balance."
 
-        self.model.setObjective(obj, GRB.MAXIMIZE)
+        self._model.setObjective(obj, GRB.MAXIMIZE)
 
     def fit(self, X, y, protect_feat, legit_factor):
         """
@@ -284,17 +284,17 @@ class FairOCT(FlowOCTMultipleNode):
         check_binary(X)
 
         # Store the classes seen during fit
-        self.classes_ = unique_labels(y)
+        self._classes = unique_labels(y)
 
         self._create_main_problem()
-        self.model.update()
-        self.model.optimize()
+        self._model.update()
+        self._model.optimize()
 
         # Here we will want to store these values and any other variables
         # needed for making predictions later
-        self.b_value = self.model.getAttr("X", self.b)
-        self.w_value = self.model.getAttr("X", self.w)
-        self.p_value = self.model.getAttr("X", self.p)
+        self.b_value = self._model.getAttr("X", self._b)
+        self.w_value = self._model.getAttr("X", self._w)
+        self.p_value = self._model.getAttr("X", self._p)
 
         # Return the classifier
         return self
@@ -321,7 +321,7 @@ class FairOCT(FlowOCTMultipleNode):
         # but we have the column information from when we called fit
         X = check_array(X)
 
-        check_columns_match(self.X_col_labels, X)
+        check_columns_match(self._X_col_labels, X)
 
         return self._make_prediction(X)
 
