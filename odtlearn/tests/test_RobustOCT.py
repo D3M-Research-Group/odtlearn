@@ -3,7 +3,6 @@ import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 
-# from odtlearn.RobustTree import RobustTreeClassifier
 from odtlearn.RobustOCT import RobustOCT
 
 
@@ -70,10 +69,8 @@ def synthetic_costs_1():
     return costs
 
 
-def test_RobustTree_X_noninteger_error():
+def test_RobustOCT_X_noninteger_error():
     """Test whether X is integer-valued"""
-
-    # clf = RobustTreeClassifier(depth=1, time_limit=20)
     clf = RobustOCT(depth=1, time_limit=20)
 
     with pytest.raises(
@@ -87,9 +84,8 @@ def test_RobustTree_X_noninteger_error():
         clf.fit(data, y)
 
 
-def test_RobustTree_cost_shape_error():
+def test_RobustOCT_cost_shape_error():
     """Test whether X and cost have the same size and columns"""
-    # clf = RobustTreeClassifier(depth=1, time_limit=20)
     clf = RobustOCT(depth=1, time_limit=20)
     data = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
@@ -151,7 +147,7 @@ def test_RobustTree_cost_shape_error():
 
 
 @pytest.mark.test_gurobi
-def test_RobustTree_prediction_shape_error():
+def test_RobustOCT_prediction_shape_error():
     """Test whether X and cost have the same size and columns"""
     # Run some quick model that finishes in 1 second
     clf = RobustOCT(depth=1, time_limit=20)
@@ -218,7 +214,7 @@ def test_RobustTree_prediction_shape_error():
 
 
 @pytest.mark.test_gurobi
-def test_RobustTree_with_uncertainty_success():
+def test_RobustOCT_with_uncertainty_success():
     clf = RobustOCT(depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
@@ -240,7 +236,7 @@ def test_RobustTree_with_uncertainty_success():
 
 
 @pytest.mark.test_gurobi
-def test_RobustTree_no_uncertainty_success():
+def test_RobustOCT_no_uncertainty_success():
     clf = RobustOCT(depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
@@ -266,7 +262,7 @@ def test_RobustTree_no_uncertainty_success():
         (2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])),
     ],
 )
-def test_RobustTree_correctness(synthetic_data_1, d, expected_pred):
+def test_RobustOCT_correctness(synthetic_data_1, d, expected_pred):
     X, y = synthetic_data_1
     robust_classifier = RobustOCT(
         depth=d,
@@ -286,7 +282,7 @@ def test_RobustTree_correctness(synthetic_data_1, d, expected_pred):
         (2, 5, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1])),
     ],
 )
-def test_RobustTree_uncertainty_correctness(
+def test_RobustOCT_uncertainty_correctness(
     synthetic_data_1, synthetic_costs_1, d, budget, expected_pred
 ):
     """

@@ -3,7 +3,6 @@ import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 
-# from odtlearn.StrongTree import StrongTreeClassifier
 from odtlearn.BendersOCT import BendersOCT
 from odtlearn.FlowOCT import FlowOCT
 
@@ -82,9 +81,8 @@ def synthetic_data_2():
 
 
 # fmt: on
-def test_StrongTree_X_nonbinary_error():
+def test_FlowOCT_X_nonbinary_error():
     # Test that we raise a ValueError if X matrix has values other than zero or one
-    # clf = StrongTreeClassifier(depth=1, time_limit=2, _lambda=1)
     clf = FlowOCT(depth=1, time_limit=2, _lambda=1)
 
     with pytest.raises(
@@ -107,7 +105,7 @@ def test_StrongTree_X_nonbinary_error():
 
 
 # Test that we raise an error if X and y have different number of rows
-def test_StrongTree_X_data_shape_error():
+def test_FlowOCT_X_data_shape_error():
     X = np.ones(100).reshape(100, 1)
 
     clf = FlowOCT(depth=1, time_limit=2, _lambda=1)
@@ -121,7 +119,7 @@ def test_StrongTree_X_data_shape_error():
 
 @pytest.mark.test_gurobi
 # Test that if we are given a pandas dataframe, we keep the original data and its labels
-def test_StrongTree_classifier():
+def test_FlowOCT_classifier():
     train = pd.DataFrame(
         {"x1": [1, 0, 0, 0, 1], "x2": [1, 1, 1, 0, 1], "y": [1, 1, 0, 0, 0]},
         index=["A", "B", "C", "D", "E"],
@@ -153,9 +151,7 @@ def test_StrongTree_classifier():
         (2, 0.51, True, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1])),
     ],
 )
-def test_StrongTree_same_predictions(
-    synthetic_data_1, d, _lambda, benders, expected_pred
-):
+def test_FlowOCT_same_predictions(synthetic_data_1, d, _lambda, benders, expected_pred):
     X, y = synthetic_data_1
     if benders:
         stcl = BendersOCT(
@@ -187,7 +183,7 @@ def test_StrongTree_same_predictions(
         (True, "balance", np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1])),
     ],
 )
-def test_StrongTree_obj_mode(synthetic_data_2, benders, obj_mode, expected_pred):
+def test_FlowOCT_obj_mode(synthetic_data_2, benders, obj_mode, expected_pred):
     X, y = synthetic_data_2
     if benders:
         stcl = BendersOCT(

@@ -54,7 +54,7 @@ def synthetic_data_1():
 
 
 # fmt: on
-def test_FairTree_same_predictions(synthetic_data_1):
+def test_FairOCT_same_predictions(synthetic_data_1):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
         positive_class=1,
@@ -88,7 +88,7 @@ def test_FairTree_same_predictions(synthetic_data_1):
     "f, b, g0_value",
     [("SP", 1, 0.214), ("SP", 0.2, 0.5), ("PE", 1, 0.111), ("PE", 0.04, 0)],
 )
-def test_FairTree_metrics(synthetic_data_1, f, b, g0_value):
+def test_FairOCT_metrics(synthetic_data_1, f, b, g0_value):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
         positive_class=1,

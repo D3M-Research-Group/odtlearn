@@ -3,7 +3,6 @@ import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 
-# from odtlearn.PrescriptiveTree import PrescriptiveTreeClassifier
 from odtlearn.FlowOPT import FlowOPT_DM, FlowOPT_DR, FlowOPT_IPW
 
 
@@ -14,9 +13,8 @@ def data():
 
 
 # Test that we raise a ValueError if X matrix has values other than zero or one
-def test_PrescriptiveTree_X_nonbinary_error():
+def test_FlowOPT_X_nonbinary_error():
 
-    # clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
     clf = FlowOPT_IPW(depth=1, time_limit=300)
 
     with pytest.raises(
@@ -32,10 +30,9 @@ def test_PrescriptiveTree_X_nonbinary_error():
 
 
 # Test that we raise an error if X and y have different number of rows
-def test_PrescriptiveTree_X_data_shape_error():
+def test_FlowOPT_X_data_shape_error():
     X = np.ones(10).reshape(10, 1)
 
-    # clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
     clf = FlowOPT_IPW(depth=1, time_limit=300)
 
     with pytest.raises(
@@ -49,7 +46,7 @@ def test_PrescriptiveTree_X_data_shape_error():
 
 
 # Test that we raise an error if IPW and y_hat are not in correct format
-def test_PrescriptiveTree_X_helpers_error(data):
+def test_FlowOPT_X_helpers_error(data):
     X = np.ones(10).reshape(10, 1)
     t = np.random.randint(2, size=X.shape[0])
     y = np.random.rand(10)
@@ -59,7 +56,6 @@ def test_PrescriptiveTree_X_helpers_error(data):
         AssertionError, match=r"Inverse propensity weights must be in the range \(0, 1]"
     ):
         ipw = np.random.rand(10) + 1
-        # clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
         clf = FlowOPT_IPW(depth=1, time_limit=300)
         clf.fit(X, t, y, ipw)
 
@@ -71,14 +67,12 @@ def test_PrescriptiveTree_X_helpers_error(data):
         # df = pd.read_csv("../../data/prescriptive_tree/train_50.csv")
         df = data
         y_hat = df[["lasso0", "lasso1", "lasso1"]]
-        # clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="DM")
         clf = FlowOPT_DM(depth=1, time_limit=300)
         clf.fit(X=X, t=t, y=y, y_hat=y_hat, ipw=None)
 
 
 # Test that we raise an error if t isn't discrete and starts from 0
-def test_PrescriptiveTree_X_treatment_error():
-    # clf = PrescriptiveTreeClassifier(depth=1, time_limit=300, method="IPW")
+def test_FlowOPT_X_treatment_error():
     clf = FlowOPT_IPW(depth=1, time_limit=300)
 
     with pytest.raises(
@@ -107,9 +101,8 @@ def test_PrescriptiveTree_X_treatment_error():
                      1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
                      0, 1]))])
 # fmt: on
-def test_PrescriptiveTree_classifier(data, method, expected_pred):
+def test_FlowOPT_classifier(data, method, expected_pred):
     df = data
-    # clf = PrescriptiveTreeClassifier(depth=2, time_limit=300, method=method)
     X = df.iloc[:, :20]
     t = df["t"]
     y = df["y"]
