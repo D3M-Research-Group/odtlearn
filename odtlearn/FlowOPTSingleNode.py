@@ -24,7 +24,7 @@ class FlowOPTSingleNode(OptimalPrescriptiveTree):
         self._b = self._model.addVars(
             self._tree.Nodes, self._X_col_labels, vtype=GRB.BINARY, name="b"
         )
-        self.p = self._model.addVars(
+        self._p = self._model.addVars(
             self._tree.Nodes + self._tree.Leaves, vtype=GRB.BINARY, name="p"
         )
         self._w = self._model.addVars(
@@ -96,8 +96,8 @@ class FlowOPTSingleNode(OptimalPrescriptiveTree):
         self._model.addConstrs(
             (
                 quicksum(self._b[n, f] for f in self._X_col_labels)
-                + self.p[n]
-                + quicksum(self.p[m] for m in self._tree.get_ancestors(n))
+                + self._p[n]
+                + quicksum(self._p[m] for m in self._tree.get_ancestors(n))
                 == 1
             )
             for n in self._tree.Nodes
@@ -105,7 +105,10 @@ class FlowOPTSingleNode(OptimalPrescriptiveTree):
 
         # p[n] + sum(p[m], m in A(n)) = 1   forall n in Leaves
         self._model.addConstrs(
-            (self.p[n] + quicksum(self.p[m] for m in self._tree.get_ancestors(n)) == 1)
+            (
+                self._p[n] + quicksum(self._p[m] for m in self._tree.get_ancestors(n))
+                == 1
+            )
             for n in self._tree.Leaves
         )
 
@@ -117,7 +120,7 @@ class FlowOPTSingleNode(OptimalPrescriptiveTree):
 
         # sum(w[n,k], k in treatments) = p[n]
         self._model.addConstrs(
-            (quicksum(self._w[n, k] for k in self._treatments) == self.p[n])
+            (quicksum(self._w[n, k] for k in self._treatments) == self._p[n])
             for n in self._tree.Nodes + self._tree.Leaves
         )
 

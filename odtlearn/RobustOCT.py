@@ -37,7 +37,6 @@ class RobustOCT(OptimalClassificationTree):
         num_threads=None,
         verbose=False,
     ) -> None:
-        self.model_name = "RobustOCT"
         super().__init__(
             depth,
             time_limit,
@@ -46,10 +45,8 @@ class RobustOCT(OptimalClassificationTree):
         )
 
         # Regularization term: encourage less branching without sacrificing accuracy
-        self.reg = 1 / (len(self._tree.Nodes) + 1)
+        self._reg = 1 / (len(self._tree.Nodes) + 1)
 
-        # Decision Variables (b,w inherited from problem formulation)
-        self._t = 0
         # The cuts we add in the callback function would be treated as lazy constraints
         self._model.params.LazyConstraints = 1
 
@@ -221,7 +218,7 @@ class RobustOCT(OptimalClassificationTree):
         # encourage less branching
         obj.add(
             -1
-            * self.reg
+            * self._reg
             * quicksum(self._b[n, f, theta] for (n, f, theta) in self._b_indices)
         )
 

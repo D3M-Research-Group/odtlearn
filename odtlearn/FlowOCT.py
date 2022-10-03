@@ -16,8 +16,7 @@ class FlowOCT(FlowOCTSingleNode):
         num_threads=None,
         verbose=False,
     ) -> None:
-        self.model_name = "FlowOCT"
-        self.obj_mode = obj_mode
+        self._obj_mode = obj_mode
         super().__init__(
             _lambda,
             depth,
@@ -34,11 +33,11 @@ class FlowOCT(FlowOCTSingleNode):
         for n in self._tree.Nodes:
             for f in self._X_col_labels:
                 obj.add(-1 * self._lambda * self._b[n, f])
-        if self.obj_mode == "acc":
+        if self._obj_mode == "acc":
             for i in self._datapoints:
                 obj.add((1 - self._lambda) * self._z[i, 1])
 
-        elif self.obj_mode == "balance":
+        elif self._obj_mode == "balance":
             for i in self._datapoints:
                 obj.add(
                     (1 - self._lambda)
@@ -50,7 +49,7 @@ class FlowOCT(FlowOCTSingleNode):
                     * self._z[i, 1]
                 )
         else:
-            assert self.obj_mode not in [
+            assert self._obj_mode not in [
                 "acc",
                 "balance",
             ], "Wrong objective mode. obj_mode should be one of acc or balance."

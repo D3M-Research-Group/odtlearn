@@ -85,8 +85,7 @@ class FlowOPT_IPW(FlowOPTSingleNode):
 
         # we also need to check on y and ipw/y_hat depending on the method chosen
         y = check_y(X, y)
-        # self.ipw, _ = check_helpers(X, self.treatments, ipw=ipw, y_hat=None)
-        self.ipw = check_ipw(X, ipw)
+        self._ipw = check_ipw(X, ipw)
 
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
@@ -97,7 +96,7 @@ class FlowOPT_IPW(FlowOPTSingleNode):
 
         self.b_value = self._model.getAttr("X", self._b)
         self.w_value = self._model.getAttr("X", self._w)
-        self.p_value = self._model.getAttr("X", self.p)
+        self.p_value = self._model.getAttr("X", self._p)
 
         # Return the classifier
         return self
@@ -167,16 +166,8 @@ class FlowOPT_DM(FlowOPTMultipleNode):
             for n in self._tree.Nodes + self._tree.Leaves:
                 for k in self._treatments:
                     obj.add(
-                        self._zeta[i, n, k] * (self.y_hat[i][int(k)])
+                        self._zeta[i, n, k] * (self._y_hat[i][int(k)])
                     )  # we assume that each column corresponds to an ordered list t, which might be problematic
-                    # treat = self.t[i]
-                    # if self.robust:
-                    #     if int(treat) == int(k):
-                    #         obj.add(
-                    #             self.zeta[i, n, k]
-                    #             * (self.y[i] - self.y_hat[i][int(k)])
-                    #             / self.ipw[i]
-                    #         )
 
         self._model.setObjective(obj, GRB.MAXIMIZE)
 
@@ -221,9 +212,8 @@ class FlowOPT_DM(FlowOPTMultipleNode):
 
         # we also need to check on y and ipw/y_hat depending on the method chosen
         y = check_y(X, y)
-        # self.ipw, self.y_hat = check_helpers(X, self.treatments, ipw=ipw, y_hat=y_hat)
-        self.ipw = check_ipw(X, ipw)
-        self.y_hat = check_y_hat(X, self._treatments, y_hat)
+        self._ipw = check_ipw(X, ipw)
+        self._y_hat = check_y_hat(X, self._treatments, y_hat)
 
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
@@ -277,12 +267,12 @@ class FlowOPT_DR(FlowOPT_DM):
             for n in self._tree.Nodes + self._tree.Leaves:
                 for k in self._treatments:
                     obj.add(
-                        self._zeta[i, n, k] * (self.y_hat[i][int(k)])
+                        self._zeta[i, n, k] * (self._y_hat[i][int(k)])
                     )  # we assume that each column corresponds to an ordered list t, which might be problematic
                     if self._t[i] == int(k):
                         obj.add(
                             self._zeta[i, n, k]
-                            * (self._y[i] - self.y_hat[i][int(k)])
-                            / self.ipw[i]
+                            * (self._y[i] - self._y_hat[i][int(k)])
+                            / self._ipw[i]
                         )
         self._model.setObjective(obj, GRB.MAXIMIZE)

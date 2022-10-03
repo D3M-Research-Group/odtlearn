@@ -31,8 +31,6 @@ class BendersOCT(OptimalClassificationTree):
             verbose,
         )
 
-        self._g = 0
-
         # The cuts we add in the callback function would be treated as lazy constraints
         self._model.params.LazyConstraints = 1
         """
@@ -69,7 +67,7 @@ class BendersOCT(OptimalClassificationTree):
         self._model._main_grb_obj = self
 
         self._lambda = _lambda
-        self.obj_mode = obj_mode
+        self._obj_mode = obj_mode
 
     def _define_variables(self):
         ###########################################################
@@ -142,10 +140,10 @@ class BendersOCT(OptimalClassificationTree):
         for n in self._tree.Nodes:
             for f in self._X_col_labels:
                 obj.add(-1 * self._lambda * self._b[n, f])
-        if self.obj_mode == "acc":
+        if self._obj_mode == "acc":
             for i in self._datapoints:
                 obj.add((1 - self._lambda) * self._g[i])
-        elif self.obj_mode == "balance":
+        elif self._obj_mode == "balance":
             for i in self._datapoints:
                 obj.add(
                     (1 - self._lambda)
@@ -157,7 +155,7 @@ class BendersOCT(OptimalClassificationTree):
                     * self._g[i]
                 )
         else:
-            assert self.obj_mode not in [
+            assert self._obj_mode not in [
                 "acc",
                 "balance",
             ], "Wrong objective mode. obj_mode should be one of acc or balance."

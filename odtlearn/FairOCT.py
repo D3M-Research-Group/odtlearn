@@ -50,7 +50,6 @@ class FairOCT(FlowOCTMultipleNode):
                   It's up to the user to include the protected features in X or not.
                   We assume that we are allowed to branch on any of the columns within X.
         """
-        self.model_name = "FairOCT"
         super().__init__(
             _lambda,
             depth,
@@ -59,22 +58,22 @@ class FairOCT(FlowOCTMultipleNode):
             verbose,
         )
 
-        self.obj_mode = obj_mode
-        self.fairness_type = fairness_type
-        self.fairness_bound = fairness_bound
-        self.positive_class = positive_class
+        self._obj_mode = obj_mode
+        self._fairness_type = fairness_type
+        self._fairness_bound = fairness_bound
+        self._positive_class = positive_class
 
     def _extract_metadata(self, X, y, protect_feat):
         super()._extract_metadata(X, y)
         if isinstance(protect_feat, pd.DataFrame):
-            self.protect_feat_col_labels = protect_feat.columns
-            self.protect_feat_col_dtypes = protect_feat.dtypes
+            self._protect_feat_col_labels = protect_feat.columns
+            self._protect_feat_col_dtypes = protect_feat.dtypes
         else:
-            self.protect_feat_col_labels = np.array(
+            self._protect_feat_col_labels = np.array(
                 [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
             )
 
-    def add_fairness_constraint(self, p_df, p_prime_df):
+    def _add_fairness_constraint(self, p_df, p_prime_df):
         count_p = p_df.shape[0]
         count_p_prime = p_prime_df.shape[0]
         constraint_added = False
@@ -85,7 +84,7 @@ class FairOCT(FlowOCTMultipleNode):
                     (1 / count_p)
                     * quicksum(
                         quicksum(
-                            self._zeta[i, n, self.positive_class]
+                            self._zeta[i, n, self._positive_class]
                             for n in self._tree.Leaves + self._tree.Nodes
                         )
                         for i in p_df.index
@@ -94,14 +93,14 @@ class FairOCT(FlowOCTMultipleNode):
                         (1 / count_p_prime)
                         * quicksum(
                             quicksum(
-                                self._zeta[i, n, self.positive_class]
+                                self._zeta[i, n, self._positive_class]
                                 for n in self._tree.Leaves + self._tree.Nodes
                             )
                             for i in p_prime_df.index
                         )
                     )
                 )
-                <= self.fairness_bound
+                <= self._fairness_bound
             )
 
             self._model.addConstr(
@@ -109,7 +108,7 @@ class FairOCT(FlowOCTMultipleNode):
                     (1 / count_p)
                     * quicksum(
                         quicksum(
-                            self._zeta[i, n, self.positive_class]
+                            self._zeta[i, n, self._positive_class]
                             for n in (self._tree.Leaves + self._tree.Nodes)
                         )
                         for i in p_df.index
@@ -119,13 +118,13 @@ class FairOCT(FlowOCTMultipleNode):
                     (1 / count_p_prime)
                     * quicksum(
                         quicksum(
-                            self._zeta[i, n, self.positive_class]
+                            self._zeta[i, n, self._positive_class]
                             for n in self._tree.Leaves + self._tree.Nodes
                         )
                         for i in p_prime_df.index
                     )
                 )
-                >= -1 * self.fairness_bound
+                >= -1 * self._fairness_bound
             )
 
         return constraint_added
@@ -137,54 +136,54 @@ class FairOCT(FlowOCTMultipleNode):
         ###########################################################
 
         # Loop through all possible combinations of the protected feature
-        for protected_feature in self.P_col_labels:
-            for combo in combinations(self.X_p[protected_feature].unique(), 2):
+        for protected_feature in self._P_col_labels:
+            for combo in combinations(self._X_p[protected_feature].unique(), 2):
                 p = combo[0]
                 p_prime = combo[1]
 
-                if self.fairness_type == "SP":
-                    p_df = self.X_p[self.X_p[protected_feature] == p]
-                    p_prime_df = self.X_p[self.X_p[protected_feature] == p_prime]
-                    self.add_fairness_constraint(p_df, p_prime_df)
-                elif self.fairness_type == "PE":
-                    p_df = self.X_p[
-                        (self.X_p[protected_feature] == p)
-                        & (self.X_p[self.class_name] != self.positive_class)
+                if self._fairness_type == "SP":
+                    p_df = self._X_p[self._X_p[protected_feature] == p]
+                    p_prime_df = self._X_p[self._X_p[protected_feature] == p_prime]
+                    self._add_fairness_constraint(p_df, p_prime_df)
+                elif self._fairness_type == "PE":
+                    p_df = self._X_p[
+                        (self._X_p[protected_feature] == p)
+                        & (self._X_p[self._class_name] != self._positive_class)
                     ]
-                    p_prime_df = self.X_p[
-                        (self.X_p[protected_feature] == p_prime)
-                        & (self.X_p[self.class_name] != self.positive_class)
+                    p_prime_df = self._X_p[
+                        (self._X_p[protected_feature] == p_prime)
+                        & (self._X_p[self._class_name] != self._positive_class)
                     ]
-                    self.add_fairness_constraint(p_df, p_prime_df)
-                elif self.fairness_type == "EOpp":
-                    p_df = self.X_p[
-                        (self.X_p[protected_feature] == p)
-                        & (self.X_p[self.class_name] == self.positive_class)
+                    self._add_fairness_constraint(p_df, p_prime_df)
+                elif self._fairness_type == "EOpp":
+                    p_df = self._X_p[
+                        (self._X_p[protected_feature] == p)
+                        & (self._X_p[self._class_name] == self._positive_class)
                     ]
-                    p_prime_df = self.X_p[
-                        (self.X_p[protected_feature] == p_prime)
-                        & (self.X_p[self.class_name] == self.positive_class)
+                    p_prime_df = self._X_p[
+                        (self._X_p[protected_feature] == p_prime)
+                        & (self._X_p[self._class_name] == self._positive_class)
                     ]
-                    self.add_fairness_constraint(p_df, p_prime_df)
+                    self._add_fairness_constraint(p_df, p_prime_df)
                 elif (
-                    self.fairness_type == "EOdds"
+                    self._fairness_type == "EOdds"
                 ):  # Need to check with group if this is how we want to enforce this constraint
-                    PE_p_df = self.X_p[
-                        (self.X_p[protected_feature] == p)
-                        & (self.X_p[self.class_name] != self.positive_class)
+                    PE_p_df = self._X_p[
+                        (self._X_p[protected_feature] == p)
+                        & (self._X_p[self._class_name] != self._positive_class)
                     ]
-                    PE_p_prime_df = self.X_p[
-                        (self.X_p[protected_feature] == p_prime)
-                        & (self.X_p[self.class_name] != self.positive_class)
+                    PE_p_prime_df = self._X_p[
+                        (self._X_p[protected_feature] == p_prime)
+                        & (self._X_p[self._class_name] != self._positive_class)
                     ]
 
-                    EOpp_p_df = self.X_p[
-                        (self.X_p[protected_feature] == p)
-                        & (self.X_p[self.class_name] == self.positive_class)
+                    EOpp_p_df = self._X_p[
+                        (self._X_p[protected_feature] == p)
+                        & (self._X_p[self._class_name] == self._positive_class)
                     ]
-                    EOpp_p_prime_df = self.X_p[
-                        (self.X_p[protected_feature] == p_prime)
-                        & (self.X_p[self.class_name] == self.positive_class)
+                    EOpp_p_prime_df = self._X_p[
+                        (self._X_p[protected_feature] == p_prime)
+                        & (self._X_p[self._class_name] == self._positive_class)
                     ]
 
                     if (
@@ -193,19 +192,19 @@ class FairOCT(FlowOCTMultipleNode):
                         and EOpp_p_df.shape[0] != 0
                         and EOpp_p_prime_df.shape[0] != 0
                     ):
-                        self.add_fairness_constraint(PE_p_df, PE_p_prime_df)
-                        self.add_fairness_constraint(EOpp_p_df, EOpp_p_prime_df)
-                elif self.fairness_type == "CSP":
-                    for l_value in self.X_p[self.legitimate_name].unique():
-                        p_df = self.X_p[
-                            (self.X_p[protected_feature] == p)
-                            & (self.X_p[self.legitimate_name] == l_value)
+                        self._add_fairness_constraint(PE_p_df, PE_p_prime_df)
+                        self._add_fairness_constraint(EOpp_p_df, EOpp_p_prime_df)
+                elif self._fairness_type == "CSP":
+                    for l_value in self._X_p[self._legitimate_name].unique():
+                        p_df = self._X_p[
+                            (self._X_p[protected_feature] == p)
+                            & (self._X_p[self._legitimate_name] == l_value)
                         ]
-                        p_prime_df = self.X_p[
-                            (self.X_p[protected_feature] == p_prime)
-                            & (self.X_p[self.legitimate_name] == l_value)
+                        p_prime_df = self._X_p[
+                            (self._X_p[protected_feature] == p_prime)
+                            & (self._X_p[self._legitimate_name] == l_value)
                         ]
-                        self.add_fairness_constraint(p_df, p_prime_df)
+                        self._add_fairness_constraint(p_df, p_prime_df)
 
     def _define_objective(self):
         ###########################################################
@@ -216,11 +215,11 @@ class FairOCT(FlowOCTMultipleNode):
         for n in self._tree.Nodes:
             for f in self._X_col_labels:
                 obj.add(-1 * self._lambda * self._b[n, f])
-        if self.obj_mode == "acc":
+        if self._obj_mode == "acc":
             for i in self._datapoints:
                 for n in self._tree.Nodes + self._tree.Leaves:
                     obj.add((1 - self._lambda) * (self._zeta[i, n, self._y[i]]))
-        elif self.obj_mode == "balance":
+        elif self._obj_mode == "balance":
             for i in self._datapoints:
                 for n in self._tree.Nodes + self._tree.Leaves:
                     obj.add(
@@ -233,7 +232,7 @@ class FairOCT(FlowOCTMultipleNode):
                         * (self._zeta[i, n, self._y[i]])
                     )
         else:
-            assert self.obj_mode not in [
+            assert self._obj_mode not in [
                 "acc",
                 "balance",
             ], "Wrong objective mode. obj_mode should be one of acc or balance."
@@ -260,23 +259,23 @@ class FairOCT(FlowOCTMultipleNode):
         """
         self._extract_metadata(X, y, protect_feat)
 
-        self.P = protect_feat
-        self.legit_factor = legit_factor
+        self._P = protect_feat
+        self._legit_factor = legit_factor
 
-        self.class_name = "class_label"
-        self.legitimate_name = "legitimate_feature_name"
-        self.X_p = np.concatenate(
+        self._class_name = "class_label"
+        self._legitimate_name = "legitimate_feature_name"
+        self._X_p = np.concatenate(
             (protect_feat, legit_factor.reshape(-1, 1), y.reshape(-1, 1)), axis=1
         )
-        self.X_p = pd.DataFrame(
-            self.X_p,
+        self._X_p = pd.DataFrame(
+            self._X_p,
             columns=(
-                self.protect_feat_col_labels.tolist()
-                + [self.legitimate_name, self.class_name]
+                self._protect_feat_col_labels.tolist()
+                + [self._legitimate_name, self._class_name]
             ),
         )
 
-        self.P_col_labels = self.protect_feat_col_labels
+        self._P_col_labels = self._protect_feat_col_labels
 
         # this function returns converted X and y but we retain metadata
         X, y = check_X_y(X, y)
@@ -339,9 +338,9 @@ class FairOCT(FlowOCTMultipleNode):
 
         """
         if isinstance(protect_feat, pd.DataFrame):
-            self.protect_feat_test_col_names = protect_feat.columns
+            protect_feat_test_col_names = protect_feat.columns
         else:
-            self.protect_feat_test_col_names = np.array(
+            protect_feat_test_col_names = np.array(
                 [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
             )
 
@@ -349,19 +348,19 @@ class FairOCT(FlowOCTMultipleNode):
         # but we have the column information from when we called fit
         protect_feat, y = check_X_y(protect_feat, y)
 
-        check_columns_match(self.protect_feat_col_labels, protect_feat)
+        check_columns_match(self._protect_feat_col_labels, protect_feat)
 
         class_name = "class_label"
         X_p = np.concatenate((protect_feat, y.reshape(-1, 1)), axis=1)
         X_p = pd.DataFrame(
             X_p,
-            columns=(self.protect_feat_test_col_names.tolist() + [class_name]),
+            columns=(protect_feat_test_col_names.tolist() + [class_name]),
         )
 
         sp_dict = {}
 
         for t in X_p[class_name].unique():
-            for protected_feature in self.protect_feat_test_col_names:
+            for protected_feature in protect_feat_test_col_names:
                 for p in X_p[protected_feature].unique():
                     p_df = X_p[X_p[protected_feature] == p]
                     sp_p_t = None
@@ -390,9 +389,9 @@ class FairOCT(FlowOCTMultipleNode):
         """
 
         if isinstance(protect_feat, pd.DataFrame):
-            self.protect_feat_test_col_names = protect_feat.columns
+            protect_feat_test_col_names = protect_feat.columns
         else:
-            self.protect_feat_test_col_names = np.array(
+            protect_feat_test_col_names = np.array(
                 [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
             )
 
@@ -401,7 +400,7 @@ class FairOCT(FlowOCTMultipleNode):
         _, y = check_X_y(protect_feat, y)
         protect_feat, legit_factor = check_X_y(protect_feat, legit_factor)
 
-        check_columns_match(self.protect_feat_col_labels, protect_feat)
+        check_columns_match(self._protect_feat_col_labels, protect_feat)
 
         class_name = "class_label"
         legitimate_name = "legitimate_feature_name"
@@ -411,15 +410,14 @@ class FairOCT(FlowOCTMultipleNode):
         X_p = pd.DataFrame(
             X_p,
             columns=(
-                self.protect_feat_test_col_names.tolist()
-                + [legitimate_name, class_name]
+                protect_feat_test_col_names.tolist() + [legitimate_name, class_name]
             ),
         )
 
         csp_dict = {}
 
         for t in X_p[class_name].unique():
-            for protected_feature in self.protect_feat_test_col_names:
+            for protected_feature in protect_feat_test_col_names:
                 for p in X_p[protected_feature].unique():
                     for f in X_p[legitimate_name].unique():
                         p_f_df = X_p[
@@ -452,9 +450,9 @@ class FairOCT(FlowOCTMultipleNode):
         """
 
         if isinstance(protect_feat, pd.DataFrame):
-            self.protect_feat_test_col_names = protect_feat.columns
+            protect_feat_test_col_names = protect_feat.columns
         else:
-            self.protect_feat_test_col_names = np.array(
+            protect_feat_test_col_names = np.array(
                 [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
             )
 
@@ -463,7 +461,7 @@ class FairOCT(FlowOCTMultipleNode):
         _, y = check_X_y(protect_feat, y)
         protect_feat, y_pred = check_X_y(protect_feat, y_pred)
 
-        check_columns_match(self.protect_feat_col_labels, protect_feat)
+        check_columns_match(self._protect_feat_col_labels, protect_feat)
 
         class_name = "class_label"
         pred_name = "pred_label"
@@ -472,16 +470,14 @@ class FairOCT(FlowOCTMultipleNode):
         )
         X_p = pd.DataFrame(
             X_p,
-            columns=(
-                self.protect_feat_test_col_names.tolist() + [class_name, pred_name]
-            ),
+            columns=(protect_feat_test_col_names.tolist() + [class_name, pred_name]),
         )
 
         eq_dict = {}
 
         for t in X_p[class_name].unique():
             for t_pred in X_p[class_name].unique():
-                for protected_feature in self.protect_feat_test_col_names:
+                for protected_feature in protect_feat_test_col_names:
                     for p in X_p[protected_feature].unique():
                         p_t_df = X_p[
                             (X_p[protected_feature] == p) & (X_p[class_name] == t)
@@ -515,9 +511,9 @@ class FairOCT(FlowOCTMultipleNode):
         """
 
         if isinstance(protect_feat, pd.DataFrame):
-            self.protect_feat_test_col_names = protect_feat.columns
+            protect_feat_test_col_names = protect_feat.columns
         else:
-            self.protect_feat_test_col_names = np.array(
+            protect_feat_test_col_names = np.array(
                 [f"P_{i}" for i in np.arange(0, protect_feat.shape[1])]
             )
 
@@ -527,7 +523,7 @@ class FairOCT(FlowOCTMultipleNode):
         _, y_pred = check_X_y(protect_feat, y_pred)
         protect_feat, legit_factor = check_X_y(protect_feat, legit_factor)
 
-        check_columns_match(self.protect_feat_col_labels, protect_feat)
+        check_columns_match(self._protect_feat_col_labels, protect_feat)
 
         class_name = "class_label"
         pred_name = "pred_label"
@@ -544,7 +540,7 @@ class FairOCT(FlowOCTMultipleNode):
         X_p = pd.DataFrame(
             X_p,
             columns=(
-                self.protect_feat_test_col_names.tolist()
+                protect_feat_test_col_names.tolist()
                 + [legitimate_name, class_name, pred_name]
             ),
         )
@@ -553,7 +549,7 @@ class FairOCT(FlowOCTMultipleNode):
 
         for t in X_p[class_name].unique():
             for t_pred in X_p[class_name].unique():
-                for protected_feature in self.protect_feat_test_col_names:
+                for protected_feature in protect_feat_test_col_names:
                     for p in X_p[protected_feature].unique():
                         for f in X_p[legitimate_name].unique():
                             p_f_t_df = X_p[
