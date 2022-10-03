@@ -567,7 +567,7 @@ class FairOCT(FlowOCTMultipleNode):
         return ceq_dict
 
     def fairness_metric_summary(self, metric, new_data=None):
-        check_is_fitted(self, ["X_", "y_", "protect_feat_", "legit_factor_"])
+        check_is_fitted(self, ["b_value", "w_value", "p_value"])
         metric_names = ["SP", "CSP", "PE", "CPE"]
         if new_data is None:
             new_data = self.predict(self.X_)
