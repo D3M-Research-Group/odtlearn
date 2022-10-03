@@ -259,7 +259,7 @@ class FairOCT(FlowOCTMultipleNode):
         """
         self._extract_metadata(X, y, protect_feat)
 
-        self._P = protect_feat
+        self._protect_feat = protect_feat
         self._legit_factor = legit_factor
 
         self._class_name = "class_label"
@@ -570,33 +570,33 @@ class FairOCT(FlowOCTMultipleNode):
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
         metric_names = ["SP", "CSP", "PE", "CPE"]
         if new_data is None:
-            new_data = self.predict(self.X_)
+            new_data = self.predict(self._X)
         if metric not in metric_names:
             raise ValueError(
                 f"metric argument: '{metric}' does not match any of the options: {metric_names}"
             )
         if metric == "SP":
             sp_df = pd.DataFrame(
-                self.get_SP(self.protect_feat_, new_data).items(),
+                self.get_SP(self._protect_feat, new_data).items(),
                 columns=["(p,y)", "P(Y=y|P=p)"],
             )
             print(sp_df)
         elif metric == "CSP":
             csp_df = pd.DataFrame(
-                self.get_CSP(self.protect_feat_, self.legit_factor_, new_data).items(),
+                self.get_CSP(self._protect_feat, self._legit_factor, new_data).items(),
                 columns=["(p, f, y)", "P(Y=y|P=p, L=f)"],
             )
             print(csp_df)
         elif metric == "PE":
             pe_df = pd.DataFrame(
-                self.get_EqOdds(self.protect_feat_, self.y_, new_data).items(),
+                self.get_EqOdds(self._protect_feat, self.y_, new_data).items(),
                 columns=["(p, y, y_pred)", "P(Y_pred=y_pred|P=p, Y=y)"],
             )
             print(pe_df)
         elif metric == "CPE":
             cpe_df = pd.DataFrame(
                 self.get_CondEqOdds(
-                    self.protect_feat_, self.legit_factor_, self.y_, new_data
+                    self._protect_feat, self._legit_factor, self.y_, new_data
                 ).items(),
                 columns=["(p, f, t, t_pred)" "P(Y_pred=y_pred|P=p, Y=y, L=f)"],
             )
