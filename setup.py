@@ -61,8 +61,8 @@ setup(
         "": [
             "data/*.csv",
             "data/*.npz",
-            "data/prescriptive_tree/test_v2_200.csv",
-            "data/prescriptive_tree/train_v2_100.csv",
+            "data/prescriptive/test_v2_200.csv",
+            "data/prescriptive/train_v2_100.csv",
         ]
     },
 )

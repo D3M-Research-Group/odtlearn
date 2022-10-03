@@ -3,13 +3,13 @@ import pandas as pd
 import pkg_resources
 
 
-def prescrip_tree_data():
+def prescriptive_ex_data():
     """Return tuple of the train and test dataframes from the prescriptive tree example notebook"""
     train_stream = pkg_resources.resource_stream(
-        "odtlearn", "data/prescriptive_tree/train_v2_100.csv"
+        "odtlearn", "data/prescriptive/train_v2_100.csv"
     )
     test_stream = pkg_resources.resource_stream(
-        "odtlearn", "data/prescriptive_tree/test_v2_200.csv"
+        "odtlearn", "data/prescriptive/test_v2_200.csv"
     )
     train = pd.read_csv(train_stream)
     test = pd.read_csv(test_stream)
@@ -25,7 +25,7 @@ def balance_scale_data():
     return pd.read_csv(stream)
 
 
-def strongtree_example():
+def flow_oct_example():
     """Returns tuple with two numpy arrays containing the data used in example 1
      of the example notebooks in the ODTlearn documentation.
      The diagram within the code block shows the training dataset. Our dataset has
