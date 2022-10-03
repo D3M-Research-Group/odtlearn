@@ -133,6 +133,6 @@ class FlowOPTSingleNode(OptimalPrescriptiveTree):
         # define objective function
         obj = LinExpr(0)
         for i in self._datapoints:
-            obj.add(self._z[i, 1] * (self._y[i]) / self.ipw[i])
+            obj.add(self._z[i, 1] * (self._y[i]) / self._ipw[i])
 
         self._model.setObjective(obj, GRB.MAXIMIZE)
