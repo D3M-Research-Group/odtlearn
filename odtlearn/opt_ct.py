@@ -2,11 +2,11 @@ import numpy as np
 import pandas as pd
 from sklearn.utils.validation import check_is_fitted
 
-from odtlearn.problem_formulation import ProblemFormulation
+from odtlearn.opt_dt import OptimalDecisionTree
 from odtlearn.utils.TreePlotter import MPLPlotter
 
 
-class PrescriptiveProblem(ProblemFormulation):
+class OptimalClassificationTree(OptimalDecisionTree):
     def __init__(
         self,
         depth,
@@ -14,18 +14,9 @@ class PrescriptiveProblem(ProblemFormulation):
         num_threads,
         verbose,
     ) -> None:
-        """
-        :param t: numpy array or pandas series/dataframe of treatment assignments
-        :param ipw: numpy array or pandas series/dataframe of inverse propensity weights
-        :param treatments_set: a list or set of all possible treatments
-
-        """
         super().__init__(depth, time_limit, num_threads, verbose)
 
-        # self.t = t
-        # self.ipw = ipw
-
-    def _extract_metadata(self, X, y, t):
+    def _extract_metadata(self, X, y):
         """A function for extracting metadata from the inputs before converting
         them into numpy arrays to work with the sklearn API
 
@@ -49,9 +40,6 @@ class PrescriptiveProblem(ProblemFormulation):
         else:
             self._y = y
         self._labels = np.unique(self._y)
-
-        self._t = t
-        self._treatments = np.unique(t)
 
     def _get_node_status(self, b, w, p, n):
         """
@@ -98,7 +86,7 @@ class PrescriptiveProblem(ProblemFormulation):
             p_sum = p_sum + p[m]
         if p[n] > 0.5:  # leaf
             leaf = True
-            labels = self._treatments
+            labels = self._labels
             for k in labels:
                 if w[n, k] > 0.5:
                     value = k
@@ -236,7 +224,7 @@ class PrescriptiveProblem(ProblemFormulation):
             node_dict,
             self._X_col_labels,
             self._tree.depth,
-            self._treatments,
+            self._classes,
             type(self).__name__,
             label=label,
             filled=filled,

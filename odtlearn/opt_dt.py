@@ -5,7 +5,7 @@ from gurobipy import Model
 from odtlearn.utils.Tree import _Tree
 
 
-class ProblemFormulation(ABC):
+class OptimalDecisionTree(ABC):
     def __init__(self, depth=1, time_limit=60, num_threads=None, verbose=False) -> None:
         """
         Parameters

@@ -2,12 +2,12 @@ from gurobipy import GRB, LinExpr, quicksum
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
-from odtlearn.classification_formulation import ClassificationProblem
+from odtlearn.opt_ct import OptimalClassificationTree
 from odtlearn.utils.callbacks import benders_callback
 from odtlearn.utils.validation import check_binary, check_columns_match
 
 
-class BendersOCT(ClassificationProblem):
+class BendersOCT(OptimalClassificationTree):
     def __init__(
         self,
         _lambda=0,

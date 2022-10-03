@@ -6,13 +6,13 @@ from gurobipy import GRB, LinExpr, quicksum
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_is_fitted, check_X_y
 
-from odtlearn.classification_formulation import ClassificationProblem
+from odtlearn.opt_ct import OptimalClassificationTree
 from odtlearn.utils.callbacks import robust_tree_callback
 from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.validation import check_integer, check_same_as_X
 
 
-class RobustOCT(ClassificationProblem):
+class RobustOCT(OptimalClassificationTree):
     """An optimal robust decision tree classifier, fitted on a given integer-valued
     data set and a given cost-and-budget uncertainty set to produce a tree robust
     against distribution shifts.

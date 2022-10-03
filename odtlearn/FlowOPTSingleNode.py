@@ -1,9 +1,9 @@
 from gurobipy import GRB, LinExpr, quicksum
 
-from odtlearn.prescriptive_formulation import PrescriptiveProblem
+from odtlearn.opt_pt import OptimalPrescriptiveTree
 
 
-class FlowOPTSingleNode(PrescriptiveProblem):
+class FlowOPTSingleNode(OptimalPrescriptiveTree):
     def __init__(
         self,
         depth,

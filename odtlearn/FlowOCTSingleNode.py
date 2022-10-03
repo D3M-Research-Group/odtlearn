@@ -1,9 +1,9 @@
 from gurobipy import GRB, quicksum
 
-from odtlearn.classification_formulation import ClassificationProblem
+from odtlearn.opt_ct import OptimalClassificationTree
 
 
-class FlowOCTSingleNode(ClassificationProblem):
+class FlowOCTSingleNode(OptimalClassificationTree):
     def __init__(
         self,
         _lambda,
