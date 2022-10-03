@@ -8,7 +8,7 @@ from odtlearn.FlowOPT import FlowOPT_DM, FlowOPT_DR, FlowOPT_IPW
 
 @pytest.fixture
 def data():
-    df = pd.read_csv("../data/prescriptive_tree/train_50.csv")
+    df = pd.read_csv("../data/prescriptive/train_50.csv")
     return df
 
 
