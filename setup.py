@@ -21,7 +21,7 @@ MAINTAINER_EMAIL = "patrick.vossler18@gmail.com"
 URL = "https://github.com/D3M-Research-Group/odtlearn"
 LICENSE = "GPL-3"
 DOWNLOAD_URL = "https://github.com/D3M-Research-Group/odtlearn"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 INSTALL_REQUIRES = ["numpy", "scipy", "scikit-learn", "pandas", "gurobipy"]
 CLASSIFIERS = [
     "Intended Audience :: Science/Research",
