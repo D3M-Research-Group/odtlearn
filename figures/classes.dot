@@ -1,0 +1,33 @@
+digraph "classes" {
+rankdir=BT
+charset="utf-8";ranksep=0.2;
+"abc.ABC" [color="grey", fontcolor="black", label="{Abstract Base Class}", shape="record", style="filled", fontsize="25"];
+"odtlearn.BendersOCT.BendersOCT" [fillcolor="aliceblue", fontcolor="black", label="{BendersOCT|_b\l_classes\l_g\l_lambda\l_obj_mode\l_p\l_w\lb_value\lp_value\lw_value\l|_define_constraints()\l_define_objective()\l_define_variables()\lfit(X, y)\lpredict(X)\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.FairOCT.FairOCT" [fillcolor="aliceblue", fontcolor="black", label="{FairOCT|_P\l_P_col_labels\l_X_p : ndarray, DataFrame\l_class_name\l_classes\l_fairness_bound\l_fairness_type\l_legit_factor\l_legitimate_name\l_obj_mode\l_positive_class\l_protect_feat_col_dtypes\l_protect_feat_col_labels\lb_value\lp_value\lw_value\l|_add_fairness_constraint(p_df, p_prime_df)\l_define_constraints()\l_define_objective()\l_extract_metadata(X, y, protect_feat)\lfairness_metric_summary(metric, new_data)\lfit(X, y, protect_feat, legit_factor)\lget_CSP(protect_feat, legit_factor, y)\lget_CondEqOdds(protect_feat, legit_factor, y, y_pred)\lget_EqOdds(protect_feat, y, y_pred)\lget_SP(protect_feat, y)\lpredict(X)\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.FlowOCT.FlowOCT" [fillcolor="aliceblue", fontcolor="black", label="{FlowOCT|_classes\l_obj_mode\lb_value\lp_value\lw_value\l|_define_objective()\lfit(X, y)\lpredict(X)\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.FlowOCTMultipleNode.FlowOCTMultipleNode" [fillcolor="aliceblue", fontcolor="black", label="{FlowOCTMultipleNode|_b\l_lambda\l_p\l_w\l_z\l_zeta\l|_define_constraints()\l_define_variables()\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.FlowOCTSingleNode.FlowOCTSingleNode" [fillcolor="aliceblue", fontcolor="black", label="{FlowOCTSingleNode|_b\l_lambda\l_p\l_w\l_z\l_zeta\l|_define_constraints()\l_define_variables()\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.FlowOPTMultipleNode.FlowOPTMultipleNode" [fillcolor="aliceblue", fontcolor="black", label="{FlowOPTMultipleNode|_b\l_p\l_w\l_z\l_zeta\l|_define_constraints()\l_define_variables()\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.FlowOPTSingleNode.FlowOPTSingleNode" [fillcolor="aliceblue", fontcolor="black", label="{FlowOPTSingleNode|_b\l_p\l_w\l_z\l_zeta\l|_define_constraints()\l_define_objective()\l_define_variables()\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.FlowOPT.FlowOPT_DM" [fillcolor="aliceblue", fontcolor="black", label="{FlowOPT_DM|_ipw\l_y_hat\lb_value\lp_value\lw_value\l|_define_objective()\lfit(X, t, y, ipw, y_hat)\lpredict(X)\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.FlowOPT.FlowOPT_DR" [fillcolor="aliceblue", fontcolor="black", label="{FlowOPT_DR|\l|_define_objective()\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.FlowOPT.FlowOPT_IPW" [fillcolor="aliceblue", fontcolor="black", label="{FlowOPT_IPW|_ipw\lb_value\lp_value\lw_value\l|fit(X, t, y, ipw)\lpredict(X)\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.opt_ct.OptimalClassificationTree" [fillcolor="aliceblue", fontcolor="black", label="{OptimalClassificationTree|_X\l_X_col_dtypes\l_X_col_labels\l_datapoints\l_labels\l_y\l|_extract_metadata(X, y)\l_get_node_status(b, w, p, n)\l_make_prediction(X)\lplot_tree(...)\lprint_tree()\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.opt_dt.OptimalDecisionTree" [fillcolor="aliceblue", fontcolor="black", label="{OptimalDecisionTree|_depth\l_model\l_num_threads\l_time_limit\l_tree\l_verbose\l|_create_main_problem()\l_define_constraints()\l_define_objective()\l_define_variables()\lfit()\lpredict()\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.opt_pt.OptimalPrescriptiveTree" [fillcolor="aliceblue", fontcolor="black", label="{OptimalPrescriptiveTree|_X\l_X_col_dtypes\l_X_col_labels\l_datapoints\l_labels\l_t\l_treatments\l_y\l|_extract_metadata(X, y, t)\l_get_node_status(b, w, p, n)\l_make_prediction(X)\lplot_tree(...)\lprint_tree()\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.RobustOCT.RobustOCT" [fillcolor="aliceblue", fontcolor="black", label="{RobustOCT|_b\l_b_indices\l_budget\l_cat_features\l_classes\l_costs\l_epsilon\l_eta\l_f_theta_indices\l_gammas\l_max_values\l_min_values\l_reg\l_t\l_w\lb_value\lw_value\l|_define_constraints()\l_define_objective()\l_define_variables()\l_get_node_status(b, w, n)\l_make_prediction(X)\lfit(X, y, costs, budget)\lplot_tree(...)\lprint_tree()\l}", shape="record", style="filled", fontsize="25"];
+"odtlearn.BendersOCT.BendersOCT" -> "odtlearn.opt_ct.OptimalClassificationTree" [arrowhead="empty", arrowtail="none"];
+"odtlearn.FairOCT.FairOCT" -> "odtlearn.FlowOCTMultipleNode.FlowOCTMultipleNode" [arrowhead="empty", arrowtail="none"];
+"odtlearn.FlowOCT.FlowOCT" -> "odtlearn.FlowOCTSingleNode.FlowOCTSingleNode" [arrowhead="empty", arrowtail="none"];
+"odtlearn.FlowOCTMultipleNode.FlowOCTMultipleNode" -> "odtlearn.opt_ct.OptimalClassificationTree" [arrowhead="empty", arrowtail="none"];
+"odtlearn.FlowOCTSingleNode.FlowOCTSingleNode" -> "odtlearn.opt_ct.OptimalClassificationTree" [arrowhead="empty", arrowtail="none"];
+"odtlearn.FlowOPT.FlowOPT_DM" -> "odtlearn.FlowOPTMultipleNode.FlowOPTMultipleNode" [arrowhead="empty", arrowtail="none"];
+"odtlearn.FlowOPT.FlowOPT_DR" -> "odtlearn.FlowOPT.FlowOPT_DM" [arrowhead="empty", arrowtail="none"];
+"odtlearn.FlowOPT.FlowOPT_IPW" -> "odtlearn.FlowOPTSingleNode.FlowOPTSingleNode" [arrowhead="empty", arrowtail="none"];
+"odtlearn.FlowOPTMultipleNode.FlowOPTMultipleNode" -> "odtlearn.opt_pt.OptimalPrescriptiveTree" [arrowhead="empty", arrowtail="none"];
+"odtlearn.FlowOPTSingleNode.FlowOPTSingleNode" -> "odtlearn.opt_pt.OptimalPrescriptiveTree" [arrowhead="empty", arrowtail="none"];
+"odtlearn.RobustOCT.RobustOCT" -> "odtlearn.opt_ct.OptimalClassificationTree" [arrowhead="empty", arrowtail="none"];
+"odtlearn.opt_ct.OptimalClassificationTree" -> "odtlearn.opt_dt.OptimalDecisionTree" [arrowhead="empty", arrowtail="none"];
+"odtlearn.opt_dt.OptimalDecisionTree" -> "abc.ABC" [arrowhead="empty", arrowtail="none"];
+"odtlearn.opt_pt.OptimalPrescriptiveTree" -> "odtlearn.opt_dt.OptimalDecisionTree" [arrowhead="empty", arrowtail="none"];
+}
