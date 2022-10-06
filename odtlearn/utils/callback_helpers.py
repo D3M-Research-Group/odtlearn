@@ -27,7 +27,11 @@ def get_right_exp_integer(main_grb_obj, n, i):
 
 
 def get_target_exp_integer(main_grb_obj, n, i):
-    label_i = main_grb_obj._y[i]
+    # hack: look at type(main_grb_obj).__name__ to decide what to use as label
+    if "OPT" in type(main_grb_obj).__name__:
+        label_i = main_grb_obj._t[i]
+    else:
+        label_i = main_grb_obj._y[i]
     lhs = -1 * main_grb_obj._w[n, label_i]
     return lhs
 

@@ -14,7 +14,11 @@ from odtlearn.utils.callback_helpers import (
 
 
 def benders_subproblem(main_grb_obj, b, p, w, i):
-    label_i = main_grb_obj._y[i]
+    # hack: look at type(main_grb_obj).__name__ to decide what to use as label
+    if "OPT" in type(main_grb_obj).__name__:
+        label_i = main_grb_obj._t[i]
+    else:
+        label_i = main_grb_obj._y[i]
     current = 1
     right = []
     left = []

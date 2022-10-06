@@ -3,14 +3,13 @@ from itertools import combinations
 import numpy as np
 import pandas as pd
 from gurobipy import GRB, LinExpr, quicksum
-from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
-from odtlearn.FlowOCTMultipleNode import FlowOCTMultipleNode
+from odtlearn.flow_ms import FlowMultipleSink
 from odtlearn.utils.validation import check_binary, check_columns_match
 
 
-class FairOCT(FlowOCTMultipleNode):
+class FairOCT(FlowMultipleSink):
     def __init__(
         self,
         positive_class,
@@ -51,11 +50,11 @@ class FairOCT(FlowOCTMultipleNode):
                   We assume that we are allowed to branch on any of the columns within X.
         """
         super().__init__(
-            _lambda,
             depth,
             time_limit,
             num_threads,
             verbose,
+            _lambda,
         )
 
         self._obj_mode = obj_mode
@@ -281,9 +280,6 @@ class FairOCT(FlowOCTMultipleNode):
         X, y = check_X_y(X, y)
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
-
-        # Store the classes seen during fit
-        self._classes = unique_labels(y)
 
         self._create_main_problem()
         self._model.update()

@@ -1,34 +1,48 @@
 from gurobipy import GRB, LinExpr
-from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
+from sklearn.utils.validation import check_is_fitted, check_X_y
 
 from odtlearn.flow_ss import FlowSingleSink
 from odtlearn.utils.callbacks import benders_callback
-from odtlearn.utils.validation import check_binary, check_columns_match
+from odtlearn.utils.validation import (
+    check_array,
+    check_binary,
+    check_columns_match,
+    check_ipw,
+    check_y,
+)
 
 
-class BendersOCT(FlowSingleSink):
+class BendersOPT_IPW(FlowSingleSink):
+    """
+    An optimal decision tree that prescribes treatments (as opposed to predicting class labels),
+    fitted on a binary-valued observational data set.
+
+    Parameters
+    ----------
+    depth : int
+        A parameter specifying the depth of the tree
+    time_limit : int
+        The given time limit for solving the MIP in seconds
+    method : str, default='IPW'
+        The method of Prescriptive Trees to run. Choices in ('IPW', 'DM', 'DR), which represents the
+        inverse propensity weighting, direct method, and doubly robust methods, respectively
+    num_threads: int, default=None
+        The number of threads the solver should use
+
+    """
+
     def __init__(
         self,
-        _lambda=0,
-        obj_mode="acc",
         depth=1,
         time_limit=60,
         num_threads=None,
         verbose=False,
     ) -> None:
-        """
-        :param _lambda: The regularization parameter in the objective
-        :param time_limit: The given time limit for solving the MIP
-        :param num_threads: Specify number of threads for Gurobi to use when solving
-        :param verbose: Display Gurobi model output
-        """
-
         super().__init__(
             depth,
             time_limit,
             num_threads,
             verbose,
-            _lambda,
         )
 
         # The cuts we add in the callback function would be treated as lazy constraints
@@ -66,8 +80,6 @@ class BendersOCT(FlowSingleSink):
         # We also pass the following information to the model as we need them in the callback
         self._model._main_grb_obj = self
 
-        self._obj_mode = obj_mode
-
     def _define_variables(self):
         self._tree_struc_vars()
 
@@ -86,41 +98,56 @@ class BendersOCT(FlowSingleSink):
         self._tree_structure_constraints()
 
     def _define_objective(self):
+        # define objective function
         obj = LinExpr(0)
-        for n in self._tree.Nodes:
-            for f in self._X_col_labels:
-                obj.add(-1 * self._lambda * self._b[n, f])
-        if self._obj_mode == "acc":
-            for i in self._datapoints:
-                obj.add((1 - self._lambda) * self._g[i])
-        elif self._obj_mode == "balance":
-            for i in self._datapoints:
-                obj.add(
-                    (1 - self._lambda)
-                    * (
-                        1
-                        / self._y[self._y == self._y[i]].shape[0]
-                        / self._labels.shape[0]
-                    )
-                    * self._g[i]
-                )
-        else:
-            assert self._obj_mode not in [
-                "acc",
-                "balance",
-            ], "Wrong objective mode. obj_mode should be one of acc or balance."
+        for i in self._datapoints:
+            obj.add(self._g[i] * (self._y[i]) / self._ipw[i])
 
         self._model.setObjective(obj, GRB.MAXIMIZE)
 
-    def fit(self, X, y):
+    def fit(self, X, t, y, ipw):
+        """Method to fit the PrescriptiveTree class on the data
 
-        # extract column labels, unique classes and store X as a DataFrame
-        self._extract_metadata(X, y)
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The training input samples.
+        t : array-like, shape (n_samples,)
+            The treatment values. An array of int.
+        y : array-like, shape (n_samples,)
+            The observed outcomes upon given treatment t. An array of int.
+        ipw : array-like, shape (n_samples,)
+            The inverse propensity weight estimates. An array of floats in [0, 1].
+        verbose: bool, default=False
+            Display Gurobi output.
+
+        Returns
+        -------
+        self : object
+            Returns self.
+        """
+        # store column information and dtypes if any
+        self._extract_metadata(X, y, t=t)
+
+        # this function returns converted X and t but we retain metadata
+        X, t = check_X_y(X, t)
+
+        # need to check that t is discrete, and/or convert -- starts from 0 in accordance with indexing rule
+        try:
+            t = t.astype(int)
+        except TypeError:
+            print("The set of treatments must be discrete.")
+
+        assert (
+            min(t) == 0 and max(t) == len(set(t)) - 1
+        ), "The set of treatments must be discrete starting from {0, 1, ...}"
+
+        # we also need to check on y and ipw/y_hat depending on the method chosen
+        y = check_y(X, y)
+        self._ipw = check_ipw(X, ipw)
 
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
-        # this function returns converted X and y but we retain metadata
-        X, y = check_X_y(X, y)
 
         self._create_main_problem()
         self._model.update()
@@ -130,10 +157,11 @@ class BendersOCT(FlowSingleSink):
         self.w_value = self._model.getAttr("X", self._w)
         self.p_value = self._model.getAttr("X", self._p)
 
+        # Return the classifier
         return self
 
     def predict(self, X):
-        """Classify test points using the Benders' Formulation Classifier
+        """Method for making prescriptions using a PrescriptiveTree classifier
 
         Parameters
         ----------
@@ -142,12 +170,11 @@ class BendersOCT(FlowSingleSink):
 
         Returns
         -------
-        y : ndarray, shape (n_samples,)
-            The label for each sample is the label of the closest sample
-            seen during fit.
+        t : ndarray, shape (n_samples,)
+            The prescribed treatments for the input samples.
         """
-        # Check is fit had been called
-        # for now we are assuming the model has been fit successfully if the fitted values for b, w, and p exist
+
+        # Check if fit had been called
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
 
         # This will again convert a pandas df to numpy array

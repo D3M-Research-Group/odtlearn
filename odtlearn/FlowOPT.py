@@ -1,8 +1,8 @@
 from gurobipy import GRB, LinExpr
 from sklearn.utils.validation import check_is_fitted, check_X_y
 
-from odtlearn.FlowOPTMultipleNode import FlowOPTMultipleNode
-from odtlearn.FlowOPTSingleNode import FlowOPTSingleNode
+from odtlearn.flow_ms import FlowMultipleSink
+from odtlearn.flow_ss import FlowSingleSink
 from odtlearn.utils.validation import (
     check_array,
     check_binary,
@@ -13,7 +13,7 @@ from odtlearn.utils.validation import (
 )
 
 
-class FlowOPT_IPW(FlowOPTSingleNode):
+class FlowOPT_IPW(FlowSingleSink):
     """
     An optimal decision tree that prescribes treatments (as opposed to predicting class labels),
     fitted on a binary-valued observational data set.
@@ -46,6 +46,14 @@ class FlowOPT_IPW(FlowOPTSingleNode):
             verbose,
         )
 
+    def _define_objective(self):
+        # define objective function
+        obj = LinExpr(0)
+        for i in self._datapoints:
+            obj.add(self._z[i, 1] * (self._y[i]) / self._ipw[i])
+
+        self._model.setObjective(obj, GRB.MAXIMIZE)
+
     def fit(self, X, t, y, ipw):
         """Method to fit the PrescriptiveTree class on the data
 
@@ -68,7 +76,7 @@ class FlowOPT_IPW(FlowOPTSingleNode):
             Returns self.
         """
         # store column information and dtypes if any
-        self._extract_metadata(X, y, t)
+        self._extract_metadata(X, y, t=t)
 
         # this function returns converted X and t but we retain metadata
         X, t = check_X_y(X, t)
@@ -127,7 +135,7 @@ class FlowOPT_IPW(FlowOPTSingleNode):
         return self._make_prediction(X)
 
 
-class FlowOPT_DM(FlowOPTMultipleNode):
+class FlowOPT_DM(FlowMultipleSink):
     def __init__(
         self,
         depth=1,
@@ -164,7 +172,7 @@ class FlowOPT_DM(FlowOPTMultipleNode):
         obj = LinExpr(0)
         for i in self._datapoints:
             for n in self._tree.Nodes + self._tree.Leaves:
-                for k in self._treatments:
+                for k in self._labels:
                     obj.add(
                         self._zeta[i, n, k] * (self._y_hat[i][int(k)])
                     )  # we assume that each column corresponds to an ordered list t, which might be problematic
@@ -195,7 +203,7 @@ class FlowOPT_DM(FlowOPTMultipleNode):
             Returns self.
         """
         # store column information and dtypes if any
-        self._extract_metadata(X, y, t)
+        self._extract_metadata(X, y, t=t)
 
         # this function returns converted X and t but we retain metadata
         X, t = check_X_y(X, t)
@@ -213,7 +221,7 @@ class FlowOPT_DM(FlowOPTMultipleNode):
         # we also need to check on y and ipw/y_hat depending on the method chosen
         y = check_y(X, y)
         self._ipw = check_ipw(X, ipw)
-        self._y_hat = check_y_hat(X, self._treatments, y_hat)
+        self._y_hat = check_y_hat(X, self._labels, y_hat)
 
         # Raises ValueError if there is a column that has values other than 0 or 1
         check_binary(X)
@@ -265,7 +273,7 @@ class FlowOPT_DR(FlowOPT_DM):
         obj = LinExpr(0)
         for i in self._datapoints:
             for n in self._tree.Nodes + self._tree.Leaves:
-                for k in self._treatments:
+                for k in self._labels:
                     obj.add(
                         self._zeta[i, n, k] * (self._y_hat[i][int(k)])
                     )  # we assume that each column corresponds to an ordered list t, which might be problematic

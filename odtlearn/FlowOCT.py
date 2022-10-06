@@ -1,12 +1,11 @@
 from gurobipy import GRB, LinExpr
-from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
-from odtlearn.FlowOCTSingleNode import FlowOCTSingleNode
+from odtlearn.flow_ss import FlowSingleSink
 from odtlearn.utils.validation import check_binary, check_columns_match
 
 
-class FlowOCT(FlowOCTSingleNode):
+class FlowOCT(FlowSingleSink):
     def __init__(
         self,
         _lambda=0,
@@ -18,11 +17,11 @@ class FlowOCT(FlowOCTSingleNode):
     ) -> None:
         self._obj_mode = obj_mode
         super().__init__(
-            _lambda,
             depth,
             time_limit,
             num_threads,
             verbose,
+            _lambda,
         )
 
     def _define_objective(self):
@@ -65,9 +64,6 @@ class FlowOCT(FlowOCTSingleNode):
         check_binary(X)
         # this function returns converted X and y but we retain metadata
         X, y = check_X_y(X, y)
-
-        # Store the classes seen during fit
-        self._classes = unique_labels(y)
 
         self._create_main_problem()
         self._model.update()

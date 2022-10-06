@@ -3,6 +3,7 @@ import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 
+from odtlearn.BendersOPT_IPW import BendersOPT_IPW
 from odtlearn.FlowOPT import FlowOPT_DM, FlowOPT_DR, FlowOPT_IPW
 
 
@@ -119,9 +120,36 @@ def test_FlowOPT_classifier(data, method, expected_pred):
         clf = FlowOPT_IPW(depth=2, time_limit=300)
         clf.fit(X, t, y, ipw)
 
+        bclf = BendersOPT_IPW(depth=2, time_limit=300)
+        bclf.fit(X, t, y, ipw)
+
     # Test that after running the fit method we have b, w, and p
     assert hasattr(clf, "b_value")
     assert hasattr(clf, "w_value")
     assert hasattr(clf, "p_value")
 
     assert_allclose(clf.predict(X), expected_pred)
+
+
+def test_FlowOPT_IPW_Benders_identical(data):
+    df = data
+    X = df.iloc[:, :20]
+    t = df["t"]
+    y = df["y"]
+    ipw = df["prob_t_pred_tree"]
+    # fmt: off
+    expected_pred = np.array(
+        [1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1,
+         1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+         1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+         0, 1])
+    # fmt: on
+
+    clf = FlowOPT_IPW(depth=2, time_limit=300)
+    clf.fit(X, t, y, ipw)
+
+    bclf = BendersOPT_IPW(depth=2, time_limit=300)
+    bclf.fit(X, t, y, ipw)
+
+    assert_allclose(clf.predict(X), expected_pred)
+    assert_allclose(bclf.predict(X), expected_pred)

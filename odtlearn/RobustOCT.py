@@ -3,16 +3,15 @@ from copy import deepcopy
 import numpy as np
 import pandas as pd
 from gurobipy import GRB, LinExpr, quicksum
-from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_is_fitted, check_X_y
 
-from odtlearn.opt_ct import OptimalClassificationTree
+from odtlearn.opt_dt import OptimalDecisionTree
 from odtlearn.utils.callbacks import robust_tree_callback
 from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.validation import check_integer, check_same_as_X
 
 
-class RobustOCT(OptimalClassificationTree):
+class RobustOCT(OptimalDecisionTree):
     """An optimal robust decision tree classifier, fitted on a given integer-valued
     data set and a given cost-and-budget uncertainty set to produce a tree robust
     against distribution shifts.
@@ -251,8 +250,6 @@ class RobustOCT(OptimalClassificationTree):
         X, y = check_X_y(X, y)
         check_integer(self._X)
 
-        self._classes = unique_labels(y)
-
         self._cat_features = self._X_col_labels
 
         # Get range of data, and store indices of branching variables based on range
@@ -422,7 +419,7 @@ class RobustOCT(OptimalClassificationTree):
             node_dict,
             self._X_col_labels,
             self._tree.depth,
-            self._classes,
+            self._labels,
             type(self).__name__,
             label=label,
             filled=filled,
