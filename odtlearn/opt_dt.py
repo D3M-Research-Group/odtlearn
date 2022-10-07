@@ -36,10 +36,12 @@ class OptimalDecisionTree(ABC):
         self._model.params.TimeLimit = time_limit
 
     def __repr__(self):
-        rep = f"{type(self).__name__}('depth={self._depth}', \
-            time_limit='{self._time_limit}',\
-            'num_threads={self._num_threads}',\
-                 'verbose={self._verbose})"
+        rep = (
+            f"{type(self).__name__}(depth={self._depth},"
+            f"time_limit={self._time_limit},"
+            f"num_threads={self._num_threads},"
+            f"verbose={self._verbose})"
+        )
         return rep
 
     @abstractmethod
