@@ -48,9 +48,6 @@ def benders_subproblem(main_grb_obj, b, p, w, i):
     return subproblem_value, left, right, target
 
 
-##########################################################
-# Defining the BendersOCT callback function
-###########################################################
 def benders_callback(model, where):
     """
     This function is called by Gurobi at every node through the branch-&-bound

@@ -1,8 +1,8 @@
 from gurobipy import GRB, LinExpr
 from sklearn.utils.validation import check_is_fitted, check_X_y
 
-from odtlearn.FlowOPTMultipleNode import FlowOPTMultipleNode
-from odtlearn.FlowOPTSingleNode import FlowOPTSingleNode
+from odtlearn.flow_opt_ms import FlowOPTMultipleSink
+from odtlearn.flow_opt_ss import FlowOPTSingleSink
 from odtlearn.utils.validation import (
     check_array,
     check_binary,
@@ -13,7 +13,7 @@ from odtlearn.utils.validation import (
 )
 
 
-class FlowOPT_IPW(FlowOPTSingleNode):
+class FlowOPT_IPW(FlowOPTSingleSink):
     """
     An optimal decision tree that prescribes treatments (as opposed to predicting class labels),
     fitted on a binary-valued observational data set.
@@ -127,7 +127,7 @@ class FlowOPT_IPW(FlowOPTSingleNode):
         return self._make_prediction(X)
 
 
-class FlowOPT_DM(FlowOPTMultipleNode):
+class FlowOPT_DM(FlowOPTMultipleSink):
     def __init__(
         self,
         depth=1,

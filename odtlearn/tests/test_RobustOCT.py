@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 
-from odtlearn.RobustOCT import RobustOCT
+from odtlearn.robust_oct import RobustOCT
 
 
 @pytest.fixture

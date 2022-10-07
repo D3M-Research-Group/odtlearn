@@ -1,13 +1,109 @@
-from gurobipy import GRB, LinExpr, quicksum
+from gurobipy import GRB, LinExpr
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
-from odtlearn.opt_ct import OptimalClassificationTree
+from odtlearn.flow_oct_ss import FlowOCTSingleSink
 from odtlearn.utils.callbacks import benders_callback
 from odtlearn.utils.validation import check_binary, check_columns_match
 
 
-class BendersOCT(OptimalClassificationTree):
+class FlowOCT(FlowOCTSingleSink):
+    def __init__(
+        self,
+        _lambda=0,
+        obj_mode="acc",
+        depth=1,
+        time_limit=60,
+        num_threads=None,
+        verbose=False,
+    ) -> None:
+        self._obj_mode = obj_mode
+        super().__init__(
+            _lambda,
+            depth,
+            time_limit,
+            num_threads,
+            verbose,
+        )
+
+    def _define_objective(self):
+        obj = LinExpr(0)
+        for n in self._tree.Nodes:
+            for f in self._X_col_labels:
+                obj.add(-1 * self._lambda * self._b[n, f])
+        if self._obj_mode == "acc":
+            for i in self._datapoints:
+                obj.add((1 - self._lambda) * self._z[i, 1])
+
+        elif self._obj_mode == "balance":
+            for i in self._datapoints:
+                obj.add(
+                    (1 - self._lambda)
+                    * (
+                        1
+                        / self._y[self._y == self._y[i]].shape[0]
+                        / self._labels.shape[0]
+                    )
+                    * self._z[i, 1]
+                )
+        else:
+            assert self._obj_mode not in [
+                "acc",
+                "balance",
+            ], "Wrong objective mode. obj_mode should be one of acc or balance."
+
+        self._model.setObjective(obj, GRB.MAXIMIZE)
+
+    def fit(self, X, y):
+        # extract column labels, unique classes and store X as a DataFrame
+        self._extract_metadata(X, y)
+
+        # Raises ValueError if there is a column that has values other than 0 or 1
+        check_binary(X)
+        # this function returns converted X and y but we retain metadata
+        X, y = check_X_y(X, y)
+
+        # Store the classes seen during fit
+        self._classes = unique_labels(y)
+
+        self._create_main_problem()
+        self._model.update()
+        self._model.optimize()
+
+        self.b_value = self._model.getAttr("X", self._b)
+        self.w_value = self._model.getAttr("X", self._w)
+        self.p_value = self._model.getAttr("X", self._p)
+
+        return self
+
+    def predict(self, X):
+        """Classify test points using the StrongTree classifier
+
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The input samples.
+
+        Returns
+        -------
+        y : ndarray, shape (n_samples,)
+            The label for each sample is the label of the closest sample
+            seen during fit.
+        """
+        # Check is fit had been called
+        # for now we are assuming the model has been fit successfully if the fitted values for b, w, and p exist
+        check_is_fitted(self, ["b_value", "w_value", "p_value"])
+
+        # This will again convert a pandas df to numpy array
+        # but we have the column information from when we called fit
+        X = check_array(X)
+
+        check_columns_match(self._X_col_labels, X)
+
+        return self._make_prediction(X)
+
+
+class BendersOCT(FlowOCTSingleSink):
     def __init__(
         self,
         _lambda=0,
@@ -70,29 +166,11 @@ class BendersOCT(OptimalClassificationTree):
         self._obj_mode = obj_mode
 
     def _define_variables(self):
-        ###########################################################
-        # Define Variables
-        ###########################################################
+        self._tree_struc_variables()
 
         # g[i] is the objective value for the sub-problem[i]
         self._g = self._model.addVars(
             self._datapoints, vtype=GRB.CONTINUOUS, ub=1, name="g"
-        )
-        # b[n,f] ==1 iff at node n we branch on feature f
-        self._b = self._model.addVars(
-            self._tree.Nodes, self._X_col_labels, vtype=GRB.BINARY, name="b"
-        )
-        # p[n] == 1 iff at node n we do not branch and we make a prediction
-        self._p = self._model.addVars(
-            self._tree.Nodes + self._tree.Leaves, vtype=GRB.BINARY, name="p"
-        )
-        # w[n,k]=1 iff at node n we predict class k
-        self._w = self._model.addVars(
-            self._tree.Nodes + self._tree.Leaves,
-            self._labels,
-            vtype=GRB.CONTINUOUS,
-            lb=0,
-            name="w",
         )
 
         # we need these in the callback to have access to the value of the decision variables
@@ -102,40 +180,9 @@ class BendersOCT(OptimalClassificationTree):
         self._model._vars_w = self._w
 
     def _define_constraints(self):
-        ###########################################################
-        # Define Constraints
-        ###########################################################
-
-        # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
-        self._model.addConstrs(
-            (
-                quicksum(self._b[n, f] for f in self._X_col_labels)
-                + self._p[n]
-                + quicksum(self._p[m] for m in self._tree.get_ancestors(n))
-                == 1
-            )
-            for n in self._tree.Nodes
-        )
-
-        # sum(w[n,k], k in labels) = p[n]
-        self._model.addConstrs(
-            (quicksum(self._w[n, k] for k in self._labels) == self._p[n])
-            for n in self._tree.Nodes + self._tree.Leaves
-        )
-
-        # p[n] + sum(p[m], m in A(n)) = 1   forall n in Leaves
-        self._model.addConstrs(
-            (
-                self._p[n] + quicksum(self._p[m] for m in self._tree.get_ancestors(n))
-                == 1
-            )
-            for n in self._tree.Leaves
-        )
+        self._tree_structure_constraints()
 
     def _define_objective(self):
-        ###########################################################
-        # Define the Objective
-        ###########################################################
         obj = LinExpr(0)
         for n in self._tree.Nodes:
             for f in self._X_col_labels:

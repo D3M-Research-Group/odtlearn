@@ -6,11 +6,11 @@ from gurobipy import GRB, LinExpr, quicksum
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
-from odtlearn.FlowOCTMultipleNode import FlowOCTMultipleNode
+from odtlearn.flow_oct_ms import FlowOCTMultipleSink
 from odtlearn.utils.validation import check_binary, check_columns_match
 
 
-class FairOCT(FlowOCTMultipleNode):
+class FairOCT(FlowOCTMultipleSink):
     def __init__(
         self,
         positive_class,
@@ -131,10 +131,6 @@ class FairOCT(FlowOCTMultipleNode):
 
     def _define_constraints(self):
         super()._define_constraints()
-        ###########################################################
-        # Fairness Constraints
-        ###########################################################
-
         # Loop through all possible combinations of the protected feature
         for protected_feature in self._P_col_labels:
             for combo in combinations(self._X_p[protected_feature].unique(), 2):
@@ -207,9 +203,6 @@ class FairOCT(FlowOCTMultipleNode):
                         self._add_fairness_constraint(p_df, p_prime_df)
 
     def _define_objective(self):
-        ###########################################################
-        # Define Objective
-        ###########################################################
         # Max sum(sum(zeta[i,n,y(i)]))
         obj = LinExpr(0)
         for n in self._tree.Nodes:

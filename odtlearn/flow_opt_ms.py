@@ -3,7 +3,7 @@ from gurobipy import GRB, quicksum
 from odtlearn.opt_pt import OptimalPrescriptiveTree
 
 
-class FlowOPTMultipleNode(OptimalPrescriptiveTree):
+class FlowOPTMultipleSink(OptimalPrescriptiveTree):
     def __init__(
         self,
         depth,
@@ -19,7 +19,7 @@ class FlowOPTMultipleNode(OptimalPrescriptiveTree):
             verbose,
         )
 
-    def _define_variables(self):
+    def _tree_struc_variables(self):
         self._b = self._model.addVars(
             self._tree.Nodes, self._X_col_labels, vtype=GRB.BINARY, name="b"
         )
@@ -33,6 +33,8 @@ class FlowOPTMultipleNode(OptimalPrescriptiveTree):
             lb=0,
             name="w",
         )
+
+    def _flow_variables(self):
         self._zeta = self._model.addVars(
             self._datapoints,
             self._tree.Nodes + self._tree.Leaves,
@@ -49,8 +51,38 @@ class FlowOPTMultipleNode(OptimalPrescriptiveTree):
             name="z",
         )
 
-    def _define_constraints(self):
-        # define constraints
+    def _define_variables(self):
+        self._tree_struc_variables()
+        self._flow_variables()
+
+    def _tree_structure_constraints(self):
+        # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
+        self._model.addConstrs(
+            (
+                quicksum(self._b[n, f] for f in self._X_col_labels)
+                + self._p[n]
+                + quicksum(self._p[m] for m in self._tree.get_ancestors(n))
+                == 1
+            )
+            for n in self._tree.Nodes
+        )
+
+        # p[n] + sum(p[m], m in A(n)) = 1   forall n in Leaves
+        self._model.addConstrs(
+            (
+                self._p[n] + quicksum(self._p[m] for m in self._tree.get_ancestors(n))
+                == 1
+            )
+            for n in self._tree.Leaves
+        )
+
+        # sum(w[n,k], k in treatments) = p[n]
+        self._model.addConstrs(
+            (quicksum(self._w[n, k] for k in self._treatments) == self._p[n])
+            for n in self._tree.Nodes + self._tree.Leaves
+        )
+
+    def _flow_constraints(self):
         # z[i,n] = z[i,l(n)] + z[i,r(n)] + zeta[i,n]    forall i, n in Nodes
         for n in self._tree.Nodes:
             n_left = int(self._tree.get_left_children(n))
@@ -65,6 +97,13 @@ class FlowOPTMultipleNode(OptimalPrescriptiveTree):
                 for i in self._datapoints
             )
 
+        for n in self._tree.Leaves:
+            self._model.addConstrs(
+                quicksum(self._zeta[i, n, k] for k in self._treatments) == self._z[i, n]
+                for i in self._datapoints
+            )
+
+    def _arc_constraints(self):
         # z[i,l(n)] <= sum(b[n,f], f if x[i,f]<=0)    forall i, n in Nodes
         for i in self._datapoints:
             self._model.addConstrs(
@@ -93,26 +132,6 @@ class FlowOPTMultipleNode(OptimalPrescriptiveTree):
                 for n in self._tree.Nodes
             )
 
-        # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
-        self._model.addConstrs(
-            (
-                quicksum(self._b[n, f] for f in self._X_col_labels)
-                + self._p[n]
-                + quicksum(self._p[m] for m in self._tree.get_ancestors(n))
-                == 1
-            )
-            for n in self._tree.Nodes
-        )
-
-        # p[n] + sum(p[m], m in A(n)) = 1   forall n in Leaves
-        self._model.addConstrs(
-            (
-                self._p[n] + quicksum(self._p[m] for m in self._tree.get_ancestors(n))
-                == 1
-            )
-            for n in self._tree.Leaves
-        )
-
         # zeta[i,n] <= w[n,T[i]] for all n in N+L, i
         for n in self._tree.Nodes + self._tree.Leaves:
             for k in self._treatments:
@@ -120,16 +139,9 @@ class FlowOPTMultipleNode(OptimalPrescriptiveTree):
                     self._zeta[i, n, k] <= self._w[n, k] for i in self._datapoints
                 )
 
-        # sum(w[n,k], k in treatments) = p[n]
-        self._model.addConstrs(
-            (quicksum(self._w[n, k] for k in self._treatments) == self._p[n])
-            for n in self._tree.Nodes + self._tree.Leaves
-        )
-
-        for n in self._tree.Leaves:
-            self._model.addConstrs(
-                quicksum(self._zeta[i, n, k] for k in self._treatments) == self._z[i, n]
-                for i in self._datapoints
-            )
-
         self._model.addConstrs(self._z[i, 1] == 1 for i in self._datapoints)
+
+    def _define_constraints(self):
+        self._tree_structure_constraints()
+        self._flow_constraints()
+        self._arc_constraints()

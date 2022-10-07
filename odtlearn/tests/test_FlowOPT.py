@@ -3,7 +3,7 @@ import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 
-from odtlearn.FlowOPT import FlowOPT_DM, FlowOPT_DR, FlowOPT_IPW
+from odtlearn.flow_opt import FlowOPT_DM, FlowOPT_DR, FlowOPT_IPW
 
 
 @pytest.fixture

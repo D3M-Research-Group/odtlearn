@@ -2,8 +2,8 @@
 import matplotlib.pyplot as plt
 
 from odtlearn.datasets import fairness_example, flow_oct_example
-from odtlearn.BendersOCT import BendersOCT
-from odtlearn.FairOCT import FairOCT
+from odtlearn.fair_oct import FairOCT
+from odtlearn.flow_oct import BendersOCT
 
 # Learn an optimal classification tree
 X, y = flow_oct_example()
@@ -38,10 +38,11 @@ fcl.plot_tree()
 plt.show()
 
 import matplotlib.pyplot as plt
+
 from odtlearn.datasets import robustness_example
 
 # from odtlearn.RobustTree import RobustTreeClassifier
-from odtlearn.RobustOCT import RobustOCT
+from odtlearn.robust_oct import RobustOCT
 
 X, y, costs = robustness_example()
 
@@ -56,10 +57,11 @@ rbcl.plot_tree()
 plt.show()
 
 import matplotlib.pyplot as plt
+
 from odtlearn.datasets import prescriptive_ex_data
 
 # from odtlearn.PrescriptiveTree import PrescriptiveTreeClassifier
-from odtlearn.FlowOPT import FlowOPT_DR
+from odtlearn.flow_opt import FlowOPT_DR
 
 df_train, df_test = prescriptive_ex_data()
 

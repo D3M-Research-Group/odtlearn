@@ -3,8 +3,7 @@ import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 
-from odtlearn.BendersOCT import BendersOCT
-from odtlearn.FlowOCT import FlowOCT
+from odtlearn.flow_oct import BendersOCT, FlowOCT
 
 
 # fmt: off
