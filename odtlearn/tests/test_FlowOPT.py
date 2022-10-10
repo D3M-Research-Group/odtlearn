@@ -68,7 +68,7 @@ def test_FlowOPT_X_helpers_error(data):
         df = data
         y_hat = df[["lasso0", "lasso1", "lasso1"]]
         clf = FlowOPT_DM(depth=1, time_limit=300)
-        clf.fit(X=X, t=t, y=y, y_hat=y_hat, ipw=None)
+        clf.fit(X=X, t=t, y=y, y_hat=y_hat)
 
 
 # Test that we raise an error if t isn't discrete and starts from 0
@@ -114,7 +114,7 @@ def test_FlowOPT_classifier(data, method, expected_pred):
         clf.fit(X, t, y, ipw, y_hat)
     elif method == "DM":
         clf = FlowOPT_DM(depth=2, time_limit=300)
-        clf.fit(X, t, y, ipw, y_hat)
+        clf.fit(X, t, y, y_hat)
     else:
         clf = FlowOPT_IPW(depth=2, time_limit=300)
         clf.fit(X, t, y, ipw)

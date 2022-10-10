@@ -30,7 +30,6 @@ def flow_oct_example():
      of the example notebooks in the ODTlearn documentation.
      The diagram within the code block shows the training dataset. Our dataset has
      two binary features (X1 and X2) and two class labels (+1 and -1).
-
     X2
     |               |
     |               |
@@ -41,12 +40,10 @@ def flow_oct_example():
     0    - - - -    |    + + +
     |    - - -      |
     |______0________|_______1_______X1
-
     Returns
     -------
     X: numpy array of covariates from training set
     y: numpy array of responses from training set
-
     """
     stream = pkg_resources.resource_stream("odtlearn", "data/example_1.npz")
     npzfile = np.load(stream)
@@ -58,7 +55,6 @@ def robustness_example():
      of the RobustTree example notebook in the ODTlearn documentation.
      The diagram within the code block shows the training dataset. Our dataset has
      two binary features (X1 and X2) and two class labels (+1 and -1).
-
     X2
     |               |
     |               |
@@ -69,18 +65,15 @@ def robustness_example():
     0    - - - -    |    + + +
     |    - - -      |
     |______0________|_______1_______X1
-
     The third array returned contains a cost vector with the following form:
     - Uncertainty in 5 points at [0,0] on X1 can cause it to flip to [1,0] if needed to misclassify
     - Uncertainty in 1 point at [1,1] on X2 can cause it to flip to [1,0] if needed to misclassify
     - All other points certain
-
     Returns
     -------
     X: numpy array of covariates from training set
     y: numpy array of responses from training set
     costs: numpy array of costs for each observation in the training set
-
     """
     stream = pkg_resources.resource_stream("odtlearn", "data/example_1_robust.npz")
     npzfile = np.load(stream)
@@ -93,7 +86,6 @@ def example_2_data():
     The diagram within the code block shows the training dataset. Our dataset has
     two binary features (X1 and X2) and two class labels (+1 and -1). Here the data
     is imbalanced with the positive class being the minority class.
-
     X2
     |               |
     |               |
@@ -104,12 +96,10 @@ def example_2_data():
     0    - - - +    |    - - -
     |    - - - -    |
     |______0________|_______1_______X1
-
     Returns
     -------
     X: numpy array of covariates from training set
     y: numpy array of responses from training set
-
     """
     stream = pkg_resources.resource_stream("odtlearn", "data/example_2.npz")
     npzfile = np.load(stream)

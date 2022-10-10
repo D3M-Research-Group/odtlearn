@@ -121,6 +121,7 @@ class BendersOCT(FlowOCTSingleSink):
         """
 
         super().__init__(
+            _lambda,
             depth,
             time_limit,
             num_threads,
