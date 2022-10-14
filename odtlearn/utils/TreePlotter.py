@@ -96,7 +96,12 @@ class MPLPlotter(_MPLTreeExporter):
         characters = self.characters
         node_string = characters[-1]
 
-        name = str(value) if selected_feature is None else selected_feature
+        name = value if selected_feature is None else selected_feature
+        if type(name) != str:
+            if type(name) != int:
+                name = str(int(name))
+            else:
+                name = str(name)
         cutoff = cutoff if selected_feature is not None else None
 
         # Should labels be shown?
@@ -109,16 +114,18 @@ class MPLPlotter(_MPLTreeExporter):
             # then we want to write the selected feature and if applicable the cutoff
             feature = name
             if cutoff is not None:
-                node_string += "feature %s %s %s%s" % (
-                    feature,
+                # = or <=
+                sign = (
                     "="
                     if self.model_name in ["FairOCT", "FlowOCT", "BendersOCT"]
-                    else characters[3],
-                    round(cutoff, self.precision),
-                    characters[4],
+                    else characters[3]
                 )
+                node_string += f"feature {feature} {sign} {round(cutoff, self.precision)}{characters[4]}"
+                if self.debug:
+                    print(f"cutoff value: {cutoff}")
+                    print(f"rounded cutoff value: {round(cutoff, self.precision)}")
             else:
-                node_string += "%s" % (feature)
+                node_string += f"{feature}"
         else:
             if labels:
                 if "OPT" in self.model_name:
