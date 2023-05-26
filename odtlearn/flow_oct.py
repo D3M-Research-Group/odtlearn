@@ -114,10 +114,12 @@ class BendersOCT(FlowOCTSingleSink):
         verbose=False,
     ) -> None:
         """
-        :param _lambda: The regularization parameter in the objective
-        :param time_limit: The given time limit for solving the MIP
-        :param num_threads: Specify number of threads for Gurobi to use when solving
-        :param verbose: Display Gurobi model output
+        Parameters
+        ----------
+        _lambda: The regularization parameter in the objective
+        time_limit: The given time limit for solving the MIP
+        num_threads: Specify number of threads for Gurobi to use when solving
+        verbose: Display Gurobi model output
         """
 
         super().__init__(

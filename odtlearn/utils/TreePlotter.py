@@ -232,12 +232,10 @@ class MPLPlotter(_MPLTreeExporter):
         arrow_kwargs = dict(
             bbox=dict(
                 facecolor="white",
-                # edgecolor="black",
                 edgecolor="none",
                 alpha=1,
                 mutation_scale=0.5,
-                pad=0.5
-                # fill=False
+                pad=0.5,
             ),
             ha="center",
             va="center",

@@ -1,17 +1,17 @@
-"""
-In this class we create a structure to hold the classification/regression tree.
-We need following requirements:
-    0- An easy way for user to create the tree
-    1- The set of branching nodes
-    2- The set of Leaves
-    3- For each node we need to get the index of left/right children and the parent
-In this class we assume that we have a complete binary tree; we only receive the depth from the user
-"""
-
 import numpy as np
 
 
 class _Tree:
+    """
+    This class hold the classification/regression tree.
+    We need following requirements:
+        0- An easy way for user to create the tree
+        1- The set of branching nodes
+        2- The set of Leaves
+        3- For each node we need to get the index of left/right children and the parent
+    In this class we assume that we have a complete binary tree; we only receive the depth from the user
+    """
+
     def __init__(self, d):
         self.depth = d
         self.Nodes = [i for i in range(1, np.power(2, d))]

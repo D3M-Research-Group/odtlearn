@@ -15,9 +15,12 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
         verbose,
     ) -> None:
         """
-        :param t: numpy array or pandas series/dataframe of treatment assignments
-        :param ipw: numpy array or pandas series/dataframe of inverse propensity weights
-        :param treatments_set: a list or set of all possible treatments
+        Parameters
+        ----------
+
+        t: numpy array or pandas series/dataframe of treatment assignments
+        ipw: numpy array or pandas series/dataframe of inverse propensity weights
+        treatments_set: a list or set of all possible treatments
 
         """
         super().__init__(depth, time_limit, num_threads, verbose)
@@ -56,9 +59,9 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
     def _get_node_status(self, b, w, p, n):
         """
         This function give the status of a given node in a tree. By status we mean whether the node
-            1- is pruned? i.e., we have made a prediction at one of its ancestors
-            2- is a branching node? If yes, what feature do we branch on
-            3- is a leaf? If yes, what is the prediction at this node?
+        1- is pruned? i.e., we have made a prediction at one of its ancestors
+        2- is a branching node? If yes, what feature do we branch on
+        3- is a leaf? If yes, what is the prediction at this node?
 
         Parameters
         ----------
@@ -187,7 +190,8 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
         debug=False,
         distance=1.0,
     ):
-        """Plot the fitted tree with the branching features, the threshold values for
+        """
+        Plot the fitted tree with the branching features, the threshold values for
         each branching node's test, and the predictions asserted for each assignment node
         using matplotlib. The method uses the Gurobi model's name for determining how
         to generate the tree. It does some preprocessing before passing the tree to the

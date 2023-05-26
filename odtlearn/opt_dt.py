@@ -58,7 +58,7 @@ class OptimalDecisionTree(ABC):
 
     def _create_main_problem(self):
         """
-        This function creates and return a gurobi model based on the
+        This function creates and return a Gurobi model based on the
         variables, constraints, and objective defined within a subclass
         """
         self._define_variables()
