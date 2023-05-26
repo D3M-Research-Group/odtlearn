@@ -510,12 +510,25 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">number_of_child_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">age_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span>
-<span class="n">race_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Black'</span><span class="p">,</span><span class="s1">'White'</span><span class="p">,</span><span class="s1">'Hispanic'</span><span class="p">,</span><span class="s1">'Black'</span><span class="p">,</span><span class="s1">'White'</span><span class="p">,</span><span class="s1">'Black'</span><span class="p">,</span><span class="s1">'White'</span><span class="p">,</span><span class="s1">'Hispanic'</span><span class="p">,</span><span class="s1">'Black'</span><span class="p">,</span><span class="s1">'White'</span><span class="p">]</span>
-<span class="n">sex_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'M'</span><span class="p">,</span><span class="s1">'F'</span><span class="p">,</span><span class="s1">'M'</span><span class="p">,</span><span class="s1">'M'</span><span class="p">,</span><span class="s1">'F'</span><span class="p">,</span><span class="s1">'M'</span><span class="p">,</span><span class="s1">'F'</span><span class="p">,</span><span class="s1">'M'</span><span class="p">,</span><span class="s1">'M'</span><span class="p">,</span><span class="s1">'F'</span><span class="p">]</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">sex_list</span><span class="p">,</span> <span class="n">race_list</span><span class="p">,</span> <span class="n">number_of_child_list</span><span class="p">,</span><span class="n">age_list</span><span class="p">)),</span>
-               <span class="n">columns</span> <span class="o">=</span><span class="p">[</span><span class="s1">'sex'</span><span class="p">,</span> <span class="s1">'race'</span><span class="p">,</span><span class="s1">'num_child'</span><span class="p">,</span><span class="s1">'age'</span><span class="p">])</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">number_of_child_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">age_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="n">race_list</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Black"</span><span class="p">,</span>
+    <span class="s2">"White"</span><span class="p">,</span>
+    <span class="s2">"Hispanic"</span><span class="p">,</span>
+    <span class="s2">"Black"</span><span class="p">,</span>
+    <span class="s2">"White"</span><span class="p">,</span>
+    <span class="s2">"Black"</span><span class="p">,</span>
+    <span class="s2">"White"</span><span class="p">,</span>
+    <span class="s2">"Hispanic"</span><span class="p">,</span>
+    <span class="s2">"Black"</span><span class="p">,</span>
+    <span class="s2">"White"</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">sex_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"M"</span><span class="p">,</span> <span class="s2">"F"</span><span class="p">,</span> <span class="s2">"M"</span><span class="p">,</span> <span class="s2">"M"</span><span class="p">,</span> <span class="s2">"F"</span><span class="p">,</span> <span class="s2">"M"</span><span class="p">,</span> <span class="s2">"F"</span><span class="p">,</span> <span class="s2">"M"</span><span class="p">,</span> <span class="s2">"M"</span><span class="p">,</span> <span class="s2">"F"</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">sex_list</span><span class="p">,</span> <span class="n">race_list</span><span class="p">,</span> <span class="n">number_of_child_list</span><span class="p">,</span> <span class="n">age_list</span><span class="p">)),</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"sex"</span><span class="p">,</span> <span class="s2">"race"</span><span class="p">,</span> <span class="s2">"num_child"</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">],</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -523,7 +536,9 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_enc</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">categorical_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'sex'</span><span class="p">,</span><span class="s1">'race'</span><span class="p">],</span> <span class="n">integer_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'num_child'</span><span class="p">,</span><span class="s1">'age'</span><span class="p">])</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_enc</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">categorical_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">"sex"</span><span class="p">,</span> <span class="s2">"race"</span><span class="p">],</span> <span class="n">integer_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">"num_child"</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">]</span>
+<span class="p">)</span>
 <span class="n">df_enc</span>
 </pre></div>
 </div>
@@ -729,7 +744,9 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">'''</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">odtlearn.datasets</span> <span class="kn">import</span> <span class="n">flow_oct_example</span>
+
+<span class="sd">"""</span>
 <span class="sd">    X2</span>
 <span class="sd">    |               |</span>
 <span class="sd">    |               |</span>
@@ -740,8 +757,9 @@ div.rendered_html tbody tr:hover {
 <span class="sd">    0    - - - -    |    + + +</span>
 <span class="sd">    |    - - -      |</span>
 <span class="sd">    |______0________|_______1_______X1</span>
-<span class="sd">'''</span>
-<span class="kn">from</span> <span class="nn">odtlearn.datasets</span> <span class="kn">import</span> <span class="n">flow_oct_example</span>
+<span class="sd">"""</span>
+
+
 <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">flow_oct_example</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -753,11 +771,9 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span>
-        <span class="n">depth</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -783,7 +799,7 @@ FlowOCT(depth=1,time_limit=60,num_threads=None,verbose=False)
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Optimality gap is </span><span class="si">{</span><span class="n">stcl</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"MIPGap"</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -830,20 +846,11 @@ leaf 1
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_13_1.png" src="../_images/notebooks_FlowOCT_13_1.png"/>
+<img alt="../_images/notebooks_FlowOCT_13_0.png" src="../_images/notebooks_FlowOCT_13_0.png"/>
 </div>
 </div>
 </div>
@@ -854,11 +861,9 @@ leaf 1
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span>
-        <span class="n">depth</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -876,7 +881,7 @@ FlowOCT(depth=2,time_limit=60,num_threads=None,verbose=False)
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Optimality gap is </span><span class="si">{</span><span class="n">stcl</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"MIPGap"</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -900,22 +905,11 @@ In-sample accuracy is 1.0
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_18_1.png" src="../_images/notebooks_FlowOCT_18_1.png"/>
+<img alt="../_images/notebooks_FlowOCT_18_0.png" src="../_images/notebooks_FlowOCT_18_0.png"/>
 </div>
 </div>
 </div>
@@ -926,12 +920,9 @@ In-sample accuracy is 1.0
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span>
-        <span class="n">depth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="n">_lambda</span> <span class="o">=</span> <span class="mf">0.51</span>
-    <span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">_lambda</span><span class="o">=</span><span class="mf">0.51</span><span class="p">)</span>
 <span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -948,7 +939,7 @@ FlowOCT(depth=2,time_limit=60,num_threads=None,verbose=False)
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -970,21 +961,11 @@ In-sample accuracy is 0.9230769230769231
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_22_1.png" src="../_images/notebooks_FlowOCT_22_1.png"/>
+<img alt="../_images/notebooks_FlowOCT_22_0.png" src="../_images/notebooks_FlowOCT_22_0.png"/>
 </div>
 </div>
 </div>
@@ -1025,14 +1006,10 @@ In-sample accuracy is 0.9230769230769231
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl_acc</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span>
-        <span class="n">depth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">'acc'</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>
-    <span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl_acc</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">stcl_acc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl_acc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1083,22 +1060,11 @@ leaf 0
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_28_1.png" src="../_images/notebooks_FlowOCT_28_1.png"/>
+<img alt="../_images/notebooks_FlowOCT_28_0.png" src="../_images/notebooks_FlowOCT_28_0.png"/>
 </div>
 </div>
 </div>
@@ -1109,14 +1075,14 @@ leaf 0
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl_balance</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span>
-        <span class="n">depth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">'balance'</span><span class="p">,</span>
-        <span class="n">_lambda</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"balance"</span><span class="p">,</span>
+    <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="n">stcl_balance</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl_balance</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1138,22 +1104,11 @@ In-sample accuracy is 0.8
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_31_1.png" src="../_images/notebooks_FlowOCT_31_1.png"/>
+<img alt="../_images/notebooks_FlowOCT_31_0.png" src="../_images/notebooks_FlowOCT_31_0.png"/>
 </div>
 </div>
 <p>As we can see, when we maximize accuracy, i.e., when <code class="docutils literal notranslate"><span class="pre">obj_mode</span> <span class="pre">=</span> <span class="pre">'acc'</span></code>, the optimal tree is just a single node without branching, predicting the majority class for the whole dataset. But when we change the objective mode to balanced accuracy, we account for the minority class by sacrificing the overal accuracy.</p>
@@ -1178,7 +1133,7 @@ In-sample accuracy is 0.8
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># read data</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">balance_scale_data</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'shape</span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"shape</span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">data</span><span class="o">.</span><span class="n">columns</span>
 </pre></div>
 </div>
@@ -1219,12 +1174,7 @@ Index(['V2.1', 'V2.2', 'V2.3', 'V2.4', 'V2.5', 'V3.1', 'V3.2', 'V3.3', 'V3.4',
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span>
-    <span class="n">depth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
-    <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">obj_mode</span> <span class="o">=</span> <span class="s1">'acc'</span>
-<span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">)</span>
 
 <span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
@@ -1294,26 +1244,11 @@ leaf 2
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-&lt;class 'numpy.int64'&gt;
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_39_1.png" src="../_images/notebooks_FlowOCT_39_1.png"/>
+<img alt="../_images/notebooks_FlowOCT_39_0.png" src="../_images/notebooks_FlowOCT_39_0.png"/>
 </div>
 </div>
 <div class="nbinput docutils container">

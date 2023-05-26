@@ -57,7 +57,8 @@
     "import numpy as np\n",
     "import pandas as pd\n",
     "import matplotlib.pyplot as plt\n",
-    "'''\n",
+    "\n",
+    "\"\"\"\n",
     "    X2\n",
     "    |               |\n",
     "    |               |\n",
@@ -68,17 +69,27 @@
     "    0    - - - -    |    + + +\n",
     "    |    - - -      |\n",
     "    |______0________|_______1_______X1\n",
-    "'''\n",
-    "X = np.array([[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],\n",
-    "             [1,0],[1,0],[1,0],\n",
-    "             [1,1],\n",
-    "             [0,1],[0,1]])\n",
-    "X = pd.DataFrame(X, columns=['X1', 'X2'])\n",
+    "\"\"\"\n",
+    "X = np.array(\n",
+    "    [\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [1, 0],\n",
+    "        [1, 0],\n",
+    "        [1, 0],\n",
+    "        [1, 1],\n",
+    "        [0, 1],\n",
+    "        [0, 1],\n",
+    "    ]\n",
+    ")\n",
+    "X = pd.DataFrame(X, columns=[\"X1\", \"X2\"])\n",
     "\n",
-    "y = np.array([0,0,0,0,0,0,0,\n",
-    "              1,1,1,\n",
-    "              0,\n",
-    "              1,1])"
+    "y = np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])"
    ]
   },
   {
@@ -211,9 +222,9 @@
     }
    ],
    "source": [
-    "fig, ax = plt.subplots(figsize=(10, 5)) \n",
+    "fig, ax = plt.subplots(figsize=(10, 5))\n",
     "robust_classifier.plot_tree()\n",
-    "plt.show()\n"
+    "plt.show()"
    ]
   },
   {
@@ -290,23 +301,33 @@
    "outputs": [],
    "source": [
     "# Same data as Example 1\n",
-    "X = np.array([[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0],\n",
-    "             [1,0],[1,0],[1,0],\n",
-    "             [1,1],\n",
-    "             [0,1],[0,1]])\n",
-    "X = pd.DataFrame(X, columns=['X1', 'X2'])\n",
+    "X = np.array(\n",
+    "    [\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [0, 0],\n",
+    "        [1, 0],\n",
+    "        [1, 0],\n",
+    "        [1, 0],\n",
+    "        [1, 1],\n",
+    "        [0, 1],\n",
+    "        [0, 1],\n",
+    "    ]\n",
+    ")\n",
+    "X = pd.DataFrame(X, columns=[\"X1\", \"X2\"])\n",
     "\n",
-    "y = np.array([0,0,0,0,0,0,0,\n",
-    "              1,1,1,\n",
-    "              0,\n",
-    "              1,1])\n",
+    "y = np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])\n",
     "\n",
     "robust_classifier = RobustOCT(\n",
-    "        depth = 2, \n",
-    "        time_limit = 60,\n",
-    "    )\n",
+    "    depth=2,\n",
+    "    time_limit=60,\n",
+    ")\n",
     "robust_classifier.fit(X, y, costs=costs, budget=2)\n",
-    "predictions = robust_classifier.predict(X)\n"
+    "predictions = robust_classifier.predict(X)"
    ]
   },
   {
@@ -430,7 +451,7 @@
    "outputs": [],
    "source": [
     "robust_classifier.fit(X, y, costs=costs, budget=5)\n",
-    "predictions = robust_classifier.predict(X)\n"
+    "predictions = robust_classifier.predict(X)"
    ]
   },
   {
@@ -636,13 +657,9 @@
     "from odtlearn.robust_oct import RobustOCT\n",
     "\n",
     "# If you define no uncertainty, you get an optimal tree without regularization that maximizes accuracy\n",
-    "non_robust_classifier = RobustOCT(\n",
-    "    depth = 2, \n",
-    "    time_limit = 60,\n",
-    "    verbose=False\n",
-    ") \n",
+    "non_robust_classifier = RobustOCT(depth=2, time_limit=60, verbose=False)\n",
     "\n",
-    "non_robust_classifier.fit(X_train, y_train)\n"
+    "non_robust_classifier.fit(X_train, y_train)"
    ]
   },
   {
@@ -828,7 +845,8 @@
    "source": [
     "\"\"\"Define budget of uncertainty\"\"\"\n",
     "from math import log\n",
-    "l = 0.9 # Lambda value between 0 and 1\n",
+    "\n",
+    "l = 0.9  # Lambda value between 0 and 1\n",
     "budget = -1 * X_train.shape[0] * log(l)\n",
     "budget"
    ]
@@ -1009,10 +1027,10 @@
     "from copy import deepcopy\n",
     "\n",
     "costs = deepcopy(X_train)\n",
-    "costs = costs.astype('float')\n",
+    "costs = costs.astype(\"float\")\n",
     "for f in range(len(q_f)):\n",
     "    if q_f[f] == 1:\n",
-    "        costs[costs.columns[f]] = budget + 1 # no uncertainty = \"infinite\" cost\n",
+    "        costs[costs.columns[f]] = budget + 1  # no uncertainty = \"infinite\" cost\n",
     "    else:\n",
     "        costs[costs.columns[f]] = -1 * log(1 - q_f[f])\n",
     "\n",
@@ -1064,9 +1082,9 @@
    ],
    "source": [
     "robust_classifier = RobustOCT(\n",
-    "        depth = 2, \n",
-    "        time_limit = 120,\n",
-    "    )\n",
+    "    depth=2,\n",
+    "    time_limit=120,\n",
+    ")\n",
     "robust_classifier.fit(X_train, y_train, costs=costs, budget=budget)"
    ]
   },
@@ -1149,7 +1167,7 @@
     }
    ],
    "source": [
-    "fig, ax = plt.subplots(figsize=(10, 5)) \n",
+    "fig, ax = plt.subplots(figsize=(10, 5))\n",
     "robust_classifier.plot_tree()\n",
     "plt.show()"
    ]
@@ -1182,10 +1200,22 @@
    "source": [
     "from sklearn.metrics import accuracy_score\n",
     "\n",
-    "print(\"Non-robust training accuracy: \", accuracy_score(y_train, non_robust_classifier.predict(X_train)))\n",
-    "print(\"Robust training accuracy:     \", accuracy_score(y_train, robust_classifier.predict(X_train)))\n",
-    "print(\"Non-robust test accuracy:     \", accuracy_score(y_test, non_robust_classifier.predict(X_test)))\n",
-    "print(\"Robust test accuracy:         \", accuracy_score(y_test, robust_classifier.predict(X_test)))"
+    "print(\n",
+    "    \"Non-robust training accuracy: \",\n",
+    "    accuracy_score(y_train, non_robust_classifier.predict(X_train)),\n",
+    ")\n",
+    "print(\n",
+    "    \"Robust training accuracy:     \",\n",
+    "    accuracy_score(y_train, robust_classifier.predict(X_train)),\n",
+    ")\n",
+    "print(\n",
+    "    \"Non-robust test accuracy:     \",\n",
+    "    accuracy_score(y_test, non_robust_classifier.predict(X_test)),\n",
+    ")\n",
+    "print(\n",
+    "    \"Robust test accuracy:         \",\n",
+    "    accuracy_score(y_test, robust_classifier.predict(X_test)),\n",
+    ")"
    ]
   },
   {
@@ -1223,12 +1253,13 @@
     "    # Perturbation of features\n",
     "    for f in range(len(new_data.columns)):\n",
     "        perturbations = np.random.geometric(q_f[f], size=new_data.shape[0])\n",
-    "        perturbations = perturbations - 1 # Support should be 0,1,2,...\n",
+    "        perturbations = perturbations - 1  # Support should be 0,1,2,...\n",
     "        signs = (2 * np.random.binomial(1, 0.5, size=new_data.shape[0])) - 1\n",
     "        perturbations = perturbations * signs\n",
     "        new_data[new_data.columns[f]] = new_data[new_data.columns[f]] + perturbations\n",
     "    return new_data\n",
-    "    \n",
+    "\n",
+    "\n",
     "\"\"\"Obtain 1000 different perturbed test sets, and record accuracies\"\"\"\n",
     "non_robust_acc = []\n",
     "robust_acc = []\n",
@@ -1268,7 +1299,9 @@
    "source": [
     "print(\"Worst-case accuracy (Non-Robust Tree): \", min(non_robust_acc))\n",
     "print(\"Worst-case accuracy (Robust Tree):     \", min(robust_acc))\n",
-    "print(\"Average accuracy (Non-Robust Tree):    \", sum(non_robust_acc) / len(non_robust_acc))\n",
+    "print(\n",
+    "    \"Average accuracy (Non-Robust Tree):    \", sum(non_robust_acc) / len(non_robust_acc)\n",
+    ")\n",
     "print(\"Average accuracy (Robust Tree):        \", sum(robust_acc) / len(robust_acc))"
    ]
   },
