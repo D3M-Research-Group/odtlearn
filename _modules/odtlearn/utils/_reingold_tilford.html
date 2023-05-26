@@ -241,9 +241,29 @@
         <article role="main">
           <h1>Source code for odtlearn.utils._reingold_tilford</h1><div class="highlight"><pre>
 <span></span><span class="c1"># Modified version of the DrawTree class from sci-kit learn</span>
+<span class="c1"># (https://github.com/scikit-learn/scikit-learn/blob/42d235924efa64987a19e945035c85414c53d4f0/sklearn/tree/_reingold_tilford.py)</span>
 <span class="c1"># Original Author: William Mill (bill@billmill.org)</span>
 <span class="c1"># Original License: BSD 3 clause</span>
 <span class="c1"># Modified by: Patrick Vossler (patrick.vossler18@gmail.com)</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright &lt;2019&gt; &lt;William Mill (bill@billmill.org)&gt;</span>
+<span class="c1"># Redistribution and use in source and binary forms, with or without modification,</span>
+<span class="c1"># are permitted provided that the following conditions are met:</span>
+<span class="c1"># 1. Redistributions of source code must retain the above copyright notice, this</span>
+<span class="c1">#  list of conditions and the following disclaimer.</span>
+<span class="c1"># 2. Redistributions in binary form must reproduce the above copyright notice, this list</span>
+<span class="c1">#  of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</span>
+<span class="c1"># 3. Neither the name of the copyright holder nor the names of its contributors may be used</span>
+<span class="c1">#  to endorse or promote products derived from this software without specific prior written permission.</span>
+<span class="c1"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS</span>
+<span class="c1"># OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY</span>
+<span class="c1"># AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR</span>
+<span class="c1"># CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL</span>
+<span class="c1"># DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,</span>
+<span class="c1"># DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER</span>
+<span class="c1"># IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT</span>
+<span class="c1"># OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</span>
+
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
