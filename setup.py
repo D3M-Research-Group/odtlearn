@@ -37,7 +37,14 @@ CLASSIFIERS = [
 ]
 EXTRAS_REQUIRE = {
     "tests": ["pytest", "pytest-cov"],
-    "docs": ["sphinx", "sphinx-gallery", "sphinx_rtd_theme", "numpydoc", "matplotlib"],
+    "docs": [
+        "sphinx",
+        "sphinx-gallery",
+        "furo",
+        "numpydoc",
+        "matplotlib",
+        "sphinx-autoapi",
+    ],
 }
 
 setup(
