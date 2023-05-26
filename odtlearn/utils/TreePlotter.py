@@ -1,3 +1,4 @@
+import numpy as np
 from seaborn import color_palette
 from sklearn.tree._export import _MPLTreeExporter
 
@@ -97,7 +98,8 @@ class MPLPlotter(_MPLTreeExporter):
         node_string = characters[-1]
 
         name = value if selected_feature is None else selected_feature
-        if type(name) != str:
+        if type(name) not in [str, np.str_]:
+            print(type(name))
             if type(name) != int:
                 name = str(int(name))
             else:
@@ -129,10 +131,10 @@ class MPLPlotter(_MPLTreeExporter):
         else:
             if labels:
                 if "OPT" in self.model_name:
-                    node_string += "treatment = "
+                    node_string += "trt = "
                 else:
                     node_string += "class = "
-            class_name = "%s" % (name)
+            class_name = f"{name}"
             node_string += class_name
         # Clean up any trailing newlines
         if node_string.endswith(characters[4]):
@@ -158,7 +160,7 @@ class MPLPlotter(_MPLTreeExporter):
             return Tree(label, node_id)
         return Tree(label, node_id, *children)
 
-    def export(self, ax=None):
+    def export(self, ax=None, distance=1.0):
         import matplotlib.pyplot as plt
         from matplotlib.text import Annotation
 
@@ -167,7 +169,7 @@ class MPLPlotter(_MPLTreeExporter):
         ax.clear()
         ax.set_axis_off()
         my_tree = self._make_tree(1)
-        draw_tree = buchheim(my_tree, distance=1.0)
+        draw_tree = buchheim(my_tree, distance=distance)
         # important to make sure we're still
         # inside the axis after drawing the box
         # this makes sense because the width of a box

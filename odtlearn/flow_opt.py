@@ -1,10 +1,9 @@
 from gurobipy import GRB, LinExpr
-from sklearn.utils.validation import check_is_fitted, check_X_y
+from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 from odtlearn.flow_opt_ms import FlowOPTMultipleSink
 from odtlearn.flow_opt_ss import FlowOPTSingleSink
 from odtlearn.utils.validation import (
-    check_array,
     check_binary,
     check_columns_match,
     check_ipw,

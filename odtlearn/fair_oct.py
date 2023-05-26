@@ -64,7 +64,7 @@ class FairOCT(FlowOCTMultipleSink):
         self._positive_class = positive_class
 
     def _extract_metadata(self, X, y, protect_feat):
-        super()._extract_metadata(X, y)
+        super(FlowOCTMultipleSink, self)._extract_metadata(X, y)
         if isinstance(protect_feat, pd.DataFrame):
             self._protect_feat_col_labels = protect_feat.columns
             self._protect_feat_col_dtypes = protect_feat.dtypes
@@ -582,14 +582,14 @@ class FairOCT(FlowOCTMultipleSink):
             print(csp_df)
         elif metric == "PE":
             pe_df = pd.DataFrame(
-                self.get_EqOdds(self._protect_feat, self.y_, new_data).items(),
+                self.get_EqOdds(self._protect_feat, self._y, new_data).items(),
                 columns=["(p, y, y_pred)", "P(Y_pred=y_pred|P=p, Y=y)"],
             )
             print(pe_df)
         elif metric == "CPE":
             cpe_df = pd.DataFrame(
                 self.get_CondEqOdds(
-                    self._protect_feat, self._legit_factor, self.y_, new_data
+                    self._protect_feat, self._legit_factor, self._y, new_data
                 ).items(),
                 columns=["(p, f, t, t_pred)" "P(Y_pred=y_pred|P=p, Y=y, L=f)"],
             )

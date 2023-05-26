@@ -17,6 +17,7 @@ import sys
 
 # Add to sys.path the top-level directory where the package is located.
 sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, os.path.abspath("../.."))
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -33,7 +34,7 @@ needs_sphinx = "3.0"
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
+    # "sphinx.ext.autosummary",
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
@@ -44,9 +45,11 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx_copybutton",
     "numpydoc",
-    "sphinx_gallery.gen_gallery",
+    # "sphinx_gallery.gen_gallery",
     "sphinx_toggleprompt",
     "nbsphinx",
+    "autoapi.extension",
+    "sphinx.ext.inheritance_diagram",
 ]
 
 # this is needed for some reason...
@@ -69,7 +72,38 @@ autodoc_default_flags = ["members", "inherited-members"]
 templates_path = ["_templates"]
 
 # generate autosummary even if no references
-autosummary_generate = True
+# autosummary_generate = True
+autoapi_type = "python"
+autoapi_modules = {"odtlearn": {"prune": True}}
+autoapi_dirs = ["../odtlearn"]
+autoapi_add_toctree_entry = False
+# autoapi_options = ["members", "inherited-members"]
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "show-module-summary",
+    "imported-members",
+]
+autoapi_ignore = ["*/_version.py", "*/test_*.py", "tests/*"]
+
+
+def skip_submodules(app, what, name, obj, skip, options):
+    if what == "class":
+        print(name)
+    if what == "package" and name in ["odtlearn.tests"]:
+        skip = True
+    if what == "module" and name in [
+        "odtlearn.tests.conftest",
+        "odtlearn.utils._reingold_tilford",
+    ]:
+        skip = True
+    return skip
+
+
+def setup(sphinx):
+    sphinx.connect("autoapi-skip-member", skip_submodules)
+
 
 # The suffix of source filenames.
 source_suffix = {
@@ -377,12 +411,12 @@ intersphinx_mapping = {
 }
 
 # sphinx-gallery configuration
-sphinx_gallery_conf = {
-    "doc_module": "odtlearn",
-    "backreferences_dir": os.path.join("generated"),
-    "reference_url": {"odtlearn": None},
-    # "filename_pattern": r"fit_*",
-}
+# sphinx_gallery_conf = {
+#     "doc_module": "odtlearn",
+#     "backreferences_dir": os.path.join("generated"),
+#     "reference_url": {"odtlearn": None},
+#     # "filename_pattern": r"fit_*",
+# }
 
 
 # copybutton strip prompt text

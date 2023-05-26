@@ -185,6 +185,7 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
         edge_annotation=True,
         arrow_annotation_font_scale=0.8,
         debug=False,
+        distance=1.0,
     ):
         """Plot the fitted tree with the branching features, the threshold values for
         each branching node's test, and the predictions asserted for each assignment node
@@ -248,4 +249,4 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
             arrow_annotation_font_scale=arrow_annotation_font_scale,
             debug=debug,
         )
-        return exporter.export(ax=ax)
+        return exporter.export(ax=ax, distance=distance)

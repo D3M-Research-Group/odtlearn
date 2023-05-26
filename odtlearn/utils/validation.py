@@ -17,7 +17,9 @@ def check_ipw(X, ipw):
     X: The input/training data
     ipw: A vector or array-like object for inverse propensity weights. Only needed when running IPW/DR
 
-    :return: The converted version of ipw after passing the series of checks
+    Returns
+    -------
+    The converted version of ipw after passing the series of checks
     """
     if ipw is not None:
         ipw = column_or_1d(ipw, warn=True)
@@ -43,7 +45,9 @@ def check_y_hat(X, treatments, y_hat):
     treatments: A vector of the unique treatment values in the dataset.
     y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR
 
-    :return: The converted versions of ipw and y_hat after passing the series of checks
+    Returns
+    -------
+    The converted versions of ipw and y_hat after passing the series of checks
     """
     if y_hat is not None:
         y_hat = check_array(y_hat)
@@ -72,7 +76,9 @@ def check_helpers(X, treatments, **kwargs):
     treatments: A vector of the unique treatment values in the dataset.
     y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR
 
-    :return: The converted versions of ipw and y_hat after passing the series of checks
+    Returns
+    -------
+    The converted versions of ipw and y_hat after passing the series of checks
     """
     if (ipw := kwargs.get("ipw", None)) is not None:
         ipw = column_or_1d(ipw, warn=True)
@@ -108,9 +114,15 @@ def check_helpers(X, treatments, **kwargs):
 def check_y(X, y):
     """
     This function checks the shape and contents of the observed outcomes
-    :param X: The input/training data
-    :param y: A vector or array-like object for the observed outcomes corresponding to treatment t
-    :return: The converted version of y after passing the series of checks
+
+    Parameters
+    ----------
+    X: The input/training data
+    y: A vector or array-like object for the observed outcomes corresponding to treatment t
+
+    Returns
+    -------
+    The converted version of y after passing the series of checks
     """
     # check consistent length
     y = column_or_1d(y, warn=True)
@@ -124,10 +136,17 @@ def check_y(X, y):
 
 def check_columns_match(original_columns, new_data):
     """
-    :param original_columns: List of column names from the data set used to fit the model
-    :param new_data: The numpy matrix or pd dataframe new data set for
+    Check that the column names of a new data frame match the column names used when used to fit the model
+
+    Parameters
+    ----------
+    original_columns: List of column names from the data set used to fit the model
+    new_data: The numpy matrix or pd dataframe new data set for
     which we want to make predictions
-    :return ValueError if column names do not match, otherwise None
+
+    Returns
+    -------
+    ValueError if column names do not match, otherwise None
     """
 
     if isinstance(new_data, pd.DataFrame):
