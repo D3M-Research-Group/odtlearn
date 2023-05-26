@@ -99,7 +99,6 @@ class MPLPlotter(_MPLTreeExporter):
 
         name = value if selected_feature is None else selected_feature
         if type(name) not in [str, np.str_]:
-            print(type(name))
             if type(name) != int:
                 name = str(int(name))
             else:
@@ -147,7 +146,6 @@ class MPLPlotter(_MPLTreeExporter):
         # traverses _tree.Tree recursively, builds intermediate
         # "_reingold_tilford.Tree" object
         _, _, selected_feature, cutoff, leaf, value = self.node_dict[node_id]
-        # print(leaf, selected_feature, cutoff, value)
         label = self.node_to_str(node_id, leaf, selected_feature, cutoff, value)
         if not leaf and depth <= self.max_depth:
             left_child = self.tree.get_left_children(node_id)
