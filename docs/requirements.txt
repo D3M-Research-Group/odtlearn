@@ -21,4 +21,5 @@ myst-parser==0.17.2
 furo==2022.3.4
 ipykernel
 seaborn
+sphinx-autoapi
 git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
