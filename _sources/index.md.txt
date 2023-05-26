@@ -27,20 +27,20 @@ Decision trees are interpretable machine learning models that are routinely used
 There are a few ways to get started with ODTlearn:
 
 * Read the [Installation Guide](installation).
-* Read the [User Guide](project:./user_guide/index.md) for an overview of each of the algorithms in this package.
-* Review the [example notebooks](project:./notebooks/index.md) for each of the methods implemented in ODTlearn.
+* Read the [User Guide](./user_guide/index.md) for an overview of each of the algorithms in this package.
+* Review the [Example Notebooks](./notebooks/index.md) for each of the methods implemented in ODTlearn.
 
 ## Documentation Structure
 
 We provide an overview of the structure of our documentation to help you know where to look when you run into any issues:
 
-* **Tutorials** walk through fitting decision trees for several toy problems using ODTlearn. Start here if you are new to ODTlearn, or you have a particular type of problem you want to model.
-* The **API Reference** contains a complete list of the classes and methods you can use in ODTlearn. Go here to know how to use a particular classifier and its corresponding methods.
-* The **Developer Docs** section contains information for people interested in contributing to ODTlearn development or writing an ODTlearn extension. Don't worry about this section if you are using ODTlearn to solve problems as a user.
+* [**Example notebooks**](./notebooks/index.md) walk through fitting decision trees for several toy problems using ODTlearn. Start here if you are new to ODTlearn, or you have a particular type of problem you want to model.
+* The [**API Reference**](api.md) contains a complete list of the classes and methods you can use in ODTlearn. Go here to know how to use a particular classifier and its corresponding methods.
+* The [**Developer Docs**](contributing.md) section contains information for people interested in contributing to ODTlearn development or writing an ODTlearn extension. Don't worry about this section if you are using ODTlearn to solve problems as a user.
 
 ## Usage Example
 
-The following script demonstrates how to use the ODTlearn package to fit a StrongTree. For examples of how to use other types of trees please consult the [example notebooks](project:./notebooks/index.md) and [API documentation](project:./api.md).
+The following script demonstrates how to use the ODTlearn package to fit a StrongTree. For examples of how to use other types of trees please consult the [example notebooks](./notebooks/index.md) and [API documentation](./api.md).
 
 ```python
 import pandas as pd
