@@ -1,0 +1,234 @@
+:py:mod:`odtlearn.utils.validation`
+===================================
+
+.. py:module:: odtlearn.utils.validation
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.validation.check_ipw
+   odtlearn.utils.validation.check_y_hat
+   odtlearn.utils.validation.check_helpers
+   odtlearn.utils.validation.check_y
+   odtlearn.utils.validation.check_columns_match
+   odtlearn.utils.validation.check_binary
+   odtlearn.utils.validation.check_integer
+   odtlearn.utils.validation.check_same_as_X
+
+
+
+.. py:function:: check_ipw(X, ipw)
+
+   
+   This function checks the propensity weights and counterfactual predictions
+
+
+   :Parameters:
+
+       **X: The input/training data**
+           ..
+
+       **ipw: A vector or array-like object for inverse propensity weights. Only needed when running IPW/DR**
+           ..
+
+   :Returns:
+
+       The converted version of ipw after passing the series of checks
+           ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: check_y_hat(X, treatments, y_hat)
+
+   
+   This function checks the propensity weights and counterfactual predictions
+
+
+   :Parameters:
+
+       **X: The input/training data**
+           ..
+
+       **treatments: A vector of the unique treatment values in the dataset.**
+           ..
+
+       **y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR**
+           ..
+
+   :Returns:
+
+       The converted versions of ipw and y_hat after passing the series of checks
+           ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: check_helpers(X, treatments, **kwargs)
+
+   
+   This function checks the propensity weights and counterfactual predictions
+
+
+   :Parameters:
+
+       **X: The input/training data**
+           ..
+
+       **treatments: A vector of the unique treatment values in the dataset.**
+           ..
+
+       **y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR**
+           ..
+
+   :Returns:
+
+       The converted versions of ipw and y_hat after passing the series of checks
+           ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: check_y(X, y)
+
+   
+   This function checks the shape and contents of the observed outcomes
+
+
+   :Parameters:
+
+       **X: The input/training data**
+           ..
+
+       **y: A vector or array-like object for the observed outcomes corresponding to treatment t**
+           ..
+
+   :Returns:
+
+       The converted version of y after passing the series of checks
+           ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: check_columns_match(original_columns, new_data)
+
+   
+   Check that the column names of a new data frame match the column names used when used to fit the model
+
+
+   :Parameters:
+
+       **original_columns: List of column names from the data set used to fit the model**
+           ..
+
+       **new_data: The numpy matrix or pd dataframe new data set for**
+           ..
+
+       **which we want to make predictions**
+           ..
+
+   :Returns:
+
+       ValueError if column names do not match, otherwise None
+           ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: check_binary(df)
+
+
+.. py:function:: check_integer(df)
+
+
+.. py:function:: check_same_as_X(X, X_col_labels, G, G_label)
+
+   
+   Check if a DataFrame G has the columns of X
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

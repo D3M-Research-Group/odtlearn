@@ -1,0 +1,28 @@
+:orphan:
+
+:py:mod:`odtlearn.tests.conftest`
+=================================
+
+.. py:module:: odtlearn.tests.conftest
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.tests.conftest.pytest_addoption
+   odtlearn.tests.conftest.pytest_configure
+
+
+
+.. py:function:: pytest_addoption(parser)
+
+
+.. py:function:: pytest_configure(config)
+
+

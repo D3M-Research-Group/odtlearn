@@ -2,17 +2,14 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="Optimal Prescriptive Trees" href="notebooks/PrescriptiveTree.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="RobustTreeClassifier Examples" href="notebooks/RobustOCT.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>How to contribute to ODTlearn - odtlearn 0.1.0 documentation</title>
+        <title>How to contribute to ODTlearn - odtlearn 0.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
     
     
@@ -125,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">odtlearn 0.1.0 documentation</div></a>
+      <a href="index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -148,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.1.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -161,26 +158,51 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="user_guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/optimal_classification_trees.html">Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/fair_optimal_classification_trees.html">Fair Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/optimal_prescriptive_trees.html">Optimal Prescriptive Trees</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="generated/odtlearn.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.StrongTree</span></code>.StrongTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/odtlearn.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.FairTree</span></code>.FairTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/odtlearn.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.RobustTree</span></code>.RobustTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/odtlearn.tree_classifier.TreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.tree_classifier</span></code>.TreeClassifier</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="autoapi/odtlearn/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/odtlearn/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/Tree/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.Tree</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/TreePlotter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.TreePlotter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/flow_oct_ms/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct_ms</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/flow_oct_ss/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct_ss</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/flow_opt/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_opt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/flow_opt_ms/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_opt_ms</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/flow_opt_ss/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_opt_ss</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/opt_ct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.opt_ct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/opt_dt/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.opt_dt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/opt_pt/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.opt_pt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/robust_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.robust_oct</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example Notebooks</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/StrongTree.html">Optimal Strong Classification Trees</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/FairTree.html">Fair Optimal Classification Trees</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/RobustTree.html">Optimal Robust Classification Trees</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/PrescriptiveTree.html">Optimal Prescriptive Trees</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustTreeClassifier</span></code> Examples</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Docs</span></p>
 <ul class="current">
@@ -243,14 +265,14 @@
         
         <div class="related-pages">
           
-          <a class="prev-page" href="notebooks/PrescriptiveTree.html">
+          <a class="prev-page" href="notebooks/RobustOCT.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Optimal Prescriptive Trees</div>
+                <div class="title"><code class="docutils literal notranslate"><span class="pre">RobustTreeClassifier</span></code> Examples</div>
                 
               </div>
             </a>

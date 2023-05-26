@@ -1,0 +1,885 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
+
+    <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
+        <title>odtlearn.fair_oct - odtlearn 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  
+  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../user_guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/optimal_classification_trees.html">Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/fair_optimal_classification_trees.html">Fair Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/optimal_prescriptive_trees.html">Optimal Prescriptive Trees</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/odtlearn/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/odtlearn/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/Tree/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.Tree</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/TreePlotter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.TreePlotter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/flow_oct_ms/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct_ms</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/flow_oct_ss/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct_ss</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/flow_opt/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_opt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/flow_opt_ms/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_opt_ms</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/flow_opt_ss/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_opt_ss</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/opt_ct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.opt_ct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/opt_dt/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.opt_dt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/opt_pt/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.opt_pt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/robust_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.robust_oct</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Example Notebooks</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustTreeClassifier</span></code> Examples</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">How to contribute to ODTlearn</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <h1>Source code for odtlearn.fair_oct</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">gurobipy</span> <span class="kn">import</span> <span class="n">GRB</span><span class="p">,</span> <span class="n">LinExpr</span><span class="p">,</span> <span class="n">quicksum</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">check_X_y</span>
+
+<span class="kn">from</span> <span class="nn">odtlearn.flow_oct_ms</span> <span class="kn">import</span> <span class="n">FlowOCTMultipleSink</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_binary</span><span class="p">,</span> <span class="n">check_columns_match</span>
+
+
+<div class="viewcode-block" id="FairOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT">[docs]</a><span class="k">class</span> <span class="nc">FairOCT</span><span class="p">(</span><span class="n">FlowOCTMultipleSink</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">positive_class</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span>
+        <span class="n">fairness_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">"""</span>
+<span class="sd">        An optimal and fair classification tree fitted on a given binary-valued</span>
+<span class="sd">        data set. The fairness criteria enforced in the training step is one of statistical parity (SP),</span>
+<span class="sd">        conditional statistical parity (CSP), predictive equality (PE),</span>
+<span class="sd">        equal opportunity (EOpp) or equalized odds (EOdds).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        depth : int, default= 1</span>
+<span class="sd">            A parameter specifying the depth of the tree</span>
+<span class="sd">        time_limit : int, default= 60</span>
+<span class="sd">            The given time limit (in seconds) for solving the MIO problem</span>
+<span class="sd">        _lambda : float, default= 0</span>
+<span class="sd">            The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
+<span class="sd">        num_threads: int, default=None</span>
+<span class="sd">            The number of threads the solver should use. If None, it will use all avaiable threads</span>
+<span class="sd">        positive_class : int</span>
+<span class="sd">            The value of the class label which is corresponding to the desired outcome</span>
+<span class="sd">        fairness_type: [None, 'SP', 'CSP', 'PE', 'EOpp', 'EOdds'], default=None</span>
+<span class="sd">            The type of fairness criteria that we want to enforce</span>
+<span class="sd">        fairness_bound: float (0,1], default=1</span>
+<span class="sd">            The bound of the fairness constraint. The smaller the value the stricter</span>
+<span class="sd">            the fairness constraint and 1 corresponds to no fairness at all</span>
+<span class="sd">        :param X: numpy matrix or pandas data-frame of covariates.</span>
+<span class="sd">                  It's up to the user to include the protected features in X or not.</span>
+<span class="sd">                  We assume that we are allowed to branch on any of the columns within X.</span>
+<span class="sd">        """</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">_lambda</span><span class="p">,</span>
+            <span class="n">depth</span><span class="p">,</span>
+            <span class="n">time_limit</span><span class="p">,</span>
+            <span class="n">num_threads</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_type</span> <span class="o">=</span> <span class="n">fairness_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_bound</span> <span class="o">=</span> <span class="n">fairness_bound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
+
+    <span class="k">def</span> <span class="nf">_extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FlowOCTMultipleSink</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span> <span class="o">=</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">columns</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_dtypes</span> <span class="o">=</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">dtypes</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">"P_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_fairness_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_df</span><span class="p">,</span> <span class="n">p_prime_df</span><span class="p">):</span>
+        <span class="n">count_p</span> <span class="o">=</span> <span class="n">p_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">count_p_prime</span> <span class="o">=</span> <span class="n">p_prime_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">constraint_added</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">count_p</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">count_p_prime</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">constraint_added</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addConstr</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">count_p</span><span class="p">)</span>
+                    <span class="o">*</span> <span class="n">quicksum</span><span class="p">(</span>
+                        <span class="n">quicksum</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">]</span>
+                            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span>
+                        <span class="p">)</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">p_df</span><span class="o">.</span><span class="n">index</span>
+                    <span class="p">)</span>
+                    <span class="o">-</span> <span class="p">(</span>
+                        <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">count_p_prime</span><span class="p">)</span>
+                        <span class="o">*</span> <span class="n">quicksum</span><span class="p">(</span>
+                            <span class="n">quicksum</span><span class="p">(</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">]</span>
+                                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span>
+                            <span class="p">)</span>
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">p_prime_df</span><span class="o">.</span><span class="n">index</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_bound</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addConstr</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">count_p</span><span class="p">)</span>
+                    <span class="o">*</span> <span class="n">quicksum</span><span class="p">(</span>
+                        <span class="n">quicksum</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">]</span>
+                            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">)</span>
+                        <span class="p">)</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">p_df</span><span class="o">.</span><span class="n">index</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="o">-</span> <span class="p">(</span>
+                    <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">count_p_prime</span><span class="p">)</span>
+                    <span class="o">*</span> <span class="n">quicksum</span><span class="p">(</span>
+                        <span class="n">quicksum</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">]</span>
+                            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span>
+                        <span class="p">)</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">p_prime_df</span><span class="o">.</span><span class="n">index</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_bound</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">constraint_added</span>
+
+    <span class="k">def</span> <span class="nf">_define_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_define_constraints</span><span class="p">()</span>
+        <span class="c1"># Loop through all possible combinations of the protected feature</span>
+        <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_P_col_labels</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="n">combo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">p_prime</span> <span class="o">=</span> <span class="n">combo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_type</span> <span class="o">==</span> <span class="s2">"SP"</span><span class="p">:</span>
+                    <span class="n">p_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">]</span>
+                    <span class="n">p_prime_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p_prime</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_fairness_constraint</span><span class="p">(</span><span class="n">p_df</span><span class="p">,</span> <span class="n">p_prime_df</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_type</span> <span class="o">==</span> <span class="s2">"PE"</span><span class="p">:</span>
+                    <span class="n">p_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">)</span>
+                    <span class="p">]</span>
+                    <span class="n">p_prime_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p_prime</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">)</span>
+                    <span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_fairness_constraint</span><span class="p">(</span><span class="n">p_df</span><span class="p">,</span> <span class="n">p_prime_df</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_type</span> <span class="o">==</span> <span class="s2">"EOpp"</span><span class="p">:</span>
+                    <span class="n">p_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">)</span>
+                    <span class="p">]</span>
+                    <span class="n">p_prime_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p_prime</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">)</span>
+                    <span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_fairness_constraint</span><span class="p">(</span><span class="n">p_df</span><span class="p">,</span> <span class="n">p_prime_df</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_type</span> <span class="o">==</span> <span class="s2">"EOdds"</span>
+                <span class="p">):</span>  <span class="c1"># Need to check with group if this is how we want to enforce this constraint</span>
+                    <span class="n">PE_p_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">)</span>
+                    <span class="p">]</span>
+                    <span class="n">PE_p_prime_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p_prime</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">)</span>
+                    <span class="p">]</span>
+
+                    <span class="n">EOpp_p_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">)</span>
+                    <span class="p">]</span>
+                    <span class="n">EOpp_p_prime_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p_prime</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span><span class="p">)</span>
+                    <span class="p">]</span>
+
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">PE_p_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span>
+                        <span class="ow">and</span> <span class="n">PE_p_prime_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span>
+                        <span class="ow">and</span> <span class="n">EOpp_p_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span>
+                        <span class="ow">and</span> <span class="n">EOpp_p_prime_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span>
+                    <span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_add_fairness_constraint</span><span class="p">(</span><span class="n">PE_p_df</span><span class="p">,</span> <span class="n">PE_p_prime_df</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_add_fairness_constraint</span><span class="p">(</span><span class="n">EOpp_p_df</span><span class="p">,</span> <span class="n">EOpp_p_prime_df</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_type</span> <span class="o">==</span> <span class="s2">"CSP"</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">l_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_legitimate_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                        <span class="n">p_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span>
+                            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span>
+                            <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_legitimate_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">l_value</span><span class="p">)</span>
+                        <span class="p">]</span>
+                        <span class="n">p_prime_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span>
+                            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p_prime</span><span class="p">)</span>
+                            <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_legitimate_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">l_value</span><span class="p">)</span>
+                        <span class="p">]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_add_fairness_constraint</span><span class="p">(</span><span class="n">p_df</span><span class="p">,</span> <span class="n">p_prime_df</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_define_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Max sum(sum(zeta[i,n,y(i)]))</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">LinExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">:</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">"acc"</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>
+                    <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]]))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">"balance"</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>
+                    <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                        <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span>
+                        <span class="o">*</span> <span class="p">(</span>
+                            <span class="mi">1</span>
+                            <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="p">)</span>
+                        <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+                    <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="s2">"acc"</span><span class="p">,</span>
+                <span class="s2">"balance"</span><span class="p">,</span>
+            <span class="p">],</span> <span class="s2">"Wrong objective mode. obj_mode should be one of acc or balance."</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">GRB</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FairOCT.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : {array-like, sparse matrix}, shape (n_samples, n_features)</span>
+<span class="sd">            The training input samples.</span>
+<span class="sd">        y : array-like, shape (n_samples,)</span>
+<span class="sd">            The target values (class labels in classification).</span>
+<span class="sd">        protect_feat : array-like, shape (n_samples,1) or (n_samples, n_p)</span>
+<span class="sd">            The protected feature columns (Race, gender, etc); Can have one or more columns</span>
+<span class="sd">        legit_factor : array-like, shape (n_samples,)</span>
+<span class="sd">            The legitimate factor column(e.g., prior number of criminal acts)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            Returns self.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat</span> <span class="o">=</span> <span class="n">protect_feat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_legit_factor</span> <span class="o">=</span> <span class="n">legit_factor</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span> <span class="o">=</span> <span class="s2">"class_label"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_legitimate_name</span> <span class="o">=</span> <span class="s2">"legitimate_feature_name"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="o">+</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_legitimate_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span><span class="p">]</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_P_col_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span>
+
+        <span class="c1"># this function returns converted X and y but we retain metadata</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="c1"># Raises ValueError if there is a column that has values other than 0 or 1</span>
+        <span class="n">check_binary</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># Store the classes seen during fit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_classes</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_main_problem</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+
+        <span class="c1"># Here we will want to store these values and any other variables</span>
+        <span class="c1"># needed for making predictions later</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">)</span>
+
+        <span class="c1"># Return the classifier</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="FairOCT.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">"""Classify test points using the FairTree classifier</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
+<span class="sd">            The input samples.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        y : ndarray, shape (n_samples,)</span>
+<span class="sd">            The label for each sample is the label of the closest sample</span>
+<span class="sd">            seen during fit.</span>
+<span class="sd">        """</span>
+
+        <span class="c1"># Check is fit had been called</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"b_value"</span><span class="p">,</span> <span class="s2">"w_value"</span><span class="p">,</span> <span class="s2">"p_value"</span><span class="p">])</span>
+
+        <span class="c1"># This will again convert a pandas df to numpy array</span>
+        <span class="c1"># but we have the column information from when we called fit</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_prediction</span><span class="p">(</span><span class="n">X</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FairOCT.get_SP"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT.get_SP">[docs]</a>    <span class="k">def</span> <span class="nf">get_SP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        This function returns the statistical parity value for any given protected level and outcome value</span>
+
+<span class="sd">        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)</span>
+<span class="sd">                The protected feature columns (Race, gender, etc); We could have one or more columns</span>
+<span class="sd">        :param y: array-like, shape (n_samples,)</span>
+<span class="sd">                The target values (class labels in classification).</span>
+
+<span class="sd">        :return sp_dict: a dictionary with key =(p,t) and value = P(Y=t|P=p)</span>
+<span class="sd">        where p is a protected level and t is an outcome value</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">protect_feat_test_col_names</span> <span class="o">=</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">protect_feat_test_col_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">"P_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># This will again convert a pandas df to numpy array</span>
+        <span class="c1"># but we have the column information from when we called fit</span>
+        <span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">)</span>
+
+        <span class="n">class_name</span> <span class="o">=</span> <span class="s2">"class_label"</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">X_p</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="n">protect_feat_test_col_names</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">class_name</span><span class="p">]),</span>
+        <span class="p">)</span>
+
+        <span class="n">sp_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="n">protect_feat_test_col_names</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                    <span class="n">p_df</span> <span class="o">=</span> <span class="n">X_p</span><span class="p">[</span><span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">]</span>
+                    <span class="n">sp_p_t</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="n">p_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">sp_p_t</span> <span class="o">=</span> <span class="n">p_df</span><span class="p">[</span><span class="n">p_df</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">p_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">sp_dict</span><span class="p">[(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)]</span> <span class="o">=</span> <span class="n">sp_p_t</span>
+
+        <span class="k">return</span> <span class="n">sp_dict</span></div>
+
+<div class="viewcode-block" id="FairOCT.get_CSP"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT.get_CSP">[docs]</a>    <span class="k">def</span> <span class="nf">get_CSP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        This function returns the conditional statistical parity value for any given</span>
+<span class="sd">        protected level, legitimate feature value and outcome value</span>
+
+<span class="sd">        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)</span>
+<span class="sd">                The protected feature columns (Race, gender, etc); We could have one or more columns</span>
+<span class="sd">        :param legit_fact: array-like, shape (n_samples,)</span>
+<span class="sd">            The legitimate factor column(e.g., prior number of criminal acts)</span>
+<span class="sd">        :param y: array-like, shape (n_samples,)</span>
+<span class="sd">                The target values (class labels in classification).</span>
+
+
+<span class="sd">        :return csp_dict: a dictionary with key =(p, f, t) and value = P(Y=t|P=p, L=f) where p is a protected level</span>
+<span class="sd">                          and t is an outcome value and l is the value of the legitimate feature</span>
+
+<span class="sd">        """</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">protect_feat_test_col_names</span> <span class="o">=</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">protect_feat_test_col_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">"P_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># This will again convert a pandas df to numpy array</span>
+        <span class="c1"># but we have the column information from when we called fit</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">)</span>
+
+        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">)</span>
+
+        <span class="n">class_name</span> <span class="o">=</span> <span class="s2">"class_label"</span>
+        <span class="n">legitimate_name</span> <span class="o">=</span> <span class="s2">"legitimate_feature_name"</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">X_p</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">protect_feat_test_col_names</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">legitimate_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">]</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">csp_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="n">protect_feat_test_col_names</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">legitimate_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                        <span class="n">p_f_df</span> <span class="o">=</span> <span class="n">X_p</span><span class="p">[</span>
+                            <span class="p">(</span><span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">X_p</span><span class="p">[</span><span class="n">legitimate_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">f</span><span class="p">)</span>
+                        <span class="p">]</span>
+                        <span class="n">csp_p_f_t</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">if</span> <span class="n">p_f_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">csp_p_f_t</span> <span class="o">=</span> <span class="p">(</span>
+                                <span class="n">p_f_df</span><span class="p">[</span><span class="n">p_f_df</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="p">)</span> <span class="o">/</span> <span class="n">p_f_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">csp_dict</span><span class="p">[(</span><span class="n">p</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">)]</span> <span class="o">=</span> <span class="n">csp_p_f_t</span>
+
+        <span class="k">return</span> <span class="n">csp_dict</span></div>
+
+<div class="viewcode-block" id="FairOCT.get_EqOdds"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT.get_EqOdds">[docs]</a>    <span class="k">def</span> <span class="nf">get_EqOdds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        This function returns the false positive and true positive rate value</span>
+<span class="sd">        for any given protected level, outcome value and prediction value</span>
+
+<span class="sd">        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)</span>
+<span class="sd">                The protected feature columns (Race, gender, etc); We could have one or more columns</span>
+
+<span class="sd">        :param y: array-like, shape (n_samples,)</span>
+<span class="sd">                The true target values (class labels in classification).</span>
+<span class="sd">        :param y_pred: array-like, shape (n_samples,)</span>
+<span class="sd">                The predicted values (class labels in classification).</span>
+
+<span class="sd">        :return eq_dict: a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t)</span>
+
+<span class="sd">        """</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">protect_feat_test_col_names</span> <span class="o">=</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">protect_feat_test_col_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">"P_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># This will again convert a pandas df to numpy array</span>
+        <span class="c1"># but we have the column information from when we called fit</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">protect_feat</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">)</span>
+
+        <span class="n">class_name</span> <span class="o">=</span> <span class="s2">"class_label"</span>
+        <span class="n">pred_name</span> <span class="o">=</span> <span class="s2">"pred_label"</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">X_p</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="n">protect_feat_test_col_names</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="n">class_name</span><span class="p">,</span> <span class="n">pred_name</span><span class="p">]),</span>
+        <span class="p">)</span>
+
+        <span class="n">eq_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">t_pred</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="n">protect_feat_test_col_names</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                        <span class="n">p_t_df</span> <span class="o">=</span> <span class="n">X_p</span><span class="p">[</span>
+                            <span class="p">(</span><span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">)</span>
+                        <span class="p">]</span>
+                        <span class="n">eq_p_t_t_pred</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">if</span> <span class="n">p_t_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">eq_p_t_t_pred</span> <span class="o">=</span> <span class="p">(</span>
+                                <span class="n">p_t_df</span><span class="p">[</span><span class="n">p_t_df</span><span class="p">[</span><span class="n">pred_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t_pred</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="p">)</span> <span class="o">/</span> <span class="n">p_t_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">eq_dict</span><span class="p">[(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">t_pred</span><span class="p">)]</span> <span class="o">=</span> <span class="n">eq_p_t_t_pred</span>
+
+        <span class="k">return</span> <span class="n">eq_dict</span></div>
+
+<div class="viewcode-block" id="FairOCT.get_CondEqOdds"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT.get_CondEqOdds">[docs]</a>    <span class="k">def</span> <span class="nf">get_CondEqOdds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        This function returns the conditional false negative and true positive rate value</span>
+<span class="sd">        for any given protected level, outcome value, prediction value and legitimate feature value</span>
+
+<span class="sd">        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)</span>
+<span class="sd">                The protected feature columns (Race, gender, etc); We could have one or more columns</span>
+<span class="sd">        :param legit_factor: array-like, shape (n_samples,)</span>
+<span class="sd">            The legitimate factor column(e.g., prior number of criminal acts)</span>
+
+<span class="sd">        :param y: array-like, shape (n_samples,)</span>
+<span class="sd">                The true target values (class labels in classification).</span>
+<span class="sd">        :param y_pred: array-like, shape (n_samples,)</span>
+<span class="sd">                The predicted values (class labels in classification).</span>
+
+<span class="sd">        :return ceq_dict: a dictionary with key =(p, f, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t, L=f)</span>
+
+<span class="sd">        """</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">protect_feat_test_col_names</span> <span class="o">=</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">protect_feat_test_col_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">"P_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+            <span class="p">)</span>
+
+        <span class="c1"># This will again convert a pandas df to numpy array</span>
+        <span class="c1"># but we have the column information from when we called fit</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+        <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">)</span>
+
+        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">)</span>
+
+        <span class="n">class_name</span> <span class="o">=</span> <span class="s2">"class_label"</span>
+        <span class="n">pred_name</span> <span class="o">=</span> <span class="s2">"pred_label"</span>
+        <span class="n">legitimate_name</span> <span class="o">=</span> <span class="s2">"legitimate_feature_name"</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">protect_feat</span><span class="p">,</span>
+                <span class="n">legit_factor</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">y_pred</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="p">),</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">X_p</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">X_p</span><span class="p">,</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">protect_feat_test_col_names</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+                <span class="o">+</span> <span class="p">[</span><span class="n">legitimate_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">pred_name</span><span class="p">]</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">ceq_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">t_pred</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="n">protect_feat_test_col_names</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">X_p</span><span class="p">[</span><span class="n">legitimate_name</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                            <span class="n">p_f_t_df</span> <span class="o">=</span> <span class="n">X_p</span><span class="p">[</span>
+                                <span class="p">(</span><span class="n">X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span>
+                                <span class="o">&amp;</span> <span class="p">(</span><span class="n">X_p</span><span class="p">[</span><span class="n">legitimate_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">f</span><span class="p">)</span>
+                                <span class="o">&amp;</span> <span class="p">(</span><span class="n">X_p</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">)</span>
+                            <span class="p">]</span>
+                            <span class="n">ceq_p_f_t_t_pred</span> <span class="o">=</span> <span class="kc">None</span>
+                            <span class="k">if</span> <span class="n">p_f_t_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="n">ceq_p_f_t_t_pred</span> <span class="o">=</span> <span class="p">(</span>
+                                    <span class="n">p_f_t_df</span><span class="p">[</span><span class="n">p_f_t_df</span><span class="p">[</span><span class="n">pred_name</span><span class="p">]</span> <span class="o">==</span> <span class="n">t_pred</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                                <span class="p">)</span> <span class="o">/</span> <span class="n">p_f_t_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">ceq_dict</span><span class="p">[(</span><span class="n">p</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">t_pred</span><span class="p">)]</span> <span class="o">=</span> <span class="n">ceq_p_f_t_t_pred</span>
+
+        <span class="k">return</span> <span class="n">ceq_dict</span></div>
+
+<div class="viewcode-block" id="FairOCT.fairness_metric_summary"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT.fairness_metric_summary">[docs]</a>    <span class="k">def</span> <span class="nf">fairness_metric_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">new_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">"b_value"</span><span class="p">,</span> <span class="s2">"w_value"</span><span class="p">,</span> <span class="s2">"p_value"</span><span class="p">])</span>
+        <span class="n">metric_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"SP"</span><span class="p">,</span> <span class="s2">"CSP"</span><span class="p">,</span> <span class="s2">"PE"</span><span class="p">,</span> <span class="s2">"CPE"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">new_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">new_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">metric</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metric_names</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"metric argument: '</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s2">' does not match any of the options: </span><span class="si">{</span><span class="n">metric_names</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">"SP"</span><span class="p">:</span>
+            <span class="n">sp_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_SP</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat</span><span class="p">,</span> <span class="n">new_data</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"(p,y)"</span><span class="p">,</span> <span class="s2">"P(Y=y|P=p)"</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sp_df</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">"CSP"</span><span class="p">:</span>
+            <span class="n">csp_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_CSP</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_legit_factor</span><span class="p">,</span> <span class="n">new_data</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"(p, f, y)"</span><span class="p">,</span> <span class="s2">"P(Y=y|P=p, L=f)"</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">csp_df</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">"PE"</span><span class="p">:</span>
+            <span class="n">pe_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_EqOdds</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="n">new_data</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"(p, y, y_pred)"</span><span class="p">,</span> <span class="s2">"P(Y_pred=y_pred|P=p, Y=y)"</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">pe_df</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">"CPE"</span><span class="p">:</span>
+            <span class="n">cpe_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_CondEqOdds</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_legit_factor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="n">new_data</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"(p, f, t, t_pred)"</span> <span class="s2">"P(Y_pred=y_pred|P=p, Y=y, L=f)"</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">cpe_df</span><span class="p">)</span></div></div>
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/D3M-Research-Group/odtlearn" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/scripts/furo.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/toggleprompt.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>

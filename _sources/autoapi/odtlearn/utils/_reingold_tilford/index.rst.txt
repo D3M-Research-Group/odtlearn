@@ -1,0 +1,86 @@
+:orphan:
+
+:py:mod:`odtlearn.utils._reingold_tilford`
+==========================================
+
+.. py:module:: odtlearn.utils._reingold_tilford
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils._reingold_tilford.DrawTree
+   odtlearn.utils._reingold_tilford.Tree
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils._reingold_tilford.buchheim
+   odtlearn.utils._reingold_tilford.third_walk
+   odtlearn.utils._reingold_tilford.first_walk
+   odtlearn.utils._reingold_tilford.apportion
+   odtlearn.utils._reingold_tilford.move_subtree
+   odtlearn.utils._reingold_tilford.execute_shifts
+   odtlearn.utils._reingold_tilford.ancestor
+   odtlearn.utils._reingold_tilford.second_walk
+
+
+
+.. py:class:: DrawTree(tree, parent=None, depth=0, number=1)
+
+   .. py:attribute:: lmost_sibling
+
+      
+
+   .. py:method:: left()
+
+
+   .. py:method:: right()
+
+
+   .. py:method:: lbrother()
+
+
+   .. py:method:: get_lmost_sibling()
+
+
+   .. py:method:: max_extents()
+
+
+
+.. py:function:: buchheim(tree, distance=1.0)
+
+
+.. py:function:: third_walk(tree, n)
+
+
+.. py:function:: first_walk(v, distance)
+
+
+.. py:function:: apportion(v, default_ancestor, distance)
+
+
+.. py:function:: move_subtree(wl, wr, shift)
+
+
+.. py:function:: execute_shifts(v)
+
+
+.. py:function:: ancestor(vil, v, default_ancestor)
+
+
+.. py:function:: second_walk(v, m=0, depth=0, min=None)
+
+
+.. py:class:: Tree(label='', node_id=-1, *children)
+
+

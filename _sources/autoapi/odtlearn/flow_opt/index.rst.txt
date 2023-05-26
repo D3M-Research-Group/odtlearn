@@ -1,0 +1,334 @@
+:py:mod:`odtlearn.flow_opt`
+===========================
+
+.. py:module:: odtlearn.flow_opt
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.flow_opt.FlowOPT_IPW
+   odtlearn.flow_opt.FlowOPT_DM
+   odtlearn.flow_opt.FlowOPT_DR
+
+
+
+
+.. py:class:: FlowOPT_IPW(depth=1, time_limit=60, num_threads=None, verbose=False)
+
+   Bases: :py:obj:`odtlearn.flow_opt_ss.FlowOPTSingleSink`
+
+   
+   An optimal decision tree that prescribes treatments (as opposed to predicting class labels),
+   fitted on a binary-valued observational data set.
+
+
+   :Parameters:
+
+       **depth** : int
+           A parameter specifying the depth of the tree
+
+       **time_limit** : int
+           The given time limit for solving the MIP in seconds
+
+       **method** : str, default='IPW'
+           The method of Prescriptive Trees to run. Choices in ('IPW', 'DM', 'DR), which represents the
+           inverse propensity weighting, direct method, and doubly robust methods, respectively
+
+       **num_threads: int, default=None**
+           The number of threads the solver should use
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: fit(X, t, y, ipw)
+
+      
+      Method to fit the PrescriptiveTree class on the data
+
+
+      :Parameters:
+
+          **X** : array-like, shape (n_samples, n_features)
+              The training input samples.
+
+          **t** : array-like, shape (n_samples,)
+              The treatment values. An array of int.
+
+          **y** : array-like, shape (n_samples,)
+              The observed outcomes upon given treatment t. An array of int.
+
+          **ipw** : array-like, shape (n_samples,)
+              The inverse propensity weight estimates. An array of floats in [0, 1].
+
+          **verbose: bool, default=False**
+              Display Gurobi output.
+
+      :Returns:
+
+          **self** : object
+              Returns self.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: predict(X)
+
+      
+      Method for making prescriptions using a PrescriptiveTree classifier
+
+
+      :Parameters:
+
+          **X** : array-like, shape (n_samples, n_features)
+              The input samples.
+
+      :Returns:
+
+          **t** : ndarray, shape (n_samples,)
+              The prescribed treatments for the input samples.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: FlowOPT_DM(depth=1, time_limit=60, num_threads=None, verbose=False)
+
+   Bases: :py:obj:`odtlearn.flow_opt_ms.FlowOPTMultipleSink`
+
+   
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: fit(X, t, y, y_hat)
+
+      
+      Method to fit the PrescriptiveTree class on the data
+
+
+      :Parameters:
+
+          **X** : array-like, shape (n_samples, n_features)
+              The training input samples.
+
+          **t** : array-like, shape (n_samples,)
+              The treatment values. An array of int.
+
+          **y** : array-like, shape (n_samples,)
+              The observed outcomes upon given treatment t. An array of int.
+
+          **y_hat: array-like, shape (n_samples, n_treatments)**
+              The counterfactual predictions.
+
+      :Returns:
+
+          **self** : object
+              Returns self.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: predict(X)
+
+      
+      Classify test points using the StrongTree classifier
+
+
+      :Parameters:
+
+          **X** : array-like, shape (n_samples, n_features)
+              The input samples.
+
+      :Returns:
+
+          **y** : ndarray, shape (n_samples,)
+              The label for each sample is the label of the closest sample
+              seen during fit.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: FlowOPT_DR(depth=1, time_limit=60, num_threads=None, verbose=False)
+
+   Bases: :py:obj:`odtlearn.flow_opt_ms.FlowOPTMultipleSink`
+
+   
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: fit(X, t, y, ipw, y_hat)
+
+      
+      Method to fit the PrescriptiveTree class on the data
+
+
+      :Parameters:
+
+          **X** : array-like, shape (n_samples, n_features)
+              The training input samples.
+
+          **t** : array-like, shape (n_samples,)
+              The treatment values. An array of int.
+
+          **y** : array-like, shape (n_samples,)
+              The observed outcomes upon given treatment t. An array of int.
+
+          **ipw** : array-like, shape (n_samples,)
+              The inverse propensity weight estimates. An array of floats in [0, 1].
+
+          **y_hat: array-like, shape (n_samples, n_treatments)**
+              The counterfactual predictions.
+
+      :Returns:
+
+          **self** : object
+              Returns self.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: predict(X)
+
+      
+      Classify test points using the StrongTree classifier
+
+
+      :Parameters:
+
+          **X** : array-like, shape (n_samples, n_features)
+              The input samples.
+
+      :Returns:
+
+          **y** : ndarray, shape (n_samples,)
+              The label for each sample is the label of the closest sample
+              seen during fit.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+

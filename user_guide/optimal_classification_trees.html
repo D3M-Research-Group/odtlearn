@@ -2,17 +2,14 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="ODTlearn API" href="../api.html" /><link rel="prev" title="User Guide" href="index.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Fair Optimal Classification Trees" href="fair_optimal_classification_trees.html" /><link rel="prev" title="User Guide" href="index.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>Optimal Classification Trees - odtlearn 0.1.0 documentation</title>
+        <title>Optimal Classification Trees - odtlearn 0.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
     
     
@@ -125,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">odtlearn 0.1.0 documentation</div></a>
+      <a href="../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -148,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.1.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -161,26 +158,51 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fair_optimal_classification_trees.html">Fair Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optimal_prescriptive_trees.html">Optimal Prescriptive Trees</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../generated/odtlearn.StrongTree.StrongTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.StrongTree</span></code>.StrongTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/odtlearn.FairTree.FairTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.FairTree</span></code>.FairTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/odtlearn.RobustTree.RobustTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.RobustTree</span></code>.RobustTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/odtlearn.PrescriptiveTree.PrescriptiveTreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.PrescriptiveTree</span></code>.PrescriptiveTreeClassifier</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../generated/odtlearn.tree_classifier.TreeClassifier.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.tree_classifier</span></code>.TreeClassifier</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../autoapi/odtlearn/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../autoapi/odtlearn/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/Tree/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.Tree</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/TreePlotter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.TreePlotter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_oct_ms/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct_ms</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_oct_ss/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct_ss</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_opt/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_opt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_opt_ms/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_opt_ms</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_opt_ss/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_opt_ss</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/opt_ct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.opt_ct</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/opt_dt/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.opt_dt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/opt_pt/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.opt_pt</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/robust_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.robust_oct</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example Notebooks</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../notebooks/StrongTree.html">Optimal Strong Classification Trees</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../notebooks/FairTree.html">Fair Optimal Classification Trees</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../notebooks/RobustTree.html">Optimal Robust Classification Trees</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../notebooks/PrescriptiveTree.html">Optimal Prescriptive Trees</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustTreeClassifier</span></code> Examples</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Docs</span></p>
 <ul>
@@ -219,36 +241,35 @@
         <article role="main">
           <div class="section" id="optimal-classification-trees">
 <h1>Optimal Classification Trees<a class="headerlink" href="#optimal-classification-trees" title="Permalink to this headline">#</a></h1>
-<p>This document shows how to use the <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> to train optimal classification trees. It introduces StrongTree, demonstrates the standard use case, walks through parameter choices and method details, and then provides a small example using a dataset from UCI repository.</p>
-<div class="section" id="the-basics">
-<h2>The Basics<a class="headerlink" href="#the-basics" title="Permalink to this headline">#</a></h2>
-<p>Classification trees are among the most popular and inherently interpretable machine learning models and are used routinely in applications ranging from revenue management and medicine to bioinformatics. In these settings, it is crucial to leverage the full potential of available data to obtain the best possible, a.k.a, optimal, classification tree. <strong>StrongTree</strong> is a Mixed-Integer-Optimization (MIO) based formulation for learning optimal classification trees of a given depth. StrongTree significantly improves upon traditional heuristic approaches in terms of performance and is much faster than other MIO-based alternatives. See the corresponding paper for a complete treatment of StrongTree (Aghaei et al., 2021).</p>
-<div class="section" id="handling-integer-features">
-<h3>Handling Integer Features<a class="headerlink" href="#handling-integer-features" title="Permalink to this headline">#</a></h3>
-<p>StrongTree requires all the input features to be binary, i.e., all the elements of feature matrix <span class="math">X</span> should be either 0 or 1. However, this formulation can also be applied to datasets involving categorical or integer features by first preprocessing the data. For each categorical feature, one needs to encode it as a one-hot vector, i.e., for each level of the feature, one needs to create a new binary column with a value of one if and only if the original column has the corresponding level. A similar approach for encoding integer features can be used with a slight change. The new binary column should have a value of one if and only if the main column has the corresponding value or any value smaller than it.
-ODTlearn provides a function called <code class="docutils literal notranslate"><span class="pre">binarize</span></code> for taking care of the binarization step where given a dataframe with only categorical/integer columns it outputs a binarized dataframe.</p>
-</div>
-<div class="section" id="imbalanced-decision-trees">
-<h3>Imbalanced Decision Trees<a class="headerlink" href="#imbalanced-decision-trees" title="Permalink to this headline">#</a></h3>
-<p>To avoid overfitting on the training data, <code class="docutils literal notranslate"><span class="pre">StrongTree</span></code> can add a regularization term (with the regularization parameter <span class="math">0 \leq \lambda \leq 1</span>) to the objective function. This regularization term penalizes the number of branching nodes in the decision tree. Higher values of <span class="math">\lambda</span> results in a sparser decision tree, i.e., a decision tree where the distance of its leaf nodes from the root node is not the same. Figure 2 shows an example of an imbalanced decision tree. You can set the value of <span class="math">\lambda</span> via parameter <code class="docutils literal notranslate"><span class="pre">_lambda</span></code> in <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code>.</p>
-<img alt="An imbalanced decision tree of depth 2" class="align-center" src="../_images/classification_tree_imbalanced.png" style="width: 600px;"/>
-<!-- <p align = "center">
-Figure.2 - An imbalanced decision tree of depth 2
-</p> -->
-</div>
-</div>
-<div class="section" id="different-choice-of-objective">
-<h2>Different Choice of Objective<a class="headerlink" href="#different-choice-of-objective" title="Permalink to this headline">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> provides two options for the objective function. It can either maximize the classification accuracy or the balanced accuracy, which averages the accuracy across classes.</p>
-<p>The balanced accuracy can be helpful in the case of imbalanced datasets. A dataset is imbalanced when the class distribution is not uniform, i.e., when the number of data points in each class varies significantly between classes. For an imbalanced dataset, predicting the majority class results in high accuracy. Thus decision trees that maximize prediction accuracy without accounting for the imbalanced nature of the data perform poorly on the minority class. Imbalanced datasets occur in many important domains, e.g., in a problem such as suicide prevention, there are very small number of suicide instances.</p>
+<p>Classification trees are among the most popular and inherently interpretable machine learning models and are used routinely in applications ranging from revenue management and medicine to bioinformatics. In these settings, it is crucial to leverage the full potential of available data to obtain the best possible, i.e., optimal, classification tree. We say that a classification tree is <em>optimal</em> if there exists a mathematical proof that no other tree yields a lower misclassification rate in the population used for training the method. StrongTree is a Mixed-Integer Optimization (MIO) based formulation for learning optimal classification trees of a given depth. StrongTree significantly improves upon traditional heuristic approaches in terms of performance, is much faster than other MIO-based alternatives, and can handle real-valued covariates, unlike existing MIO-based methods. See the corresponding paper for a complete treatment of StrongTree (Aghaei et al., 2021).</p>
+<div class="section" id="choosing-an-objective-to-optimize">
+<h2>Choosing an Objective to Optimize<a class="headerlink" href="#choosing-an-objective-to-optimize" title="Permalink to this headline">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> provides two options for the objective function through the <code class="docutils literal notranslate"><span class="pre">obj_mode</span></code> parameter, <code class="docutils literal notranslate"><span class="pre">"acc"</span></code> and <code class="docutils literal notranslate"><span class="pre">"balance"</span></code>. When <code class="docutils literal notranslate"><span class="pre">obj_mode="acc"</span></code> the classifier will attempt to maximize the classification accuracy and when<code class="docutils literal notranslate"><span class="pre">obj_mode="acc"</span></code> it will maximize the balanced accuracy, which averages the accuracy across classes.</p>
+<p>The balanced accuracy can be helpful in the case of imbalanced datasets. A dataset is imbalanced when the class distribution is not uniform, i.e., when the number of data points in each class varies significantly between classes. For an imbalanced dataset, predicting the majority class results in high accuracy. Thus decision trees that maximize prediction accuracy without accounting for the imbalanced nature of the data perform poorly on the minority class. Imbalanced datasets occur in many important domains, e.g., in a problem such as suicide prevention, there are a very small number of suicide instances.</p>
 </div>
 <div class="section" id="optimality">
 <h2>Optimality<a class="headerlink" href="#optimality" title="Permalink to this headline">#</a></h2>
-<p>To use ODTlearn, you need to have the <strong>Gurobi</strong> solver installed on your machine. Depending on the size of the problem (number of data points and features), the <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> needs a certain amount of time to find the optimal decision tree. For larger problems, this solving time may be hours long. For this reason, you need to provide a time limit, and the solving process times out after the given time limit. The default time limit for the <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> is 60 seconds (<code class="docutils literal notranslate"><span class="pre">time_limit=60</span></code>). Still, you may need to increase the time limit for larger problems if the classifier cannot find a high-quality solution. <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> either finds the optimal tree within the time limit or reports the optimality gap, which is an indicator of the quality of the solution, i.e., how far our solution is from the optimal solution (in the case of optimality, the gap is zero).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> provides an argument, <code class="docutils literal notranslate"><span class="pre">time_limit</span></code> for limiting the amount of time the solver will spend finding the optimal decision tree. The default time limit is 60 seconds and once the specified solving time has elapsed, <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code> will return the resulting decision tree and report the optimality gap, which is an indicator of the quality of the solution. The optimality gap is an indicator of the quality of the solution, i.e., how far our solution is from the optimal solution (in the case of optimality, the gap is zero). For larger problems it may be necessary to increase the time limit to allow the classifier to find a high-quality solution.</p>
 </div>
-<div class="section" id="benders-decomposition">
-<h2>Benders’ Decomposition<a class="headerlink" href="#benders-decomposition" title="Permalink to this headline">#</a></h2>
-<p>ODTlearn offers a novel Benders’ decomposition-based algorithm for solving the problem of learning optimal classification trees. This algorithm is the default algorithm for <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code>. However, one may not want to use the decomposition algorithm, i.e., <code class="docutils literal notranslate"><span class="pre">benders_oct=</span> <span class="pre">False</span></code>, wherein, in this case, we directly solve the MIO formulation using Gurobi. The Benders’ decomposition-based algorithm is significantly faster than the direct approach.</p>
+<div class="section" id="speeding-up-computation-benders-decomposition">
+<h2>Speeding up Computation: Benders’ Decomposition<a class="headerlink" href="#speeding-up-computation-benders-decomposition" title="Permalink to this headline">#</a></h2>
+<p>ODTlearn offers a novel Benders’ decomposition-based algorithm for solving the problem of learning optimal classification trees. This algorithm is the default algorithm for <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code>. However, one may not want to use the decomposition algorithm when developing new MIO formulations based upon <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code>. We provide the option to directly solve the MIO formulation using Gurobi by specifying <code class="docutils literal notranslate"><span class="pre">benders_oct=</span> <span class="pre">False</span></code>. For the majority of use-cases we recommend the Benders’ decomposition-based algorithm because it is significantly faster than the direct approach.</p>
+</div>
+<div class="section" id="regularization">
+<h2>Regularization<a class="headerlink" href="#regularization" title="Permalink to this headline">#</a></h2>
+<p>To avoid overfitting on the training data, a regularization term (<span class="math">0 \leq \lambda \leq 1</span>) can be specified in <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code>. This regularization term penalizes the number of branching nodes in the decision tree. A higher value of <span class="math">\lambda</span> results in a sparser decision tree, i.e., a decision tree where the distance of its leaf nodes from the root node is not the same. Figure 2 shows an example of an imbalanced decision tree. You can set the value of <span class="math">\lambda</span> via parameter <code class="docutils literal notranslate"><span class="pre">_lambda</span></code> in <code class="docutils literal notranslate"><span class="pre">StrongTreeClassifier</span></code>.</p>
+<img alt="classification tree" src="../_static/img/classification_tree_imbalanced.png" style="width:600px;display:block;margin-left:auto;margin-right:auto;"/>
+</div>
+<div class="section" id="handling-integer-features">
+<h2>Handling Integer Features<a class="headerlink" href="#handling-integer-features" title="Permalink to this headline">#</a></h2>
+<p>StrongTree requires all the input features to be binary, i.e., all the elements of the feature matrix <span class="math">X</span> should be either 0 or 1. However, this formulation can also be applied to datasets involving categorical or integer features by first preprocessing the data. For each categorical feature, one needs to encode it as a one-hot vector, i.e., for each level of the feature, one needs to create a new binary column with a value of one if and only if the original column has the corresponding level. One can use a similar approach for encoding integer features with a slight change. The new binary column should have a value of one if and only if the main column has the corresponding value or any value smaller than it.</p>
+<p>ODTlearn provides a function called <code class="docutils literal notranslate"><span class="pre">binarize</span></code> for taking care of the binarization step. When provided a data frame with only categorical/integer columns, the function outputs a binarized data frame.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Aghaei, S., Gómez, A., &amp; Vayanos, P. (2021). Strong optimal classification trees. arXiv preprint arXiv:2103.15965. https://arxiv.org/abs/2103.15965</p></li>
+</ul>
 </div>
 </div>
 
@@ -257,12 +278,12 @@ Figure.2 - An imbalanced decision tree of depth 2
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../api.html">
+          <a class="next-page" href="fair_optimal_classification_trees.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">ODTlearn API</div>
+                <div class="title">Fair Optimal Classification Trees</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -312,14 +333,12 @@ Figure.2 - An imbalanced decision tree of depth 2
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Optimal Classification Trees</a><ul>
-<li><a class="reference internal" href="#the-basics">The Basics</a><ul>
-<li><a class="reference internal" href="#handling-integer-features">Handling Integer Features</a></li>
-<li><a class="reference internal" href="#imbalanced-decision-trees">Imbalanced Decision Trees</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#different-choice-of-objective">Different Choice of Objective</a></li>
+<li><a class="reference internal" href="#choosing-an-objective-to-optimize">Choosing an Objective to Optimize</a></li>
 <li><a class="reference internal" href="#optimality">Optimality</a></li>
-<li><a class="reference internal" href="#benders-decomposition">Benders’ Decomposition</a></li>
+<li><a class="reference internal" href="#speeding-up-computation-benders-decomposition">Speeding up Computation: Benders’ Decomposition</a></li>
+<li><a class="reference internal" href="#regularization">Regularization</a></li>
+<li><a class="reference internal" href="#handling-integer-features">Handling Integer Features</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
 </ul>

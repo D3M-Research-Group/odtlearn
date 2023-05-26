@@ -1,0 +1,45 @@
+:py:mod:`odtlearn.flow_oct_ss`
+==============================
+
+.. py:module:: odtlearn.flow_oct_ss
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.flow_oct_ss.FlowOCTSingleSink
+
+
+
+
+.. py:class:: FlowOCTSingleSink(_lambda, depth, time_limit, num_threads, verbose)
+
+   Bases: :py:obj:`odtlearn.opt_ct.OptimalClassificationTree`
+
+   
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

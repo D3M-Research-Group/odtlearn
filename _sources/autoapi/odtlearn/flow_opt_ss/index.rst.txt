@@ -1,0 +1,45 @@
+:py:mod:`odtlearn.flow_opt_ss`
+==============================
+
+.. py:module:: odtlearn.flow_opt_ss
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.flow_opt_ss.FlowOPTSingleSink
+
+
+
+
+.. py:class:: FlowOPTSingleSink(depth, time_limit, num_threads, verbose)
+
+   Bases: :py:obj:`odtlearn.opt_pt.OptimalPrescriptiveTree`
+
+   
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

@@ -1,0 +1,137 @@
+:py:mod:`odtlearn.opt_pt`
+=========================
+
+.. py:module:: odtlearn.opt_pt
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.opt_pt.OptimalPrescriptiveTree
+
+
+
+
+.. py:class:: OptimalPrescriptiveTree(depth, time_limit, num_threads, verbose)
+
+   Bases: :py:obj:`odtlearn.opt_dt.OptimalDecisionTree`
+
+   
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: print_tree()
+
+      
+      Print the fitted tree with the branching features, the threshold values for
+      each branching node's test, and the predictions asserted for each assignment node
+
+      The method uses the Gurobi model's name for determining how to generate the tree
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: plot_tree(label='all', filled=True, rounded=False, precision=3, ax=None, fontsize=None, color_dict={'node': None, 'leaves': []}, edge_annotation=True, arrow_annotation_font_scale=0.8, debug=False, distance=1.0)
+
+      
+      Plot the fitted tree with the branching features, the threshold values for
+      each branching node's test, and the predictions asserted for each assignment node
+      using matplotlib. The method uses the Gurobi model's name for determining how
+      to generate the tree. It does some preprocessing before passing the tree to the
+      `_MPLTreeExporter` class from the sklearn package. The arguments for the
+      `plot_tree` method are based on the arguments of the sklearn `plot_tree` function.
+
+
+      :Parameters:
+
+          **label** : {'all', 'root', 'none'}, default='all'
+              ..
+
+          **Whether to show informative labels for impurity, etc.**
+              ..
+
+          **Options include 'all' to show at every node, 'root' to show only at**
+              ..
+
+          **the top root node, or 'none' to not show at any node.**
+              ..
+
+          **filled** : bool, default=False
+              When set to ``True``, paint nodes to indicate majority class for
+              classification, extremity of values for regression, or purity of node
+              for multi-output.
+
+          **rounded** : bool, default=False
+              When set to ``True``, draw node boxes with rounded corners and use
+              Helvetica fonts instead of Times-Roman.
+
+          **precision: int, default=3**
+              Number of digits of precision for floating point in the values of
+              impurity, threshold and value attributes of each node.
+
+          **ax** : matplotlib axis, default=None
+              Axes to plot to. If None, use current axis. Any previous content
+
+          **is cleared.**
+              ..
+
+          **fontsize** : int, default=None
+              Size of text font. If None, determined automatically to fit figure.
+
+          **color_dict: dict, default={"node": None, "leaves": []}**
+              A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
+              If None, the colors are chosen using the sklearn `plot_tree` color palette
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+

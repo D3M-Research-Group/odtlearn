@@ -1,0 +1,251 @@
+:py:mod:`odtlearn.fair_oct`
+===========================
+
+.. py:module:: odtlearn.fair_oct
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.fair_oct.FairOCT
+
+
+
+
+.. py:class:: FairOCT(positive_class, _lambda=0, depth=1, obj_mode='acc', fairness_type=None, fairness_bound=1, time_limit=60, num_threads=None, verbose=False)
+
+   Bases: :py:obj:`odtlearn.flow_oct_ms.FlowOCTMultipleSink`
+
+   
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: fit(X, y, protect_feat, legit_factor)
+
+      
+
+
+
+      :Parameters:
+
+          **X** : {array-like, sparse matrix}, shape (n_samples, n_features)
+              The training input samples.
+
+          **y** : array-like, shape (n_samples,)
+              The target values (class labels in classification).
+
+          **protect_feat** : array-like, shape (n_samples,1) or (n_samples, n_p)
+              The protected feature columns (Race, gender, etc); Can have one or more columns
+
+          **legit_factor** : array-like, shape (n_samples,)
+              The legitimate factor column(e.g., prior number of criminal acts)
+
+      :Returns:
+
+          **self** : object
+              Returns self.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: predict(X)
+
+      
+      Classify test points using the FairTree classifier
+
+
+      :Parameters:
+
+          **X** : array-like, shape (n_samples, n_features)
+              The input samples.
+
+      :Returns:
+
+          **y** : ndarray, shape (n_samples,)
+              The label for each sample is the label of the closest sample
+              seen during fit.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_SP(protect_feat, y)
+
+      
+      This function returns the statistical parity value for any given protected level and outcome value
+
+      :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
+              The protected feature columns (Race, gender, etc); We could have one or more columns
+      :param y: array-like, shape (n_samples,)
+              The target values (class labels in classification).
+
+      :return sp_dict: a dictionary with key =(p,t) and value = P(Y=t|P=p)
+      where p is a protected level and t is an outcome value
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_CSP(protect_feat, legit_factor, y)
+
+      
+      This function returns the conditional statistical parity value for any given
+      protected level, legitimate feature value and outcome value
+
+      :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
+              The protected feature columns (Race, gender, etc); We could have one or more columns
+      :param legit_fact: array-like, shape (n_samples,)
+          The legitimate factor column(e.g., prior number of criminal acts)
+      :param y: array-like, shape (n_samples,)
+              The target values (class labels in classification).
+
+      :return csp_dict: a dictionary with key =(p, f, t) and value = P(Y=t|P=p, L=f) where p is a protected level
+                        and t is an outcome value and l is the value of the legitimate feature
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_EqOdds(protect_feat, y, y_pred)
+
+      
+      This function returns the false positive and true positive rate value
+      for any given protected level, outcome value and prediction value
+
+      :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
+              The protected feature columns (Race, gender, etc); We could have one or more columns
+
+      :param y: array-like, shape (n_samples,)
+              The true target values (class labels in classification).
+      :param y_pred: array-like, shape (n_samples,)
+              The predicted values (class labels in classification).
+
+      :return eq_dict: a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_CondEqOdds(protect_feat, legit_factor, y, y_pred)
+
+      
+      This function returns the conditional false negative and true positive rate value
+      for any given protected level, outcome value, prediction value and legitimate feature value
+
+      :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
+              The protected feature columns (Race, gender, etc); We could have one or more columns
+      :param legit_factor: array-like, shape (n_samples,)
+          The legitimate factor column(e.g., prior number of criminal acts)
+
+      :param y: array-like, shape (n_samples,)
+              The true target values (class labels in classification).
+      :param y_pred: array-like, shape (n_samples,)
+              The predicted values (class labels in classification).
+
+      :return ceq_dict: a dictionary with key =(p, f, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t, L=f)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: fairness_metric_summary(metric, new_data=None)
+
+
+

@@ -1,0 +1,56 @@
+:py:mod:`odtlearn.utils.solver`
+===============================
+
+.. py:module:: odtlearn.utils.solver
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.solver.Solver
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.solver.GUROBI
+
+
+.. py:data:: GUROBI
+   :value: 'gurobi'
+
+   
+
+.. py:class:: Solver(model_name, solver='gurobi')
+
+   .. py:method:: set_param(key, value)
+
+
+   .. py:method:: addVars(*indices, lb=0.0, ub=float('inf'), obj=0.0, vtype='C', name: str = '')
+
+
+   .. py:method:: zip_indices(indices)
+
+
+   .. py:method:: addConstrs(cons_expr_tuple)
+
+
+   .. py:method:: addConstr(cons_expr)
+
+
+   .. py:method:: obj_init(arg1=0.0)
+
+
+   .. py:method:: setObjective(expr, sense)
+
+
+

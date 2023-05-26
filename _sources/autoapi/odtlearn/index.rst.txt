@@ -1,0 +1,35 @@
+:py:mod:`odtlearn`
+==================
+
+.. py:module:: odtlearn
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   utils/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   datasets/index.rst
+   fair_oct/index.rst
+   flow_oct/index.rst
+   flow_oct_ms/index.rst
+   flow_oct_ss/index.rst
+   flow_opt/index.rst
+   flow_opt_ms/index.rst
+   flow_opt_ss/index.rst
+   opt_ct/index.rst
+   opt_dt/index.rst
+   opt_pt/index.rst
+   robust_oct/index.rst
+
+

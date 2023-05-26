@@ -1,0 +1,97 @@
+:py:mod:`odtlearn.utils.callbacks`
+==================================
+
+.. py:module:: odtlearn.utils.callbacks
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.callbacks.benders_subproblem
+   odtlearn.utils.callbacks.benders_callback
+   odtlearn.utils.callbacks.robust_tree_subproblem
+   odtlearn.utils.callbacks.robust_tree_callback
+
+
+
+.. py:function:: benders_subproblem(main_grb_obj, b, p, w, i)
+
+
+.. py:function:: benders_callback(model, where)
+
+   
+   This function is called by Gurobi at every node through the branch-&-bound
+   tree while we solve the model. Using the argument "where" we can see where
+   the callback has been called.
+
+   We are specifically interested at nodes
+   where we get an integer solution for the master problem.
+   When we get an integer solution for b and p, for every data-point we solve
+   the sub-problem which is a minimum cut and check if g[i] <= value of
+   sub-problem[i]. If this is violated we add the corresponding benders
+   constraint as lazy constraint to the master problem and proceed.
+   Whenever we have no violated constraint, it means that we have found
+   the optimal solution.
+
+   :param model: the gurobi model we are solving.
+   :param where: the node where the callback function is called from
+   :return:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: robust_tree_subproblem(master, i, terminal_nodes, terminal_path_dict, terminal_features_dict, terminal_assignments_dict, terminal_cutoffs_dict, initial_xi={}, initial_mins={}, initial_maxes={})
+
+
+.. py:function:: robust_tree_callback(model, where)
+
+   
+   This function is called by gurobi at every node through the branch-&-bound tree while we solve the model.
+   Using the argument "where" we can see where the callback has been called.
+   We are specifically interested at nodes where we get an integer solution for the master problem.
+   When we get an integer solution for b and p, for every datapoint we solve the subproblem
+   which is a minimum cut and check if g[i] <= value of subproblem[i].
+   If this is violated we add the corresponding benders constraint as lazy constraint to the master
+   problem and proceed. Whenever we have no violated constraint, it means that we have found the optimal solution.
+   :param model: the gurobi model we are solving.
+   :param where: the node where the callback function is called from
+   :return:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

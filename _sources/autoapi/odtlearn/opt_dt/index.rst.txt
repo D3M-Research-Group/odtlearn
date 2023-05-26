@@ -1,0 +1,53 @@
+:py:mod:`odtlearn.opt_dt`
+=========================
+
+.. py:module:: odtlearn.opt_dt
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.opt_dt.OptimalDecisionTree
+
+
+
+
+.. py:class:: OptimalDecisionTree(depth=1, time_limit=60, num_threads=None, verbose=False)
+
+   Bases: :py:obj:`abc.ABC`
+
+   
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: fit()
+      :abstractmethod:
+
+
+   .. py:method:: predict()
+      :abstractmethod:
+
+
+

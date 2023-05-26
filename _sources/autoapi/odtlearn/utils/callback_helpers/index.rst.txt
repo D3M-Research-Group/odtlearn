@@ -1,0 +1,90 @@
+:py:mod:`odtlearn.utils.callback_helpers`
+=========================================
+
+.. py:module:: odtlearn.utils.callback_helpers
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.callback_helpers.get_left_exp_integer
+   odtlearn.utils.callback_helpers.get_right_exp_integer
+   odtlearn.utils.callback_helpers.get_target_exp_integer
+   odtlearn.utils.callback_helpers.get_cut_integer
+   odtlearn.utils.callback_helpers.get_cut_expression
+   odtlearn.utils.callback_helpers.get_all_terminal_paths
+   odtlearn.utils.callback_helpers.get_nominal_path
+   odtlearn.utils.callback_helpers.shortest_path_solver
+
+
+
+.. py:function:: get_left_exp_integer(main_grb_obj, n, i)
+
+
+.. py:function:: get_right_exp_integer(main_grb_obj, n, i)
+
+
+.. py:function:: get_target_exp_integer(main_grb_obj, n, i)
+
+
+.. py:function:: get_cut_integer(main_grb_obj, left, right, target, i)
+
+
+.. py:function:: get_cut_expression(master, b, w, path, xi, v, i)
+
+
+.. py:function:: get_all_terminal_paths(master, b, w, terminal_nodes=[], path_dict={}, feature_path_dict={}, assignment_dict={}, cutoff_dict={}, curr_node=1, curr_path=[1], curr_feature_path=[], curr_cutoff_path=[])
+
+   
+   find all terminal paths
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_nominal_path(master, b, w, i)
+
+   
+   Get the nominal path for a correctly classified point
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: shortest_path_solver(master, i, label, terminal_nodes, terminal_path_dict, terminal_features_dict, terminal_assignments_dict, terminal_cutoffs_dict, initial_xi, initial_mins, initial_maxes)
+
+
