@@ -257,9 +257,12 @@
         <span class="n">verbose</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">"""</span>
-<span class="sd">        :param t: numpy array or pandas series/dataframe of treatment assignments</span>
-<span class="sd">        :param ipw: numpy array or pandas series/dataframe of inverse propensity weights</span>
-<span class="sd">        :param treatments_set: a list or set of all possible treatments</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        t: numpy array or pandas series/dataframe of treatment assignments</span>
+<span class="sd">        ipw: numpy array or pandas series/dataframe of inverse propensity weights</span>
+<span class="sd">        treatments_set: a list or set of all possible treatments</span>
 
 <span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
@@ -298,9 +301,9 @@
     <span class="k">def</span> <span class="nf">_get_node_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
         <span class="sd">"""</span>
 <span class="sd">        This function give the status of a given node in a tree. By status we mean whether the node</span>
-<span class="sd">            1- is pruned? i.e., we have made a prediction at one of its ancestors</span>
-<span class="sd">            2- is a branching node? If yes, what feature do we branch on</span>
-<span class="sd">            3- is a leaf? If yes, what is the prediction at this node?</span>
+<span class="sd">        1- is pruned? i.e., we have made a prediction at one of its ancestors</span>
+<span class="sd">        2- is a branching node? If yes, what feature do we branch on</span>
+<span class="sd">        3- is a leaf? If yes, what is the prediction at this node?</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -429,7 +432,8 @@
         <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">distance</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">"""Plot the fitted tree with the branching features, the threshold values for</span>
+        <span class="sd">"""</span>
+<span class="sd">        Plot the fitted tree with the branching features, the threshold values for</span>
 <span class="sd">        each branching node's test, and the predictions asserted for each assignment node</span>
 <span class="sd">        using matplotlib. The method uses the Gurobi model's name for determining how</span>
 <span class="sd">        to generate the tree. It does some preprocessing before passing the tree to the</span>
