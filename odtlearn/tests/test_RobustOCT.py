@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
+from sklearn.exceptions import NotFittedError
 
 from odtlearn.robust_oct import RobustOCT
 
@@ -299,3 +300,51 @@ def test_RobustOCT_uncertainty_correctness(
     )
     robust_classifier.fit(X, y, costs=costs, budget=budget)
     assert_allclose(robust_classifier.predict(X), expected_pred)
+
+
+# test that tree is fitted before trying to fit, predict, print, or plot
+def test_check_fit(synthetic_data_1):
+    X, y = synthetic_data_1
+    rcl = RobustOCT(
+        depth=1,
+        time_limit=100,
+    )
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {rcl.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        rcl.predict(X)
+
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {rcl.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        rcl.print_tree()
+
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {rcl.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        rcl.plot_tree()
+
+
+def test_RobustOCT_visualize_tree(synthetic_data_1, synthetic_costs_1):
+    X, y = synthetic_data_1
+    costs = synthetic_costs_1
+    robust_classifier = RobustOCT(
+        depth=2,
+        time_limit=100,
+    )
+    robust_classifier.fit(X, y, costs=costs, budget=2)
+
+    robust_classifier.print_tree()
+    robust_classifier.plot_tree()

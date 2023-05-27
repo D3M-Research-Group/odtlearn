@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose
+from sklearn.exceptions import NotFittedError
 
 from odtlearn.fair_oct import FairOCT
 from odtlearn.flow_oct import FlowOCT
@@ -108,3 +109,62 @@ def test_FairOCT_metrics(synthetic_data_1, f, b, g0_value):
     elif f == "PE":
         eq_val = fcl.get_EqOdds(protect_feat, y, fcl.predict(X))
         assert_allclose(np.round(eq_val[(0, 0, 1)], 3), g0_value)
+
+
+# test that tree is fitted before trying to fit, predict, print, or plot
+def test_check_fit(synthetic_data_1):
+    X, y, protect_feat, legit_factor = synthetic_data_1
+    fcl = FairOCT(
+        positive_class=1,
+        depth=2,
+        _lambda=0,
+        time_limit=100,
+        fairness_type="SP",
+        fairness_bound=1,
+        num_threads=None,
+        obj_mode="acc",
+    )
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {fcl.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        fcl.predict(X)
+
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {fcl.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        fcl.print_tree()
+
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {fcl.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        fcl.plot_tree()
+
+
+def test_FairOCT_visualize_tree(synthetic_data_1):
+    X, y, protect_feat, legit_factor = synthetic_data_1
+    fcl = FairOCT(
+        positive_class=1,
+        depth=2,
+        _lambda=0,
+        time_limit=100,
+        fairness_type="SP",
+        fairness_bound=1,
+        num_threads=None,
+        obj_mode="acc",
+    )
+
+    fcl.fit(X, y, protect_feat, legit_factor)
+    fcl.print_tree()
+    fcl.plot_tree()

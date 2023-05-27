@@ -22,19 +22,19 @@ class _Tree:
         if n in self.Nodes:
             return 2 * n
         else:
-            raise Exception("Node index is not correct")
+            raise IndexError("Node index not found in tree")
 
     def get_right_children(self, n):
         if n in self.Nodes:
             return 2 * n + 1
         else:
-            raise Exception("Node index is not correct")
+            raise IndexError("Node index not found in tree")
 
     def get_parent(self, n):
         if (n in self.Nodes) or (n in self.Leaves):
             return np.floor(n / 2)
         else:
-            raise Exception("Node index is not correct")
+            raise IndexError("Node index not found in tree")
 
     def get_ancestors(self, n):
         ancestors = []
@@ -46,4 +46,4 @@ class _Tree:
             return ancestors
 
         else:
-            raise Exception("Node index is not correct")
+            raise IndexError("Node index not found in tree")
