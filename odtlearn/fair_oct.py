@@ -225,10 +225,9 @@ class FairOCT(FlowOCTMultipleSink):
                         * (self._zeta[i, n, self._y[i]])
                     )
         else:
-            assert self._obj_mode not in [
-                "acc",
-                "balance",
-            ], "Wrong objective mode. obj_mode should be one of acc or balance."
+            raise ValueError(
+                "Invalid objective mode. obj_mode should be one of acc or balance."
+            )
 
         self._model.setObjective(obj, GRB.MAXIMIZE)
 
@@ -257,6 +256,15 @@ class FairOCT(FlowOCTMultipleSink):
 
         self._class_name = "class_label"
         self._legitimate_name = "legitimate_feature_name"
+
+        # this function returns converted X and y but we retain metadata
+        if isinstance(y, (pd.Series, pd.DataFrame)):
+            X, y = check_X_y(X, y.values.ravel())
+        else:
+            X, y = check_X_y(X, y)
+        # Raises ValueError if there is a column that has values other than 0 or 1
+        check_binary(X)
+
         self._X_p = np.concatenate(
             (protect_feat, legit_factor.reshape(-1, 1), y.reshape(-1, 1)), axis=1
         )
@@ -269,11 +277,6 @@ class FairOCT(FlowOCTMultipleSink):
         )
 
         self._P_col_labels = self._protect_feat_col_labels
-
-        # this function returns converted X and y but we retain metadata
-        X, y = check_X_y(X, y)
-        # Raises ValueError if there is a column that has values other than 0 or 1
-        check_binary(X)
 
         # Store the classes seen during fit
         self._classes = unique_labels(y)
@@ -451,7 +454,10 @@ class FairOCT(FlowOCTMultipleSink):
 
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
-        _, y = check_X_y(protect_feat, y)
+        if isinstance(y, (pd.Series, pd.DataFrame)):
+            _, y = check_X_y(protect_feat, y.values.ravel())
+        else:
+            _, y = check_X_y(protect_feat, y)
         protect_feat, y_pred = check_X_y(protect_feat, y_pred)
 
         check_columns_match(self._protect_feat_col_labels, protect_feat)
@@ -512,7 +518,10 @@ class FairOCT(FlowOCTMultipleSink):
 
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
-        _, y = check_X_y(protect_feat, y)
+        if isinstance(y, (pd.Series, pd.DataFrame)):
+            _, y = check_X_y(protect_feat, y.values.ravel())
+        else:
+            _, y = check_X_y(protect_feat, y)
         _, y_pred = check_X_y(protect_feat, y_pred)
         protect_feat, legit_factor = check_X_y(protect_feat, legit_factor)
 
@@ -591,6 +600,6 @@ class FairOCT(FlowOCTMultipleSink):
                 self.get_CondEqOdds(
                     self._protect_feat, self._legit_factor, self._y, new_data
                 ).items(),
-                columns=["(p, f, t, t_pred)" "P(Y_pred=y_pred|P=p, Y=y, L=f)"],
+                columns=["(p, f, t, t_pred)", "P(Y_pred=y_pred|P=p, Y=y, L=f)"],
             )
             print(cpe_df)

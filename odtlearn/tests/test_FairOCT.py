@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 from sklearn.exceptions import NotFittedError
@@ -55,7 +56,11 @@ def synthetic_data_1():
 
 
 # fmt: on
-def test_FairOCT_same_predictions(synthetic_data_1):
+@pytest.mark.parametrize(
+    "obj_mode",
+    ["acc", "balance"],
+)
+def test_FairOCT_same_predictions(synthetic_data_1, obj_mode):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
         positive_class=1,
@@ -65,7 +70,7 @@ def test_FairOCT_same_predictions(synthetic_data_1):
         fairness_type=None,
         fairness_bound=1,
         num_threads=None,
-        obj_mode="acc",
+        obj_mode=obj_mode,
     )
 
     stcl = FlowOCT(
@@ -73,7 +78,7 @@ def test_FairOCT_same_predictions(synthetic_data_1):
         time_limit=100,
         _lambda=0,
         num_threads=None,
-        obj_mode="acc",
+        obj_mode=obj_mode,
     )
 
     stcl.fit(X, y)
@@ -106,13 +111,17 @@ def test_FairOCT_metrics(synthetic_data_1, f, b, g0_value):
     if f == "SP":
         sp_val = fcl.get_SP(protect_feat, fcl.predict(X))
         assert_allclose(np.round(sp_val[(0, 1)], 3), g0_value)
-    elif f == "PE":
+    else:
         eq_val = fcl.get_EqOdds(protect_feat, y, fcl.predict(X))
         assert_allclose(np.round(eq_val[(0, 0, 1)], 3), g0_value)
 
 
+@pytest.mark.parametrize(
+    "obj_mode",
+    ["acc", "balance"],
+)
 # test that tree is fitted before trying to fit, predict, print, or plot
-def test_check_fit(synthetic_data_1):
+def test_check_fit(synthetic_data_1, obj_mode):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
         positive_class=1,
@@ -122,7 +131,7 @@ def test_check_fit(synthetic_data_1):
         fairness_type="SP",
         fairness_bound=1,
         num_threads=None,
-        obj_mode="acc",
+        obj_mode=obj_mode,
     )
     with pytest.raises(
         NotFittedError,
@@ -168,3 +177,92 @@ def test_FairOCT_visualize_tree(synthetic_data_1):
     fcl.fit(X, y, protect_feat, legit_factor)
     fcl.print_tree()
     fcl.plot_tree()
+
+
+@pytest.mark.parametrize(
+    "f, pd_data",
+    [
+        ("SP", True),
+        ("SP", False),
+        ("PE", True),
+        ("PE", False),
+        ("CSP", True),
+        ("CSP", False),
+        ("CPE", True),
+        ("CPE", False),
+    ],
+)
+# test that we can properly handle data passed as pd.DataFrame
+def test_handle_pandas_cols(synthetic_data_1, f, pd_data):
+    X, y, protect_feat, legit_factor = synthetic_data_1
+    fcl = FairOCT(
+        positive_class=1,
+        depth=2,
+        _lambda=0,
+        time_limit=100,
+        fairness_type=f,
+        fairness_bound=1,
+        num_threads=None,
+        obj_mode="acc",
+    )
+    if pd_data:
+        X = pd.DataFrame(X)
+        y = pd.DataFrame(y)
+        protect_feat = pd.DataFrame(protect_feat)
+
+    fcl.fit(X, y, protect_feat, legit_factor)
+
+    if f == "SP":
+        metric_val = fcl.get_SP(protect_feat, fcl.predict(X))
+        assert len(metric_val.keys()) == 4
+    elif f == "CSP":
+        metric_val = fcl.get_CSP(protect_feat, legit_factor, fcl.predict(X))
+        assert len(metric_val.keys()) == 8
+    elif f == "PE":
+        metric_val = fcl.get_EqOdds(protect_feat, y, fcl.predict(X))
+        assert len(metric_val.keys()) == 8
+    else:
+        metric_val = fcl.get_CondEqOdds(protect_feat, legit_factor, y, fcl.predict(X))
+        assert len(metric_val.keys()) == 16
+
+
+# test that assertion error is thrown when invalid objective mode is given
+def test_bad_obj_mode(synthetic_data_1):
+    X, y, protect_feat, legit_factor = synthetic_data_1
+    with pytest.raises(
+        ValueError,
+        match="Invalid objective mode. obj_mode should be one of acc or balance.",
+    ):
+        fcl = FairOCT(
+            positive_class=1,
+            depth=2,
+            _lambda=0,
+            time_limit=100,
+            fairness_type="SP",
+            fairness_bound=1,
+            num_threads=None,
+            obj_mode="inacc",
+        )
+        fcl.fit(X, y, protect_feat, legit_factor)
+
+
+@pytest.mark.parametrize(
+    "f, b",
+    [("SP", 1), ("CSP", 1), ("PE", 1), ("CPE", 1)],
+)
+def test_fairness_metric_summary(synthetic_data_1, f, b):
+    X, y, protect_feat, legit_factor = synthetic_data_1
+    fcl = FairOCT(
+        positive_class=1,
+        depth=2,
+        _lambda=0.01,
+        time_limit=100,
+        fairness_type=f,
+        fairness_bound=b,
+        num_threads=None,
+        obj_mode="acc",
+        verbose=False,
+    )
+    fcl.fit(X, y, protect_feat, legit_factor)
+
+    fcl.fairness_metric_summary(f, fcl.predict(X))

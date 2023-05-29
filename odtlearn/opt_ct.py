@@ -36,7 +36,7 @@ class OptimalClassificationTree(OptimalDecisionTree):
         self._datapoints = np.arange(0, self._X.shape[0])
 
         if isinstance(y, (pd.Series, pd.DataFrame)):
-            self._y = y.values
+            self._y = y.values.squeeze()
         else:
             self._y = y
         self._labels = np.unique(self._y)
