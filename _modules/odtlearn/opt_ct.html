@@ -400,7 +400,8 @@
                 <span class="nb">print</span><span class="p">(</span><span class="s2">"pruned"</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">branching</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">"branch on </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">selected_feature</span><span class="p">))</span>
-            <span class="k">elif</span> <span class="n">leaf</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">leaf</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                <span class="c1"># a tree will always have leaves</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">"leaf </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="OptimalClassificationTree.plot_tree"><a class="viewcode-back" href="../../autoapi/odtlearn/opt_ct/index.html#odtlearn.opt_ct.OptimalClassificationTree.plot_tree">[docs]</a>    <span class="k">def</span> <span class="nf">plot_tree</span><span class="p">(</span>
