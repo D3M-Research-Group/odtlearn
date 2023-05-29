@@ -257,22 +257,19 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_y_hat" title="odtlearn.utils.validation.check_y_hat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_y_hat</span></code></a>(X, treatments, y_hat)</p></td>
 <td><p>This function checks the propensity weights and counterfactual predictions</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_helpers" title="odtlearn.utils.validation.check_helpers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_helpers</span></code></a>(X, treatments, **kwargs)</p></td>
-<td><p>This function checks the propensity weights and counterfactual predictions</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_y" title="odtlearn.utils.validation.check_y"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_y</span></code></a>(X, y)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_y" title="odtlearn.utils.validation.check_y"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_y</span></code></a>(X, y)</p></td>
 <td><p>This function checks the shape and contents of the observed outcomes</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_columns_match" title="odtlearn.utils.validation.check_columns_match"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_columns_match</span></code></a>(original_columns, new_data)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_columns_match" title="odtlearn.utils.validation.check_columns_match"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_columns_match</span></code></a>(original_columns, new_data)</p></td>
 <td><p>Check that the column names of a new data frame match the column names used when used to fit the model</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_binary" title="odtlearn.utils.validation.check_binary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_binary</span></code></a>(df)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_binary" title="odtlearn.utils.validation.check_binary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_binary</span></code></a>(df)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_integer" title="odtlearn.utils.validation.check_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_integer</span></code></a>(df)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_integer" title="odtlearn.utils.validation.check_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_integer</span></code></a>(df)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_same_as_X" title="odtlearn.utils.validation.check_same_as_X"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_same_as_X</span></code></a>(X, X_col_labels, G, G_label)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.validation.check_same_as_X" title="odtlearn.utils.validation.check_same_as_X"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_same_as_X</span></code></a>(X, X_col_labels, G, G_label)</p></td>
 <td><p>Check if a DataFrame G has the columns of X</p></td>
 </tr>
 </tbody>
@@ -298,25 +295,6 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.validation.check_y_hat">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.validation.</span></span><span class="sig-name descname"><span class="pre">check_y_hat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treatments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_hat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/validation.html#check_y_hat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.validation.check_y_hat" title="Permalink to this definition">#</a></dt>
-<dd><p>This function checks the propensity weights and counterfactual predictions</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>X: The input/training data</strong></dt><dd></dd>
-<dt><strong>treatments: A vector of the unique treatment values in the dataset.</strong></dt><dd></dd>
-<dt><strong>y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR</strong></dt><dd></dd>
-</dl>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><dl class="simple">
-<dt>The converted versions of ipw and y_hat after passing the series of checks</dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="odtlearn.utils.validation.check_helpers">
-<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.validation.</span></span><span class="sig-name descname"><span class="pre">check_helpers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">treatments</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/validation.html#check_helpers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.validation.check_helpers" title="Permalink to this definition">#</a></dt>
 <dd><p>This function checks the propensity weights and counterfactual predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

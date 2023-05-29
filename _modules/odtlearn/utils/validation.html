@@ -308,51 +308,6 @@
     <span class="k">return</span> <span class="n">y_hat</span></div>
 
 
-<div class="viewcode-block" id="check_helpers"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_helpers">[docs]</a><span class="k">def</span> <span class="nf">check_helpers</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">treatments</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    This function checks the propensity weights and counterfactual predictions</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    X: The input/training data</span>
-<span class="sd">    treatments: A vector of the unique treatment values in the dataset.</span>
-<span class="sd">    y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    The converted versions of ipw and y_hat after passing the series of checks</span>
-<span class="sd">    """</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">ipw</span> <span class="o">:=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ipw"</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ipw</span> <span class="o">=</span> <span class="n">column_or_1d</span><span class="p">(</span><span class="n">ipw</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">ipw</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">"O"</span><span class="p">:</span>
-            <span class="n">ipw</span> <span class="o">=</span> <span class="n">ipw</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-
-        <span class="k">assert</span> <span class="p">(</span>
-            <span class="nb">min</span><span class="p">(</span><span class="n">ipw</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">max</span><span class="p">(</span><span class="n">ipw</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span>
-        <span class="p">),</span> <span class="s2">"Inverse propensity weights must be in the range (0, 1]"</span>
-
-        <span class="n">check_consistent_length</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">ipw</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="n">ipw</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Inverse propensity weights cannot be None"</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">y_hat</span> <span class="o">:=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"y_hat"</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">y_hat</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">y_hat</span><span class="p">)</span>
-
-        <span class="c1"># y_hat has to have as many columns as there are treatments</span>
-
-        <span class="k">assert</span> <span class="n">y_hat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
-            <span class="n">treatments</span>
-        <span class="p">),</span> <span class="sa">f</span><span class="s2">"Found counterfactual estimates for </span><span class="si">{</span><span class="n">y_hat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> treatments. </span><span class="se">\</span>
-<span class="s2">        There are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">treatments</span><span class="p">)</span><span class="si">}</span><span class="s2"> unique treatments in the data"</span>
-
-        <span class="n">check_consistent_length</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="n">y_hat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Counterfactual estimates cannot be None"</span>
-
-    <span class="k">return</span> <span class="n">ipw</span><span class="p">,</span> <span class="n">y_hat</span></div>
-
-
 <div class="viewcode-block" id="check_y"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_y">[docs]</a><span class="k">def</span> <span class="nf">check_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="sd">"""</span>
 <span class="sd">    This function checks the shape and contents of the observed outcomes</span>

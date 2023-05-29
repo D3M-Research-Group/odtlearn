@@ -467,10 +467,9 @@
                         <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
                     <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
-                <span class="s2">"acc"</span><span class="p">,</span>
-                <span class="s2">"balance"</span><span class="p">,</span>
-            <span class="p">],</span> <span class="s2">"Wrong objective mode. obj_mode should be one of acc or balance."</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"Invalid objective mode. obj_mode should be one of acc or balance."</span>
+            <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">GRB</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
 
@@ -499,6 +498,15 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span> <span class="o">=</span> <span class="s2">"class_label"</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_legitimate_name</span> <span class="o">=</span> <span class="s2">"legitimate_feature_name"</span>
+
+        <span class="c1"># this function returns converted X and y but we retain metadata</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)):</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="c1"># Raises ValueError if there is a column that has values other than 0 or 1</span>
+        <span class="n">check_binary</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
             <span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
         <span class="p">)</span>
@@ -511,11 +519,6 @@
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_P_col_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span>
-
-        <span class="c1"># this function returns converted X and y but we retain metadata</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-        <span class="c1"># Raises ValueError if there is a column that has values other than 0 or 1</span>
-        <span class="n">check_binary</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
         <span class="c1"># Store the classes seen during fit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_classes</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
@@ -693,7 +696,10 @@
 
         <span class="c1"># This will again convert a pandas df to numpy array</span>
         <span class="c1"># but we have the column information from when we called fit</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)):</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="n">protect_feat</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
 
         <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">)</span>
@@ -754,7 +760,10 @@
 
         <span class="c1"># This will again convert a pandas df to numpy array</span>
         <span class="c1"># but we have the column information from when we called fit</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)):</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
         <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">)</span>
 
@@ -833,7 +842,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">get_CondEqOdds</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_legit_factor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="n">new_data</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
-                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"(p, f, t, t_pred)"</span> <span class="s2">"P(Y_pred=y_pred|P=p, Y=y, L=f)"</span><span class="p">],</span>
+                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"(p, f, t, t_pred)"</span><span class="p">,</span> <span class="s2">"P(Y_pred=y_pred|P=p, Y=y, L=f)"</span><span class="p">],</span>
             <span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">cpe_df</span><span class="p">)</span></div></div>
 </pre></div>

@@ -15,7 +15,6 @@ Functions
 
    odtlearn.utils.validation.check_ipw
    odtlearn.utils.validation.check_y_hat
-   odtlearn.utils.validation.check_helpers
    odtlearn.utils.validation.check_y
    odtlearn.utils.validation.check_columns_match
    odtlearn.utils.validation.check_binary
@@ -59,43 +58,6 @@ Functions
        !! processed by numpydoc !!
 
 .. py:function:: check_y_hat(X, treatments, y_hat)
-
-   
-   This function checks the propensity weights and counterfactual predictions
-
-
-   :Parameters:
-
-       **X: The input/training data**
-           ..
-
-       **treatments: A vector of the unique treatment values in the dataset.**
-           ..
-
-       **y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR**
-           ..
-
-   :Returns:
-
-       The converted versions of ipw and y_hat after passing the series of checks
-           ..
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: check_helpers(X, treatments, **kwargs)
 
    
    This function checks the propensity weights and counterfactual predictions
