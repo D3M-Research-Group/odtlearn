@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
+from sklearn.exceptions import NotFittedError
 
 from odtlearn.flow_opt import FlowOPT_DM, FlowOPT_DR, FlowOPT_IPW
 
@@ -125,3 +126,63 @@ def test_FlowOPT_classifier(data, method, expected_pred):
     assert hasattr(clf, "p_value")
 
     assert_allclose(clf.predict(X), expected_pred)
+
+
+@pytest.mark.parametrize("method", ["DR", "DM", "IPW"])
+# test that tree is fitted before trying to fit, predict, print, or plot
+def test_check_fit(data, method):
+    df = data
+    X = df.iloc[:, :20]
+    if method == "DR":
+        clf = FlowOPT_DR(depth=2, time_limit=300)
+    elif method == "DM":
+        clf = FlowOPT_DM(depth=2, time_limit=300)
+    else:
+        clf = FlowOPT_IPW(depth=2, time_limit=300)
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {clf.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        clf.predict(X)
+
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {clf.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        clf.print_tree()
+
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {clf.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        clf.plot_tree()
+
+
+@pytest.mark.parametrize("method", ["DR", "DM", "IPW"])
+def test_FairOCT_visualize_tree(data, method):
+    df = data
+    X = df.iloc[:, :20]
+    t = df["t"]
+    y = df["y"]
+    ipw = df["prob_t_pred_tree"]
+    y_hat = df[["linear0", "linear1"]]
+    if method == "DR":
+        clf = FlowOPT_DR(depth=2, time_limit=300)
+        clf.fit(X, t, y, ipw, y_hat)
+    elif method == "DM":
+        clf = FlowOPT_DM(depth=2, time_limit=300)
+        clf.fit(X, t, y, y_hat)
+    else:
+        clf = FlowOPT_IPW(depth=2, time_limit=300)
+        clf.fit(X, t, y, ipw)
+    clf.print_tree()
+    clf.plot_tree()
