@@ -615,7 +615,7 @@ leaf 0
 </div>
 <div class="section" id="Example-2:-synthetic-data-with-specified-shifts">
 <h2>Example 2: synthetic data with specified shifts<a class="headerlink" href="#Example-2:-synthetic-data-with-specified-shifts" title="Permalink to this headline">#</a></h2>
-<p>We take the same synthetic data from Example 1, but now add distribution shifts with the following schema: - For 5 samples at <span class="math">[0,0]</span>, pay a cost of 1 to perturb <span class="math">X_1</span> and get <span class="math">[1,0]</span> - For the 1 sample at <span class="math">[1,1]</span>, pay a cost of 1 to perturb <span class="math">X_2</span> to get <span class="math">[1,0]</span> - All other perturbations are not allowed</p>
+<p>We take the same synthetic data from Example 1, but now add distribution shifts with the following schema: - For 5 samples at <img alt="[0,0]" class="math" src="../_images/math/ebf9e680273a1d5e209eb0e2a4b13a19620a103b.png"/>, pay a cost of 1 to perturb <img alt="X_1" class="math" src="../_images/math/08fe31609cd48800a8b44af61f352242fc327578.png"/> and get <img alt="[1,0]" class="math" src="../_images/math/89373012d8df0f30839ffc7ef5cb142d7a990cb0.png"/> - For the 1 sample at <img alt="[1,1]" class="math" src="../_images/math/6cf1b5020649f69c2f029417055708155cca1ece.png"/>, pay a cost of 1 to perturb <img alt="X_2" class="math" src="../_images/math/468c3ea6b761e3ae0b6853569ec76f21642a0c03.png"/> to get <img alt="[1,0]" class="math" src="../_images/math/89373012d8df0f30839ffc7ef5cb142d7a990cb0.png"/> - All other perturbations are not allowed</p>
 <p>First, define these costs, which have the same shape and features as your input sample.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
@@ -867,7 +867,7 @@ leaf 0
 <img alt="../_images/notebooks_RobustOCT_24_0.png" src="../_images/notebooks_RobustOCT_24_0.png"/>
 </div>
 </div>
-<p>Train a robust tree. First, define the uncertainty. Here, we will generate a probability of certainty for each feature randomly (in practice, you would need to use some guess from domain knowledge). For simplicity, we will not change this probability by data sample <span class="math">i</span>. We also define <span class="math">\lambda = 0.9</span>, which in practice must be tuned.</p>
+<p>Train a robust tree. First, define the uncertainty. Here, we will generate a probability of certainty for each feature randomly (in practice, you would need to use some guess from domain knowledge). For simplicity, we will not change this probability by data sample <img alt="i" class="math" src="../_images/math/5aa339d4daf45a810dda332e3c80a0698e526e04.png"/>. We also define <img alt="\lambda = 0.9" class="math" src="../_images/math/50d821c5e3b3d624d499af661a86eb2bfcebbfa8.png"/>, which in practice must be tuned.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
