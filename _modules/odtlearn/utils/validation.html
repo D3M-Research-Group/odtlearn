@@ -354,6 +354,8 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">"Columns </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">non_matched_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> found in prediction data, but not found in fit data."</span>
             <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># we are assuming the order of columns matches and we will just check that shapes match</span>
         <span class="c1"># assuming here that new_data is a numpy matrix</span>
