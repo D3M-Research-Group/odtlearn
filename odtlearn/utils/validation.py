@@ -112,6 +112,8 @@ def check_columns_match(original_columns, new_data):
             raise ValueError(
                 f"Columns {list(non_matched_columns)} found in prediction data, but not found in fit data."
             )
+        else:
+            return True
     else:
         # we are assuming the order of columns matches and we will just check that shapes match
         # assuming here that new_data is a numpy matrix
