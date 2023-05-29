@@ -236,3 +236,16 @@ def test_FlowOCT_obj_mode(synthetic_data_2, benders, obj_mode, expected_pred):
     stcl.fit(X, y)
     # stcl.print_tree()
     assert_allclose(stcl.predict(X), expected_pred)
+
+
+def test_FlowOCT_plot_print(synthetic_data_1):
+    X, y = synthetic_data_1
+    stcl = FlowOCT(
+        depth=1,
+        time_limit=100,
+        num_threads=None,
+        obj_mode="acc",
+    )
+    stcl.fit(X, y)
+    stcl.print_tree()
+    stcl.plot_tree()

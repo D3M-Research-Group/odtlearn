@@ -158,7 +158,8 @@ class OptimalClassificationTree(OptimalDecisionTree):
                 print("pruned")
             elif branching:
                 print("branch on {}".format(selected_feature))
-            elif leaf:
+            elif leaf:  # pragma: no cover
+                # a tree will always have leaves
                 print("leaf {}".format(value))
 
     def plot_tree(
