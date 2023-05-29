@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install Python 3
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9.x'
       - name: Install dependencies
