@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
 
-from gurobipy import Model
-
+from odtlearn.utils.gb_solver import GurobiSolver
+from odtlearn.utils.scip_solver import SCIPSolver
 from odtlearn.utils.Tree import _Tree
 
 
 class OptimalDecisionTree(ABC):
-    def __init__(self, depth=1, time_limit=60, num_threads=None, verbose=False) -> None:
+    def __init__(
+        self, solver, depth=1, time_limit=60, num_threads=None, verbose=False
+    ) -> None:
         """
         Parameters
         ----------
@@ -18,7 +20,7 @@ class OptimalDecisionTree(ABC):
             The number of threads the solver should use. If no argument is supplied,
             Gurobi will use all available threads.
         """
-
+        self.solver_name = solver
         self._depth = depth
         self._time_limit = time_limit
         self._num_threads = num_threads
@@ -26,18 +28,36 @@ class OptimalDecisionTree(ABC):
 
         self._tree = _Tree(self._depth)
         self._time_limit = time_limit
-        # Gurobi model
-        self._model = Model()
+
+        if solver.lower() == "gurobi":
+            self._solver = GurobiSolver()
+        elif solver.lower() == "scip":
+            self._solver = SCIPSolver()
+        else:
+            raise NotImplementedError(
+                f"Interface for {solver} not currently supported."
+            )
+
         if not verbose:
             # supress all logging
-            self._model.params.OutputFlag = 0
+            if self._solver.__class__.__name__ == "GurobiSolver":
+                self._solver.set_param("OutputFlag", 0)
+            else:
+                self._solver.set_param("display/verblevel", 0)
         if num_threads is not None:
-            self._model.params.Threads = num_threads
-        self._model.params.TimeLimit = time_limit
+            if self._solver.__class__.__name__ == "GurobiSolver":
+                self._solver.set_param("Threads", num_threads)
+            else:
+                self._solver.set_param("lp/threads", num_threads)
+        if self._solver.__class__.__name__ == "GurobiSolver":
+            self._solver.set_param("TimeLimit", time_limit)
+        else:
+            self._solver.set_param("limits/time", time_limit)
 
     def __repr__(self):
         rep = (
-            f"{type(self).__name__}(depth={self._depth},"
+            f"{type(self).__name__}(solver={self.solver_name},"
+            f"depth={self._depth},"
             f"time_limit={self._time_limit},"
             f"num_threads={self._num_threads},"
             f"verbose={self._verbose})"

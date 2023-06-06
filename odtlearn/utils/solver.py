@@ -1,48 +1,40 @@
-from gurobipy import LinExpr, Model
+from abc import ABC, abstractmethod
 
-GUROBI = "gurobi"
+# Base classes for the different parts of an optimization problem
+# Variables, Constraints, Objective, Model Container or Solver?
 
 
-class Solver:
-    def __init__(self, model_name, solver="gurobi") -> None:
-        self.solver = solver.lower()
-        self.model = Model(model_name)
+class Solver(ABC):
+    def __init__(self, model_name):
+        self.model_name = model_name
 
     def set_param(self, key, value):
         self.model.setParam(key, value)
 
-    def addVars(
-        self, *indices, lb=0.0, ub=float("inf"), obj=0.0, vtype="C", name: str = ""
-    ):
-        zipped_indices = self.zip_indices(indices)
-        return self.model.addVars(
-            zipped_indices, lb=lb, ub=ub, obj=obj, vtype=vtype, name=name
-        )
+    @abstractmethod
+    def get_attr(self):
+        pass
 
-    def zip_indices(self, indices):
-        to_zip = []
-        # if given an integer, create range
-        for elem in indices:
-            if type(elem) is int:
-                to_zip.append(range(elem))
-            # if given float, coerce to integer
-            if type(elem) is float:
-                to_zip.append(range(int(elem)))
-            # otherwise just pass the element to be zipped
-            else:
-                to_zip.append(elem)
-        # TO-DO: check that all elements are the same length?
-        return zip(to_zip)
+    @abstractmethod
+    def optimize(self):
+        pass
 
-    def addConstrs(self, cons_expr_tuple):
-        for expr in cons_expr_tuple:
-            self.addConstr(expr)
+    @abstractmethod
+    def add_vars(self):
+        pass
 
-    def addConstr(self, cons_expr):
-        self.model.addConstr(cons_expr)
+    @abstractmethod
+    def add_constrs(self):
+        pass
 
-    def obj_init(self, arg1=0.0):
-        return LinExpr(arg1)
+    @abstractmethod
+    def set_objective(self):
+        pass
 
-    def setObjective(self, expr, sense):
-        self.model.setObjective(expr, sense)
+    @abstractmethod
+    def lin_expr(self):
+        pass
+
+    @abstractmethod
+    def quicksum(self):
+        pass

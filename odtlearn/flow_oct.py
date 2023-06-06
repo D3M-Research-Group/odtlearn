@@ -10,6 +10,7 @@ from odtlearn.utils.validation import check_binary, check_columns_match
 class FlowOCT(FlowOCTSingleSink):
     def __init__(
         self,
+        solver,
         _lambda=0,
         obj_mode="acc",
         depth=1,
@@ -19,6 +20,7 @@ class FlowOCT(FlowOCTSingleSink):
     ) -> None:
         self._obj_mode = obj_mode
         super().__init__(
+            solver,
             _lambda,
             depth,
             time_limit,
@@ -27,7 +29,8 @@ class FlowOCT(FlowOCTSingleSink):
         )
 
     def _define_objective(self):
-        obj = LinExpr(0)
+        obj = self._solver.lin_expr(0)
+        # obj = LinExpr(0)
         for n in self._tree.Nodes:
             for f in self._X_col_labels:
                 obj.add(-1 * self._lambda * self._b[n, f])
@@ -51,8 +54,7 @@ class FlowOCT(FlowOCTSingleSink):
                 "acc",
                 "balance",
             ], "Wrong objective mode. obj_mode should be one of acc or balance."
-
-        self._model.setObjective(obj, GRB.MAXIMIZE)
+        self._solver.set_objective(obj, GRB.MAXIMIZE)
 
     def fit(self, X, y):
         # extract column labels, unique classes and store X as a DataFrame
@@ -67,12 +69,10 @@ class FlowOCT(FlowOCTSingleSink):
         self._classes = unique_labels(y)
 
         self._create_main_problem()
-        self._model.update()
-        self._model.optimize()
-
-        self.b_value = self._model.getAttr("X", self._b)
-        self.w_value = self._model.getAttr("X", self._w)
-        self.p_value = self._model.getAttr("X", self._p)
+        self._solver.optimize()
+        self.b_value = self._solver.get_attr("X", self._b)
+        self.w_value = self._solver.get_attr("X", self._w)
+        self.p_value = self._solver.get_attr("X", self._p)
 
         return self
 
