@@ -4,7 +4,7 @@ import pytest
 from numpy.testing import assert_allclose
 from sklearn.exceptions import NotFittedError
 
-from odtlearn.flow_oct import FlowOCT
+from odtlearn.flow_oct import BendersOCT, FlowOCT
 
 
 # fmt: off
@@ -186,29 +186,54 @@ def test_FlowOCT_classifier():
 def test_FlowOCT_same_predictions(synthetic_data_1, d, _lambda, benders, expected_pred):
     X, y = synthetic_data_1
 
-    stcl = FlowOCT(
-        solver="gurobi",
-        depth=d,
-        time_limit=100,
-        _lambda=_lambda,
-        num_threads=None,
-        obj_mode="acc",
-    )
-    stcl.fit(X, y)
-    # stcl.print_tree()
-    assert_allclose(stcl.predict(X), expected_pred)
+    if benders:
+        stcl = BendersOCT(
+            solver="gurobi",
+            depth=d,
+            time_limit=100,
+            _lambda=_lambda,
+            num_threads=None,
+            obj_mode="acc",
+        )
+        stcl.fit(X, y)
+        # stcl.print_tree()
+        assert_allclose(stcl.predict(X), expected_pred)
 
-    stcl = FlowOCT(
-        solver="scip",
-        depth=d,
-        time_limit=100,
-        _lambda=_lambda,
-        num_threads=None,
-        obj_mode="acc",
-    )
-    stcl.fit(X, y)
-    # stcl.print_tree()
-    assert_allclose(stcl.predict(X), expected_pred)
+        stcl = BendersOCT(
+            solver="cbc",
+            depth=d,
+            time_limit=100,
+            _lambda=_lambda,
+            num_threads=None,
+            obj_mode="acc",
+        )
+        stcl.fit(X, y)
+        # stcl.print_tree()
+        assert_allclose(stcl.predict(X), expected_pred)
+    else:
+        stcl = FlowOCT(
+            solver="gurobi",
+            depth=d,
+            time_limit=100,
+            _lambda=_lambda,
+            num_threads=None,
+            obj_mode="acc",
+        )
+        stcl.fit(X, y)
+        # stcl.print_tree()
+        assert_allclose(stcl.predict(X), expected_pred)
+
+        stcl = FlowOCT(
+            solver="scip",
+            depth=d,
+            time_limit=100,
+            _lambda=_lambda,
+            num_threads=None,
+            obj_mode="acc",
+        )
+        stcl.fit(X, y)
+        # stcl.print_tree()
+        assert_allclose(stcl.predict(X), expected_pred)
 
 
 @pytest.mark.parametrize(

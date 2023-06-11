@@ -67,37 +67,39 @@ def benders_callback(model, where):
     :param where: the node where the callback function is called from
     :return:
     """
-    X = model._main_grb_obj._X
+    X = model._data["self"]._X
 
     if where == GRB.Callback.MIPSOL:
-        func_start_time = time.time()
-        model._callback_counter_integer += 1
         # we need the value of b, w and g
-        g = model.cbGetSolution(model._vars_g)
-        b = model.cbGetSolution(model._vars_b)
-        p = model.cbGetSolution(model._vars_p)
-        w = model.cbGetSolution(model._vars_w)
+        g = model.cbGetSolution(model._data["g"])
+        b = model.cbGetSolution(model._data["b"])
+        p = model.cbGetSolution(model._data["p"])
+        w = model.cbGetSolution(model._data["w"])
+        print("at integer solution")
+        print(f"g: {g}")
+        print(f"b: {b}")
+        print(f"p: {p}")
+        print(f"w: {w}")
 
-        added_cut = 0
         # We only want indices that g_i is one!
         for i in X.index:
             g_threshold = 0.5
             if g[i] > g_threshold:
                 subproblem_value, left, right, target = benders_subproblem(
-                    model._main_grb_obj, b, p, w, i
+                    model._data["self"], b, p, w, i
                 )
+                print(subproblem_value, left, right, target)
                 if subproblem_value == 0:
-                    added_cut = 1
-                    lhs = get_cut_integer(model._main_grb_obj, left, right, target, i)
+                    lhs = get_cut_integer(
+                        model._data["self"]._solver,
+                        model._data["self"],
+                        left,
+                        right,
+                        target,
+                        i,
+                    )
+                    print(lhs)
                     model.cbLazy(lhs <= 0)
-
-        func_end_time = time.time()
-        func_time = func_end_time - func_start_time
-        # print(model._callback_counter)
-        model._total_callback_time_integer += func_time
-        if added_cut == 1:
-            model._callback_counter_integer_success += 1
-            model._total_callback_time_integer_success += func_time
 
 
 def robust_tree_subproblem(

@@ -6,8 +6,8 @@ from gurobipy import LinExpr, quicksum
 # helper functions for BenderOCT callback
 
 
-def get_left_exp_integer(main_grb_obj, n, i):
-    lhs = quicksum(
+def get_left_exp_integer(solver, main_grb_obj, n, i):
+    lhs = solver.quicksum(
         -1 * main_grb_obj._b[n, f]
         for f in main_grb_obj._X_col_labels
         if main_grb_obj._X.at[i, f] == 0
@@ -16,8 +16,8 @@ def get_left_exp_integer(main_grb_obj, n, i):
     return lhs
 
 
-def get_right_exp_integer(main_grb_obj, n, i):
-    lhs = quicksum(
+def get_right_exp_integer(solver, main_grb_obj, n, i):
+    lhs = solver.quicksum(
         -1 * main_grb_obj._b[n, f]
         for f in main_grb_obj._X_col_labels
         if main_grb_obj._X.at[i, f] == 1
@@ -32,19 +32,23 @@ def get_target_exp_integer(main_grb_obj, n, i):
     return lhs
 
 
-def get_cut_integer(main_grb_obj, left, right, target, i):
-    lhs = LinExpr(0) + main_grb_obj._g[i]
+def get_cut_integer(solver, main_grb_obj, left, right, target, i):
+    lhs = solver.lin_expr(0.0)
+    lhs += main_grb_obj._g[i]
     for n in left:
-        tmp_lhs = get_left_exp_integer(main_grb_obj, n, i)
-        lhs = lhs + tmp_lhs
+        tmp_lhs = get_left_exp_integer(solver, main_grb_obj, n, i)
+        # lhs = lhs + tmp_lhs
+        lhs += tmp_lhs
 
     for n in right:
-        tmp_lhs = get_right_exp_integer(main_grb_obj, n, i)
-        lhs = lhs + tmp_lhs
+        tmp_lhs = get_right_exp_integer(solver, main_grb_obj, n, i)
+        # lhs = lhs + tmp_lhs
+        lhs += tmp_lhs
 
     for n in target:
         tmp_lhs = get_target_exp_integer(main_grb_obj, n, i)
-        lhs = lhs + tmp_lhs
+        # lhs = lhs + tmp_lhs
+        lhs += tmp_lhs
 
     return lhs
 

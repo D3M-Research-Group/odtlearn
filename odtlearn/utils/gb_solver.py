@@ -8,12 +8,21 @@ class GurobiSolver(Solver):
     def __init__(self) -> None:
         self.model = Model()
 
+    def get_var_value(self, objs, var_name=None):
+        return self.model.getAttr("X", objs)
+
     def get_attr(self, name, objs):
         return self.model.getAttr(name, objs)
 
-    def optimize(self):
+    def optimize(self, callback=False, callback_action=None):
         # self.model.update() # update is called when we call optimize
-        self.model.optimize()
+        if callback:
+            if callback_action is not None:
+                self.model.optimize(callback_action)
+            else:
+                raise TypeError("Must supply callback function if callback=True")
+        else:
+            self.model.optimize()
 
     def add_vars(
         self, *indices, lb=0.0, ub=float("inf"), obj=0.0, vtype="C", name: str = ""
@@ -42,3 +51,13 @@ class GurobiSolver(Solver):
         Pass through function for Gurobi quicksum function
         """
         return gb_quicksum(terms)
+
+    def store_data(self, key, value):
+        try:
+            getattr(self.model, "_data")
+        except AttributeError:
+            self.model._data = {}
+
+        # if self.model._data is None:
+        #     self.model._data = {}
+        self.model._data[key] = value
