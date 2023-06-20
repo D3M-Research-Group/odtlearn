@@ -16,7 +16,7 @@ def data():
 # Test that we raise a ValueError if X matrix has values other than zero or one
 def test_FlowOPT_X_nonbinary_error():
 
-    clf = FlowOPT_IPW(depth=1, time_limit=300)
+    clf = FlowOPT_IPW(solver="gurobi", depth=1, time_limit=300)
 
     with pytest.raises(
         AssertionError,
@@ -34,7 +34,7 @@ def test_FlowOPT_X_nonbinary_error():
 def test_FlowOPT_X_data_shape_error():
     X = np.ones(10).reshape(10, 1)
 
-    clf = FlowOPT_IPW(depth=1, time_limit=300)
+    clf = FlowOPT_IPW(solver="gurobi", depth=1, time_limit=300)
 
     with pytest.raises(
         ValueError, match="Found input variables with inconsistent numbers of samples"
@@ -57,7 +57,7 @@ def test_FlowOPT_X_helpers_error(data):
         AssertionError, match=r"Inverse propensity weights must be in the range \(0, 1]"
     ):
         ipw = np.random.rand(10) + 1
-        clf = FlowOPT_IPW(depth=1, time_limit=300)
+        clf = FlowOPT_IPW(solver="gurobi", depth=1, time_limit=300)
         clf.fit(X, t, y, ipw)
 
     # what if we pass y_hat with columns that don't match up to # of treatments
@@ -68,13 +68,13 @@ def test_FlowOPT_X_helpers_error(data):
         # df = pd.read_csv("../../data/prescriptive_tree/train_50.csv")
         df = data
         y_hat = df[["lasso0", "lasso1", "lasso1"]]
-        clf = FlowOPT_DM(depth=1, time_limit=300)
+        clf = FlowOPT_DM(solver="gurobi", depth=1, time_limit=300)
         clf.fit(X=X, t=t, y=y, y_hat=y_hat)
 
 
 # Test that we raise an error if t isn't discrete and starts from 0
 def test_FlowOPT_X_treatment_error():
-    clf = FlowOPT_IPW(depth=1, time_limit=300)
+    clf = FlowOPT_IPW(solver="gurobi", depth=1, time_limit=300)
 
     with pytest.raises(
         AssertionError,
@@ -89,20 +89,32 @@ def test_FlowOPT_X_treatment_error():
 
 # fmt: off
 @pytest.mark.test_gurobi
-@pytest.mark.parametrize("method, expected_pred", [
-    ('DR', np.array([0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0,
-                    1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0,
-                    1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0])),
-    ('DM', np.array([0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1,
-                    1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1,
-                    1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0])),
-    ('IPW', np.array([1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1,
-                     1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1,
-                     1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-                     0, 1]))])
+@pytest.mark.parametrize("method,solver, expected_pred", [
+    ('DR', 'gurobi', np.array([0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
+                               1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0,
+                               1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0,
+                               1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0])),
+    ('DM', 'gurobi', np.array([0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1,
+                               1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1,
+                               1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0])),
+    ('IPW', 'gurobi', np.array([1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1,
+                                1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+                                1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                                0, 1])),
+    ('DR', 'cbc', np.array([0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
+                            1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0,
+                            1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0,
+                            1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0])),
+    ('DM', 'cbc', np.array([0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1,
+                            1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1,
+                            1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0])),
+    ('IPW', 'cbc', np.array([1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1,
+                            1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1,
+                            1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                            0, 1]))
+])
 # fmt: on
-def test_FlowOPT_classifier(data, method, expected_pred):
+def test_FlowOPT_classifier(data, method, solver, expected_pred):
     df = data
     X = df.iloc[:, :20]
     t = df["t"]
@@ -111,13 +123,13 @@ def test_FlowOPT_classifier(data, method, expected_pred):
     y_hat = df[["linear0", "linear1"]]
 
     if method == "DR":
-        clf = FlowOPT_DR(depth=2, time_limit=300)
+        clf = FlowOPT_DR(solver=solver, depth=2, time_limit=300)
         clf.fit(X, t, y, ipw, y_hat)
     elif method == "DM":
-        clf = FlowOPT_DM(depth=2, time_limit=300)
+        clf = FlowOPT_DM(solver=solver, depth=2, time_limit=300)
         clf.fit(X, t, y, y_hat)
     else:
-        clf = FlowOPT_IPW(depth=2, time_limit=300)
+        clf = FlowOPT_IPW(solver=solver, depth=2, time_limit=300)
         clf.fit(X, t, y, ipw)
 
     # Test that after running the fit method we have b, w, and p
@@ -134,11 +146,11 @@ def test_check_fit(data, method):
     df = data
     X = df.iloc[:, :20]
     if method == "DR":
-        clf = FlowOPT_DR(depth=2, time_limit=300)
+        clf = FlowOPT_DR(solver="gurobi", depth=2, time_limit=300)
     elif method == "DM":
-        clf = FlowOPT_DM(depth=2, time_limit=300)
+        clf = FlowOPT_DM(solver="gurobi", depth=2, time_limit=300)
     else:
-        clf = FlowOPT_IPW(depth=2, time_limit=300)
+        clf = FlowOPT_IPW(solver="gurobi", depth=2, time_limit=300)
     with pytest.raises(
         NotFittedError,
         match=(
@@ -176,13 +188,13 @@ def test_FairOCT_visualize_tree(data, method):
     ipw = df["prob_t_pred_tree"]
     y_hat = df[["linear0", "linear1"]]
     if method == "DR":
-        clf = FlowOPT_DR(depth=2, time_limit=300)
+        clf = FlowOPT_DR(solver="gurobi", depth=2, time_limit=300)
         clf.fit(X, t, y, ipw, y_hat)
     elif method == "DM":
-        clf = FlowOPT_DM(depth=2, time_limit=300)
+        clf = FlowOPT_DM(solver="gurobi", depth=2, time_limit=300)
         clf.fit(X, t, y, y_hat)
     else:
-        clf = FlowOPT_IPW(depth=2, time_limit=300)
+        clf = FlowOPT_IPW(solver="gurobi", depth=2, time_limit=300)
         clf.fit(X, t, y, ipw)
     clf.print_tree()
     clf.plot_tree()

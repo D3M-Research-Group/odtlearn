@@ -72,7 +72,7 @@ def synthetic_costs_1():
 
 def test_RobustOCT_X_noninteger_error():
     """Test whether X is integer-valued"""
-    clf = RobustOCT(depth=1, time_limit=20)
+    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
 
     with pytest.raises(
         ValueError,
@@ -87,7 +87,7 @@ def test_RobustOCT_X_noninteger_error():
 
 def test_RobustOCT_cost_shape_error():
     """Test whether X and cost have the same size and columns"""
-    clf = RobustOCT(depth=1, time_limit=20)
+    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
     data = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -151,7 +151,7 @@ def test_RobustOCT_cost_shape_error():
 def test_RobustOCT_prediction_shape_error():
     """Test whether X and cost have the same size and columns"""
     # Run some quick model that finishes in 1 second
-    clf = RobustOCT(depth=1, time_limit=20)
+    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -216,7 +216,7 @@ def test_RobustOCT_prediction_shape_error():
 
 @pytest.mark.test_gurobi
 def test_RobustOCT_with_uncertainty_success():
-    clf = RobustOCT(depth=1, time_limit=20)
+    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -238,7 +238,7 @@ def test_RobustOCT_with_uncertainty_success():
 
 @pytest.mark.test_gurobi
 def test_RobustOCT_no_uncertainty_success():
-    clf = RobustOCT(depth=1, time_limit=20)
+    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -256,16 +256,20 @@ def test_RobustOCT_no_uncertainty_success():
 
 
 @pytest.mark.parametrize(
-    "d, expected_pred",
+    "d, expected_pred, solver",
     [
-        (0, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])),
-        (1, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0])),
-        (2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])),
+        (0, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), "gurobi"),
+        (1, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0]), "gurobi"),
+        (2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "gurobi"),
+        (0, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), "cbc"),
+        (1, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0]), "cbc"),
+        (2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "cbc"),
     ],
 )
-def test_RobustOCT_correctness(synthetic_data_1, d, expected_pred):
+def test_RobustOCT_correctness(synthetic_data_1, d, expected_pred, solver):
     X, y = synthetic_data_1
     robust_classifier = RobustOCT(
+        solver=solver,
         depth=d,
         time_limit=100,
     )
@@ -275,16 +279,25 @@ def test_RobustOCT_correctness(synthetic_data_1, d, expected_pred):
 
 
 @pytest.mark.parametrize(
-    "d, budget, expected_pred",
+    "d, budget, expected_pred, solver",
     [
-        (0, 2, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])),
-        (1, 2, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1])),
-        (2, 2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])),
-        (2, 5, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1])),
+        (0, 2, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), "gurobi"),
+        (1, 2, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]), "gurobi"),
+        (2, 2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "gurobi"),
+        (2, 5, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]), "gurobi"),
+        (0, 2, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), "cbc"),
+        (1, 2, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]), "cbc"),
+        (2, 2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "cbc"),
+        (
+            2,
+            5,
+            np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]),
+            "cbc",
+        ),  # this can be slow for cbc
     ],
 )
 def test_RobustOCT_uncertainty_correctness(
-    synthetic_data_1, synthetic_costs_1, d, budget, expected_pred
+    synthetic_data_1, synthetic_costs_1, d, budget, expected_pred, solver
 ):
     """
     Scenario 0: Root assigns 0
@@ -295,6 +308,7 @@ def test_RobustOCT_uncertainty_correctness(
     X, y = synthetic_data_1
     costs = synthetic_costs_1
     robust_classifier = RobustOCT(
+        solver=solver,
         depth=d,
         time_limit=100,
     )
@@ -306,6 +320,7 @@ def test_RobustOCT_uncertainty_correctness(
 def test_check_fit(synthetic_data_1):
     X, y = synthetic_data_1
     rcl = RobustOCT(
+        solver="gurobi",
         depth=1,
         time_limit=100,
     )
@@ -341,6 +356,7 @@ def test_RobustOCT_visualize_tree(synthetic_data_1, synthetic_costs_1):
     X, y = synthetic_data_1
     costs = synthetic_costs_1
     robust_classifier = RobustOCT(
+        solver="gurobi",
         depth=2,
         time_limit=100,
     )

@@ -1,4 +1,4 @@
-from gurobipy import GRB, LinExpr
+from gurobipy import GRB
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 from odtlearn.flow_opt_ms import FlowOPTMultipleSink
@@ -19,26 +19,35 @@ class FlowOPT_IPW(FlowOPTSingleSink):
 
     Parameters
     ----------
-    depth : int
-        A parameter specifying the depth of the tree
+    solver: str
+        A string specifying the name of the solver to use
+        to solve the MIP. Options are "Gurobi" and "CBC".
+        If the CBC binaries are not found, Gurobi will be used by default.
+    depth : int, default=1
+        A parameter specifying the depth of the tree to learn.
     time_limit : int
-        The given time limit for solving the MIP in seconds
+        The given time limit for solving the MIP in seconds.
     method : str, default='IPW'
         The method of Prescriptive Trees to run. Choices in ('IPW', 'DM', 'DR), which represents the
-        inverse propensity weighting, direct method, and doubly robust methods, respectively
+        inverse propensity weighting, direct method, and doubly robust methods, respectively.
     num_threads: int, default=None
-        The number of threads the solver should use
+        The number of threads the solver should use. If not specified,
+        solver uses all available threads.
+    verbose : bool, default = False
+        Flag for logging solver outputs.
 
     """
 
     def __init__(
         self,
+        solver,
         depth=1,
         time_limit=60,
         num_threads=None,
         verbose=False,
     ) -> None:
         super().__init__(
+            solver,
             depth,
             time_limit,
             num_threads,
@@ -58,8 +67,6 @@ class FlowOPT_IPW(FlowOPTSingleSink):
             The observed outcomes upon given treatment t. An array of int.
         ipw : array-like, shape (n_samples,)
             The inverse propensity weight estimates. An array of floats in [0, 1].
-        verbose: bool, default=False
-            Display Gurobi output.
 
         Returns
         -------
@@ -90,12 +97,11 @@ class FlowOPT_IPW(FlowOPTSingleSink):
         check_binary(X)
 
         self._create_main_problem()
-        self._model.update()
-        self._model.optimize()
+        self._solver.optimize(self._X, self, self._solver)
 
-        self.b_value = self._model.getAttr("X", self._b)
-        self.w_value = self._model.getAttr("X", self._w)
-        self.p_value = self._model.getAttr("X", self._p)
+        self.b_value = self._solver.get_var_value(self._b, "b")
+        self.w_value = self._solver.get_var_value(self._w, "w")
+        self.p_value = self._solver.get_var_value(self._p, "p")
 
         # Return the classifier
         return self
@@ -129,6 +135,7 @@ class FlowOPT_IPW(FlowOPTSingleSink):
 class FlowOPT_DM(FlowOPTMultipleSink):
     def __init__(
         self,
+        solver,
         depth=1,
         time_limit=60,
         num_threads=None,
@@ -140,17 +147,23 @@ class FlowOPT_DM(FlowOPTMultipleSink):
 
         Parameters
         ----------
-        depth : int
-            A parameter specifying the depth of the tree
-        time_limit : int
-            The given time limit for solving the MIP in seconds
+        solver: str
+            A string specifying the name of the solver to use
+            to solve the MIP. Options are "Gurobi" and "CBC".
+            If the CBC binaries are not found, Gurobi will be used by default.
+        depth : int, default=1
+            A parameter specifying the depth of the tree to learn.
+        time_limit : int, default=60
+            The given time limit for solving the MIP in seconds.
         num_threads: int, default=None
-            The number of threads the solver should use
+            The number of threads the solver should use. If not specified,
+            solver uses all available threads
         verbose: bool, default=False
-            Display Gurobi output.
+            Flag for logging solver outputs.
 
         """
         super().__init__(
+            solver,
             depth,
             time_limit,
             num_threads,
@@ -159,15 +172,15 @@ class FlowOPT_DM(FlowOPTMultipleSink):
 
     def _define_objective(self):
         # define objective function
-        obj = LinExpr(0)
+        obj = self._solver.lin_expr(0)
         for i in self._datapoints:
             for n in self._tree.Nodes + self._tree.Leaves:
                 for k in self._treatments:
-                    obj.add(
-                        self._zeta[i, n, k] * (self._y_hat[i][int(k)])
+                    obj += self._zeta[i, n, k] * (
+                        self._y_hat[i][int(k)]
                     )  # we assume that each column corresponds to an ordered list t, which might be problematic
 
-        self._model.setObjective(obj, GRB.MAXIMIZE)
+        self._solver.set_objective(obj, GRB.MAXIMIZE)
 
     def fit(self, X, t, y, y_hat):
         """Method to fit the PrescriptiveTree class on the data
@@ -213,12 +226,11 @@ class FlowOPT_DM(FlowOPTMultipleSink):
         check_binary(X)
 
         self._create_main_problem()
-        self._model.update()
-        self._model.optimize()
+        self._solver.optimize(self._X, self, self._solver)
 
-        self.b_value = self._model.getAttr("X", self._b)
-        self.w_value = self._model.getAttr("X", self._w)
-        self.p_value = self._model.getAttr("X", self._p)
+        self.b_value = self._solver.get_var_value(self._b, "b")
+        self.w_value = self._solver.get_var_value(self._w, "w")
+        self.p_value = self._solver.get_var_value(self._p, "p")
 
         # Return the classifier
         return self
@@ -251,13 +263,19 @@ class FlowOPT_DM(FlowOPTMultipleSink):
 
 
 class FlowOPT_DR(FlowOPTMultipleSink):
-    def __init__(self, depth=1, time_limit=60, num_threads=None, verbose=False) -> None:
+    def __init__(
+        self, solver, depth=1, time_limit=60, num_threads=None, verbose=False
+    ) -> None:
         """
         An optimal decision tree that prescribes treatments (as opposed to predicting class labels),
         fitted on a binary-valued observational data set.
 
         Parameters
         ----------
+        solver: str
+            A string specifying the name of the solver to use
+            to solve the MIP. Options are "Gurobi" and "CBC".
+            If the CBC binaries are not found, Gurobi will be used by default.
         depth : int
             A parameter specifying the depth of the tree
         time_limit : int
@@ -265,10 +283,10 @@ class FlowOPT_DR(FlowOPTMultipleSink):
         num_threads: int, default=None
             The number of threads the solver should use
         verbose: bool, default=False
-            Display Gurobi output.
+            Display solver output.
 
         """
-        super().__init__(depth, time_limit, num_threads, verbose)
+        super().__init__(solver, depth, time_limit, num_threads, verbose)
 
     def fit(self, X, t, y, ipw, y_hat):
         """Method to fit the PrescriptiveTree class on the data
@@ -317,12 +335,11 @@ class FlowOPT_DR(FlowOPTMultipleSink):
         check_binary(X)
 
         self._create_main_problem()
-        self._model.update()
-        self._model.optimize()
+        self._solver.optimize(self._X, self, self._solver)
 
-        self.b_value = self._model.getAttr("X", self._b)
-        self.w_value = self._model.getAttr("X", self._w)
-        self.p_value = self._model.getAttr("X", self._p)
+        self.b_value = self._solver.get_var_value(self._b, "b")
+        self.w_value = self._solver.get_var_value(self._w, "w")
+        self.p_value = self._solver.get_var_value(self._p, "p")
 
         # Return the classifier
         return self
@@ -355,17 +372,17 @@ class FlowOPT_DR(FlowOPTMultipleSink):
 
     def _define_objective(self):
         # define objective function
-        obj = LinExpr(0)
+        obj = self._solver.lin_expr(0)
         for i in self._datapoints:
             for n in self._tree.Nodes + self._tree.Leaves:
                 for k in self._treatments:
-                    obj.add(
-                        self._zeta[i, n, k] * (self._y_hat[i][int(k)])
+                    obj += self._zeta[i, n, k] * (
+                        self._y_hat[i][int(k)]
                     )  # we assume that each column corresponds to an ordered list t, which might be problematic
                     if self._t[i] == int(k):
-                        obj.add(
+                        obj += (
                             self._zeta[i, n, k]
                             * (self._y[i] - self._y_hat[i][int(k)])
                             / self._ipw[i]
                         )
-        self._model.setObjective(obj, GRB.MAXIMIZE)
+        self._solver.set_objective(obj, GRB.MAXIMIZE)

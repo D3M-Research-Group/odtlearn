@@ -9,6 +9,7 @@ from odtlearn.utils.TreePlotter import MPLPlotter
 class OptimalPrescriptiveTree(OptimalDecisionTree):
     def __init__(
         self,
+        solver,
         depth,
         time_limit,
         num_threads,
@@ -23,7 +24,7 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
         treatments_set: a list or set of all possible treatments
 
         """
-        super().__init__(depth, time_limit, num_threads, verbose)
+        super().__init__(solver, depth, time_limit, num_threads, verbose)
 
         # self.t = t
         # self.ipw = ipw

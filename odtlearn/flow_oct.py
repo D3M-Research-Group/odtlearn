@@ -3,11 +3,42 @@ from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 from odtlearn.flow_oct_ss import FlowOCTSingleSink
-from odtlearn.utils.callbacks import benders_callback
+from odtlearn.utils.callbacks import BendersCallback, benders_callback
 from odtlearn.utils.validation import check_binary, check_columns_match
 
 
 class FlowOCT(FlowOCTSingleSink):
+    """An optimal decision tree classifier, fitted on a given
+    integer-valued data set to produce a provably optimal
+    decision tree.
+
+    Parameters
+    ----------
+    solver: str
+        A string specifying the name of the solver to use
+        to solve the MIP. Options are "Gurobi" and "CBC".
+        If the CBC binaries are not found, Gurobi will be used by default.
+    _lambda: float, default = 0
+            The regularization parameter in the objective, taking values
+            between 0 and 1, that controls
+            the complexity of a the learned tree.
+    obj_mode: str, default="acc"
+        The objective should be used to learn an optimal decision tree.
+        The two options are "acc" and "balance".
+        The accuracy objective attempts to maximize prediction accuracy while the
+        balance objective aims to learn a balanced optimal decision
+        tree to better generalize to our of sample data.
+    depth : int, default=1
+        A parameter specifying the depth of the tree to learn.
+    time_limit : int, default=60
+        The given time limit for solving the MIP in seconds.
+    num_threads: int, default=None
+        The number of threads the solver should use. If not specified,
+        solver uses all available threads
+    verbose : bool, default = False
+        Flag for logging solver outputs.
+    """
+
     def __init__(
         self,
         solver,
@@ -70,13 +101,12 @@ class FlowOCT(FlowOCTSingleSink):
         self._classes = unique_labels(y)
 
         self._create_main_problem()
-        self._solver.optimize()
+        self._solver.optimize(
+            self._X, self, self._solver, callback=False, callback_action=None
+        )
         self.b_value = self._solver.get_var_value(self._b, "b")
         self.w_value = self._solver.get_var_value(self._w, "w")
         self.p_value = self._solver.get_var_value(self._p, "p")
-        # self.b_value = self._solver.get_attr("X", self._b)
-        # self.w_value = self._solver.get_attr("X", self._w)
-        # self.p_value = self._solver.get_attr("X", self._p)
 
         return self
 
@@ -121,10 +151,29 @@ class BendersOCT(FlowOCTSingleSink):
         """
         Parameters
         ----------
-        _lambda: The regularization parameter in the objective
-        time_limit: The given time limit for solving the MIP
-        num_threads: Specify number of threads for Gurobi to use when solving
-        verbose: Display Gurobi model output
+        solver: str
+            A string specifying the name of the solver to use
+            to solve the MIP. Options are "Gurobi" and "CBC".
+            If the CBC binaries are not found, Gurobi will be used by default.
+        _lambda: float, default = 0
+            The regularization parameter in the objective,
+            taking values between 0 and 1, that controls
+            the complexity of a the learned tree.
+        obj_mode: str, default="acc"
+            The objective should be used to learn an optimal decision tree.
+            The two options are "acc" and "balance".
+            The accuracy objective attempts to maximize prediction accuracy while the
+            balance objective aims to learn a balanced optimal decision
+            tree to better generalize to our of sample data.
+        depth : int, default=1
+            A parameter specifying the depth of the tree to learn.
+        time_limit : int, default=60
+            The given time limit for solving the MIP in seconds.
+        num_threads: int, default=None
+            The number of threads the solver should use. If not specified,
+            solver uses all available threads
+        verbose : bool, default = False
+            Flag for logging solver outputs.
         """
 
         super().__init__(
@@ -139,10 +188,6 @@ class BendersOCT(FlowOCTSingleSink):
         if self._solver.__class__.__name__ == "GurobiSolver":
             # The cuts we add in the callback function would be treated as lazy constraints
             self._solver.model.params.LazyConstraints = 1
-
-        # We also pass the following information to the model as we need them in the callback
-        # self._solver.model._self_obj = self
-        self._solver.store_data("self", self)
 
         self._lambda = _lambda
         self._obj_mode = obj_mode
@@ -199,24 +244,32 @@ class BendersOCT(FlowOCTSingleSink):
         self._classes = unique_labels(y)
 
         self._create_main_problem()
+
+        # we need these in the callback to have access to the value of the decision variables for Gurobi callbacks
+        self._solver.store_data("g", self._g)
+        self._solver.store_data("b", self._b)
+        self._solver.store_data("p", self._p)
+        self._solver.store_data("w", self._w)
+        # We also pass the following information to the model as we need them in the callback
+        # self._solver.model._self_obj = self
+        self._solver.store_data("self", self)
+
         if self._solver.__class__.__name__ == "GurobiSolver":
-            # we need these in the callback to have access to the value of the decision variables for Gurobi callbacks
-            self._solver.store_data("g", self._g)
-            self._solver.store_data("b", self._b)
-            self._solver.store_data("p", self._p)
-            self._solver.store_data("w", self._w)
-            self._solver.optimize(callback=True, callback_action=benders_callback)
+            callback_action = benders_callback
         elif self._solver.__class__.__name__ == "CBCSolver":
-            self._solver.optimize(
-                self._g,
-                self._b,
-                self._p,
-                self._w,
-                X=self._X,
-                obj=self,
-                solver=self._solver,
-                callback=True,
-            )
+            callback_action = BendersCallback
+
+        self._solver.optimize(
+            self._X,
+            self,
+            self._solver,
+            callback=True,
+            callback_action=callback_action,
+            g=self._g,
+            b=self._b,
+            p=self._p,
+            w=self._w,
+        )
 
         self.b_value = self._solver.get_var_value(self._b, "b")
         self.w_value = self._solver.get_var_value(self._w, "w")

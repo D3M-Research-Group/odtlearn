@@ -637,7 +637,7 @@ def cbc_set_parameter(model: Solver, param: str, value: str):
 
 
 class SolverCbc(Solver):
-    def __init__(self, model: Model, name: str, sense: str):
+    def __init__(self, model: Model, name: str, sense: str, verbose: bool):
         super().__init__(model, name, sense)
 
         self._model = cbclib.Cbc_newModel()
@@ -659,7 +659,10 @@ class SolverCbc(Solver):
 
         self.emphasis = SearchEmphasis.DEFAULT
         self.__threads = 0
-        self.__verbose = 1
+        if verbose:
+            self.__verbose = 1
+        else:
+            self.__verbose = 0
         # pre-allocate temporary space to query names
         self.__name_space = ffi.new("char[{}]".format(MAX_NAME_SIZE))
         # in cut generation
@@ -1844,7 +1847,6 @@ class SolverOsi(Solver):
     def add_lazy_constr(self, lin_expr: LinExpr):
         if self.osi_cutsp != ffi.NULL:
             # checking if violated
-            print(f"expression sense: {lin_expr.sense}")
             # if lin_expr.violation < 1e-5:
             #     return
 

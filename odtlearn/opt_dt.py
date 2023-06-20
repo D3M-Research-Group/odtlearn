@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 from odtlearn.utils.cbc_solver import CBCSolver
 from odtlearn.utils.gb_solver import GurobiSolver
-from odtlearn.utils.scip_solver import SCIPSolver
 from odtlearn.utils.Tree import _Tree
 
 
@@ -32,10 +31,8 @@ class OptimalDecisionTree(ABC):
 
         if solver.lower() == "gurobi":
             self._solver = GurobiSolver()
-        elif solver.lower() == "scip":
-            self._solver = SCIPSolver()
         elif solver.lower() == "cbc":
-            self._solver = CBCSolver()
+            self._solver = CBCSolver(verbose)
         else:
             raise NotImplementedError(
                 f"Interface for {solver} not currently supported."
@@ -45,23 +42,18 @@ class OptimalDecisionTree(ABC):
             # supress all logging
             if self._solver.__class__.__name__ == "GurobiSolver":
                 self._solver.set_param("OutputFlag", 0)
-            elif self._solver.__class__.__name__ == "CBCSolver":
-                self._solver.model.verbose = 0
             else:
-                self._solver.set_param("display/verblevel", 0)
+                self._solver.model.verbose = 0
+                self._solver.model.solver.set_verbose = 0
         if num_threads is not None:
             if self._solver.__class__.__name__ == "GurobiSolver":
                 self._solver.set_param("Threads", num_threads)
-            elif self._solver.__class__.__name__ == "CBCSolver":
-                self._solver.model.threads = num_threads
             else:
-                self._solver.set_param("lp/threads", num_threads)
+                self._solver.model.threads = num_threads
         if self._solver.__class__.__name__ == "GurobiSolver":
             self._solver.set_param("TimeLimit", time_limit)
-        elif self._solver.__class__.__name__ == "CBCSolver":
-            self._solver.model.max_seconds = time_limit
         else:
-            self._solver.set_param("limits/time", time_limit)
+            self._solver.model.max_seconds = time_limit
 
     def __repr__(self):
         rep = (

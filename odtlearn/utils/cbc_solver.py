@@ -1,8 +1,7 @@
 from itertools import product
 
-from mip import ConstrsGenerator, LinExpr, Model, xsum
+from mip import LinExpr, Model, xsum
 
-from odtlearn.utils.callbacks import benders_subproblem, get_cut_integer
 from odtlearn.utils.mip_cbc import SolverCbc
 from odtlearn.utils.solver import Solver
 
@@ -10,42 +9,92 @@ GRB_CBC_CONST_MAP = {-1: "MAX", 1: "MIN"}
 
 
 class CBCSolver(Solver):
-    def __init__(self) -> None:
+    """
+    The CBC solver interface. This class contains functions for interacting
+    with the solver for setting up, optimizing, and getting optimal values of a model.
+    This class interacts with a slightly modified version of the SolverCbc class
+    from the python-mip package.
+    """
+
+    def __init__(self, verbose) -> None:
         self.model = Model(solver_name="cbc")
-        self.model.solver = SolverCbc(self.model, "cbc", self.model.sense)
+        self.model.solver = SolverCbc(self.model, "cbc", self.model.sense, verbose)
         self.var_name_dict = {}
 
     def get_var_value(self, objs, var_name=None):
+        """
+        Get the value of a decision variable from a solved problem.
+
+        Parameters
+        ----------
+        objs: dict
+            A dictionary of the model variables
+
+        var_name: str | None, default=None
+            The name supplied when the decision variable was initialized.
+
+        Returns
+        -------
+        A dict with the values of each variable from the solution
+        """
         result_dict = {}
         for key, _ in objs.items():
             name = self.var_name_dict[var_name][key]
             result_dict[key] = self.model.var_by_name(name).x
         return result_dict
 
-    def get_attr(self, name, objs, var_name=None):
-        """
-        Mimic the getAttr functionality from Gurobi to get the value
-        of a variable in the current solution. Raises an implementation
-        error if an attribute name besides "X" is given.
-        """
-        if name == "X":
-            result_dict = {}
-            for key, value in objs.items():
-                result_dict[key] = self.model.var_by_name(value)
-            return result_dict
-        else:
-            raise NotImplementedError(f"Unable to get attribute {name} for CBC solver")
+    def optimize(self, X, obj, solver, callback=False, callback_action=None, **kwargs):
+        """Optimize the constructed model
 
-    def optimize(self, *vars, X, obj, solver, callback=False):
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The input samples.
+
+        obj : DecisionTree object
+            A copy of the DecisionTree object that is passed to the callback action.
+
+        solver : Solver object
+            A copy of the Solver object that is passed to the callback action.
+
+        callback: bool, default=False
+            Boolean specifying whether this model uses a callback when solving the problem
+
+        callback_action: mip.ConstrsGenerator object
+            Function to be called when CBC reaches an integer solution
+
+        kwargs: Additional arguments to be passed to the callback action
+
+        Returns
+        -------
+        None
+        """
         if callback:
-            self.model.lazy_constrs_generator = BendersCallback(*vars, X, obj, solver)
-            self.model.optimize()
+            if callback_action is not None:
+                self.model.lazy_constrs_generator = callback_action(
+                    X, obj, solver, **kwargs
+                )
+                self.model.optimize()
+            else:
+                raise ValueError("Must supply callback action if callback=True")
         else:
             self.model.optimize()
 
     def prep_indices(self, *indices):
         """
-        indices: list of lists
+        Helper function for prepping variable indices to generate
+        decision variables with indices that mimic the structure of Gurobi-created
+        decision variables
+
+        Parameters
+        ----------
+        indices: List
+            list of lists of indices.
+
+        Returns
+        -------
+        A list with the generated indices.
+
         """
         prepped = []
         # if given an integer, create range
@@ -58,12 +107,39 @@ class CBCSolver(Solver):
             # otherwise just pass the element to be zipped
             else:
                 prepped.append(elem)
-        # TO-DO: check that all elements are the same length?
         return prepped
 
     def add_vars(
         self, *indices, lb=0.0, ub=float("inf"), obj=0.0, vtype="C", name: str = ""
     ):
+        """
+        Create a dictionary with the decision variables with keys of the form
+        {name}[(element of indices list)] and then add the variables to the model
+
+        Parameters
+        ----------
+        *indices: List
+            Arbitrary list of indices to use to create the decision variables.
+
+        lb: double, default=0.0
+            Lower bound for new variable.
+
+        ub: double, default=inf
+            Upper bound for new variable.
+
+        obj: double
+            Objective coefficient for new variable.
+
+        type: str, default="C"
+            Variable type for new variable. Accepted values are "C", "B", "I"
+
+        name: str, default=""
+            Name used when creating dictionary storing variables.
+
+        Returns
+        -------
+        Dictionary of new variable objects.
+        """
         var_dict = {}
         name_element_dict = {}
         prepped = self.prep_indices(*indices)
@@ -83,18 +159,72 @@ class CBCSolver(Solver):
         return var_dict
 
     def add_constrs(self, cons_expr_tuple):
+        """
+        Add constraint expressions to the model.
+
+        Parameters
+        ----------
+        cons_expr_tuple: List[LinExpr]
+            A list of constraint expressions to be added to the model.
+
+        Returns
+        -------
+        None
+        """
         for cons in cons_expr_tuple:
             self.model.add_constr(cons)
 
     def add_constr(self, cons_expr):
+        """
+        Add a constraint expression to the model.
+
+        Parameters
+        ----------
+        cons_expr: LinExpr
+            A constraint expression to be added to the model.
+
+        Returns
+        -------
+        None
+        """
         self.model.add_constr(cons_expr)
 
     def lin_expr(self, arg1=0.0, sense=None):
-        return LinExprWrapper(const=arg1, sense=sense)
+        """
+        Initialize a linear expression object
+
+        Parameters
+        ----------
+        arg1: double | Variable , default=0.0
+            A constant or Variable to be used to initialize the linear expression
+
+        sense: str | None, default=None
+            Argument for specifying whether the expression is to be minimized or maximized.
+
+
+        Returns
+        -------
+        Initalized LinExpr
+        """
+        return LinExpr(const=arg1, sense=sense)
 
     def set_objective(self, expr, sense):
         """
-        Take the linear expression and set it as the objective for the problem
+        Take the linear expression and set it as the objective for the problem.
+
+        Parameters
+        ----------
+
+        expr: LinExpr
+            The linear expression to be used as the objective for the problem.
+
+        sense: str
+            A string specifying whether the objective should be minimized (1 or GRB.MINIMIZE)
+            or maximized (-1 or GRB.MAXIMIZE)
+
+        Returns
+        -------
+        None
         """
         self.model.objective = expr
         if type(sense) is int:
@@ -107,113 +237,41 @@ class CBCSolver(Solver):
 
     def quicksum(self, terms):
         """
-        Pass through function for Gurobi quicksum function
+        Pass through function for python-mip quicksum function
+
+        Parameters
+        ----------
+        terms: List[mip.Variable]
+            List of variables to be summed
+
+        Returns
+        -------
+        LinExpr
+
         """
         return xsum(terms)
 
     def store_data(self, key, value):
+        """
+        Store data to be used in the callback action. For Gurobi, data can
+        typically be stored as private attributes of the model (i.e., model._data_var).
+        For consistency across solvers, we store the data in the model._data attribute
+        as a dictionary.
+
+        Parameters
+        ----------
+        key: str
+            The name under which to store the data
+
+        value: Any
+            The values to be stored in the dictionary.
+
+        Returns
+        -------
+        None
+        """
         try:
             getattr(self.model, "_data")
         except AttributeError:
             self.model._data = {}
-
-        # if self.model._data is None:
-        #     self.model._data = {}
         self.model._data[key] = value
-
-
-class LinExprWrapper(LinExpr):
-    def __init__(self, const, sense):
-        super().__init__(const=const, sense=sense)
-
-    def add(self, other):
-        self.__add__(other)
-
-
-class BendersCallback(ConstrsGenerator):
-    def __init__(self, g, b, p, w, X, obj, solver):
-        self.X = X
-        self.obj = obj
-        self.solver = solver
-        self.g = g
-        self.p = p
-        self.b = b
-        self.w = w
-
-    def generate_constrs(self, model: Model, depth: int = 0, npass: int = 0):
-        g_trans, p_trans, b_trans, w_trans = (
-            {k: model.translate(v).x for k, v in self.g.items()},
-            {k: model.translate(v).x for k, v in self.p.items()},
-            {k: model.translate(v).x for k, v in self.b.items()},
-            {k: model.translate(v).x for k, v in self.w.items()},
-        )
-        print(f"g: {g_trans}")
-        print(f"b: {b_trans}")
-        print(f"p: {p_trans}")
-        print(f"w: {w_trans}")
-        for i in self.X.index:
-            g_threshold = 0.5
-            if g_trans[i] > g_threshold:
-                subproblem_value, left, right, target = benders_subproblem(
-                    self.obj, b_trans, p_trans, w_trans, i
-                )
-                print(subproblem_value, left, right, target)
-                if subproblem_value == 0:
-                    lhs = get_cut_integer(
-                        self.solver,
-                        self.obj,
-                        left,
-                        right,
-                        target,
-                        i,
-                    )
-                    print(lhs)
-                    new_constr = lhs
-                    print(new_constr)
-                    new_constr.sense = "<"
-                    print(new_constr.sense)
-                    print(new_constr.const)
-                    print(new_constr.x)
-
-                    # lhs.violation = 0
-                    # model.add_constr(new_constr)
-                    model += new_constr
-
-
-# def get_left_exp_integer(solver, b, X, X_labels, n, i):
-#     lhs = solver.quicksum(-1 * b[n, f] for f in X_labels if X.at[i, f] == 0)
-
-#     return lhs
-
-
-# def get_right_exp_integer(solver, b, X, X_labels, n, i):
-#     lhs = solver.quicksum(-1 * b[n, f] for f in X_labels if X.at[i, f] == 1)
-
-#     return lhs
-
-
-# def get_target_exp_integer(main_grb_obj, w, n, i):
-#     label_i = main_grb_obj._y[i]
-#     lhs = -1 * w[n, label_i]
-#     return lhs
-
-
-# def get_cut_integer(solver, g, b, w, X, X_labels, main_grb_obj, left, right, target, i):
-#     lhs = solver.lin_expr(0.0, sense="<")
-#     lhs += g[i]
-#     for n in left:
-#         tmp_lhs = get_left_exp_integer(solver, b, X, X_labels, n, i)
-#         # lhs = lhs + tmp_lhs
-#         lhs += tmp_lhs
-
-#     for n in right:
-#         tmp_lhs = get_right_exp_integer(solver, b, X, X_labels, n, i)
-#         # lhs = lhs + tmp_lhs
-#         lhs += tmp_lhs
-
-#     for n in target:
-#         tmp_lhs = get_target_exp_integer(main_grb_obj, w, n, i)
-#         # lhs = lhs + tmp_lhs
-#         lhs += tmp_lhs
-
-#     return lhs

@@ -171,24 +171,34 @@ def test_FlowOCT_classifier():
 
 
 @pytest.mark.parametrize(
-    "d, _lambda, benders, expected_pred",
+    "d, _lambda, benders, expected_pred, solver",
     [
-        (0, 0, False, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])),
-        (1, 0, False, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0])),
-        (2, 0, False, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])),
-        (0, 0, True, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])),
-        (1, 0, True, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0])),
-        (2, 0, True, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])),
-        (2, 0.51, False, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1])),
-        (2, 0.51, True, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1])),
+        (0, 0, False, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), "gurobi"),
+        (1, 0, False, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0]), "gurobi"),
+        (2, 0, False, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "gurobi"),
+        (0, 0, True, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), "gurobi"),
+        (1, 0, True, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0]), "gurobi"),
+        (2, 0, True, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "gurobi"),
+        (2, 0.51, False, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]), "gurobi"),
+        (2, 0.51, True, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]), "gurobi"),
+        (0, 0, False, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), "cbc"),
+        (1, 0, False, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0]), "cbc"),
+        (2, 0, False, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "cbc"),
+        (0, 0, True, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), "cbc"),
+        (1, 0, True, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0]), "cbc"),
+        (2, 0, True, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "cbc"),
+        (2, 0.51, False, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]), "cbc"),
+        (2, 0.51, True, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]), "cbc"),
     ],
 )
-def test_FlowOCT_same_predictions(synthetic_data_1, d, _lambda, benders, expected_pred):
+def test_FlowOCT_same_predictions(
+    synthetic_data_1, d, _lambda, benders, expected_pred, solver
+):
     X, y = synthetic_data_1
 
     if benders:
         stcl = BendersOCT(
-            solver="gurobi",
+            solver=solver,
             depth=d,
             time_limit=100,
             _lambda=_lambda,
@@ -199,32 +209,9 @@ def test_FlowOCT_same_predictions(synthetic_data_1, d, _lambda, benders, expecte
         # stcl.print_tree()
         assert_allclose(stcl.predict(X), expected_pred)
 
-        stcl = BendersOCT(
-            solver="cbc",
-            depth=d,
-            time_limit=100,
-            _lambda=_lambda,
-            num_threads=None,
-            obj_mode="acc",
-        )
-        stcl.fit(X, y)
-        # stcl.print_tree()
-        assert_allclose(stcl.predict(X), expected_pred)
     else:
         stcl = FlowOCT(
-            solver="gurobi",
-            depth=d,
-            time_limit=100,
-            _lambda=_lambda,
-            num_threads=None,
-            obj_mode="acc",
-        )
-        stcl.fit(X, y)
-        # stcl.print_tree()
-        assert_allclose(stcl.predict(X), expected_pred)
-
-        stcl = FlowOCT(
-            solver="scip",
+            solver=solver,
             depth=d,
             time_limit=100,
             _lambda=_lambda,
@@ -237,19 +224,53 @@ def test_FlowOCT_same_predictions(synthetic_data_1, d, _lambda, benders, expecte
 
 
 @pytest.mark.parametrize(
-    "benders, obj_mode ,expected_pred",
+    "benders, obj_mode ,expected_pred, solver",
     [
-        (False, "acc", np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])),
-        (False, "balance", np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1])),
-        (True, "acc", np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])),
-        (True, "balance", np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1])),
+        (
+            False,
+            "acc",
+            np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+            "gurobi",
+        ),
+        (
+            False,
+            "balance",
+            np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]),
+            "gurobi",
+        ),
+        (
+            True,
+            "acc",
+            np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+            "gurobi",
+        ),
+        (
+            True,
+            "balance",
+            np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]),
+            "gurobi",
+        ),
+        (False, "acc", np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), "cbc"),
+        (
+            False,
+            "balance",
+            np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]),
+            "cbc",
+        ),
+        (True, "acc", np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), "cbc"),
+        (
+            True,
+            "balance",
+            np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]),
+            "cbc",
+        ),
     ],
 )
-def test_FlowOCT_obj_mode(synthetic_data_2, benders, obj_mode, expected_pred):
+def test_FlowOCT_obj_mode(synthetic_data_2, benders, obj_mode, expected_pred, solver):
     X, y = synthetic_data_2
 
     stcl = FlowOCT(
-        solver="gurobi",
+        solver=solver,
         depth=2,
         time_limit=100,
         _lambda=0,
