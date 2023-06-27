@@ -96,6 +96,7 @@ def skip_submodules(app, what, name, obj, skip, options):
     if what == "module" and name in [
         "odtlearn.tests.conftest",
         "odtlearn.utils._reingold_tilford",
+        "odtlearn.utils.mip_cbc",
     ]:
         skip = True
     return skip
