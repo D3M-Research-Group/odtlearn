@@ -230,9 +230,15 @@ class CBCSolver(Solver):
         if type(sense) is int:
             mapped_sense = GRB_CBC_CONST_MAP.get(sense, None)
             if mapped_sense is None:
-                raise ValueError(f"Invalid objective type: {sense}")
+                raise ValueError(f"Invalid objective type: {sense}.")
             else:
                 sense = mapped_sense
+        elif type(sense) is str:
+            if sense not in ["MAXIMIZE", "MINIMIZE"]:
+                raise ValueError(f"Invalid objective type: {sense}.")
+        else:
+            raise TypeError("Objective sense must be integer or string.")
+
         self.model.sense = sense
 
     def quicksum(self, terms):
