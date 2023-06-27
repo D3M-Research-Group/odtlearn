@@ -7,4 +7,4 @@ pytest-cov
 pandas
 gurobipy
 seaborn
-python-mip
+mip

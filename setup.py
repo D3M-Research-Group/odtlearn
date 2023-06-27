@@ -28,7 +28,7 @@ INSTALL_REQUIRES = [
     "scikit-learn",
     "pandas",
     "gurobipy",
-    "python-mip",
+    "mip",
 ]
 CLASSIFIERS = [
     "Intended Audience :: Science/Research",
