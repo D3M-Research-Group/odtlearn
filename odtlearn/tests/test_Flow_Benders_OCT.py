@@ -269,17 +269,30 @@ def test_FlowOCT_same_predictions(
 def test_FlowOCT_obj_mode(synthetic_data_2, benders, obj_mode, expected_pred, solver):
     X, y = synthetic_data_2
 
-    stcl = FlowOCT(
-        solver=solver,
-        depth=2,
-        time_limit=100,
-        _lambda=0,
-        num_threads=None,
-        obj_mode=obj_mode,
-    )
-    stcl.fit(X, y)
-    # stcl.print_tree()
-    assert_allclose(stcl.predict(X), expected_pred)
+    if benders:
+        bstcl = BendersOCT(
+            solver=solver,
+            depth=2,
+            time_limit=100,
+            _lambda=0,
+            num_threads=None,
+            obj_mode=obj_mode,
+        )
+        bstcl.fit(X, y)
+        # stcl.print_tree()
+        assert_allclose(bstcl.predict(X), expected_pred)
+    else:
+        stcl = FlowOCT(
+            solver=solver,
+            depth=2,
+            time_limit=100,
+            _lambda=0,
+            num_threads=None,
+            obj_mode=obj_mode,
+        )
+        stcl.fit(X, y)
+        # stcl.print_tree()
+        assert_allclose(stcl.predict(X), expected_pred)
 
 
 def test_FlowOCT_plot_print(synthetic_data_1):
@@ -294,3 +307,32 @@ def test_FlowOCT_plot_print(synthetic_data_1):
     stcl.fit(X, y)
     stcl.print_tree()
     stcl.plot_tree()
+
+
+def test_wrong_objective_FlowOCT(synthetic_data_1):
+    X, y = synthetic_data_1
+    with pytest.raises(
+        AssertionError,
+        match="Wrong objective mode. obj_mode should be one of acc or balance.",
+    ):
+        stcl = FlowOCT(
+            solver="gurobi",
+            depth=1,
+            time_limit=100,
+            num_threads=None,
+            obj_mode="sdafasdf",
+        )
+        stcl.fit(X, y)
+
+    with pytest.raises(
+        AssertionError,
+        match="Wrong objective mode. obj_mode should be one of acc or balance.",
+    ):
+        bstcl = BendersOCT(
+            solver="gurobi",
+            depth=1,
+            time_limit=100,
+            num_threads=None,
+            obj_mode="aaa",
+        )
+        bstcl.fit(X, y)
