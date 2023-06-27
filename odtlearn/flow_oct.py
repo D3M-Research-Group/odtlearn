@@ -66,11 +66,15 @@ class FlowOCT(FlowOCTSingleSink):
             for f in self._X_col_labels:
                 # obj.add(-1 * self._lambda * self._b[n, f])
                 obj += -1 * self._lambda * self._b[n, f]
+        assert self._obj_mode in [
+            "acc",
+            "balance",
+        ], "Wrong objective mode. obj_mode should be one of acc or balance."
         if self._obj_mode == "acc":
             for i in self._datapoints:
                 obj += (1 - self._lambda) * self._z[i, 1]
 
-        elif self._obj_mode == "balance":
+        else:
             for i in self._datapoints:
                 obj += (
                     (1 - self._lambda)
@@ -81,11 +85,6 @@ class FlowOCT(FlowOCTSingleSink):
                     )
                     * self._z[i, 1]
                 )
-        else:
-            assert self._obj_mode not in [
-                "acc",
-                "balance",
-            ], "Wrong objective mode. obj_mode should be one of acc or balance."
         self._solver.set_objective(obj, GRB.MAXIMIZE)
 
     def fit(self, X, y):
@@ -208,10 +207,14 @@ class BendersOCT(FlowOCTSingleSink):
         for n in self._tree.Nodes:
             for f in self._X_col_labels:
                 obj += -1 * self._lambda * self._b[n, f]
+        assert self._obj_mode in [
+            "acc",
+            "balance",
+        ], "Wrong objective mode. obj_mode should be one of acc or balance."
         if self._obj_mode == "acc":
             for i in self._datapoints:
                 obj += (1 - self._lambda) * self._g[i]
-        elif self._obj_mode == "balance":
+        else:
             for i in self._datapoints:
                 obj += (
                     (1 - self._lambda)
@@ -222,11 +225,6 @@ class BendersOCT(FlowOCTSingleSink):
                     )
                     * self._g[i]
                 )
-        else:
-            assert self._obj_mode not in [
-                "acc",
-                "balance",
-            ], "Wrong objective mode. obj_mode should be one of acc or balance."
 
         self._solver.set_objective(obj, GRB.MAXIMIZE)
 
@@ -256,7 +254,7 @@ class BendersOCT(FlowOCTSingleSink):
 
         if self._solver.__class__.__name__ == "GurobiSolver":
             callback_action = benders_callback
-        elif self._solver.__class__.__name__ == "CBCSolver":
+        else:
             callback_action = BendersCallback
 
         self._solver.optimize(
