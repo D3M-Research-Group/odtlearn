@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
-from odtlearn.utils.cbc_solver import CBCSolver
-from odtlearn.utils.gb_solver import GurobiSolver
+from odtlearn.utils.solver import Solver
 from odtlearn.utils.Tree import _Tree
 
 
@@ -19,6 +18,8 @@ class OptimalDecisionTree(ABC):
         num_threads: int, default=None
             The number of threads the solver should use. If no argument is supplied,
             Gurobi will use all available threads.
+        verbose: bool, default=False
+            A parameter passed to the solver to limit solver diagnostic output.
         """
         self.solver_name = solver
         self._depth = depth
@@ -29,31 +30,11 @@ class OptimalDecisionTree(ABC):
         self._tree = _Tree(self._depth)
         self._time_limit = time_limit
 
-        if solver.lower() == "gurobi":
-            self._solver = GurobiSolver()
-        elif solver.lower() == "cbc":
-            self._solver = CBCSolver(verbose)
-        else:
-            raise NotImplementedError(
-                f"Interface for {solver} not currently supported."
-            )
+        self._solver = Solver(self.solver_name, verbose)
 
-        if not verbose:
-            # supress all logging
-            if self._solver.__class__.__name__ == "GurobiSolver":
-                self._solver.set_param("OutputFlag", 0)
-            else:
-                self._solver.model.verbose = 0
-                self._solver.model.solver.set_verbose = 0
         if num_threads is not None:
-            if self._solver.__class__.__name__ == "GurobiSolver":
-                self._solver.set_param("Threads", num_threads)
-            else:
-                self._solver.model.threads = num_threads
-        if self._solver.__class__.__name__ == "GurobiSolver":
-            self._solver.set_param("TimeLimit", time_limit)
-        else:
-            self._solver.model.max_seconds = time_limit
+            self._solver.model.threads = num_threads
+        self._solver.model.max_seconds = time_limit
 
     def __repr__(self):
         rep = (

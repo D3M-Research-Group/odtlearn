@@ -210,6 +210,7 @@ def test_RobustOCT_prediction_shape_error():
             index=["F", "G", "H", "I", "J"],
         )
         train_nodf = np.transpose([[1, 2, 2, 2, 3], [1, 2, 1, 0, 1]])
+        clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
         clf.fit(train_nodf, y)
         clf.predict(test)
 
@@ -287,13 +288,8 @@ def test_RobustOCT_correctness(synthetic_data_1, d, expected_pred, solver):
         (2, 5, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]), "gurobi"),
         (0, 2, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), "cbc"),
         (1, 2, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]), "cbc"),
-        (2, 2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "cbc"),
-        (
-            2,
-            5,
-            np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]),
-            "cbc",
-        ),  # this can be slow for cbc
+        (2, 2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "cbc"),  # slow
+        (2, 5, np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]), "cbc"),  # slow
     ],
 )
 def test_RobustOCT_uncertainty_correctness(

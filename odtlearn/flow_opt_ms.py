@@ -1,5 +1,4 @@
-from gurobipy import GRB
-
+from odtlearn import ODTL
 from odtlearn.opt_pt import OptimalPrescriptiveTree
 
 
@@ -23,15 +22,15 @@ class FlowOPTMultipleSink(OptimalPrescriptiveTree):
 
     def _tree_struc_variables(self):
         self._b = self._solver.add_vars(
-            self._tree.Nodes, self._X_col_labels, vtype=GRB.BINARY, name="b"
+            self._tree.Nodes, self._X_col_labels, vtype=ODTL.BINARY, name="b"
         )
         self._p = self._solver.add_vars(
-            self._tree.Nodes + self._tree.Leaves, vtype=GRB.BINARY, name="p"
+            self._tree.Nodes + self._tree.Leaves, vtype=ODTL.BINARY, name="p"
         )
         self._w = self._solver.add_vars(
             self._tree.Nodes + self._tree.Leaves,
             self._treatments,
-            vtype=GRB.CONTINUOUS,
+            vtype=ODTL.CONTINUOUS,
             lb=0,
             name="w",
         )
@@ -41,14 +40,14 @@ class FlowOPTMultipleSink(OptimalPrescriptiveTree):
             self._datapoints,
             self._tree.Nodes + self._tree.Leaves,
             self._treatments,
-            vtype=GRB.CONTINUOUS,
+            vtype=ODTL.CONTINUOUS,
             lb=0,
             name="zeta",
         )
         self._z = self._solver.add_vars(
             self._datapoints,
             self._tree.Nodes + self._tree.Leaves,
-            vtype=GRB.CONTINUOUS,
+            vtype=ODTL.CONTINUOUS,
             lb=0,
             name="z",
         )

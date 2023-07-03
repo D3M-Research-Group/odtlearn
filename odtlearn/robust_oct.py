@@ -2,12 +2,12 @@ from copy import deepcopy
 
 import numpy as np
 import pandas as pd
-from gurobipy import GRB
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_is_fitted, check_X_y
 
+from odtlearn import ODTL
 from odtlearn.opt_ct import OptimalClassificationTree
-from odtlearn.utils.callbacks import RobustBendersCallback, robust_tree_callback
+from odtlearn.utils.callbacks import RobustBendersCallback
 from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.validation import check_integer, check_same_as_X
 
@@ -52,10 +52,6 @@ class RobustOCT(OptimalClassificationTree):
 
         # Regularization term: encourage less branching without sacrificing accuracy
         self._reg = 1 / (len(self._tree.Nodes) + 1)
-
-        # The cuts we add in the callback function would be treated as lazy constraints
-        if self._solver.__class__.__name__ == "GurobiSolver":
-            self._solver.model.params.LazyConstraints = 1
 
     def _get_node_status(self, b, w, n):
         """
@@ -149,18 +145,18 @@ class RobustOCT(OptimalClassificationTree):
 
         # t is the objective value of the problem
         self._t = self._solver.add_vars(
-            self._datapoints, vtype=GRB.CONTINUOUS, ub=1, name="t"
+            self._datapoints, vtype=ODTL.CONTINUOUS, ub=1, name="t"
         )
         # w[n,k] == 1 iff at node n we do not branch and we make the prediction k
         self._w = self._solver.add_vars(
             self._tree.Nodes + self._tree.Leaves,
             self._labels,
-            vtype=GRB.BINARY,
+            vtype=ODTL.BINARY,
             name="w",
         )
 
         # b[n,f,theta] ==1 iff at node n we branch on feature f with cutoff theta
-        self._b = self._solver.add_vars(self._b_indices, vtype=GRB.BINARY, name="b")
+        self._b = self._solver.add_vars(self._b_indices, vtype=ODTL.BINARY, name="b")
 
     def _define_constraints(self):
         # define constraints
@@ -197,7 +193,7 @@ class RobustOCT(OptimalClassificationTree):
                 self._b[n, f, theta] for (n, f, theta) in self._b_indices
             )
         )
-        self._solver.set_objective(obj, GRB.MAXIMIZE)
+        self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
     def fit(self, X, y, costs=None, budget=-1):
         """Fit an optimal robust classification tree given data, labels,
@@ -303,10 +299,7 @@ class RobustOCT(OptimalClassificationTree):
         self._solver.store_data("self", self)
         self._solver.store_data("datapoints", self._datapoints)
 
-        if self._solver.__class__.__name__ == "GurobiSolver":
-            callback_action = robust_tree_callback
-        elif self._solver.__class__.__name__ == "CBCSolver":
-            callback_action = RobustBendersCallback
+        callback_action = RobustBendersCallback
 
         self._solver.optimize(
             self._X,

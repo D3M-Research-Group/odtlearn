@@ -1,9 +1,9 @@
-from gurobipy import GRB
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
+from odtlearn import ODTL
 from odtlearn.flow_oct_ss import FlowOCTSingleSink
-from odtlearn.utils.callbacks import BendersCallback, benders_callback
+from odtlearn.utils.callbacks import BendersCallback
 from odtlearn.utils.validation import check_binary, check_columns_match
 
 
@@ -85,7 +85,7 @@ class FlowOCT(FlowOCTSingleSink):
                     )
                     * self._z[i, 1]
                 )
-        self._solver.set_objective(obj, GRB.MAXIMIZE)
+        self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
     def fit(self, X, y):
         # extract column labels, unique classes and store X as a DataFrame
@@ -184,10 +184,6 @@ class BendersOCT(FlowOCTSingleSink):
             verbose,
         )
 
-        if self._solver.__class__.__name__ == "GurobiSolver":
-            # The cuts we add in the callback function would be treated as lazy constraints
-            self._solver.model.params.LazyConstraints = 1
-
         self._lambda = _lambda
         self._obj_mode = obj_mode
 
@@ -196,7 +192,7 @@ class BendersOCT(FlowOCTSingleSink):
 
         # g[i] is the objective value for the sub-problem[i]
         self._g = self._solver.add_vars(
-            self._datapoints, vtype=GRB.CONTINUOUS, ub=1, name="g"
+            self._datapoints, vtype=ODTL.CONTINUOUS, ub=1, name="g"
         )
 
     def _define_constraints(self):
@@ -226,7 +222,7 @@ class BendersOCT(FlowOCTSingleSink):
                     * self._g[i]
                 )
 
-        self._solver.set_objective(obj, GRB.MAXIMIZE)
+        self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
     def fit(self, X, y):
 
@@ -243,7 +239,7 @@ class BendersOCT(FlowOCTSingleSink):
 
         self._create_main_problem()
 
-        # we need these in the callback to have access to the value of the decision variables for Gurobi callbacks
+        # we need these in the callback to have access to the value of the decision variables in the callback
         self._solver.store_data("g", self._g)
         self._solver.store_data("b", self._b)
         self._solver.store_data("p", self._p)
@@ -252,10 +248,7 @@ class BendersOCT(FlowOCTSingleSink):
         # self._solver.model._self_obj = self
         self._solver.store_data("self", self)
 
-        if self._solver.__class__.__name__ == "GurobiSolver":
-            callback_action = benders_callback
-        else:
-            callback_action = BendersCallback
+        callback_action = BendersCallback
 
         self._solver.optimize(
             self._X,

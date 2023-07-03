@@ -2,10 +2,10 @@ from itertools import combinations
 
 import numpy as np
 import pandas as pd
-from gurobipy import GRB
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
+from odtlearn import ODTL
 from odtlearn.flow_oct_ms import FlowOCTMultipleSink
 from odtlearn.utils.validation import check_binary, check_columns_match
 
@@ -235,7 +235,7 @@ class FairOCT(FlowOCTMultipleSink):
                 "Invalid objective mode. obj_mode should be one of acc or balance."
             )
 
-        self._solver.set_objective(obj, GRB.MAXIMIZE)
+        self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
     def fit(self, X, y, protect_feat, legit_factor):
         """

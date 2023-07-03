@@ -1,5 +1,6 @@
 # from gurobipy import GRB, quicksum
 
+from odtlearn import ODTL
 from odtlearn.opt_ct import OptimalClassificationTree
 
 
@@ -27,19 +28,19 @@ class FlowOCTSingleSink(OptimalClassificationTree):
     def _tree_struc_variables(self):
         # b[n,f] ==1 iff at node n we branch on feature f
         self._b = self._solver.add_vars(
-            self._tree.Nodes, self._X_col_labels, vtype="B", name="b"
+            self._tree.Nodes, self._X_col_labels, vtype=ODTL.BINARY, name="b"
         )
 
         # p[n] == 1 iff at node n we do not branch and we make a prediction
         self._p = self._solver.add_vars(
-            self._tree.Nodes + self._tree.Leaves, vtype="B", name="p"
+            self._tree.Nodes + self._tree.Leaves, vtype=ODTL.BINARY, name="p"
         )
 
         # For classification w[n,k]=1 iff at node n we predict class k
         self._w = self._solver.add_vars(
             self._tree.Nodes + self._tree.Leaves,
             self._labels,
-            vtype="C",
+            vtype=ODTL.CONTINUOUS,
             lb=0,
             name="w",
         )
@@ -50,7 +51,7 @@ class FlowOCTSingleSink(OptimalClassificationTree):
         self._zeta = self._solver.add_vars(
             self._datapoints,
             self._tree.Nodes + self._tree.Leaves,
-            vtype="C",
+            vtype=ODTL.CONTINUOUS,
             lb=0,
             name="zeta",
         )
@@ -59,7 +60,7 @@ class FlowOCTSingleSink(OptimalClassificationTree):
         self._z = self._solver.add_vars(
             self._datapoints,
             self._tree.Nodes + self._tree.Leaves,
-            vtype="C",
+            vtype=ODTL.CONTINUOUS,
             lb=0,
             name="z",
         )

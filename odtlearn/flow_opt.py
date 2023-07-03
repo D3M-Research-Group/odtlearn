@@ -1,6 +1,6 @@
-from gurobipy import GRB
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
+from odtlearn import ODTL
 from odtlearn.flow_opt_ms import FlowOPTMultipleSink
 from odtlearn.flow_opt_ss import FlowOPTSingleSink
 from odtlearn.utils.validation import (
@@ -180,7 +180,7 @@ class FlowOPT_DM(FlowOPTMultipleSink):
                         self._y_hat[i][int(k)]
                     )  # we assume that each column corresponds to an ordered list t, which might be problematic
 
-        self._solver.set_objective(obj, GRB.MAXIMIZE)
+        self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
     def fit(self, X, t, y, y_hat):
         """Method to fit the PrescriptiveTree class on the data
@@ -385,4 +385,4 @@ class FlowOPT_DR(FlowOPTMultipleSink):
                             * (self._y[i] - self._y_hat[i][int(k)])
                             / self._ipw[i]
                         )
-        self._solver.set_objective(obj, GRB.MAXIMIZE)
+        self._solver.set_objective(obj, ODTL.MAXIMIZE)

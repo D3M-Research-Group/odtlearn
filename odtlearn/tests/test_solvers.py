@@ -1,12 +1,11 @@
 import pytest
 
-from odtlearn.utils.cbc_solver import CBCSolver
-from odtlearn.utils.gb_solver import GurobiSolver
+from odtlearn.utils.solver import Solver
 
 
 def test_callback_action():
-    gb_solver = GurobiSolver()
-    cbc_solver = CBCSolver(verbose=False)
+    gb_solver = Solver(solver_name="gurobi", verbose=False)
+    cbc_solver = Solver(solver_name="cbc", verbose=False)
     with pytest.raises(
         ValueError, match="Must supply callback action if callback=True"
     ):
@@ -19,13 +18,12 @@ def test_callback_action():
 
 
 def test_add_single_constraint():
-    gb_solver = GurobiSolver()
-    cbc_solver = CBCSolver(verbose=False)
+    gb_solver = Solver(solver_name="gurobi", verbose=False)
+    cbc_solver = Solver(solver_name="cbc", verbose=False)
 
     gb_var = gb_solver.add_vars(1)
     gb_solver.add_constr(gb_var[0] == 1)
-    gb_solver.model.update()
-    assert len(gb_solver.model.getConstrs()) == 1
+    assert len(list(gb_solver.model.constrs)) == 1
 
     cbc_var = cbc_solver.add_vars(1)
     cbc_solver.add_constr(cbc_var[0] == 1)
@@ -33,7 +31,7 @@ def test_add_single_constraint():
 
 
 def test_prep_indices():
-    cbc_solver = CBCSolver(verbose=False)
+    cbc_solver = Solver(solver_name="cbc", verbose=False)
     assert cbc_solver.prep_indices(1, [1.0, 2.0, 3.0], 2.0) == [
         [0],
         [1.0, 2.0, 3.0],
@@ -42,7 +40,7 @@ def test_prep_indices():
 
 
 def test_set_objective():
-    cbc_solver = CBCSolver(verbose=False)
+    cbc_solver = Solver(solver_name="cbc", verbose=False)
     cbc_var = cbc_solver.add_vars(1)
     obj_expression = cbc_var[0] + 1
     with pytest.raises(TypeError, match="Objective sense must be integer or string."):

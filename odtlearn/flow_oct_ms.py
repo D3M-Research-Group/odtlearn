@@ -1,5 +1,4 @@
-from gurobipy import GRB
-
+from odtlearn import ODTL
 from odtlearn.opt_ct import OptimalClassificationTree
 
 
@@ -27,31 +26,31 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
     def _tree_struc_variables(self):
         # b[n,f] ==1 iff at node n we branch on feature f
         self._b = self._solver.add_vars(
-            self._tree.Nodes, self._X_col_labels, vtype=GRB.BINARY, name="b"
+            self._tree.Nodes, self._X_col_labels, vtype=ODTL.BINARY, name="b"
         )
         # self._b = self._model.addVars(
-        #     self._tree.Nodes, self._X_col_labels, vtype=GRB.BINARY, name="b"
+        #     self._tree.Nodes, self._X_col_labels, vtype=ODTL.BINARY, name="b"
         # )
         # p[n] == 1 iff at node n we do not branch and we make a prediction
         self._p = self._solver.add_vars(
-            self._tree.Nodes + self._tree.Leaves, vtype=GRB.BINARY, name="p"
+            self._tree.Nodes + self._tree.Leaves, vtype=ODTL.BINARY, name="p"
         )
         # self._p = self._model.addVars(
-        #     self._tree.Nodes + self._tree.Leaves, vtype=GRB.BINARY, name="p"
+        #     self._tree.Nodes + self._tree.Leaves, vtype=ODTL.BINARY, name="p"
         # )
 
         # For classification w[n,k]=1 iff at node n we predict class k
         self._w = self._solver.add_vars(
             self._tree.Nodes + self._tree.Leaves,
             self._labels,
-            vtype=GRB.CONTINUOUS,
+            vtype=ODTL.CONTINUOUS,
             lb=0,
             name="w",
         )
         # self._w = self._model.addVars(
         #     self._tree.Nodes + self._tree.Leaves,
         #     self._labels,
-        #     vtype=GRB.CONTINUOUS,
+        #     vtype=ODTL.CONTINUOUS,
         #     lb=0,
         #     name="w",
         # )
@@ -62,7 +61,7 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
             self._datapoints,
             self._tree.Nodes + self._tree.Leaves,
             self._labels,
-            vtype=GRB.BINARY,
+            vtype=ODTL.BINARY,
             lb=0,
             name="zeta",
         )
@@ -70,7 +69,7 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
         self._z = self._solver.add_vars(
             self._datapoints,
             self._tree.Nodes + self._tree.Leaves,
-            vtype=GRB.BINARY,
+            vtype=ODTL.BINARY,
             lb=0,
             name="z",
         )
