@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import pkg_resources
 import pytest
 from numpy.testing import assert_allclose
 from sklearn.exceptions import NotFittedError
@@ -9,7 +10,10 @@ from odtlearn.flow_opt import FlowOPT_DM, FlowOPT_DR, FlowOPT_IPW
 
 @pytest.fixture
 def data():
-    df = pd.read_csv("../data/prescriptive/train_50.csv")
+    data_stream = pkg_resources.resource_stream(
+        "odtlearn", "data/prescriptive/train_50.csv"
+    )
+    df = pd.read_csv(data_stream)
     return df
 
 
