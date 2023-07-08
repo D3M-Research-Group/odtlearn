@@ -76,6 +76,7 @@ setup(
             "data/*.npz",
             "data/prescriptive/test_v2_200.csv",
             "data/prescriptive/train_v2_100.csv",
+            "data/prescriptive/train_50.csv",
         ],
     },
     python_requires=">=3.8",
