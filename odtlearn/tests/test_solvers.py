@@ -3,13 +3,15 @@ import pytest
 from odtlearn.utils.solver import Solver
 
 
-def test_callback_action():
-    gb_solver = Solver(solver_name="gurobi", verbose=False)
+def test_callback_action(skip_gurobi):
+    if not skip_gurobi:
+        gb_solver = Solver(solver_name="gurobi", verbose=False)
+        with pytest.raises(
+            ValueError, match="Must supply callback action if callback=True"
+        ):
+            gb_solver.optimize(None, None, None, callback=True, callback_action=None)
+
     cbc_solver = Solver(solver_name="cbc", verbose=False)
-    with pytest.raises(
-        ValueError, match="Must supply callback action if callback=True"
-    ):
-        gb_solver.optimize(None, None, None, callback=True, callback_action=None)
 
     with pytest.raises(
         ValueError, match="Must supply callback action if callback=True"
@@ -17,13 +19,13 @@ def test_callback_action():
         cbc_solver.optimize(None, None, None, callback=True, callback_action=None)
 
 
-def test_add_single_constraint():
-    gb_solver = Solver(solver_name="gurobi", verbose=False)
+def test_add_single_constraint(skip_gurobi):
+    if not skip_gurobi:
+        gb_solver = Solver(solver_name="gurobi", verbose=False)
+        gb_var = gb_solver.add_vars(1)
+        gb_solver.add_constr(gb_var[0] == 1)
+        assert len(list(gb_solver.model.constrs)) == 1
     cbc_solver = Solver(solver_name="cbc", verbose=False)
-
-    gb_var = gb_solver.add_vars(1)
-    gb_solver.add_constr(gb_var[0] == 1)
-    assert len(list(gb_solver.model.constrs)) == 1
 
     cbc_var = cbc_solver.add_vars(1)
     cbc_solver.add_constr(cbc_var[0] == 1)

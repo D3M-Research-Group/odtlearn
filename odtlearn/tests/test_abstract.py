@@ -7,7 +7,7 @@ def test_dt_abc():
     OptimalDecisionTree.__abstractmethods__ = set()
 
     test_opt_dt = OptimalDecisionTree(
-        solver="gurobi", depth=10, time_limit=60, num_threads=5, verbose=True
+        solver="cbc", depth=10, time_limit=60, num_threads=5, verbose=True
     )
     vars_defined = test_opt_dt._define_variables()
     constraints_defined = test_opt_dt._define_constraints()
