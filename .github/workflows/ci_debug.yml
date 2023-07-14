@@ -20,4 +20,4 @@ jobs:
       - name: Run tests with pytest
         run: |
           cd odtlearn/tests
-          pytest --test_gurobi
+          pytest
