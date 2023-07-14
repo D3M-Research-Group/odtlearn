@@ -9,3 +9,6 @@ build-backend = "setuptools.build_meta"
 markers = [
     "test_gurobi: marks tests as run only when we have a Gurobi license (deselect with '-m \"not test_gurobi\"')"
 ]
+
+[tool.isort]
+profile = "black"

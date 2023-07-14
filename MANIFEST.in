@@ -1,1 +1,5 @@
 include requirements.txt
+include data/*.csv
+include data/*.npz
+include data/prescriptive/test_v2_200.csv
+include data/prescriptive/train_v2_200.csv

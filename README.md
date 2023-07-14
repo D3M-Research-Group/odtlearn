@@ -1,6 +1,6 @@
 # ODTlearn
 
-A package for tree-based statistical estimation and inference using optimal decision trees. ODTlearn provides implementations of StrongTrees ([1]), FairTrees ([2]), RobustTrees ([3]) for classification, and Prescriptive Trees ([4]) for prescription.
+A package for tree-based statistical estimation and inference using optimal decision trees. ODTlearn provides implementations of StrongTrees [1], FairTrees [2], RobustTrees [3] for classification, and Prescriptive Trees [4] for prescription.
 
 ## Documentation
 
@@ -15,6 +15,16 @@ pip install git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
 ```
 
 A release version of the package will be available on PyPI shortly.
+
+## Developing
+This project uses ``black`` to format code and ``flake8`` for linting. We also support ``pre-commit`` to ensure
+these have been run. To configure your local environment please install these development dependencies and set up
+the commit hooks.
+
+``` bash
+pip install black flake8 pre-commit
+pre-commit install
+```
 
 
 ## References

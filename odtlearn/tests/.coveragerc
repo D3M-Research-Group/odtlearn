@@ -1,0 +1,26 @@
+# Configuration for coverage.py
+
+[run]
+branch = True
+source = odtlearn
+# include = */odtlearn/*
+omit =
+    */setup.py
+    */_version.py
+    */conftest.py
+    */__init__.py
+    */utils/solver.py
+    */utils/_reingold_tilford.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+    if self.verbose:
+show_missing = True
