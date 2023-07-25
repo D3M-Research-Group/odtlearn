@@ -26,6 +26,5 @@ jobs:
           bash coinbrew build Cbc@master --no-prompt --tests=none
       - name: Run tests with pytest
         run: |
-          echo $PMIP_CBC_LIBRARY
           cd odtlearn/tests
           pytest
