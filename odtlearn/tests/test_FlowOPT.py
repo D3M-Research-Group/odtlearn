@@ -72,7 +72,7 @@ def test_FlowOPT_X_helpers_error(data):
         # df = pd.read_csv("../../data/prescriptive_tree/train_50.csv")
         df = data
         y_hat = df[["lasso0", "lasso1", "lasso1"]]
-        clf = FlowOPT_DM(solver="gurobi", depth=1, time_limit=300)
+        clf = FlowOPT_DM(solver="cbc", depth=1, time_limit=300)
         clf.fit(X=X, t=t, y=y, y_hat=y_hat)
 
 
