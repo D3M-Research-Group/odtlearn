@@ -31,7 +31,7 @@ jobs:
       - name: Run tests with pytest
         run: |
           export DYLD_LIBRARY_PATH=/home/runner/build/dist/lib
-          export PMIP_CBC_LIBRARY=/home/runner/build/dist/liblibCbc.dylib
+          export PMIP_CBC_LIBRARY=/home/runner/build/dist/libCbcSolver.so
           export LD_LIBRARY_PATH=/home/runner/build/dist/lib:$LD_LIBRARY_PATH
           cd odtlearn/tests
           pytest
