@@ -31,13 +31,13 @@ cd CBC
 wget -nH https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
 chmod u+x coinbrew 
 bash coinbrew fetch Cbc@master --no-prompt
-bash ./coinbrew build Cbc@stable/2.10
+bash coinbrew build Cbc@stable/2.10
 
 export DYLD_LIBRARY_PATH=/PATH/TO/CBC/dist/lib
-export PMIP_CBC_LIBRARY=/PATH/TO/CBC/dist/lib/libCbc.dylib
+export PMIP_CBC_LIBRARY=/PATH/TO/CBC/dist/lib/PLATFORM_SPECIFIC_SHARED_LIB
 ```
 
-The last two steps are critical for ensuring that ODTlearn (through Python-MIP) uses the correct CBC binary. We suggest adding the last two lines to your `.zshrc` or `.bashrc` file.
+The last two steps are critical for ensuring that ODTlearn (through Python-MIP) uses the correct CBC binary. For Windows and MacOS the shared library name is `libCbc.dll` and `libCbc.dylib`, respectively. For Linux, the shared library name is `libCbcSolver.so`. To ensure that the environment variables persist, we suggest adding the last two lines to your `.zshrc` or `.bashrc` file. 
 
 
 
