@@ -23,21 +23,21 @@ A release version of the package will be available on PyPI shortly.
 To use Gurobi with ODTlearn, you must have a valid Gurobi License. [Free licenses are available for academic use](https://www.gurobi.com/academia/academic-program-and-licenses/) and additional methods for obtaining a Gurobi license can be found [here](https://www.gurobi.com/solutions/licensing/).
 
 ### CBC Binaries
-[Python-MIP](https://github.com/coin-or/python-mip) provides CBC binaries for 64-bit versions of Windows, Linux, and MacOS that run on Intel hardware. 
-
-If you are using an Apple computer with an M1 processor, you will need to compile CBC from source. Below are the steps needed to compile CBC from source using [coinbrew](https://github.com/coin-or/coinbrew) and then copy the resulting dynamic library to the folder containing your python-mip libraries.
+[Python-MIP](https://github.com/coin-or/python-mip) provides CBC binaries for 64-bit versions of Windows, Linux, and MacOS that run on Intel hardware, however we have observed that these binaries do not seem to work properly with lazy constraint generation, which is used in some of our MIO formulation. Thus, to ensure expected behavior when using ODTlearn, we strongly recommend building CBC from source. Below are the steps needed to compile CBC from source using [coinbrew](https://github.com/coin-or/coinbrew).
 
 ```
 mkdir CBC
 cd CBC
-wget https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
+wget -nH https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
 chmod u+x coinbrew 
-./coinbrew fetch Cbc@master
-./coinbrew build Cbc 
-cp dist/lib/libCbc.0.dylib /PATH/TO/YOUR/PYTHON/INSTALLATION/lib/python3.9/site-packages/mip/libraries/cbc-c-darwin-x86-64.dylib
+bash coinbrew fetch Cbc@master --no-prompt
+bash ./coinbrew build Cbc@stable/2.10
+
+export DYLD_LIBRARY_PATH=/PATH/TO/CBC/dist/lib
+export PMIP_CBC_LIBRARY=/PATH/TO/CBC/dist/lib/libCbc.dylib
 ```
 
-Tips for determining the path to your Python installation's site-packages folder can be found in [this stackoverflow question](https://stackoverflow.com/questions/122327/how-do-i-find-the-location-of-my-python-site-packages-directory).
+The last two steps are critical for ensuring that ODTlearn (through Python-MIP) uses the correct CBC binary. We suggest adding the last two lines to your `.zshrc` or `.bashrc` file.
 
 
 
