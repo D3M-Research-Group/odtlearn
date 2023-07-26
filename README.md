@@ -27,7 +27,7 @@ To use Gurobi with ODTlearn, you must have a valid Gurobi License. [Free license
 ### CBC Binaries
 [Python-MIP](https://github.com/coin-or/python-mip) provides CBC binaries for 64-bit versions of Windows, Linux, and MacOS that run on Intel hardware, however we have observed that these binaries do not seem to work properly with lazy constraint generation, which is used in some of our MIO formulations. Thus, to ensure expected behavior when using ODTlearn, we strongly recommend building CBC from source. Below are the steps needed to compile CBC from source using [coinbrew](https://github.com/coin-or/coinbrew).
 
-```
+``` bash
 mkdir CBC
 cd CBC
 wget -nH https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew

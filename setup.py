@@ -63,6 +63,7 @@ setup(
     url=URL,
     version=VERSION,
     download_url=DOWNLOAD_URL,
+    long_description_content_type="text/markdown",
     long_description=LONG_DESCRIPTION,
     zip_safe=False,  # the package can run out of an .egg file
     classifiers=CLASSIFIERS,
