@@ -10,8 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      GRB_LICENSE_FILE: "/opt/hostedtoolcache/Python/3.9.17/x64/lib/python3.9/site-packages/gurobipy/.libs/gurobi.lic"
+    # env:
+    #   GRB_LICENSE_FILE: "/opt/hostedtoolcache/Python/3.9.17/x64/lib/python3.9/site-packages/gurobipy/.libs/gurobi.lic"
     #   GUROBI_HOME: "/opt/hostedtoolcache/Python/3.9.17/x64/lib/python3.9/site-packages/gurobipy/li"
     #   DYLD_LIBRARY_PATH: "/home/runner/build/dist/lib"
     steps:
@@ -32,8 +32,6 @@ jobs:
       #     wget -nH https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
       #     bash coinbrew fetch Cbc@master --no-prompt
       #     bash coinbrew build Cbc@stable/2.10 --no-prompt --tests=none
-      - name: Check that directory with license file exists
-        run: ls -la /opt/hostedtoolcache/Python/3.9.17/x64/lib/python3.9/site-packages/gurobipy/
       - name: Run tests with pytest
         run: |
           cd odtlearn/tests

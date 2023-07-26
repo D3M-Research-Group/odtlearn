@@ -83,7 +83,7 @@ def synthetic_data_2():
 # fmt: on
 def test_FlowOCT_X_nonbinary_error():
     # Test that we raise a ValueError if X matrix has values other than zero or one
-    clf = FlowOCT(solver="gurobi", depth=1, time_limit=2, _lambda=1)
+    clf = FlowOCT(solver="cbc", depth=1, time_limit=2, _lambda=1)
 
     with pytest.raises(
         AssertionError,
@@ -108,7 +108,7 @@ def test_FlowOCT_X_nonbinary_error():
 def test_FlowOCT_X_data_shape_error():
     X = np.ones(100).reshape(100, 1)
 
-    clf = FlowOCT(solver="gurobi", depth=1, time_limit=2, _lambda=1)
+    clf = FlowOCT(solver="cbc", depth=1, time_limit=2, _lambda=1)
 
     with pytest.raises(
         ValueError, match="Found input variables with inconsistent numbers of samples"
@@ -120,7 +120,7 @@ def test_FlowOCT_X_data_shape_error():
 # test that tree is fitted before trying to fit, predict, print, or plot
 def test_check_fit(synthetic_data_1):
     X, y = synthetic_data_1
-    clf = FlowOCT(solver="gurobi", depth=1, time_limit=2, _lambda=1)
+    clf = FlowOCT(solver="cbc", depth=1, time_limit=2, _lambda=1)
     with pytest.raises(
         NotFittedError,
         match=(
@@ -157,7 +157,7 @@ def test_FlowOCT_classifier():
     )
     y = train.pop("y")
     test = pd.DataFrame({"x1": [1, 1, 0, 0, 1], "x2": [1, 1, 1, 0, 1]})
-    clf = FlowOCT(solver="gurobi", depth=1, time_limit=20, _lambda=0.2)
+    clf = FlowOCT(solver="cbc", depth=1, time_limit=20, _lambda=0.2)
 
     clf.fit(train, y)
     # Test that after running the fit method we have b, w, and p
