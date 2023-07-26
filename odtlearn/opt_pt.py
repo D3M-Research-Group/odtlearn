@@ -9,24 +9,13 @@ from odtlearn.utils.TreePlotter import MPLPlotter
 class OptimalPrescriptiveTree(OptimalDecisionTree):
     def __init__(
         self,
+        solver,
         depth,
         time_limit,
         num_threads,
         verbose,
     ) -> None:
-        """
-        Parameters
-        ----------
-
-        t: numpy array or pandas series/dataframe of treatment assignments
-        ipw: numpy array or pandas series/dataframe of inverse propensity weights
-        treatments_set: a list or set of all possible treatments
-
-        """
-        super().__init__(depth, time_limit, num_threads, verbose)
-
-        # self.t = t
-        # self.ipw = ipw
+        super().__init__(solver, depth, time_limit, num_threads, verbose)
 
     def _extract_metadata(self, X, y, t):
         """A function for extracting metadata from the inputs before converting

@@ -3,29 +3,23 @@ from itertools import product
 from mip import LinExpr, Model, xsum
 
 from odtlearn.utils.mip_cbc import SolverCbc
+from odtlearn.utils.solver import Solver
 
 GRB_CBC_CONST_MAP = {-1: "MAX", 1: "MIN"}
 
 
-class Solver:
+class CBCSolver(Solver):
     """
-    A wrapper class on top the python-mip Model and solver classes. This class contains functions for interacting
+    The CBC solver interface. This class contains functions for interacting
     with the solver for setting up, optimizing, and getting optimal values of a model.
-    When using CBC, this class interacts with a slightly modified version of the SolverCbc class
+    This class interacts with a slightly modified version of the SolverCbc class
     from the python-mip package.
     """
 
-    def __init__(self, solver_name, verbose) -> None:
-        self.solver_name = solver_name.lower()
+    def __init__(self, verbose) -> None:
+        self.model = Model(solver_name="cbc")
+        self.model.solver = SolverCbc(self.model, "cbc", self.model.sense, verbose)
         self.var_name_dict = {}
-
-        if self.solver_name == "cbc":
-            self.model = Model(solver_name="cbc")
-            self.model.solver = SolverCbc(self.model, "cbc", self.model.sense, verbose)
-        elif self.solver_name == "gurobi":
-            self.model = Model(solver_name="gurobi")
-        else:
-            raise NotImplementedError(f"Solver {solver_name} not currently supported.")
 
     def get_var_value(self, objs, var_name=None):
         """
@@ -240,7 +234,7 @@ class Solver:
             else:
                 sense = mapped_sense
         elif type(sense) is str:
-            if sense not in ["MAX", "MIN"]:
+            if sense not in ["MAXIMIZE", "MINIMIZE"]:
                 raise ValueError(f"Invalid objective type: {sense}.")
         else:
             raise TypeError("Objective sense must be integer or string.")

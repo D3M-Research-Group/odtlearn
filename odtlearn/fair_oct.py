@@ -2,10 +2,10 @@ from itertools import combinations
 
 import numpy as np
 import pandas as pd
-from gurobipy import GRB, LinExpr, quicksum
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
+from odtlearn import ODTL
 from odtlearn.flow_oct_ms import FlowOCTMultipleSink
 from odtlearn.utils.validation import check_binary, check_columns_match
 
@@ -13,6 +13,7 @@ from odtlearn.utils.validation import check_binary, check_columns_match
 class FairOCT(FlowOCTMultipleSink):
     def __init__(
         self,
+        solver,
         positive_class,
         _lambda=0,
         depth=1,
@@ -31,6 +32,12 @@ class FairOCT(FlowOCTMultipleSink):
 
         Parameters
         ----------
+        solver: str
+            A string specifying the name of the solver to use
+            to solve the MIP. Options are "Gurobi" and "CBC".
+            If the CBC binaries are not found, Gurobi will be used by default.
+        positive_class : int
+            The value of the class label which is corresponding to the desired outcome
         depth : int, default= 1
             A parameter specifying the depth of the tree
         time_limit : int, default= 60
@@ -39,8 +46,6 @@ class FairOCT(FlowOCTMultipleSink):
             The regularization parameter in the objective. _lambda is in the interval [0,1)
         num_threads: int, default=None
             The number of threads the solver should use. If None, it will use all avaiable threads
-        positive_class : int
-            The value of the class label which is corresponding to the desired outcome
         fairness_type: [None, 'SP', 'CSP', 'PE', 'EOpp', 'EOdds'], default=None
             The type of fairness criteria that we want to enforce
         fairness_bound: float (0,1], default=1
@@ -51,6 +56,7 @@ class FairOCT(FlowOCTMultipleSink):
                   We assume that we are allowed to branch on any of the columns within X.
         """
         super().__init__(
+            solver,
             _lambda,
             depth,
             time_limit,
@@ -79,11 +85,11 @@ class FairOCT(FlowOCTMultipleSink):
         constraint_added = False
         if count_p != 0 and count_p_prime != 0:
             constraint_added = True
-            self._model.addConstr(
+            self._solver.add_constr(
                 (
                     (1 / count_p)
-                    * quicksum(
-                        quicksum(
+                    * self._solver.quicksum(
+                        self._solver.quicksum(
                             self._zeta[i, n, self._positive_class]
                             for n in self._tree.Leaves + self._tree.Nodes
                         )
@@ -91,8 +97,8 @@ class FairOCT(FlowOCTMultipleSink):
                     )
                     - (
                         (1 / count_p_prime)
-                        * quicksum(
-                            quicksum(
+                        * self._solver.quicksum(
+                            self._solver.quicksum(
                                 self._zeta[i, n, self._positive_class]
                                 for n in self._tree.Leaves + self._tree.Nodes
                             )
@@ -103,11 +109,11 @@ class FairOCT(FlowOCTMultipleSink):
                 <= self._fairness_bound
             )
 
-            self._model.addConstr(
+            self._solver.add_constr(
                 (
                     (1 / count_p)
-                    * quicksum(
-                        quicksum(
+                    * self._solver.quicksum(
+                        self._solver.quicksum(
                             self._zeta[i, n, self._positive_class]
                             for n in (self._tree.Leaves + self._tree.Nodes)
                         )
@@ -116,8 +122,8 @@ class FairOCT(FlowOCTMultipleSink):
                 )
                 - (
                     (1 / count_p_prime)
-                    * quicksum(
-                        quicksum(
+                    * self._solver.quicksum(
+                        self._solver.quicksum(
                             self._zeta[i, n, self._positive_class]
                             for n in self._tree.Leaves + self._tree.Nodes
                         )
@@ -204,18 +210,18 @@ class FairOCT(FlowOCTMultipleSink):
 
     def _define_objective(self):
         # Max sum(sum(zeta[i,n,y(i)]))
-        obj = LinExpr(0)
+        obj = self._solver.lin_expr(0)
         for n in self._tree.Nodes:
             for f in self._X_col_labels:
-                obj.add(-1 * self._lambda * self._b[n, f])
+                obj += -1 * self._lambda * self._b[n, f]
         if self._obj_mode == "acc":
             for i in self._datapoints:
                 for n in self._tree.Nodes + self._tree.Leaves:
-                    obj.add((1 - self._lambda) * (self._zeta[i, n, self._y[i]]))
+                    obj += (1 - self._lambda) * (self._zeta[i, n, self._y[i]])
         elif self._obj_mode == "balance":
             for i in self._datapoints:
                 for n in self._tree.Nodes + self._tree.Leaves:
-                    obj.add(
+                    obj += (
                         (1 - self._lambda)
                         * (
                             1
@@ -229,7 +235,7 @@ class FairOCT(FlowOCTMultipleSink):
                 "Invalid objective mode. obj_mode should be one of acc or balance."
             )
 
-        self._model.setObjective(obj, GRB.MAXIMIZE)
+        self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
     def fit(self, X, y, protect_feat, legit_factor):
         """
@@ -282,14 +288,11 @@ class FairOCT(FlowOCTMultipleSink):
         self._classes = unique_labels(y)
 
         self._create_main_problem()
-        self._model.update()
-        self._model.optimize()
+        self._solver.optimize(self._X, self, self._solver)
 
-        # Here we will want to store these values and any other variables
-        # needed for making predictions later
-        self.b_value = self._model.getAttr("X", self._b)
-        self.w_value = self._model.getAttr("X", self._w)
-        self.p_value = self._model.getAttr("X", self._p)
+        self.b_value = self._solver.get_var_value(self._b, "b")
+        self.w_value = self._solver.get_var_value(self._w, "w")
+        self.p_value = self._solver.get_var_value(self._p, "p")
 
         # Return the classifier
         return self

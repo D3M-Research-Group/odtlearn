@@ -1,13 +1,12 @@
 import copy
 
 import numpy as np
-from gurobipy import LinExpr, quicksum
 
 # helper functions for BenderOCT callback
 
 
-def get_left_exp_integer(main_grb_obj, n, i):
-    lhs = quicksum(
+def get_left_exp_integer(solver, main_grb_obj, n, i):
+    lhs = solver.quicksum(
         -1 * main_grb_obj._b[n, f]
         for f in main_grb_obj._X_col_labels
         if main_grb_obj._X.at[i, f] == 0
@@ -16,8 +15,8 @@ def get_left_exp_integer(main_grb_obj, n, i):
     return lhs
 
 
-def get_right_exp_integer(main_grb_obj, n, i):
-    lhs = quicksum(
+def get_right_exp_integer(solver, main_grb_obj, n, i):
+    lhs = solver.quicksum(
         -1 * main_grb_obj._b[n, f]
         for f in main_grb_obj._X_col_labels
         if main_grb_obj._X.at[i, f] == 1
@@ -32,19 +31,23 @@ def get_target_exp_integer(main_grb_obj, n, i):
     return lhs
 
 
-def get_cut_integer(main_grb_obj, left, right, target, i):
-    lhs = LinExpr(0) + main_grb_obj._g[i]
+def get_cut_integer(solver, main_grb_obj, left, right, target, i):
+    lhs = solver.lin_expr(0.0)
+    lhs += main_grb_obj._g[i]
     for n in left:
-        tmp_lhs = get_left_exp_integer(main_grb_obj, n, i)
-        lhs = lhs + tmp_lhs
+        tmp_lhs = get_left_exp_integer(solver, main_grb_obj, n, i)
+        # lhs = lhs + tmp_lhs
+        lhs += tmp_lhs
 
     for n in right:
-        tmp_lhs = get_right_exp_integer(main_grb_obj, n, i)
-        lhs = lhs + tmp_lhs
+        tmp_lhs = get_right_exp_integer(solver, main_grb_obj, n, i)
+        # lhs = lhs + tmp_lhs
+        lhs += tmp_lhs
 
     for n in target:
         tmp_lhs = get_target_exp_integer(main_grb_obj, n, i)
-        lhs = lhs + tmp_lhs
+        # lhs = lhs + tmp_lhs
+        lhs += tmp_lhs
 
     return lhs
 
@@ -52,8 +55,8 @@ def get_cut_integer(main_grb_obj, left, right, target, i):
 # helper functions for RobustTree callback
 
 
-def get_cut_expression(master, b, w, path, xi, v, i):
-    expr = LinExpr(0)
+def get_cut_expression(master, solver, X, b, w, path, xi, v, i, f_theta_indices):
+    expr = solver.lin_expr(0)
     node_leaf_cutoff = np.power(
         2, master._tree.depth
     )  # anything at or above this number is a leaf
@@ -64,29 +67,29 @@ def get_cut_expression(master, b, w, path, xi, v, i):
         if n < node_leaf_cutoff:
             if x == len(path) - 1:
                 # Assigned a value at an internal node
-                expr += quicksum(
-                    master._b[n, f, theta] for (f, theta) in master._f_theta_indices
+                expr += solver.quicksum(
+                    master._b[n, f, theta] for (f, theta) in f_theta_indices
                 )
             # Add to expr if we went right according to our shortest path
             elif (2 * n) + 1 == path[x + 1]:
-                expr += quicksum(
+                expr += solver.quicksum(
                     master._b[n, f, theta]
-                    for (f, theta) in master._f_theta_indices
-                    if (master._X.at[i, f] + xi[f] <= theta)
+                    for (f, theta) in f_theta_indices
+                    if (X.at[i, f] + xi[f] <= theta)
                 )
             # Add to expr if we went left according to our shortest path
             else:
-                expr += quicksum(
+                expr += solver.quicksum(
                     master._b[n, f, theta]
-                    for (f, theta) in master._f_theta_indices
-                    if (master._X.at[i, f] + xi[f] >= theta + 1)
+                    for (f, theta) in f_theta_indices
+                    if (X.at[i, f] + xi[f] >= theta + 1)
                 )
         # Add to expr the node going to the sink
         if not (x == len(path) - 1 and v):
             # Don't add edge to sink if at assignment node and label is changed
             expr += master._w[n, master._y[i]]
         else:
-            expr += quicksum(
+            expr += solver.quicksum(
                 master._w[n, lab] for lab in master._labels if (lab != master._y[i])
             )
     return expr
@@ -132,7 +135,7 @@ def get_all_terminal_paths(
     # b[n,f,theta]== 1
     curr_feature = None
     curr_theta = None
-    for (f, theta) in master._f_theta_indices:
+    for (f, theta) in master._solver.model._data["f_theta_indices"]:
         if b[curr_node, f, theta] > 0.5:
             curr_feature = f
             curr_theta = theta
@@ -219,7 +222,7 @@ def get_nominal_path(master, b, w, i):
                 return path, k
 
         # braching node - find which feature to branch on
-        for (f, theta) in master._f_theta_indices:
+        for (f, theta) in master._solver.model._data["f_theta_indices"]:
             if b[curr_node, f, theta] > 0.5:
                 if master._X.at[i, f] >= theta + 1:
                     curr_node = (2 * curr_node) + 1  # go right
@@ -241,7 +244,7 @@ def shortest_path_solver(
     initial_mins,
     initial_maxes,
 ):
-    best_cost = (master._epsilon + 1) * master._tree.depth
+    best_cost = (master._solver.model._data["epsilon"] + 1) * master._tree.depth
     best_path = []
     xi = copy.deepcopy(initial_xi)
     v = False
@@ -255,7 +258,7 @@ def shortest_path_solver(
         curr_mins = copy.deepcopy(initial_mins)
         curr_maxes = copy.deepcopy(initial_maxes)
         curr_path = terminal_path_dict[j]
-        curr_cost = master._eta * int(
+        curr_cost = master._solver.model._data["eta"] * int(
             curr_v
         )  # Start with cost if correctly classify point
         best_so_far = True
@@ -279,7 +282,9 @@ def shortest_path_solver(
                     delta_x = theta - master._X.at[i, f] + 1  # positive value
 
                     # cost increases by gamma per unit increase of xi
-                    curr_cost += master._gammas.loc[i][f] * (delta_x - curr_xi[f])
+                    curr_cost += master._solver.model._data["gammas"].loc[i][f] * (
+                        delta_x - curr_xi[f]
+                    )
                     curr_xi[f] = delta_x
 
                 # Update bounds
@@ -296,7 +301,9 @@ def shortest_path_solver(
                     delta_x = theta - master._X.at[i, f]  # negative value
 
                     # cost increases by gamma per unit decrease of xi
-                    curr_cost += master._gammas.loc[i][f] * (curr_xi[f] - delta_x)
+                    curr_cost += master._solver.model._data["gammas"].loc[i][f] * (
+                        curr_xi[f] - delta_x
+                    )
                     curr_xi[f] = delta_x
 
                 # Update bounds

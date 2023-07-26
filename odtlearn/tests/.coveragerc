@@ -11,6 +11,7 @@ omit =
     */__init__.py
     */utils/solver.py
     */utils/_reingold_tilford.py
+    */utils/mip_cbc.py  
 
 [report]
 exclude_lines =
