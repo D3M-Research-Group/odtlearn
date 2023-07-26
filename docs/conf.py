@@ -159,7 +159,7 @@ exclude_patterns = [
 
 
 html_theme = "furo"
-
+html_static_path = ["_static"]
 html_theme_options = {
     "footer_icons": [
         {
@@ -173,6 +173,8 @@ html_theme_options = {
             "class": "",
         },
     ],
+    "light_logo": "img/ODTlearn-color.png",
+    "dark_logo": "img/ODTlearn-color.png",
 }
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
