@@ -15,14 +15,21 @@ DISTNAME = "odtlearn"
 DESCRIPTION = "A package for tree-based statistical estimation and inference using optimal decision trees."
 with codecs.open("README.md", encoding="utf-8-sig") as f:
     LONG_DESCRIPTION = f.read()
-AUTHOR = "Sina Aghaei, Nathanael Jo, Nathan Justin, Patrick Vossler"
+AUTHOR = "Patrick Vossler, Sina Aghaei, Nathanael Jo, Nathan Justin"
 MAINTAINER = "Patrick Vossler"
 MAINTAINER_EMAIL = "patrick.vossler18@gmail.com"
 URL = "https://github.com/D3M-Research-Group/odtlearn"
 LICENSE = "GPL-3"
 DOWNLOAD_URL = "https://github.com/D3M-Research-Group/odtlearn"
 VERSION = "0.2.0"
-INSTALL_REQUIRES = ["numpy", "scipy", "scikit-learn", "pandas", "gurobipy"]
+INSTALL_REQUIRES = [
+    "numpy",
+    "scipy",
+    "scikit-learn",
+    "pandas",
+    "gurobipy",
+    "mip",
+]
 CLASSIFIERS = [
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
@@ -69,6 +76,7 @@ setup(
             "data/*.npz",
             "data/prescriptive/test_v2_200.csv",
             "data/prescriptive/train_v2_100.csv",
+            "data/prescriptive/train_50.csv",
         ],
     },
     python_requires=">=3.8",

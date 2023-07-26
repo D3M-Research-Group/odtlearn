@@ -9,12 +9,13 @@ from odtlearn.utils.TreePlotter import MPLPlotter
 class OptimalClassificationTree(OptimalDecisionTree):
     def __init__(
         self,
+        solver,
         depth,
         time_limit,
         num_threads,
         verbose,
     ) -> None:
-        super().__init__(depth, time_limit, num_threads, verbose)
+        super().__init__(solver, depth, time_limit, num_threads, verbose)
 
     def _extract_metadata(self, X, y):
         """A function for extracting metadata from the inputs before converting

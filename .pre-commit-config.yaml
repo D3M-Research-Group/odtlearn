@@ -9,3 +9,4 @@ repos:
     hooks:
     - id: flake8
       language_version: python3
+exclude: "odtlearn/utils/mip_cbc.py"

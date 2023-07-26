@@ -17,6 +17,7 @@ To install the package, you need to run the following command in your terminal:
 
 ```bash
 pip install git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
+```
 
 
 ## Obtain Gurobi License

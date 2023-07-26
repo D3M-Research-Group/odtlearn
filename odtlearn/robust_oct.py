@@ -2,12 +2,12 @@ from copy import deepcopy
 
 import numpy as np
 import pandas as pd
-from gurobipy import GRB, LinExpr, quicksum
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_is_fitted, check_X_y
 
+from odtlearn import ODTL
 from odtlearn.opt_ct import OptimalClassificationTree
-from odtlearn.utils.callbacks import robust_tree_callback
+from odtlearn.utils.callbacks import RobustBendersCallback
 from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.validation import check_integer, check_same_as_X
 
@@ -19,25 +19,31 @@ class RobustOCT(OptimalClassificationTree):
 
     Parameters
     ----------
+    solver: str
+        A string specifying the name of the solver to use
+        to solve the MIP. Options are "Gurobi" and "CBC".
+        If the CBC binaries are not found, Gurobi will be used by default.
     depth : int, default=1
-        A parameter specifying the depth of the tree
+        A parameter specifying the depth of the tree.
     time_limit : int, default=1800
-        The given time limit for solving the MIP in seconds
+        The given time limit for solving the MIP in seconds.
     num_threads: int, default=None
         The number of threads the solver should use. If not specified,
-        solver uses Gurobi's default number of threads
-    verbose : bool, default = True
-        Flag for logging Gurobi outputs
+        solver uses all available threads.
+    verbose : bool, default = False
+        Flag for logging solver outputs.
     """
 
     def __init__(
         self,
+        solver,
         depth=1,
         time_limit=1800,
         num_threads=None,
         verbose=False,
     ) -> None:
         super().__init__(
+            solver,
             depth,
             time_limit,
             num_threads,
@@ -46,39 +52,6 @@ class RobustOCT(OptimalClassificationTree):
 
         # Regularization term: encourage less branching without sacrificing accuracy
         self._reg = 1 / (len(self._tree.Nodes) + 1)
-
-        # The cuts we add in the callback function would be treated as lazy constraints
-        self._model.params.LazyConstraints = 1
-
-        """
-        The following variables are used for the Benders problem to keep track of the times we call the callback.
-
-        - counter_integer tracks number of times we call the callback from an integer node
-         in the branch-&-bound tree
-            - time_integer tracks the associated time spent in the callback for these calls
-        - counter_general tracks number of times we call the callback from a non-integer node
-         in the branch-&-bound tree
-            - time_general tracks the associated time spent in the callback for these calls
-
-        the ones ending with success are related to success calls. By success we mean ending
-        up adding a lazy constraint to the model
-        """
-        self._model._total_callback_time_integer = 0
-        self._model._total_callback_time_integer_success = 0
-
-        self._model._total_callback_time_general = 0
-        self._model._total_callback_time_general_success = 0
-
-        self._model._callback_counter_integer = 0
-        self._model._callback_counter_integer_success = 0
-
-        self._model._callback_counter_general = 0
-        self._model._callback_counter_general_success = 0
-
-        self._model._total_cuts = 0
-
-        # We also pass the following information to the model as we need them in the callback
-        self._model._master = self
 
     def _get_node_status(self, b, w, n):
         """
@@ -171,58 +144,56 @@ class RobustOCT(OptimalClassificationTree):
         # define variables
 
         # t is the objective value of the problem
-        self._t = self._model.addVars(
-            self._datapoints, vtype=GRB.CONTINUOUS, ub=1, name="t"
+        self._t = self._solver.add_vars(
+            self._datapoints, vtype=ODTL.CONTINUOUS, ub=1, name="t"
         )
         # w[n,k] == 1 iff at node n we do not branch and we make the prediction k
-        self._w = self._model.addVars(
+        self._w = self._solver.add_vars(
             self._tree.Nodes + self._tree.Leaves,
             self._labels,
-            vtype=GRB.BINARY,
+            vtype=ODTL.BINARY,
             name="w",
         )
 
         # b[n,f,theta] ==1 iff at node n we branch on feature f with cutoff theta
-        self._b = self._model.addVars(self._b_indices, vtype=GRB.BINARY, name="b")
-
-        # we need these in the callback to have access to the value of the decision variables
-        self._model._vars_t = self._t
-        self._model._vars_b = self._b
-        self._model._vars_w = self._w
+        self._b = self._solver.add_vars(self._b_indices, vtype=ODTL.BINARY, name="b")
 
     def _define_constraints(self):
         # define constraints
 
         # sum(b[n,f,theta], f, theta) + sum(w[n,k], k) = 1 for all n in nodes
-        self._model.addConstrs(
+        self._solver.add_constrs(
             (
-                quicksum(self._b[n, f, theta] for (f, theta) in self._f_theta_indices)
-                + quicksum(self._w[n, k] for k in self._labels)
+                self._solver.quicksum(
+                    self._b[n, f, theta] for (f, theta) in self._f_theta_indices
+                )
+                + self._solver.quicksum(self._w[n, k] for k in self._labels)
                 == 1
             )
             for n in self._tree.Nodes
         )
 
         # sum(w[n,k], k) = 1 for all n in leaves
-        self._model.addConstrs(
-            (quicksum(self._w[n, k] for k in self._labels) == 1)
+        self._solver.add_constrs(
+            (self._solver.quicksum(self._w[n, k] for k in self._labels) == 1)
             for n in self._tree.Leaves
         )
 
     def _define_objective(self):
         # define objective function
-        obj = LinExpr(0)
+        obj = self._solver.lin_expr(0)
         for i in self._datapoints:
-            obj.add(self._t[i])
+            obj += self._t[i]
         # Add regularization term so that in case of tie in objective function,
         # encourage less branching
-        obj.add(
+        obj += (
             -1
             * self._reg
-            * quicksum(self._b[n, f, theta] for (n, f, theta) in self._b_indices)
+            * self._solver.quicksum(
+                self._b[n, f, theta] for (n, f, theta) in self._b_indices
+            )
         )
-
-        self._model.setObjective(obj, GRB.MAXIMIZE)
+        self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
     def fit(self, X, y, costs=None, budget=-1):
         """Fit an optimal robust classification tree given data, labels,
@@ -254,6 +225,7 @@ class RobustOCT(OptimalClassificationTree):
         self._classes = unique_labels(y)
 
         self._cat_features = self._X_col_labels
+        self._solver.store_data("cat_features", self._X_col_labels)
 
         # Get range of data, and store indices of branching variables based on range
         min_values = self._X.min(axis=0)
@@ -274,12 +246,18 @@ class RobustOCT(OptimalClassificationTree):
         self._f_theta_indices = f_theta_indices
         self._b_indices = b_indices
 
+        self._solver.store_data("min_values", self._X.min(axis=0))
+        self._solver.store_data("max_values", self._X.max(axis=0))
+        self._solver.store_data("f_theta_indices", self._f_theta_indices)
+        self._solver.store_data("b_indices", self._b_indices)
+
         # Set default for costs of uncertainty if needed
         if costs is not None:
             self._costs = check_same_as_X(
                 self._X, self._X_col_labels, costs, "uncertainty costs"
             )
             self._costs.set_index(pd.Index(range(costs.shape[0])), inplace=True)
+            self._solver.store_data("costs", self._costs)
             # Also check if indices are the same
             if self._X.shape[0] != self._costs.shape[0]:
                 raise ValueError(
@@ -294,22 +272,49 @@ class RobustOCT(OptimalClassificationTree):
             for col in gammas_df.columns:
                 gammas_df[col].values[:] = budget + 1
             self._costs = gammas_df
+            self._solver.store_data("costs", gammas_df)
 
         # Budget of uncertainty
+        self._solver.store_data("budget", budget)
         self._budget = budget
 
         # Create uncertainty set
         self._epsilon = self._budget  # Budget of uncertainty
         self._gammas = self._costs  # Cost of feature uncertainty
         self._eta = self._budget + 1  # Cost of label uncertainty - future work
+        self._solver.store_data("epsilon", self._epsilon)  # Budget of uncertainty
+        self._solver.store_data("gammas", self._gammas)  # Cost of feature uncertainty
+        self._solver.store_data(
+            "eta", self._eta
+        )  # Cost of label uncertainty - future work
 
         self._create_main_problem()
-        self._model.update()
-        self._model.optimize(robust_tree_callback)
 
-        # Store fitted Gurobi model
-        self.b_value = self._model.getAttr("X", self._b)
-        self.w_value = self._model.getAttr("X", self._w)
+        # we need these in the callback to have access to the value of the decision variables for Gurobi callbacks
+        self._solver.store_data("t", self._t)
+        self._solver.store_data("b", self._b)
+        self._solver.store_data("w", self._w)
+
+        self._solver.store_data("solver", self._solver)
+        self._solver.store_data("self", self)
+        self._solver.store_data("datapoints", self._datapoints)
+
+        callback_action = RobustBendersCallback
+
+        self._solver.optimize(
+            self._X,
+            self,
+            self._solver,
+            callback=True,
+            callback_action=callback_action,
+            b=self._b,
+            t=self._t,
+            w=self._w,
+        )
+
+        # Store fitted decision variable values
+        self.b_value = self._solver.get_var_value(self._b, "b")
+        self.w_value = self._solver.get_var_value(self._w, "w")
 
         # `fit` should always return `self`
         return self
@@ -356,7 +361,7 @@ class RobustOCT(OptimalClassificationTree):
                     assignment_nodes += [n]
                     break
             if not terminal:
-                for (f, theta) in self._f_theta_indices:
+                for (f, theta) in self._solver.model._data["f_theta_indices"]:
                     if self.b_value[n, f, theta] > 0.5:  # b[n,f]== 1
                         print("Feature: ", f, ", Cutoff: ", theta)
                         break
