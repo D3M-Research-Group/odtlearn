@@ -1,8 +1,8 @@
 % odtlearn documentation master file
 
-# Introduction
-
-Welcome to ODTlearn's documentation!
+<p align="center">
+<img src="_static/img/ODTlearn-color.png" alt="ODTlearn Logo" width="500"/>
+</p>
 
 ## What is ODTlearn?
 Decision trees are interpretable machine learning models that are routinely used in applications involving classification and prescriptive problems. A decision tree takes the form of a binary tree and at each branching node of the tree, a binary test is performed on a specific feature. Two branches emanate from each branching node, with each branch representing the outcome of the test. If a data point passes (resp. fails) the test, it is directed to the left (resp. right) branch. A label (prediction) or treatment (prescription) is assigned to all leaf nodes for classification and prescriptive problems, respectively. Thus, each path from root to leaf represents a classification or treatment assignment rule that assigns a unique label or treatment to all data points that reach that leaf. The goal in the design of optimal decision trees is to select the best tests to perform at each branching node and which label or treatment to assign to each leaf to maximize the relevant objective.
