@@ -278,7 +278,7 @@ def test_RobustOCT_no_uncertainty_success():
 )
 def test_RobustOCT_correctness(synthetic_data_1, d, expected_pred, solver, skip_solver):
     if skip_solver:
-        pytest.skip(reason="No gurobi license available.")
+        pytest.skip(reason="Testing on github actions")
     X, y = synthetic_data_1
     robust_classifier = RobustOCT(
         solver=solver,
@@ -359,7 +359,7 @@ def test_RobustOCT_uncertainty_correctness(
     Scenario 3: Split X2, split X1 at node 3 but assign 0 at node 2 (because uncertainty in X1)
     """
     if skip_solver:
-        pytest.skip(reason="No gurobi license available.")
+        pytest.skip(reason="Testing on github actions")
     X, y = synthetic_data_1
     costs = synthetic_costs_1
     robust_classifier = RobustOCT(

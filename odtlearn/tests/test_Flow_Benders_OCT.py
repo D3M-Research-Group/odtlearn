@@ -379,7 +379,7 @@ def test_FlowOCT_obj_mode(
     X, y = synthetic_data_2
 
     if skip_solver:
-        pytest.skip(reason="No gurobi license available.")
+        pytest.skip(reason="Testing on github actions")
 
     if benders:
         bstcl = BendersOCT(

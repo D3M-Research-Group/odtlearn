@@ -6,7 +6,7 @@ from odtlearn.utils.solver import Solver
 def test_callback_action(skip_solver):
 
     if skip_solver:
-        pytest.skip(reason="No gurobi license available.")
+        pytest.skip(reason="Testing on github actions")
 
     gb_solver = Solver(solver_name="gurobi", verbose=False)
     with pytest.raises(
@@ -24,7 +24,7 @@ def test_callback_action(skip_solver):
 
 def test_add_single_constraint(skip_solver):
     if skip_solver:
-        pytest.skip(reason="No gurobi license available.")
+        pytest.skip(reason="Testing on github actions")
     gb_solver = Solver(solver_name="gurobi", verbose=False)
     gb_var = gb_solver.add_vars(1)
     gb_solver.add_constr(gb_var[0] == 1)
@@ -38,7 +38,7 @@ def test_add_single_constraint(skip_solver):
 
 def test_prep_indices(skip_solver):
     if skip_solver:
-        pytest.skip(reason="No gurobi license available.")
+        pytest.skip(reason="Testing on github actions")
     cbc_solver = Solver(solver_name="cbc", verbose=False)
     assert cbc_solver.prep_indices(1, [1.0, 2.0, 3.0], 2.0) == [
         [0],
@@ -49,7 +49,7 @@ def test_prep_indices(skip_solver):
 
 def test_set_objective(skip_solver):
     if skip_solver:
-        pytest.skip(reason="No gurobi license available.")
+        pytest.skip(reason="Testing on github actions")
 
     cbc_solver = Solver(solver_name="cbc", verbose=False)
     cbc_var = cbc_solver.add_vars(1)

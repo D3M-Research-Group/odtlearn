@@ -119,7 +119,7 @@ def test_FlowOPT_X_treatment_error():
 # fmt: on
 def test_FlowOPT_classifier(data, method, solver, expected_pred, skip_solver):
     if skip_solver:
-        pytest.skip(reason="No gurobi license available.")
+        pytest.skip(reason="Testing on github actions")
     df = data
     X = df.iloc[:, :20]
     t = df["t"]

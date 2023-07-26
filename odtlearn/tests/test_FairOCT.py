@@ -62,7 +62,7 @@ def synthetic_data_1():
 )
 def test_FairOCT_same_predictions(synthetic_data_1, obj_mode, solver, skip_solver):
     if skip_solver:
-        pytest.skip(reason="No gurobi license available.")
+        pytest.skip(reason="Testing on github actions")
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
         solver=solver,
@@ -109,7 +109,7 @@ def test_FairOCT_same_predictions(synthetic_data_1, obj_mode, solver, skip_solve
 )
 def test_FairOCT_metrics(synthetic_data_1, f, b, g0_value, solver, skip_solver):
     if skip_solver:
-        pytest.skip(reason="No gurobi license available.")
+        pytest.skip(reason="Testing on github actions")
 
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
