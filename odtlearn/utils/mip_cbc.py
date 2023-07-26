@@ -105,7 +105,6 @@ try:
             raise NotImplementedError("You operating system/platform is not supported")
     old_dir = os.getcwd()
     os.chdir(pathlib)
-    print(libfile)
     cbclib = ffi.dlopen(libfile)
     os.chdir(old_dir)
     has_cbc = True

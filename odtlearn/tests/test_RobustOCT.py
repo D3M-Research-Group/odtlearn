@@ -72,7 +72,7 @@ def synthetic_costs_1():
 
 def test_RobustOCT_X_noninteger_error():
     """Test whether X is integer-valued"""
-    clf = RobustOCT(solver="cbc", depth=1, time_limit=20)
+    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
 
     with pytest.raises(
         ValueError,
@@ -87,7 +87,7 @@ def test_RobustOCT_X_noninteger_error():
 
 def test_RobustOCT_cost_shape_error():
     """Test whether X and cost have the same size and columns"""
-    clf = RobustOCT(solver="cbc", depth=1, time_limit=20)
+    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
     data = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -150,7 +150,7 @@ def test_RobustOCT_cost_shape_error():
 def test_RobustOCT_prediction_shape_error():
     """Test whether X and cost have the same size and columns"""
     # Run some quick model that finishes in 1 second
-    clf = RobustOCT(solver="cbc", depth=1, time_limit=20)
+    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -209,13 +209,13 @@ def test_RobustOCT_prediction_shape_error():
             index=["F", "G", "H", "I", "J"],
         )
         train_nodf = np.transpose([[1, 2, 2, 2, 3], [1, 2, 1, 0, 1]])
-        clf = RobustOCT(solver="cbc", depth=1, time_limit=20)
+        clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
         clf.fit(train_nodf, y)
         clf.predict(test)
 
 
 def test_RobustOCT_with_uncertainty_success():
-    clf = RobustOCT(solver="cbc", depth=1, time_limit=20)
+    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -236,7 +236,7 @@ def test_RobustOCT_with_uncertainty_success():
 
 
 def test_RobustOCT_no_uncertainty_success():
-    clf = RobustOCT(solver="cbc", depth=1, time_limit=20)
+    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -276,8 +276,8 @@ def test_RobustOCT_no_uncertainty_success():
         (2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "cbc"),
     ],
 )
-def test_RobustOCT_correctness(synthetic_data_1, d, expected_pred, solver, skip_gurobi):
-    if skip_gurobi:
+def test_RobustOCT_correctness(synthetic_data_1, d, expected_pred, solver, skip_solver):
+    if skip_solver:
         pytest.skip(reason="No gurobi license available.")
     X, y = synthetic_data_1
     robust_classifier = RobustOCT(
@@ -350,7 +350,7 @@ def test_RobustOCT_uncertainty_correctness(
     budget,
     expected_pred,
     solver,
-    skip_gurobi,
+    skip_solver,
 ):
     """
     Scenario 0: Root assigns 0
@@ -358,7 +358,7 @@ def test_RobustOCT_uncertainty_correctness(
     Scenario 2: Perfect split (uncertainty budget not large enough)
     Scenario 3: Split X2, split X1 at node 3 but assign 0 at node 2 (because uncertainty in X1)
     """
-    if skip_gurobi:
+    if skip_solver:
         pytest.skip(reason="No gurobi license available.")
     X, y = synthetic_data_1
     costs = synthetic_costs_1
@@ -375,7 +375,7 @@ def test_RobustOCT_uncertainty_correctness(
 def test_check_fit(synthetic_data_1):
     X, y = synthetic_data_1
     rcl = RobustOCT(
-        solver="cbc",
+        solver="gurobi",
         depth=1,
         time_limit=100,
     )
@@ -411,7 +411,7 @@ def test_RobustOCT_visualize_tree(synthetic_data_1, synthetic_costs_1):
     X, y = synthetic_data_1
     costs = synthetic_costs_1
     robust_classifier = RobustOCT(
-        solver="cbc",
+        solver="gurobi",
         depth=2,
         time_limit=100,
     )
