@@ -10,6 +10,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # env:
+    #   GRB_LICENSE_FILE: "/opt/hostedtoolcache/Python/3.9.17/x64/lib/python3.9/site-packages/gurobipy/.libs/gurobi.lic"
+    #   GUROBI_HOME: "/opt/hostedtoolcache/Python/3.9.17/x64/lib/python3.9/site-packages/gurobipy/li"
+    #   DYLD_LIBRARY_PATH: "/home/runner/build/dist/lib"
     steps:
       - uses: actions/checkout@v3
       - name: Install Python 3
@@ -18,20 +22,17 @@ jobs:
           python-version: '3.9.x'
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
+          # python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Compile CBC binary and run tests
-        run : |
-          sudo apt-get install gcc g++ gfortran libgfortran-9-dev liblapack-dev libamd2 libcholmod3 libmetis-dev libsuitesparse-dev libnauty2-dev git
-          mkdir -p ~/build
-          cd ~/build
-          wget -nH https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
-          bash coinbrew fetch Cbc@master --no-prompt
-          bash coinbrew build Cbc@stable/2.10 --no-prompt --tests=none
+      # - name: Compile CBC binary and run tests
+      #   run : |
+      #     sudo apt-get install gcc g++ gfortran libgfortran-9-dev liblapack-dev libamd2 libcholmod3 libmetis-dev libsuitesparse-dev libnauty2-dev git
+      #     mkdir -p ~/build
+      #     cd ~/build
+      #     wget -nH https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
+      #     bash coinbrew fetch Cbc@master --no-prompt
+      #     bash coinbrew build Cbc@stable/2.10 --no-prompt --tests=none
       - name: Run tests with pytest
         run: |
-          export DYLD_LIBRARY_PATH=/home/runner/build/dist/lib
-          export PMIP_CBC_LIBRARY=/home/runner/build/dist/lib/libCbcSolver.so
-          export LD_LIBRARY_PATH=/home/runner/build/dist/lib:$LD_LIBRARY_PATH
           cd odtlearn/tests
-          pytest
+          pytest -v

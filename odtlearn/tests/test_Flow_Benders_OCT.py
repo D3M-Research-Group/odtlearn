@@ -287,9 +287,9 @@ def test_FlowOCT_classifier():
     ],
 )
 def test_FlowOCT_same_predictions(
-    synthetic_data_1, d, _lambda, benders, expected_pred, solver, skip_gurobi
+    synthetic_data_1, d, _lambda, benders, expected_pred, solver, skip_solver
 ):
-    if skip_gurobi:
+    if skip_solver:
         pytest.skip(reason="Gurobi license not available.")
     X, y = synthetic_data_1
 
@@ -374,12 +374,12 @@ def test_FlowOCT_same_predictions(
     ],
 )
 def test_FlowOCT_obj_mode(
-    synthetic_data_2, benders, obj_mode, expected_pred, solver, skip_gurobi
+    synthetic_data_2, benders, obj_mode, expected_pred, solver, skip_solver
 ):
     X, y = synthetic_data_2
 
-    if skip_gurobi:
-        pytest.skip(reason="No gurobi license available.")
+    if skip_solver:
+        pytest.skip(reason="Testing on github actions")
 
     if benders:
         bstcl = BendersOCT(

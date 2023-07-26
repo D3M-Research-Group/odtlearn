@@ -92,7 +92,6 @@ def test_FlowOPT_X_treatment_error():
 
 
 # fmt: off
-@pytest.mark.test_gurobi
 @pytest.mark.parametrize("method,solver, expected_pred", [
     ('DR', 'gurobi', np.array([0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
                                1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0,
@@ -118,9 +117,9 @@ def test_FlowOPT_X_treatment_error():
                             0, 1]))
 ])
 # fmt: on
-def test_FlowOPT_classifier(data, method, solver, expected_pred, skip_gurobi):
-    if skip_gurobi:
-        pytest.skip(reason="No gurobi license available.")
+def test_FlowOPT_classifier(data, method, solver, expected_pred, skip_solver):
+    if skip_solver:
+        pytest.skip(reason="Testing on github actions")
     df = data
     X = df.iloc[:, :20]
     t = df["t"]

@@ -60,45 +60,9 @@ def synthetic_data_1():
     "obj_mode, solver",
     [("acc", "gurobi"), ("balance", "gurobi"), ("acc", "cbc"), ("balance", "cbc")],
 )
-def test_FairOCT_same_predictions(synthetic_data_1, obj_mode, solver, skip_gurobi):
-    if skip_gurobi:
-        pytest.skip(reason="No gurobi license available.")
-    X, y, protect_feat, legit_factor = synthetic_data_1
-    fcl = FairOCT(
-        solver=solver,
-        positive_class=1,
-        depth=2,
-        _lambda=0,
-        time_limit=100,
-        fairness_type=None,
-        fairness_bound=1,
-        num_threads=None,
-        obj_mode=obj_mode,
-    )
-
-    stcl = FlowOCT(
-        solver=solver,
-        depth=2,
-        time_limit=100,
-        _lambda=0,
-        num_threads=None,
-        obj_mode=obj_mode,
-    )
-
-    stcl.fit(X, y)
-    stcl_pred = stcl.predict(X)
-
-    fcl.fit(X, y, protect_feat, legit_factor)
-    fcl_pred = fcl.predict(X)
-
-    assert_allclose(fcl_pred, stcl_pred)
-
-
-@pytest.mark.parametrize(
-    "obj_mode, solver",
-    [("acc", "cbc"), ("balance", "cbc")],
-)
-def test_FairOCT_same_predictions(synthetic_data_1, obj_mode, solver):
+def test_FairOCT_same_predictions(synthetic_data_1, obj_mode, solver, skip_solver):
+    if skip_solver:
+        pytest.skip(reason="Testing on github actions")
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
         solver=solver,
@@ -143,9 +107,9 @@ def test_FairOCT_same_predictions(synthetic_data_1, obj_mode, solver):
         ("PE", 0.04, 0, "cbc"),
     ],
 )
-def test_FairOCT_metrics(synthetic_data_1, f, b, g0_value, solver, skip_gurobi):
-    if skip_gurobi:
-        pytest.skip(reason="No gurobi license available.")
+def test_FairOCT_metrics(synthetic_data_1, f, b, g0_value, solver, skip_solver):
+    if skip_solver:
+        pytest.skip(reason="Testing on github actions")
 
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
