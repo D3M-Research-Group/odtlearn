@@ -1,6 +1,6 @@
-# ODTlearn
-
-![ODTlearn Logo](./img/ODTlearn-color.png)
+<p align="center">
+<img src="./img/ODTlearn-color.png" alt="ODTlearn Logo" width="500"/>
+</p>
 
 A package for tree-based statistical estimation and inference using optimal decision trees. ODTlearn provides implementations of StrongTrees [1], FairTrees [2], RobustTrees [3] for classification, and Prescriptive Trees [4] for prescription.
 
