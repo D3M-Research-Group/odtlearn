@@ -362,3 +362,4 @@ toggleprompt_offset_right = 30
 html_scaled_image_link = False
 
 nbsphinx_execute = "always"
+nbsphinx_allow_errors = True
