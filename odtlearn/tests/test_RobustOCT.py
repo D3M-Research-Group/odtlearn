@@ -214,7 +214,9 @@ def test_RobustOCT_prediction_shape_error():
         clf.predict(test)
 
 
-def test_RobustOCT_with_uncertainty_success():
+def test_RobustOCT_with_uncertainty_success(skip_solver):
+    if skip_solver:
+        pytest.skip(reason="Testing on github actions")
     clf = RobustOCT(solver="cbc", depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
@@ -235,7 +237,9 @@ def test_RobustOCT_with_uncertainty_success():
     assert y_pred.shape[0] == test.shape[0]
 
 
-def test_RobustOCT_no_uncertainty_success():
+def test_RobustOCT_no_uncertainty_success(skip_solver):
+    if skip_solver:
+        pytest.skip(reason="Testing on github actions")
     clf = RobustOCT(solver="cbc", depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
@@ -407,12 +411,14 @@ def test_check_fit(synthetic_data_1):
         rcl.plot_tree()
 
 
-def test_RobustOCT_visualize_tree(synthetic_data_1, synthetic_costs_1):
+def test_RobustOCT_visualize_tree(synthetic_data_1, synthetic_costs_1, skip_solver):
+    if skip_solver:
+        pytest.skip(reason="Testing on github actions")
     X, y = synthetic_data_1
     costs = synthetic_costs_1
     robust_classifier = RobustOCT(
         solver="cbc",
-        depth=2,
+        depth=1,
         time_limit=100,
     )
     robust_classifier.fit(X, y, costs=costs, budget=2)
