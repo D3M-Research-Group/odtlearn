@@ -141,7 +141,7 @@ def test_FairOCT_metrics(synthetic_data_1, f, b, g0_value, solver, skip_solver):
 def test_check_fit(synthetic_data_1, obj_mode):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
-        solver="gurobi",
+        solver="cbc",
         positive_class=1,
         depth=2,
         _lambda=0,
@@ -182,7 +182,7 @@ def test_check_fit(synthetic_data_1, obj_mode):
 def test_FairOCT_visualize_tree(synthetic_data_1):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
-        solver="gurobi",
+        solver="cbc",
         positive_class=1,
         depth=2,
         _lambda=0,
@@ -215,7 +215,7 @@ def test_FairOCT_visualize_tree(synthetic_data_1):
 def test_handle_pandas_cols(synthetic_data_1, f, pd_data):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
-        solver="gurobi",
+        solver="cbc",
         positive_class=1,
         depth=2,
         _lambda=0,
@@ -254,7 +254,7 @@ def test_bad_obj_mode(synthetic_data_1):
         match="Invalid objective mode. obj_mode should be one of acc or balance.",
     ):
         fcl = FairOCT(
-            solver="gurobi",
+            solver="cbc",
             positive_class=1,
             depth=2,
             _lambda=0,
@@ -274,7 +274,7 @@ def test_bad_obj_mode(synthetic_data_1):
 def test_fairness_metric_summary(synthetic_data_1, f, b):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
-        solver="gurobi",
+        solver="cbc",
         positive_class=1,
         depth=2,
         _lambda=0.01,

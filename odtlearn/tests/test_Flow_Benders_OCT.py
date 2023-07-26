@@ -410,7 +410,7 @@ def test_FlowOCT_obj_mode(
 def test_FlowOCT_plot_print(synthetic_data_1):
     X, y = synthetic_data_1
     stcl = FlowOCT(
-        solver="gurobi",
+        solver="cbc",
         depth=1,
         time_limit=100,
         num_threads=None,
@@ -428,7 +428,7 @@ def test_wrong_objective_FlowOCT(synthetic_data_1):
         match="Wrong objective mode. obj_mode should be one of acc or balance.",
     ):
         stcl = FlowOCT(
-            solver="gurobi",
+            solver="cbc",
             depth=1,
             time_limit=100,
             num_threads=None,
@@ -441,7 +441,7 @@ def test_wrong_objective_FlowOCT(synthetic_data_1):
         match="Wrong objective mode. obj_mode should be one of acc or balance.",
     ):
         bstcl = BendersOCT(
-            solver="gurobi",
+            solver="cbc",
             depth=1,
             time_limit=100,
             num_threads=None,

@@ -375,7 +375,7 @@ def test_RobustOCT_uncertainty_correctness(
 def test_check_fit(synthetic_data_1):
     X, y = synthetic_data_1
     rcl = RobustOCT(
-        solver="gurobi",
+        solver="cbc",
         depth=1,
         time_limit=100,
     )
@@ -411,7 +411,7 @@ def test_RobustOCT_visualize_tree(synthetic_data_1, synthetic_costs_1):
     X, y = synthetic_data_1
     costs = synthetic_costs_1
     robust_classifier = RobustOCT(
-        solver="gurobi",
+        solver="cbc",
         depth=2,
         time_limit=100,
     )
