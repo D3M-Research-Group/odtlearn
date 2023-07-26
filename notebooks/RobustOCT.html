@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="How to contribute to ODTlearn" href="../contributing.html" /><link rel="prev" title="FairOCT Example" href="FairOCT.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>RobustTreeClassifier Examples - odtlearn 0.2.0 documentation</title>
+        <title>RobustTreeClassifier Examples - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+      <a href="../index.html"><div class="brand">odtlearn 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -174,10 +174,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -550,6 +554,7 @@ div.rendered_html tbody tr:hover {
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">odtlearn.robust_oct</span> <span class="kn">import</span> <span class="n">RobustOCT</span>
 
 <span class="n">robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
+        <span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">,</span>
         <span class="n">depth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
         <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">60</span>
     <span class="p">)</span>
@@ -563,7 +568,30 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Restricted license - for non-production use only - expires 2023-10-25
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[2], line 9</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> robust_classifier <span style="color: rgb(98,98,98)">=</span> RobustOCT(
+<span class="ansi-green-intense-fg ansi-bold">      4</span>         solver<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">cbc</span><span style="color: rgb(175,0,0)">"</span>,
+<span class="ansi-green-intense-fg ansi-bold">      5</span>         depth <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(98,98,98)">2</span>,
+<span class="ansi-green-intense-fg ansi-bold">      6</span>         time_limit <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(98,98,98)">60</span>
+<span class="ansi-green-intense-fg ansi-bold">      7</span>     )
+<span class="ansi-green-intense-fg ansi-bold">      8</span> robust_classifier<span style="color: rgb(98,98,98)">.</span>fit(X, y)
+<span class="ansi-green-fg">----&gt; 9</span> predictions <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">predict</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">X</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:342</span>, in <span class="ansi-cyan-fg">RobustOCT.predict</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    339</span> df_test <span style="color: rgb(98,98,98)">=</span> check_same_as_X(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X_col_labels, X, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">test covariates</span><span style="color: rgb(175,0,0)">"</span>)
+<span class="ansi-green-intense-fg ansi-bold">    340</span> check_integer(df_test)
+<span class="ansi-green-fg">--&gt; 342</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_make_prediction</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">df_test</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:127</span>, in <span class="ansi-cyan-fg">RobustOCT._make_prediction</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    125</span> terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>
+<span class="ansi-green-intense-fg ansi-bold">    126</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
+<span class="ansi-green-fg">--&gt; 127</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:  <span style="color: rgb(95,135,135)"># w[n,k] == 1</span>
+<span class="ansi-green-intense-fg ansi-bold">    128</span>         prediction <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [k]
+<span class="ansi-green-intense-fg ansi-bold">    129</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -574,25 +602,32 @@ Restricted license - for non-production use only - expires 2023-10-25
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-Feature:  X2 , Cutoff:  0
-#########node  2
-Feature:  X1 , Cutoff:  0
-#########node  3
-Feature:  X1 , Cutoff:  0
-#########node  4
-leaf 0
-#########node  5
-leaf 1
-#########node  6
-leaf 1
-#########node  7
-leaf 0
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[3], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">print_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:358</span>, in <span class="ansi-cyan-fg">RobustOCT.print_tree</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    355</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">continue</span>
+<span class="ansi-green-intense-fg ansi-bold">    357</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
+<span class="ansi-green-fg">--&gt; 358</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:
+<span class="ansi-green-intense-fg ansi-bold">    359</span>         <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">leaf </span><span class="ansi-bold" style="color: rgb(175,95,135)">{}</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(98,98,98)">.</span>format(k))
+<span class="ansi-green-intense-fg ansi-bold">    360</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -605,11 +640,56 @@ leaf 0
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[4], line 2</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> fig, ax <span style="color: rgb(98,98,98)">=</span> plt<span style="color: rgb(98,98,98)">.</span>subplots(figsize<span style="color: rgb(98,98,98)">=</span>(<span style="color: rgb(98,98,98)">10</span>, <span style="color: rgb(98,98,98)">5</span>))
+<span class="ansi-green-fg">----&gt; 2</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">plot_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span style="color: rgb(98,98,98)">.</span>show()
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:423</span>, in <span class="ansi-cyan-fg">RobustOCT.plot_tree</span><span class="ansi-blue-fg">(self, label, filled, rounded, precision, ax, fontsize, color_dict, edge_annotation, arrow_annotation_font_scale, debug)</span>
+<span class="ansi-green-intense-fg ansi-bold">    421</span> node_dict <span style="color: rgb(98,98,98)">=</span> {}
+<span class="ansi-green-intense-fg ansi-bold">    422</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> node <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> np<span style="color: rgb(98,98,98)">.</span>arange(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree<span style="color: rgb(98,98,98)">.</span>total_nodes <span style="color: rgb(98,98,98)">+</span> <span style="color: rgb(98,98,98)">1</span>):
+<span class="ansi-green-fg">--&gt; 423</span>     node_dict[node] <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_get_node_status</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">b_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    425</span> exporter <span style="color: rgb(98,98,98)">=</span> MPLPlotter(
+<span class="ansi-green-intense-fg ansi-bold">    426</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree,
+<span class="ansi-green-intense-fg ansi-bold">    427</span>     node_dict,
+<span class="ansi-green-fg">   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">    440</span>     debug<span style="color: rgb(98,98,98)">=</span>debug,
+<span class="ansi-green-intense-fg ansi-bold">    441</span> )
+<span class="ansi-green-intense-fg ansi-bold">    442</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> exporter<span style="color: rgb(98,98,98)">.</span>export(ax<span style="color: rgb(98,98,98)">=</span>ax)
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">RobustOCT._get_node_status</span><span class="ansi-blue-fg">(self, b, w, n)</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
+<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
+<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
+<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([w[n, k] <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
+<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
+<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
+<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
+<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
+<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
+<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([<span class="ansi-yellow-bg">w</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
+<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
+<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
+<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_6_0.png" src="../_images/notebooks_RobustOCT_6_0.png"/>
+<img alt="../_images/notebooks_RobustOCT_6_1.png" src="../_images/notebooks_RobustOCT_6_1.png"/>
 </div>
 </div>
 </div>
@@ -631,7 +711,7 @@ leaf 0
 </div>
 </div>
 <!-- When the budget is 2 (corresponding to the variable &epsilon;), we don't see a change in the tree as the non-robust tree will have worst-case accuracy 11/13 and no other tree will have a better worst-case accuracy. --><p>When the budget is 2 (corresponding to the variable ε), we don’t see a change in the tree from Example 1 since for this dataset, the budget is small and thus the level of robustness is small.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
@@ -658,6 +738,7 @@ leaf 0
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
 <span class="n">robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
+    <span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">,</span>
     <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
 <span class="p">)</span>
@@ -665,6 +746,37 @@ leaf 0
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[6], line 29</span>
+<span class="ansi-green-intense-fg ansi-bold">     23</span> robust_classifier <span style="color: rgb(98,98,98)">=</span> RobustOCT(
+<span class="ansi-green-intense-fg ansi-bold">     24</span>     solver<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">cbc</span><span style="color: rgb(175,0,0)">"</span>,
+<span class="ansi-green-intense-fg ansi-bold">     25</span>     depth<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">2</span>,
+<span class="ansi-green-intense-fg ansi-bold">     26</span>     time_limit<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">60</span>,
+<span class="ansi-green-intense-fg ansi-bold">     27</span> )
+<span class="ansi-green-intense-fg ansi-bold">     28</span> robust_classifier<span style="color: rgb(98,98,98)">.</span>fit(X, y, costs<span style="color: rgb(98,98,98)">=</span>costs, budget<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">2</span>)
+<span class="ansi-green-fg">---&gt; 29</span> predictions <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">predict</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">X</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:342</span>, in <span class="ansi-cyan-fg">RobustOCT.predict</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    339</span> df_test <span style="color: rgb(98,98,98)">=</span> check_same_as_X(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X_col_labels, X, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">test covariates</span><span style="color: rgb(175,0,0)">"</span>)
+<span class="ansi-green-intense-fg ansi-bold">    340</span> check_integer(df_test)
+<span class="ansi-green-fg">--&gt; 342</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_make_prediction</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">df_test</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:127</span>, in <span class="ansi-cyan-fg">RobustOCT._make_prediction</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    125</span> terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>
+<span class="ansi-green-intense-fg ansi-bold">    126</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
+<span class="ansi-green-fg">--&gt; 127</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:  <span style="color: rgb(95,135,135)"># w[n,k] == 1</span>
+<span class="ansi-green-intense-fg ansi-bold">    128</span>         prediction <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [k]
+<span class="ansi-green-intense-fg ansi-bold">    129</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
@@ -674,25 +786,32 @@ leaf 0
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-Feature:  X2 , Cutoff:  0
-#########node  2
-Feature:  X1 , Cutoff:  0
-#########node  3
-Feature:  X1 , Cutoff:  0
-#########node  4
-leaf 0
-#########node  5
-leaf 1
-#########node  6
-leaf 1
-#########node  7
-leaf 0
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[7], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">print_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:358</span>, in <span class="ansi-cyan-fg">RobustOCT.print_tree</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    355</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">continue</span>
+<span class="ansi-green-intense-fg ansi-bold">    357</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
+<span class="ansi-green-fg">--&gt; 358</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:
+<span class="ansi-green-intense-fg ansi-bold">    359</span>         <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">leaf </span><span class="ansi-bold" style="color: rgb(175,95,135)">{}</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(98,98,98)">.</span>format(k))
+<span class="ansi-green-intense-fg ansi-bold">    360</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -705,11 +824,56 @@ leaf 0
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[8], line 2</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> fig, ax <span style="color: rgb(98,98,98)">=</span> plt<span style="color: rgb(98,98,98)">.</span>subplots(figsize<span style="color: rgb(98,98,98)">=</span>(<span style="color: rgb(98,98,98)">10</span>, <span style="color: rgb(98,98,98)">5</span>))
+<span class="ansi-green-fg">----&gt; 2</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">plot_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span style="color: rgb(98,98,98)">.</span>show()
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:423</span>, in <span class="ansi-cyan-fg">RobustOCT.plot_tree</span><span class="ansi-blue-fg">(self, label, filled, rounded, precision, ax, fontsize, color_dict, edge_annotation, arrow_annotation_font_scale, debug)</span>
+<span class="ansi-green-intense-fg ansi-bold">    421</span> node_dict <span style="color: rgb(98,98,98)">=</span> {}
+<span class="ansi-green-intense-fg ansi-bold">    422</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> node <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> np<span style="color: rgb(98,98,98)">.</span>arange(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree<span style="color: rgb(98,98,98)">.</span>total_nodes <span style="color: rgb(98,98,98)">+</span> <span style="color: rgb(98,98,98)">1</span>):
+<span class="ansi-green-fg">--&gt; 423</span>     node_dict[node] <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_get_node_status</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">b_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    425</span> exporter <span style="color: rgb(98,98,98)">=</span> MPLPlotter(
+<span class="ansi-green-intense-fg ansi-bold">    426</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree,
+<span class="ansi-green-intense-fg ansi-bold">    427</span>     node_dict,
+<span class="ansi-green-fg">   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">    440</span>     debug<span style="color: rgb(98,98,98)">=</span>debug,
+<span class="ansi-green-intense-fg ansi-bold">    441</span> )
+<span class="ansi-green-intense-fg ansi-bold">    442</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> exporter<span style="color: rgb(98,98,98)">.</span>export(ax<span style="color: rgb(98,98,98)">=</span>ax)
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">RobustOCT._get_node_status</span><span class="ansi-blue-fg">(self, b, w, n)</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
+<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
+<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
+<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([w[n, k] <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
+<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
+<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
+<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
+<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
+<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
+<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([<span class="ansi-yellow-bg">w</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
+<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
+<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
+<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_12_0.png" src="../_images/notebooks_RobustOCT_12_0.png"/>
+<img alt="../_images/notebooks_RobustOCT_12_1.png" src="../_images/notebooks_RobustOCT_12_1.png"/>
 </div>
 </div>
 <!-- <font size="3.5">But when the budget is &epsilon;=5, we see a change in the tree, as we allow up to 5 points at [0,0] and [1,1] to switch to [1,0] to potentially be misclassified. With the non-robust tree, this would decrease our accuracy to 8/13 in worst-case.
@@ -717,7 +881,7 @@ leaf 0
 
 <font size="3.5">If we think it through, the expected tree will classify points at [0,1] as 1, and classify all else as 0, as the allowed perturbations will not change the assigned label, making the worst-case accuracy 10/13 (the maximum worst-case accuracy)
     </font> --><p>But when the budget is increased to 5 (adding more robustness), we see a change in the tree.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
@@ -725,6 +889,32 @@ leaf 0
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[9], line 2</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> robust_classifier<span style="color: rgb(98,98,98)">.</span>fit(X, y, costs<span style="color: rgb(98,98,98)">=</span>costs, budget<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">5</span>)
+<span class="ansi-green-fg">----&gt; 2</span> predictions <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">predict</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">X</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:342</span>, in <span class="ansi-cyan-fg">RobustOCT.predict</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    339</span> df_test <span style="color: rgb(98,98,98)">=</span> check_same_as_X(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X_col_labels, X, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">test covariates</span><span style="color: rgb(175,0,0)">"</span>)
+<span class="ansi-green-intense-fg ansi-bold">    340</span> check_integer(df_test)
+<span class="ansi-green-fg">--&gt; 342</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_make_prediction</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">df_test</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:127</span>, in <span class="ansi-cyan-fg">RobustOCT._make_prediction</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    125</span> terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>
+<span class="ansi-green-intense-fg ansi-bold">    126</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
+<span class="ansi-green-fg">--&gt; 127</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:  <span style="color: rgb(95,135,135)"># w[n,k] == 1</span>
+<span class="ansi-green-intense-fg ansi-bold">    128</span>         prediction <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [k]
+<span class="ansi-green-intense-fg ansi-bold">    129</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
@@ -734,25 +924,32 @@ leaf 0
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-Feature:  X2 , Cutoff:  0
-#########node  2
-leaf 0
-#########node  3
-Feature:  X1 , Cutoff:  0
-#########node  4
-pruned
-#########node  5
-pruned
-#########node  6
-leaf 1
-#########node  7
-leaf 0
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[10], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">print_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:358</span>, in <span class="ansi-cyan-fg">RobustOCT.print_tree</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    355</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">continue</span>
+<span class="ansi-green-intense-fg ansi-bold">    357</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
+<span class="ansi-green-fg">--&gt; 358</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:
+<span class="ansi-green-intense-fg ansi-bold">    359</span>         <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">leaf </span><span class="ansi-bold" style="color: rgb(175,95,135)">{}</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(98,98,98)">.</span>format(k))
+<span class="ansi-green-intense-fg ansi-bold">    360</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -767,8 +964,44 @@ leaf 0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_16_0.png" src="../_images/notebooks_RobustOCT_16_0.png"/>
-</div>
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[11], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">plot_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:423</span>, in <span class="ansi-cyan-fg">RobustOCT.plot_tree</span><span class="ansi-blue-fg">(self, label, filled, rounded, precision, ax, fontsize, color_dict, edge_annotation, arrow_annotation_font_scale, debug)</span>
+<span class="ansi-green-intense-fg ansi-bold">    421</span> node_dict <span style="color: rgb(98,98,98)">=</span> {}
+<span class="ansi-green-intense-fg ansi-bold">    422</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> node <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> np<span style="color: rgb(98,98,98)">.</span>arange(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree<span style="color: rgb(98,98,98)">.</span>total_nodes <span style="color: rgb(98,98,98)">+</span> <span style="color: rgb(98,98,98)">1</span>):
+<span class="ansi-green-fg">--&gt; 423</span>     node_dict[node] <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_get_node_status</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">b_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    425</span> exporter <span style="color: rgb(98,98,98)">=</span> MPLPlotter(
+<span class="ansi-green-intense-fg ansi-bold">    426</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree,
+<span class="ansi-green-intense-fg ansi-bold">    427</span>     node_dict,
+<span class="ansi-green-fg">   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">    440</span>     debug<span style="color: rgb(98,98,98)">=</span>debug,
+<span class="ansi-green-intense-fg ansi-bold">    441</span> )
+<span class="ansi-green-intense-fg ansi-bold">    442</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> exporter<span style="color: rgb(98,98,98)">.</span>export(ax<span style="color: rgb(98,98,98)">=</span>ax)
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">RobustOCT._get_node_status</span><span class="ansi-blue-fg">(self, b, w, n)</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
+<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
+<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
+<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([w[n, k] <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
+<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
+<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
+<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
+<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
+<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
+<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([<span class="ansi-yellow-bg">w</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
+<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
+<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
+<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+</pre></div></div>
 </div>
 </div>
 <div class="section" id="Example-3:-UCI-data-example">
@@ -806,7 +1039,7 @@ leaf 0
 <span class="kn">from</span> <span class="nn">odtlearn.robust_oct</span> <span class="kn">import</span> <span class="n">RobustOCT</span>
 
 <span class="c1"># If you define no uncertainty, you get an optimal tree without regularization that maximizes accuracy</span>
-<span class="n">non_robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">non_robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
@@ -818,7 +1051,7 @@ leaf 0
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-RobustOCT(depth=2,time_limit=60,num_threads=None,verbose=False)
+RobustOCT(solver=cbc,depth=2,time_limit=60,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -829,25 +1062,32 @@ RobustOCT(depth=2,time_limit=60,num_threads=None,verbose=False)
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-Feature:  Feat2 , Cutoff:  1
-#########node  2
-Feature:  Feat3 , Cutoff:  2
-#########node  3
-Feature:  Feat4 , Cutoff:  1
-#########node  4
-leaf 0
-#########node  5
-leaf 1
-#########node  6
-leaf 1
-#########node  7
-leaf 0
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[15], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">non_robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">print_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:358</span>, in <span class="ansi-cyan-fg">RobustOCT.print_tree</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    355</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">continue</span>
+<span class="ansi-green-intense-fg ansi-bold">    357</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
+<span class="ansi-green-fg">--&gt; 358</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:
+<span class="ansi-green-intense-fg ansi-bold">    359</span>         <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">leaf </span><span class="ansi-bold" style="color: rgb(175,95,135)">{}</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(98,98,98)">.</span>format(k))
+<span class="ansi-green-intense-fg ansi-bold">    360</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -860,11 +1100,56 @@ leaf 0
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[16], line 2</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> fig, ax <span style="color: rgb(98,98,98)">=</span> plt<span style="color: rgb(98,98,98)">.</span>subplots(figsize<span style="color: rgb(98,98,98)">=</span>(<span style="color: rgb(98,98,98)">10</span>, <span style="color: rgb(98,98,98)">5</span>))
+<span class="ansi-green-fg">----&gt; 2</span> <span class="ansi-yellow-bg">non_robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">plot_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span style="color: rgb(98,98,98)">.</span>show()
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:423</span>, in <span class="ansi-cyan-fg">RobustOCT.plot_tree</span><span class="ansi-blue-fg">(self, label, filled, rounded, precision, ax, fontsize, color_dict, edge_annotation, arrow_annotation_font_scale, debug)</span>
+<span class="ansi-green-intense-fg ansi-bold">    421</span> node_dict <span style="color: rgb(98,98,98)">=</span> {}
+<span class="ansi-green-intense-fg ansi-bold">    422</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> node <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> np<span style="color: rgb(98,98,98)">.</span>arange(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree<span style="color: rgb(98,98,98)">.</span>total_nodes <span style="color: rgb(98,98,98)">+</span> <span style="color: rgb(98,98,98)">1</span>):
+<span class="ansi-green-fg">--&gt; 423</span>     node_dict[node] <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_get_node_status</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">b_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    425</span> exporter <span style="color: rgb(98,98,98)">=</span> MPLPlotter(
+<span class="ansi-green-intense-fg ansi-bold">    426</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree,
+<span class="ansi-green-intense-fg ansi-bold">    427</span>     node_dict,
+<span class="ansi-green-fg">   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">    440</span>     debug<span style="color: rgb(98,98,98)">=</span>debug,
+<span class="ansi-green-intense-fg ansi-bold">    441</span> )
+<span class="ansi-green-intense-fg ansi-bold">    442</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> exporter<span style="color: rgb(98,98,98)">.</span>export(ax<span style="color: rgb(98,98,98)">=</span>ax)
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">RobustOCT._get_node_status</span><span class="ansi-blue-fg">(self, b, w, n)</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
+<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
+<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
+<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([w[n, k] <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
+<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
+<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
+<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
+<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
+<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
+<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([<span class="ansi-yellow-bg">w</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
+<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
+<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
+<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_24_0.png" src="../_images/notebooks_RobustOCT_24_0.png"/>
+<img alt="../_images/notebooks_RobustOCT_24_1.png" src="../_images/notebooks_RobustOCT_24_1.png"/>
 </div>
 </div>
 <p>Train a robust tree. First, define the uncertainty. Here, we will generate a probability of certainty for each feature randomly (in practice, you would need to use some guess from domain knowledge). For simplicity, we will not change this probability by data sample <img alt="i" class="math" src="../_images/math/5aa339d4daf45a810dda332e3c80a0698e526e04.png"/>. We also define <img alt="\lambda = 0.9" class="math" src="../_images/math/50d821c5e3b3d624d499af661a86eb2bfcebbfa8.png"/>, which in practice must be tuned.</p>
@@ -1085,12 +1370,20 @@ array([0.94967142, 0.88617357, 0.96476885, 1.        , 0.87658466,
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-RobustOCT(depth=2,time_limit=120,num_threads=None,verbose=False)
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[20], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> robust_classifier <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">RobustOCT</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">depth</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">2</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">time_limit</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">120</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      5</span> robust_classifier<span style="color: rgb(98,98,98)">.</span>fit(X_train, y_train, costs<span style="color: rgb(98,98,98)">=</span>costs, budget<span style="color: rgb(98,98,98)">=</span>budget)
+
+<span class="ansi-red-fg">TypeError</span>: __init__() missing 1 required positional argument: 'solver'
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1101,25 +1394,32 @@ RobustOCT(depth=2,time_limit=120,num_threads=None,verbose=False)
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-Feature:  Feat3 , Cutoff:  2
-#########node  2
-leaf 0
-#########node  3
-Feature:  Feat2 , Cutoff:  1
-#########node  4
-pruned
-#########node  5
-pruned
-#########node  6
-leaf 1
-#########node  7
-leaf 0
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[21], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">print_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:358</span>, in <span class="ansi-cyan-fg">RobustOCT.print_tree</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-intense-fg ansi-bold">    355</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">continue</span>
+<span class="ansi-green-intense-fg ansi-bold">    357</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
+<span class="ansi-green-fg">--&gt; 358</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:
+<span class="ansi-green-intense-fg ansi-bold">    359</span>         <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">leaf </span><span class="ansi-bold" style="color: rgb(175,95,135)">{}</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(98,98,98)">.</span>format(k))
+<span class="ansi-green-intense-fg ansi-bold">    360</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1132,11 +1432,56 @@ leaf 0
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[22], line 2</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> fig, ax <span style="color: rgb(98,98,98)">=</span> plt<span style="color: rgb(98,98,98)">.</span>subplots(figsize<span style="color: rgb(98,98,98)">=</span>(<span style="color: rgb(98,98,98)">10</span>, <span style="color: rgb(98,98,98)">5</span>))
+<span class="ansi-green-fg">----&gt; 2</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">plot_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span style="color: rgb(98,98,98)">.</span>show()
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:423</span>, in <span class="ansi-cyan-fg">RobustOCT.plot_tree</span><span class="ansi-blue-fg">(self, label, filled, rounded, precision, ax, fontsize, color_dict, edge_annotation, arrow_annotation_font_scale, debug)</span>
+<span class="ansi-green-intense-fg ansi-bold">    421</span> node_dict <span style="color: rgb(98,98,98)">=</span> {}
+<span class="ansi-green-intense-fg ansi-bold">    422</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> node <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> np<span style="color: rgb(98,98,98)">.</span>arange(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree<span style="color: rgb(98,98,98)">.</span>total_nodes <span style="color: rgb(98,98,98)">+</span> <span style="color: rgb(98,98,98)">1</span>):
+<span class="ansi-green-fg">--&gt; 423</span>     node_dict[node] <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_get_node_status</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">b_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    425</span> exporter <span style="color: rgb(98,98,98)">=</span> MPLPlotter(
+<span class="ansi-green-intense-fg ansi-bold">    426</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree,
+<span class="ansi-green-intense-fg ansi-bold">    427</span>     node_dict,
+<span class="ansi-green-fg">   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">    440</span>     debug<span style="color: rgb(98,98,98)">=</span>debug,
+<span class="ansi-green-intense-fg ansi-bold">    441</span> )
+<span class="ansi-green-intense-fg ansi-bold">    442</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> exporter<span style="color: rgb(98,98,98)">.</span>export(ax<span style="color: rgb(98,98,98)">=</span>ax)
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">RobustOCT._get_node_status</span><span class="ansi-blue-fg">(self, b, w, n)</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
+<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
+<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
+<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([w[n, k] <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
+<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
+<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
+<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
+<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
+<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
+<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([<span class="ansi-yellow-bg">w</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
+<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
+<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
+<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_33_0.png" src="../_images/notebooks_RobustOCT_33_0.png"/>
+<img alt="../_images/notebooks_RobustOCT_33_1.png" src="../_images/notebooks_RobustOCT_33_1.png"/>
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1169,14 +1514,40 @@ leaf 0
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Non-robust training accuracy:  0.6666666666666666
-Robust training accuracy:      0.6587301587301587
-Non-robust test accuracy:      0.5813953488372093
-Robust test accuracy:          0.5581395348837209
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[23], line 5</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span> <span class="ansi-bold" style="color: rgb(0,0,255)">sklearn</span><span class="ansi-bold" style="color: rgb(0,0,255)">.</span><span class="ansi-bold" style="color: rgb(0,0,255)">metrics</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> accuracy_score
+<span class="ansi-green-intense-fg ansi-bold">      3</span> <span style="color: rgb(0,135,0)">print</span>(
+<span class="ansi-green-intense-fg ansi-bold">      4</span>     <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Non-robust training accuracy: </span><span style="color: rgb(175,0,0)">"</span>,
+<span class="ansi-green-fg">----&gt; 5</span>     accuracy_score(y_train, <span class="ansi-yellow-bg">non_robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">predict</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">X_train</span><span class="ansi-yellow-bg">)</span>),
+<span class="ansi-green-intense-fg ansi-bold">      6</span> )
+<span class="ansi-green-intense-fg ansi-bold">      7</span> <span style="color: rgb(0,135,0)">print</span>(
+<span class="ansi-green-intense-fg ansi-bold">      8</span>     <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Robust training accuracy:     </span><span style="color: rgb(175,0,0)">"</span>,
+<span class="ansi-green-intense-fg ansi-bold">      9</span>     accuracy_score(y_train, robust_classifier<span style="color: rgb(98,98,98)">.</span>predict(X_train)),
+<span class="ansi-green-intense-fg ansi-bold">     10</span> )
+<span class="ansi-green-intense-fg ansi-bold">     11</span> <span style="color: rgb(0,135,0)">print</span>(
+<span class="ansi-green-intense-fg ansi-bold">     12</span>     <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Non-robust test accuracy:     </span><span style="color: rgb(175,0,0)">"</span>,
+<span class="ansi-green-intense-fg ansi-bold">     13</span>     accuracy_score(y_test, non_robust_classifier<span style="color: rgb(98,98,98)">.</span>predict(X_test)),
+<span class="ansi-green-intense-fg ansi-bold">     14</span> )
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:342</span>, in <span class="ansi-cyan-fg">RobustOCT.predict</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    339</span> df_test <span style="color: rgb(98,98,98)">=</span> check_same_as_X(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X_col_labels, X, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">test covariates</span><span style="color: rgb(175,0,0)">"</span>)
+<span class="ansi-green-intense-fg ansi-bold">    340</span> check_integer(df_test)
+<span class="ansi-green-fg">--&gt; 342</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_make_prediction</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">df_test</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:127</span>, in <span class="ansi-cyan-fg">RobustOCT._make_prediction</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    125</span> terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>
+<span class="ansi-green-intense-fg ansi-bold">    126</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
+<span class="ansi-green-fg">--&gt; 127</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:  <span style="color: rgb(95,135,135)"># w[n,k] == 1</span>
+<span class="ansi-green-intense-fg ansi-bold">    128</span>         prediction <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [k]
+<span class="ansi-green-intense-fg ansi-bold">    129</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
 </pre></div></div>
 </div>
 <p>To measure the performance of the trained models, perturb the test data based off of our known certainties of each feature (to simulate a distribtion shift), and then see how well each tree performs against the perturbed data</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
@@ -1206,6 +1577,35 @@ Robust test accuracy:          0.5581395348837209
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[24], line 20</span>
+<span class="ansi-green-intense-fg ansi-bold">     18</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> s <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">range</span>(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(98,98,98)">1001</span>):
+<span class="ansi-green-intense-fg ansi-bold">     19</span>     X_test_perturbed <span style="color: rgb(98,98,98)">=</span> perturb(X_test, q_f, s)
+<span class="ansi-green-fg">---&gt; 20</span>     non_robust_pred <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">non_robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">predict</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">X_test_perturbed</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     21</span>     robust_pred <span style="color: rgb(98,98,98)">=</span> robust_classifier<span style="color: rgb(98,98,98)">.</span>predict(X_test_perturbed)
+<span class="ansi-green-intense-fg ansi-bold">     22</span>     non_robust_acc <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [accuracy_score(y_test, non_robust_pred)]
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:342</span>, in <span class="ansi-cyan-fg">RobustOCT.predict</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    339</span> df_test <span style="color: rgb(98,98,98)">=</span> check_same_as_X(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X_col_labels, X, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">test covariates</span><span style="color: rgb(175,0,0)">"</span>)
+<span class="ansi-green-intense-fg ansi-bold">    340</span> check_integer(df_test)
+<span class="ansi-green-fg">--&gt; 342</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_make_prediction</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">df_test</span><span class="ansi-yellow-bg">)</span>
+
+File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:127</span>, in <span class="ansi-cyan-fg">RobustOCT._make_prediction</span><span class="ansi-blue-fg">(self, X)</span>
+<span class="ansi-green-intense-fg ansi-bold">    125</span> terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>
+<span class="ansi-green-intense-fg ansi-bold">    126</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
+<span class="ansi-green-fg">--&gt; 127</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:  <span style="color: rgb(95,135,135)"># w[n,k] == 1</span>
+<span class="ansi-green-intense-fg ansi-bold">    128</span>         prediction <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [k]
+<span class="ansi-green-intense-fg ansi-bold">    129</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+
+<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+</pre></div></div>
+</div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
@@ -1224,10 +1624,16 @@ Robust test accuracy:          0.5581395348837209
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Worst-case accuracy (Non-Robust Tree):  0.4883720930232558
-Worst-case accuracy (Robust Tree):      0.5116279069767442
-Average accuracy (Non-Robust Tree):     0.5733255813953408
-Average accuracy (Robust Tree):         0.5584186046511533
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[25], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Worst-case accuracy (Non-Robust Tree): </span><span style="color: rgb(175,0,0)">"</span>, <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">min</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">non_robust_acc</span><span class="ansi-yellow-bg">)</span>)
+<span class="ansi-green-intense-fg ansi-bold">      2</span> <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Worst-case accuracy (Robust Tree):     </span><span style="color: rgb(175,0,0)">"</span>, <span style="color: rgb(0,135,0)">min</span>(robust_acc))
+<span class="ansi-green-intense-fg ansi-bold">      3</span> <span style="color: rgb(0,135,0)">print</span>(
+<span class="ansi-green-intense-fg ansi-bold">      4</span>     <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Average accuracy (Non-Robust Tree):    </span><span style="color: rgb(175,0,0)">"</span>, <span style="color: rgb(0,135,0)">sum</span>(non_robust_acc) <span style="color: rgb(98,98,98)">/</span> <span style="color: rgb(0,135,0)">len</span>(non_robust_acc)
+<span class="ansi-green-intense-fg ansi-bold">      5</span> )
+
+<span class="ansi-red-fg">ValueError</span>: min() arg is an empty sequence
 </pre></div></div>
 </div>
 </div>

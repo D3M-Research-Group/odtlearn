@@ -17,7 +17,8 @@ Classes
 
 
 
-.. py:class:: FairOCT(positive_class, _lambda=0, depth=1, obj_mode='acc', fairness_type=None, fairness_bound=1, time_limit=60, num_threads=None, verbose=False)
+.. py:class:: FairOCT(solver, positive_class, _lambda=0, depth=1, obj_mode='acc', fairness_type=None, fairness_bound=1, time_limit=60, num_threads=None, verbose=False)
+
 
    Bases: :py:obj:`odtlearn.flow_oct_ms.FlowOCTMultipleSink`
 

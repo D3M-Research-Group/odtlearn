@@ -1,0 +1,362 @@
+:py:mod:`odtlearn.utils.scip_solver`
+====================================
+
+.. py:module:: odtlearn.utils.scip_solver
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.scip_solver.SCIPSolver
+   odtlearn.utils.scip_solver.ExprWrapper
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.scip_solver.GRB_CONST_MAP
+
+
+.. py:data:: GRB_CONST_MAP
+
+   
+
+.. py:class:: SCIPSolver
+
+
+   Bases: :py:obj:`odtlearn.utils.solver.Solver`
+
+   
+   A wrapper class on top the python-mip Model and solver classes. This class contains functions for interacting
+   with the solver for setting up, optimizing, and getting optimal values of a model.
+   When using CBC, this class interacts with a slightly modified version of the SolverCbc class
+   from the python-mip package.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: get_attr(name, objs)
+
+      
+      Mimic the getAttr functionality from Gurobi to get the value
+      of a variable in the current solution. Raises an implementation
+      error if an attribute name besides "X" is given.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: optimize()
+
+      
+      Optimize the constructed model
+
+
+      :Parameters:
+
+          **X** : array-like, shape (n_samples, n_features)
+              The input samples.
+
+          **obj** : DecisionTree object
+              A copy of the DecisionTree object that is passed to the callback action.
+
+          **solver** : Solver object
+              A copy of the Solver object that is passed to the callback action.
+
+          **callback: bool, default=False**
+              Boolean specifying whether this model uses a callback when solving the problem
+
+          **callback_action: mip.ConstrsGenerator object**
+              Function to be called when CBC reaches an integer solution
+
+          **kwargs: Additional arguments to be passed to the callback action**
+              ..
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: prep_indices(*indices)
+
+      
+      indices: list of lists
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: add_vars(*indices, lb=0.0, ub=float('inf'), obj=0.0, vtype='C', name: str = '')
+
+      
+      Create a dictionary with the decision variables with keys of the form
+      {name}[(element of indices list)] and then add the variables to the model
+
+
+      :Parameters:
+
+          **\*indices: List**
+              Arbitrary list of indices to use to create the decision variables.
+
+          **lb: double, default=0.0**
+              Lower bound for new variable.
+
+          **ub: double, default=inf**
+              Upper bound for new variable.
+
+          **obj: double**
+              Objective coefficient for new variable.
+
+          **type: str, default="C"**
+              Variable type for new variable. Accepted values are "C", "B", "I"
+
+          **name: str, default=""**
+              Name used when creating dictionary storing variables.
+
+      :Returns:
+
+          Dictionary of new variable objects.
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: add_constr(cons_expr)
+
+      
+      Add a constraint expression to the model.
+
+
+      :Parameters:
+
+          **cons_expr: LinExpr**
+              A constraint expression to be added to the model.
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: add_constrs(cons_expr_tuple)
+
+      
+      Add constraint expressions to the model.
+
+
+      :Parameters:
+
+          **cons_expr_tuple: List[LinExpr]**
+              A list of constraint expressions to be added to the model.
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: lin_expr(arg1=0.0)
+
+      
+      arg1 is ignored for now.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: set_objective(expr, sense)
+
+      
+      Take the linear expression and set it as the objective for the problem.
+
+
+      :Parameters:
+
+          **expr: LinExpr**
+              The linear expression to be used as the objective for the problem.
+
+          **sense: str**
+              A string specifying whether the objective should be minimized (1 or GRB.MINIMIZE)
+              or maximized (-1 or GRB.MAXIMIZE)
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: quicksum(terms)
+
+      
+      Pass through function for python-mip quicksum function
+
+
+      :Parameters:
+
+          **terms: List[mip.Variable]**
+              List of variables to be summed
+
+      :Returns:
+
+          LinExpr
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: ExprWrapper
+
+
+   Bases: :py:obj:`pyscipopt.Expr`
+
+   .. py:method:: add(other)
+
+
+

@@ -17,7 +17,8 @@ Classes
 
 
 
-.. py:class:: FlowOCTMultipleSink(_lambda, depth, time_limit, num_threads, verbose)
+.. py:class:: FlowOCTMultipleSink(solver, _lambda, depth, time_limit, num_threads, verbose)
+
 
    Bases: :py:obj:`odtlearn.opt_ct.OptimalClassificationTree`
 

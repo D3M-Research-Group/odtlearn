@@ -17,7 +17,8 @@ Classes
 
 
 
-.. py:class:: OptimalDecisionTree(depth=1, time_limit=60, num_threads=None, verbose=False)
+.. py:class:: OptimalDecisionTree(solver, depth=1, time_limit=60, num_threads=None, verbose=False)
+
 
    Bases: :py:obj:`abc.ABC`
 

@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" /><link rel="next" title="odtlearn.utils.callbacks" href="../callbacks/index.html" /><link rel="prev" title="odtlearn.utils.binarize" href="../binarize/index.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>odtlearn.utils.callback_helpers - odtlearn 0.2.0 documentation</title>
+        <title>odtlearn.utils.callback_helpers - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+      <a href="../../../../index.html"><div class="brand">odtlearn 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -174,10 +174,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -251,19 +255,19 @@
 <col style="width: 90%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_left_exp_integer" title="odtlearn.utils.callback_helpers.get_left_exp_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_left_exp_integer</span></code></a>(main_grb_obj, n, i)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_left_exp_integer" title="odtlearn.utils.callback_helpers.get_left_exp_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_left_exp_integer</span></code></a>(solver, main_grb_obj, n, i)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_right_exp_integer" title="odtlearn.utils.callback_helpers.get_right_exp_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_right_exp_integer</span></code></a>(main_grb_obj, n, i)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_right_exp_integer" title="odtlearn.utils.callback_helpers.get_right_exp_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_right_exp_integer</span></code></a>(solver, main_grb_obj, n, i)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_target_exp_integer" title="odtlearn.utils.callback_helpers.get_target_exp_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_target_exp_integer</span></code></a>(main_grb_obj, n, i)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_cut_integer" title="odtlearn.utils.callback_helpers.get_cut_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cut_integer</span></code></a>(main_grb_obj, left, right, target, i)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_cut_integer" title="odtlearn.utils.callback_helpers.get_cut_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cut_integer</span></code></a>(solver, main_grb_obj, left, right, ...)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_cut_expression" title="odtlearn.utils.callback_helpers.get_cut_expression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cut_expression</span></code></a>(master, b, w, path, xi, v, i)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_cut_expression" title="odtlearn.utils.callback_helpers.get_cut_expression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cut_expression</span></code></a>(master, solver, X, b, w, path, xi, ...)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_all_terminal_paths" title="odtlearn.utils.callback_helpers.get_all_terminal_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_terminal_paths</span></code></a>(master, b, w[, terminal_nodes, ...])</p></td>
@@ -279,11 +283,11 @@
 </table></div>
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_left_exp_integer">
-<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_left_exp_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_grb_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_left_exp_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_left_exp_integer" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_left_exp_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_grb_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_left_exp_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_left_exp_integer" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_right_exp_integer">
-<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_right_exp_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_grb_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_right_exp_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_right_exp_integer" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_right_exp_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_grb_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_right_exp_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_right_exp_integer" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_target_exp_integer">
@@ -291,11 +295,11 @@
 <dd></dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_cut_integer">
-<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_cut_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_grb_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_cut_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_cut_integer" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_cut_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_grb_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_cut_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_cut_integer" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_cut_expression">
-<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_cut_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_cut_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_cut_expression" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_cut_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_theta_indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_cut_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_cut_expression" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_all_terminal_paths">

@@ -1,0 +1,51 @@
+:py:mod:`odtlearn.constants`
+============================
+
+.. py:module:: odtlearn.constants
+
+.. autoapi-nested-parse::
+
+   ODTLearn Constants
+
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+.. py:data:: MIN
+   :value: 'MIN'
+
+   
+
+.. py:data:: MAX
+   :value: 'MAX'
+
+   
+
+.. py:data:: MINIMIZE
+   :value: 'MIN'
+
+   
+
+.. py:data:: MAXIMIZE
+   :value: 'MAX'
+
+   
+
+.. py:data:: BINARY
+   :value: 'B'
+
+   
+
+.. py:data:: CONTINUOUS
+   :value: 'C'
+
+   
+
+.. py:data:: INTEGER
+   :value: 'I'
+
+   
+

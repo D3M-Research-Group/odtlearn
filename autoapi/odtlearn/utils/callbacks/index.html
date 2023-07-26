@@ -2,10 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" /><link rel="next" title="odtlearn.utils.solver" href="../solver/index.html" /><link rel="prev" title="odtlearn.utils.callback_helpers" href="../callback_helpers/index.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" /><link rel="next" title="odtlearn.utils.cbc_solver" href="../cbc_solver/index.html" /><link rel="prev" title="odtlearn.utils.callback_helpers" href="../callback_helpers/index.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>odtlearn.utils.callbacks - odtlearn 0.2.0 documentation</title>
+        <title>odtlearn.utils.callbacks - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+      <a href="../../../../index.html"><div class="brand">odtlearn 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -174,10 +174,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -243,6 +247,23 @@
 <span id="odtlearn-utils-callbacks"></span><h1><a class="reference internal" href="#module-odtlearn.utils.callbacks" title="odtlearn.utils.callbacks"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a><a class="headerlink" href="#module-odtlearn.utils.callbacks" title="Permalink to this headline">#</a></h1>
 <div class="section" id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">#</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">#</a></h3>
+<div class="table-wrapper"><table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%"/>
+<col style="width: 90%"/>
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.BendersCallback" title="odtlearn.utils.callbacks.BendersCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BendersCallback</span></code></a></p></td>
+<td><p>This class contains a function that is called by the sovler at</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.RobustBendersCallback" title="odtlearn.utils.callbacks.RobustBendersCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RobustBendersCallback</span></code></a></p></td>
+<td><p>This class contains the functioncalled by the solver at every node through</p></td>
+</tr>
+</tbody>
+</table></div>
+</div>
 <div class="section" id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">#</a></h3>
 <div class="table-wrapper"><table class="longtable docutils align-default">
@@ -251,30 +272,24 @@
 <col style="width: 90%"/>
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.benders_subproblem" title="odtlearn.utils.callbacks.benders_subproblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">benders_subproblem</span></code></a>(main_grb_obj, b, p, w, i)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.benders_subproblem" title="odtlearn.utils.callbacks.benders_subproblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">benders_subproblem</span></code></a>(main_model_obj, b, p, w, i)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.benders_callback" title="odtlearn.utils.callbacks.benders_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">benders_callback</span></code></a>(model, where)</p></td>
-<td><p>This function is called by Gurobi at every node through the branch-&amp;-bound</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.robust_tree_subproblem" title="odtlearn.utils.callbacks.robust_tree_subproblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">robust_tree_subproblem</span></code></a>(master, i, terminal_nodes, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.robust_tree_subproblem" title="odtlearn.utils.callbacks.robust_tree_subproblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">robust_tree_subproblem</span></code></a>(master, i, terminal_nodes, ...)</p></td>
 <td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.robust_tree_callback" title="odtlearn.utils.callbacks.robust_tree_callback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">robust_tree_callback</span></code></a>(model, where)</p></td>
-<td><p>This function is called by gurobi at every node through the branch-&amp;-bound tree while we solve the model.</p></td>
 </tr>
 </tbody>
 </table></div>
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callbacks.benders_subproblem">
-<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">benders_subproblem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_grb_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#benders_subproblem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.benders_subproblem" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">benders_subproblem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_model_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#benders_subproblem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.benders_subproblem" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="odtlearn.utils.callbacks.benders_callback">
-<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">benders_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">where</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#benders_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.benders_callback" title="Permalink to this definition">#</a></dt>
-<dd><p>This function is called by Gurobi at every node through the branch-&amp;-bound
-tree while we solve the model. Using the argument “where” we can see where
-the callback has been called.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="odtlearn.utils.callbacks.BendersCallback">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">BendersCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#BendersCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.BendersCallback" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">mip.ConstrsGenerator</span></code></p>
+<p>This class contains a function that is called by the sovler at
+every node through the branch-&amp;-bound tree while we solve the model.</p>
 <p>We are specifically interested at nodes
 where we get an integer solution for the master problem.
 When we get an integer solution for b and p, for every data-point we solve
@@ -283,35 +298,100 @@ sub-problem[i]. If this is violated we add the corresponding benders
 constraint as lazy constraint to the master problem and proceed.
 Whenever we have no violated constraint, it means that we have found
 the optimal solution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> – the gurobi model we are solving.</p></li>
-<li><p><strong>where</strong> – the node where the callback function is called from</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.utils.callbacks.BendersCallback.generate_constrs">
+<span class="sig-name descname"><span class="pre">generate_constrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">mip.Model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#BendersCallback.generate_constrs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.BendersCallback.generate_constrs" title="Permalink to this definition">#</a></dt>
+<dd><p>Method called by the solver engine to generate <em>cuts</em> or <em>lazy constraints</em>.</p>
+<blockquote>
+<div><p>After analyzing the contents of the solution in model
+variables <code class="xref py py-attr docutils literal notranslate"><span class="pre">vars</span></code>, whose solution values can
+be queried with the <code class="xref py py-attr docutils literal notranslate"><span class="pre">x</span></code> attribute, one or more
+constraints may be generated and added to the solver with
+the <code class="xref py py-meth docutils literal notranslate"><span class="pre">add_cut()</span></code> method for cuts. This method
+can be called by the solver engine in two situations, in the first
+one a fractional solution is found and one or more inequalities
+can be generated (cutting planes) to remove this fractional
+solution. In the second case an integer feasible solution is found
+and then a new constraint can be generated (lazy constraint) to
+report that this integer solution is not feasible.  To control when
+the constraint generator will be called set your
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ConstrsGenerator</span></code> object in the attributes
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">cuts_generator</span></code> or
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">lazy_constrs_generator</span></code> (adding
+to both is also possible).</p>
+</div></blockquote>
+<p>Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>model(mip.Model): model for which cuts may be generated. Please note</dt><dd><p>that this model may have fewer variables than the original
+model due to pre-processing. If you want to generate cuts
+in terms of the original variables, one alternative is to
+query variables by their names, checking which ones remain
+in this pre-processed problem. In this procedure you can
+query model properties and add cuts (<code class="xref py py-meth docutils literal notranslate"><span class="pre">add_cut()</span></code>) or lazy constraints
+(<code class="xref py py-meth docutils literal notranslate"><span class="pre">add_lazy_constr()</span></code>), but you cannot
+perform other model modifications, such as add columns.</p>
 </dd>
 </dl>
+<p>depth(int): depth of the search tree (0 is the root node)
+npass(int): current number of cut passes in this node</p>
+</div></blockquote>
+</dd></dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callbacks.robust_tree_subproblem">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">robust_tree_subproblem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_path_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_features_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_assignments_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_cutoffs_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_mins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_maxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#robust_tree_subproblem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.robust_tree_subproblem" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="odtlearn.utils.callbacks.robust_tree_callback">
-<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">robust_tree_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">where</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#robust_tree_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.robust_tree_callback" title="Permalink to this definition">#</a></dt>
-<dd><p>This function is called by gurobi at every node through the branch-&amp;-bound tree while we solve the model.
-Using the argument “where” we can see where the callback has been called.
+<dl class="py class">
+<dt class="sig sig-object py" id="odtlearn.utils.callbacks.RobustBendersCallback">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">RobustBendersCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#RobustBendersCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.RobustBendersCallback" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">mip.ConstrsGenerator</span></code></p>
+<p>This class contains the functioncalled by the solver at every node through
+the branch-&amp;-bound tree while we solve the model.
 We are specifically interested at nodes where we get an integer solution for the master problem.
 When we get an integer solution for b and p, for every datapoint we solve the subproblem
 which is a minimum cut and check if g[i] &lt;= value of subproblem[i].
 If this is violated we add the corresponding benders constraint as lazy constraint to the master
-problem and proceed. Whenever we have no violated constraint, it means that we have found the optimal solution.
-:param model: the gurobi model we are solving.
-:param where: the node where the callback function is called from
-:return:</p>
+problem and proceed. Whenever we have no violated constraint, it means that we have found the optimal solution.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.utils.callbacks.RobustBendersCallback.generate_constrs">
+<span class="sig-name descname"><span class="pre">generate_constrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">mip.Model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#RobustBendersCallback.generate_constrs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.RobustBendersCallback.generate_constrs" title="Permalink to this definition">#</a></dt>
+<dd><p>Method called by the solver engine to generate <em>cuts</em> or <em>lazy constraints</em>.</p>
+<blockquote>
+<div><p>After analyzing the contents of the solution in model
+variables <code class="xref py py-attr docutils literal notranslate"><span class="pre">vars</span></code>, whose solution values can
+be queried with the <code class="xref py py-attr docutils literal notranslate"><span class="pre">x</span></code> attribute, one or more
+constraints may be generated and added to the solver with
+the <code class="xref py py-meth docutils literal notranslate"><span class="pre">add_cut()</span></code> method for cuts. This method
+can be called by the solver engine in two situations, in the first
+one a fractional solution is found and one or more inequalities
+can be generated (cutting planes) to remove this fractional
+solution. In the second case an integer feasible solution is found
+and then a new constraint can be generated (lazy constraint) to
+report that this integer solution is not feasible.  To control when
+the constraint generator will be called set your
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ConstrsGenerator</span></code> object in the attributes
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">cuts_generator</span></code> or
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">lazy_constrs_generator</span></code> (adding
+to both is also possible).</p>
+</div></blockquote>
+<p>Args:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>model(mip.Model): model for which cuts may be generated. Please note</dt><dd><p>that this model may have fewer variables than the original
+model due to pre-processing. If you want to generate cuts
+in terms of the original variables, one alternative is to
+query variables by their names, checking which ones remain
+in this pre-processed problem. In this procedure you can
+query model properties and add cuts (<code class="xref py py-meth docutils literal notranslate"><span class="pre">add_cut()</span></code>) or lazy constraints
+(<code class="xref py py-meth docutils literal notranslate"><span class="pre">add_lazy_constr()</span></code>), but you cannot
+perform other model modifications, such as add columns.</p>
+</dd>
+</dl>
+<p>depth(int): depth of the search tree (0 is the root node)
+npass(int): current number of cut passes in this node</p>
+</div></blockquote>
+</dd></dl>
 </dd></dl>
 </div>
 </div>
@@ -322,12 +402,12 @@ problem and proceed. Whenever we have no violated constraint, it means that we h
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../solver/index.html">
+          <a class="next-page" href="../cbc_solver/index.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></div>
+                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -378,6 +458,7 @@ problem and proceed. Whenever we have no violated constraint, it means that we h
             <ul>
 <li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a><ul>
 <li><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
 </li>

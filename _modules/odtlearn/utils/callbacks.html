@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>odtlearn.utils.callbacks - odtlearn 0.2.0 documentation</title>
+        <title>odtlearn.utils.callbacks - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+      <a href="../../../index.html"><div class="brand">odtlearn 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -174,10 +174,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -242,9 +246,8 @@
           <h1>Source code for odtlearn.utils.callbacks</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">heapq</span>
-<span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">gurobipy</span> <span class="kn">import</span> <span class="n">GRB</span><span class="p">,</span> <span class="n">LinExpr</span><span class="p">,</span> <span class="n">quicksum</span>
+<span class="kn">from</span> <span class="nn">mip</span> <span class="kn">import</span> <span class="n">ConstrsGenerator</span><span class="p">,</span> <span class="n">Model</span>
 
 <span class="kn">from</span> <span class="nn">odtlearn.utils.callback_helpers</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_all_terminal_paths</span><span class="p">,</span>
@@ -255,8 +258,8 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="benders_subproblem"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callbacks/index.html#odtlearn.utils.callbacks.benders_subproblem">[docs]</a><span class="k">def</span> <span class="nf">benders_subproblem</span><span class="p">(</span><span class="n">main_grb_obj</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
-    <span class="n">label_i</span> <span class="o">=</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<div class="viewcode-block" id="benders_subproblem"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callbacks/index.html#odtlearn.utils.callbacks.benders_subproblem">[docs]</a><span class="k">def</span> <span class="nf">benders_subproblem</span><span class="p">(</span><span class="n">main_model_obj</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+    <span class="n">label_i</span> <span class="o">=</span> <span class="n">main_model_obj</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="n">current</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">right</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">left</span> <span class="o">=</span> <span class="p">[]</span>
@@ -264,12 +267,17 @@
     <span class="n">subproblem_value</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">branching</span><span class="p">,</span> <span class="n">selected_feature</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">terminal</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_get_node_status</span><span class="p">(</span>
-            <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">current</span>
-        <span class="p">)</span>
+        <span class="p">(</span>
+            <span class="n">_</span><span class="p">,</span>
+            <span class="n">branching</span><span class="p">,</span>
+            <span class="n">selected_feature</span><span class="p">,</span>
+            <span class="n">_</span><span class="p">,</span>
+            <span class="n">terminal</span><span class="p">,</span>
+            <span class="n">_</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">main_model_obj</span><span class="o">.</span><span class="n">_get_node_status</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">terminal</span><span class="p">:</span>
             <span class="n">target</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">current</span> <span class="ow">in</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">current</span> <span class="ow">in</span> <span class="n">main_model_obj</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
                 <span class="n">left</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
                 <span class="n">right</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">w</span><span class="p">[</span><span class="n">current</span><span class="p">,</span> <span class="n">label_i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
@@ -277,24 +285,23 @@
             <span class="k">break</span>
         <span class="k">elif</span> <span class="n">branching</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span>
-                <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_X</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">selected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+                <span class="n">main_model_obj</span><span class="o">.</span><span class="n">_X</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">selected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
             <span class="p">):</span>  <span class="c1"># going right on the branch</span>
                 <span class="n">left</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
                 <span class="n">target</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
-                <span class="n">current</span> <span class="o">=</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_right_children</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="n">main_model_obj</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_right_children</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>  <span class="c1"># going left on the branch</span>
                 <span class="n">right</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
                 <span class="n">target</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
-                <span class="n">current</span> <span class="o">=</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_left_children</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="n">main_model_obj</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_left_children</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">subproblem_value</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">target</span></div>
 
 
-<div class="viewcode-block" id="benders_callback"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callbacks/index.html#odtlearn.utils.callbacks.benders_callback">[docs]</a><span class="k">def</span> <span class="nf">benders_callback</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">where</span><span class="p">):</span>
+<div class="viewcode-block" id="BendersCallback"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callbacks/index.html#odtlearn.utils.callbacks.BendersCallback">[docs]</a><span class="k">class</span> <span class="nc">BendersCallback</span><span class="p">(</span><span class="n">ConstrsGenerator</span><span class="p">):</span>
     <span class="sd">"""</span>
-<span class="sd">    This function is called by Gurobi at every node through the branch-&amp;-bound</span>
-<span class="sd">    tree while we solve the model. Using the argument "where" we can see where</span>
-<span class="sd">    the callback has been called.</span>
+<span class="sd">    This class contains a function that is called by the sovler at</span>
+<span class="sd">    every node through the branch-&amp;-bound tree while we solve the model.</span>
 
 <span class="sd">    We are specifically interested at nodes</span>
 <span class="sd">    where we get an integer solution for the master problem.</span>
@@ -305,41 +312,44 @@
 <span class="sd">    Whenever we have no violated constraint, it means that we have found</span>
 <span class="sd">    the optimal solution.</span>
 
-<span class="sd">    :param model: the gurobi model we are solving.</span>
-<span class="sd">    :param where: the node where the callback function is called from</span>
-<span class="sd">    :return:</span>
 <span class="sd">    """</span>
-    <span class="n">X</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_main_grb_obj</span><span class="o">.</span><span class="n">_X</span>
 
-    <span class="k">if</span> <span class="n">where</span> <span class="o">==</span> <span class="n">GRB</span><span class="o">.</span><span class="n">Callback</span><span class="o">.</span><span class="n">MIPSOL</span><span class="p">:</span>
-        <span class="n">func_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">_callback_counter_integer</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="c1"># we need the value of b, w and g</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cbGetSolution</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_vars_g</span><span class="p">)</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cbGetSolution</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_vars_b</span><span class="p">)</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cbGetSolution</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_vars_p</span><span class="p">)</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cbGetSolution</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_vars_w</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">solver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"g"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"p"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"b"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"w"</span><span class="p">)</span>
 
-        <span class="n">added_cut</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># We only want indices that g_i is one!</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+<div class="viewcode-block" id="BendersCallback.generate_constrs"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callbacks/index.html#odtlearn.utils.callbacks.BendersCallback.generate_constrs">[docs]</a>    <span class="k">def</span> <span class="nf">generate_constrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">npass</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">g_trans</span><span class="p">,</span> <span class="n">p_trans</span><span class="p">,</span> <span class="n">b_trans</span><span class="p">,</span> <span class="n">w_trans</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
             <span class="n">g_threshold</span> <span class="o">=</span> <span class="mf">0.5</span>
-            <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">g_threshold</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">g_trans</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">g_threshold</span><span class="p">:</span>
                 <span class="n">subproblem_value</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">benders_subproblem</span><span class="p">(</span>
-                    <span class="n">model</span><span class="o">.</span><span class="n">_main_grb_obj</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">i</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">b_trans</span><span class="p">,</span> <span class="n">p_trans</span><span class="p">,</span> <span class="n">w_trans</span><span class="p">,</span> <span class="n">i</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">subproblem_value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">added_cut</span> <span class="o">=</span> <span class="mi">1</span>
-                    <span class="n">lhs</span> <span class="o">=</span> <span class="n">get_cut_integer</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_main_grb_obj</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-                    <span class="n">model</span><span class="o">.</span><span class="n">cbLazy</span><span class="p">(</span><span class="n">lhs</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
-
-        <span class="n">func_end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">func_time</span> <span class="o">=</span> <span class="n">func_end_time</span> <span class="o">-</span> <span class="n">func_start_time</span>
-        <span class="c1"># print(model._callback_counter)</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">_total_callback_time_integer</span> <span class="o">+=</span> <span class="n">func_time</span>
-        <span class="k">if</span> <span class="n">added_cut</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">_callback_counter_integer_success</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">_total_callback_time_integer_success</span> <span class="o">+=</span> <span class="n">func_time</span></div>
+                    <span class="n">lhs</span> <span class="o">=</span> <span class="n">get_cut_integer</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span>
+                        <span class="n">left</span><span class="p">,</span>
+                        <span class="n">right</span><span class="p">,</span>
+                        <span class="n">target</span><span class="p">,</span>
+                        <span class="n">i</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="c1"># print(lhs)</span>
+                    <span class="n">new_constr</span> <span class="o">=</span> <span class="n">lhs</span>
+                    <span class="n">new_constr</span><span class="o">.</span><span class="n">sense</span> <span class="o">=</span> <span class="s2">"&lt;"</span>
+                    <span class="n">model</span> <span class="o">+=</span> <span class="n">new_constr</span></div></div>
 
 
 <div class="viewcode-block" id="robust_tree_subproblem"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callbacks/index.html#odtlearn.utils.callbacks.robust_tree_subproblem">[docs]</a><span class="k">def</span> <span class="nf">robust_tree_subproblem</span><span class="p">(</span>
@@ -375,40 +385,45 @@
     <span class="k">return</span> <span class="n">target</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">v</span></div>
 
 
-<div class="viewcode-block" id="robust_tree_callback"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callbacks/index.html#odtlearn.utils.callbacks.robust_tree_callback">[docs]</a><span class="k">def</span> <span class="nf">robust_tree_callback</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">where</span><span class="p">):</span>
+<div class="viewcode-block" id="RobustBendersCallback"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callbacks/index.html#odtlearn.utils.callbacks.RobustBendersCallback">[docs]</a><span class="k">class</span> <span class="nc">RobustBendersCallback</span><span class="p">(</span><span class="n">ConstrsGenerator</span><span class="p">):</span>
     <span class="sd">"""</span>
-<span class="sd">    This function is called by gurobi at every node through the branch-&amp;-bound tree while we solve the model.</span>
-<span class="sd">    Using the argument "where" we can see where the callback has been called.</span>
+<span class="sd">    This class contains the functioncalled by the solver at every node through</span>
+<span class="sd">    the branch-&amp;-bound tree while we solve the model.</span>
 <span class="sd">    We are specifically interested at nodes where we get an integer solution for the master problem.</span>
 <span class="sd">    When we get an integer solution for b and p, for every datapoint we solve the subproblem</span>
 <span class="sd">    which is a minimum cut and check if g[i] &lt;= value of subproblem[i].</span>
 <span class="sd">    If this is violated we add the corresponding benders constraint as lazy constraint to the master</span>
 <span class="sd">    problem and proceed. Whenever we have no violated constraint, it means that we have found the optimal solution.</span>
-<span class="sd">    :param model: the gurobi model we are solving.</span>
-<span class="sd">    :param where: the node where the callback function is called from</span>
-<span class="sd">    :return:</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">where</span> <span class="o">==</span> <span class="n">GRB</span><span class="o">.</span><span class="n">Callback</span><span class="o">.</span><span class="n">MIPSOL</span><span class="p">:</span>
-        <span class="n">func_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">_callback_counter_integer</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="c1"># we need the value of b, w, and t</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cbGetSolution</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_vars_b</span><span class="p">)</span>
-        <span class="n">w</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cbGetSolution</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_vars_w</span><span class="p">)</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">cbGetSolution</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_vars_t</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">solver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"b"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"w"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"t"</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RobustBendersCallback.generate_constrs"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callbacks/index.html#odtlearn.utils.callbacks.RobustBendersCallback.generate_constrs">[docs]</a>    <span class="k">def</span> <span class="nf">generate_constrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">npass</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">b_trans</span><span class="p">,</span> <span class="n">w_trans</span><span class="p">,</span> <span class="n">t_trans</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+        <span class="p">)</span>
 
         <span class="c1"># Initialize a blank-slate xi</span>
         <span class="n">initial_xi</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="o">.</span><span class="n">_cat_features</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"cat_features"</span><span class="p">]:</span>
             <span class="n">initial_xi</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="c1"># Initialize dictionaries to store min and max values of each feature:</span>
         <span class="n">initial_mins</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">initial_maxes</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="o">.</span><span class="n">_cat_features</span><span class="p">:</span>
-            <span class="n">initial_mins</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="o">.</span><span class="n">_min_values</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
-            <span class="n">initial_maxes</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="o">.</span><span class="n">_max_values</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"cat_features"</span><span class="p">]:</span>
+            <span class="n">initial_mins</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"min_values"</span><span class="p">][</span><span class="n">c</span><span class="p">]</span>
+            <span class="n">initial_maxes</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"max_values"</span><span class="p">][</span><span class="n">c</span><span class="p">]</span>
 
-        <span class="n">whole_expr</span> <span class="o">=</span> <span class="n">LinExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Constraint RHS expression</span>
+        <span class="n">whole_expr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">lin_expr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Constraint RHS expression</span>
         <span class="n">priority_queue</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Stores elements of form (path_cost, index)</span>
         <span class="n">path_dict</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Stores all paths from shortest path problem</span>
         <span class="n">xi_dict</span> <span class="o">=</span> <span class="p">(</span>
@@ -421,16 +436,25 @@
         <span class="n">correct_points</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># List of indices of nominally correctly classified points</span>
 
         <span class="c1"># Find nominal path for every data point</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
-            <span class="n">nom_path</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">get_nominal_path</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"datapoints"</span><span class="p">]:</span>
+            <span class="n">nom_path</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">get_nominal_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">b_trans</span><span class="p">,</span> <span class="n">w_trans</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                 <span class="c1"># Misclassified nominally - no need to check for shortest path</span>
                 <span class="n">curr_expr</span> <span class="o">=</span> <span class="n">get_cut_expression</span><span class="p">(</span>
-                    <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">nom_path</span><span class="p">,</span> <span class="n">initial_xi</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">i</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_X</span><span class="p">,</span>
+                    <span class="n">b_trans</span><span class="p">,</span>
+                    <span class="n">w_trans</span><span class="p">,</span>
+                    <span class="n">nom_path</span><span class="p">,</span>
+                    <span class="n">initial_xi</span><span class="p">,</span>
+                    <span class="kc">False</span><span class="p">,</span>
+                    <span class="n">i</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"f_theta_indices"</span><span class="p">],</span>
                 <span class="p">)</span>
-                <span class="n">whole_expr</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">curr_expr</span><span class="p">)</span>
-                <span class="n">model</span><span class="o">.</span><span class="n">cbLazy</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="o">.</span><span class="n">_t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">curr_expr</span><span class="p">)</span>
-                <span class="n">model</span><span class="o">.</span><span class="n">_total_cuts</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">whole_expr</span> <span class="o">+=</span> <span class="n">curr_expr</span>
+                <span class="n">new_constr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"t"</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">curr_expr</span>
+                <span class="n">model</span> <span class="o">+=</span> <span class="n">new_constr</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># Correctly classified - put into pool of problems for shortest path</span>
                 <span class="n">correct_points</span> <span class="o">+=</span> <span class="p">[</span><span class="n">i</span><span class="p">]</span>
@@ -444,10 +468,10 @@
             <span class="n">terminal_features_dict</span><span class="p">,</span>
             <span class="n">terminal_assignments_dict</span><span class="p">,</span>
             <span class="n">terminal_cutoffs_dict</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="n">get_all_terminal_paths</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">get_all_terminal_paths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">b_trans</span><span class="p">,</span> <span class="n">w_trans</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">correct_points</span><span class="p">:</span>
             <span class="n">path</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">robust_tree_subproblem</span><span class="p">(</span>
-                <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span>
                 <span class="n">i</span><span class="p">,</span>
                 <span class="n">terminal_nodes</span><span class="p">,</span>
                 <span class="n">terminal_path_dict</span><span class="p">,</span>
@@ -472,43 +496,53 @@
             <span class="c1"># Get next least-cost point and see if still under epsilon budget</span>
             <span class="n">current_point</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">priority_queue</span><span class="p">)</span>
             <span class="n">curr_cost</span> <span class="o">=</span> <span class="n">current_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">curr_cost</span> <span class="o">+</span> <span class="n">total_cost</span> <span class="o">&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="o">.</span><span class="n">_epsilon</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">curr_cost</span> <span class="o">+</span> <span class="n">total_cost</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"epsilon"</span><span class="p">]:</span>
                 <span class="c1"># Push point back into queue</span>
                 <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">priority_queue</span><span class="p">,</span> <span class="n">current_point</span><span class="p">)</span>
                 <span class="k">break</span>
             <span class="c1"># Add RHS expression for point if still under budget</span>
             <span class="n">i</span> <span class="o">=</span> <span class="n">current_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">whole_expr</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-                <span class="n">get_cut_expression</span><span class="p">(</span>
-                    <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">path_dict</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">xi_dict</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">v_dict</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span>
-                <span class="p">)</span>
+            <span class="n">whole_expr</span> <span class="o">+=</span> <span class="n">get_cut_expression</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_X</span><span class="p">,</span>
+                <span class="n">b_trans</span><span class="p">,</span>
+                <span class="n">w_trans</span><span class="p">,</span>
+                <span class="n">path_dict</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">xi_dict</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">v_dict</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">i</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"f_theta_indices"</span><span class="p">],</span>
             <span class="p">)</span>
             <span class="n">total_cost</span> <span class="o">+=</span> <span class="n">curr_cost</span>
 
-        <span class="n">added_cut</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span>
+        <span class="n">added_cut</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">t_trans</span><span class="p">))</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span>
             <span class="n">priority_queue</span>
         <span class="p">)</span>  <span class="c1"># current sum of t is larger than RHS -&gt; violated constraint(s)</span>
         <span class="k">if</span> <span class="n">added_cut</span><span class="p">:</span>
             <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">priority_queue</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">current_point</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">priority_queue</span><span class="p">)</span>
                 <span class="n">i</span> <span class="o">=</span> <span class="n">current_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">whole_expr</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-                    <span class="n">get_cut_expression</span><span class="p">(</span>
-                        <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">nom_path_dict</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">initial_xi</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">i</span>
-                    <span class="p">)</span>
+                <span class="n">whole_expr</span> <span class="o">+=</span> <span class="n">get_cut_expression</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_X</span><span class="p">,</span>
+                    <span class="n">b_trans</span><span class="p">,</span>
+                    <span class="n">w_trans</span><span class="p">,</span>
+                    <span class="n">nom_path_dict</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                    <span class="n">initial_xi</span><span class="p">,</span>
+                    <span class="kc">False</span><span class="p">,</span>
+                    <span class="n">i</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"f_theta_indices"</span><span class="p">],</span>
                 <span class="p">)</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">cbLazy</span><span class="p">(</span>
-                <span class="n">quicksum</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="o">.</span><span class="n">_t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">_master</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">)</span>
+            <span class="n">new_constr</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">quicksum</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"t"</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">"datapoints"</span><span class="p">]</span>
+                <span class="p">)</span>
                 <span class="o">&lt;=</span> <span class="n">whole_expr</span>
             <span class="p">)</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">_total_cuts</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="n">func_end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">func_time</span> <span class="o">=</span> <span class="n">func_end_time</span> <span class="o">-</span> <span class="n">func_start_time</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">_total_callback_time_integer</span> <span class="o">+=</span> <span class="n">func_time</span>
-        <span class="k">if</span> <span class="n">added_cut</span><span class="p">:</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">_callback_counter_integer_success</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">model</span><span class="o">.</span><span class="n">_total_callback_time_integer_success</span> <span class="o">+=</span> <span class="n">func_time</span></div>
+            <span class="n">model</span> <span class="o">+=</span> <span class="n">new_constr</span></div></div>
 </pre></div>
         </article>
       </div>

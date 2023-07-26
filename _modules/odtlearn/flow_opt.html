@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>odtlearn.flow_opt - odtlearn 0.2.0 documentation</title>
+        <title>odtlearn.flow_opt - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">odtlearn 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -174,10 +174,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -240,9 +244,9 @@
         </div>
         <article role="main">
           <h1>Source code for odtlearn.flow_opt</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">gurobipy</span> <span class="kn">import</span> <span class="n">GRB</span><span class="p">,</span> <span class="n">LinExpr</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">check_X_y</span>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">check_X_y</span>
 
+<span class="kn">from</span> <span class="nn">odtlearn</span> <span class="kn">import</span> <span class="n">ODTL</span>
 <span class="kn">from</span> <span class="nn">odtlearn.flow_opt_ms</span> <span class="kn">import</span> <span class="n">FlowOPTMultipleSink</span>
 <span class="kn">from</span> <span class="nn">odtlearn.flow_opt_ss</span> <span class="kn">import</span> <span class="n">FlowOPTSingleSink</span>
 <span class="kn">from</span> <span class="nn">odtlearn.utils.validation</span> <span class="kn">import</span> <span class="p">(</span>
@@ -261,26 +265,35 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    depth : int</span>
-<span class="sd">        A parameter specifying the depth of the tree</span>
+<span class="sd">    solver: str</span>
+<span class="sd">        A string specifying the name of the solver to use</span>
+<span class="sd">        to solve the MIP. Options are "Gurobi" and "CBC".</span>
+<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">    depth : int, default=1</span>
+<span class="sd">        A parameter specifying the depth of the tree to learn.</span>
 <span class="sd">    time_limit : int</span>
-<span class="sd">        The given time limit for solving the MIP in seconds</span>
+<span class="sd">        The given time limit for solving the MIP in seconds.</span>
 <span class="sd">    method : str, default='IPW'</span>
 <span class="sd">        The method of Prescriptive Trees to run. Choices in ('IPW', 'DM', 'DR), which represents the</span>
-<span class="sd">        inverse propensity weighting, direct method, and doubly robust methods, respectively</span>
+<span class="sd">        inverse propensity weighting, direct method, and doubly robust methods, respectively.</span>
 <span class="sd">    num_threads: int, default=None</span>
-<span class="sd">        The number of threads the solver should use</span>
+<span class="sd">        The number of threads the solver should use. If not specified,</span>
+<span class="sd">        solver uses all available threads.</span>
+<span class="sd">    verbose : bool, default = False</span>
+<span class="sd">        Flag for logging solver outputs.</span>
 
 <span class="sd">    """</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">,</span>
         <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">solver</span><span class="p">,</span>
             <span class="n">depth</span><span class="p">,</span>
             <span class="n">time_limit</span><span class="p">,</span>
             <span class="n">num_threads</span><span class="p">,</span>
@@ -300,8 +313,6 @@
 <span class="sd">            The observed outcomes upon given treatment t. An array of int.</span>
 <span class="sd">        ipw : array-like, shape (n_samples,)</span>
 <span class="sd">            The inverse propensity weight estimates. An array of floats in [0, 1].</span>
-<span class="sd">        verbose: bool, default=False</span>
-<span class="sd">            Display Gurobi output.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -332,12 +343,11 @@
         <span class="n">check_binary</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_main_problem</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">)</span>
 
         <span class="c1"># Return the classifier</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -371,6 +381,7 @@
 <div class="viewcode-block" id="FlowOPT_DM"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DM">[docs]</a><span class="k">class</span> <span class="nc">FlowOPT_DM</span><span class="p">(</span><span class="n">FlowOPTMultipleSink</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">,</span>
         <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -382,17 +393,23 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        depth : int</span>
-<span class="sd">            A parameter specifying the depth of the tree</span>
-<span class="sd">        time_limit : int</span>
-<span class="sd">            The given time limit for solving the MIP in seconds</span>
+<span class="sd">        solver: str</span>
+<span class="sd">            A string specifying the name of the solver to use</span>
+<span class="sd">            to solve the MIP. Options are "Gurobi" and "CBC".</span>
+<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">        depth : int, default=1</span>
+<span class="sd">            A parameter specifying the depth of the tree to learn.</span>
+<span class="sd">        time_limit : int, default=60</span>
+<span class="sd">            The given time limit for solving the MIP in seconds.</span>
 <span class="sd">        num_threads: int, default=None</span>
-<span class="sd">            The number of threads the solver should use</span>
+<span class="sd">            The number of threads the solver should use. If not specified,</span>
+<span class="sd">            solver uses all available threads</span>
 <span class="sd">        verbose: bool, default=False</span>
-<span class="sd">            Display Gurobi output.</span>
+<span class="sd">            Flag for logging solver outputs.</span>
 
 <span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">solver</span><span class="p">,</span>
             <span class="n">depth</span><span class="p">,</span>
             <span class="n">time_limit</span><span class="p">,</span>
             <span class="n">num_threads</span><span class="p">,</span>
@@ -401,15 +418,15 @@
 
     <span class="k">def</span> <span class="nf">_define_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># define objective function</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="n">LinExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">lin_expr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treatments</span><span class="p">:</span>
-                    <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_y_hat</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)])</span>
+                    <span class="n">obj</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_y_hat</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
                     <span class="p">)</span>  <span class="c1"># we assume that each column corresponds to an ordered list t, which might be problematic</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">GRB</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ODTL</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlowOPT_DM.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DM.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">):</span>
         <span class="sd">"""Method to fit the PrescriptiveTree class on the data</span>
@@ -455,12 +472,11 @@
         <span class="n">check_binary</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_main_problem</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">)</span>
 
         <span class="c1"># Return the classifier</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -493,13 +509,19 @@
 
 
 <div class="viewcode-block" id="FlowOPT_DR"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DR">[docs]</a><span class="k">class</span> <span class="nc">FlowOPT_DR</span><span class="p">(</span><span class="n">FlowOPTMultipleSink</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">"""</span>
 <span class="sd">        An optimal decision tree that prescribes treatments (as opposed to predicting class labels),</span>
 <span class="sd">        fitted on a binary-valued observational data set.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        solver: str</span>
+<span class="sd">            A string specifying the name of the solver to use</span>
+<span class="sd">            to solve the MIP. Options are "Gurobi" and "CBC".</span>
+<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
 <span class="sd">        depth : int</span>
 <span class="sd">            A parameter specifying the depth of the tree</span>
 <span class="sd">        time_limit : int</span>
@@ -507,10 +529,10 @@
 <span class="sd">        num_threads: int, default=None</span>
 <span class="sd">            The number of threads the solver should use</span>
 <span class="sd">        verbose: bool, default=False</span>
-<span class="sd">            Display Gurobi output.</span>
+<span class="sd">            Display solver output.</span>
 
 <span class="sd">        """</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlowOPT_DR.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DR.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ipw</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">):</span>
         <span class="sd">"""Method to fit the PrescriptiveTree class on the data</span>
@@ -559,12 +581,11 @@
         <span class="n">check_binary</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_main_problem</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">)</span>
 
         <span class="c1"># Return the classifier</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -597,20 +618,20 @@
 
     <span class="k">def</span> <span class="nf">_define_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># define objective function</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="n">LinExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">lin_expr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_treatments</span><span class="p">:</span>
-                    <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_y_hat</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)])</span>
+                    <span class="n">obj</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_y_hat</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span>
                     <span class="p">)</span>  <span class="c1"># we assume that each column corresponds to an ordered list t, which might be problematic</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
-                        <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                        <span class="n">obj</span> <span class="o">+=</span> <span class="p">(</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
                             <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y_hat</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)])</span>
                             <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ipw</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">GRB</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ODTL</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span></div>
 </pre></div>
         </article>
       </div>

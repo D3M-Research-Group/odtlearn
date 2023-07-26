@@ -19,6 +19,7 @@ Classes
 
 .. py:class:: MPLPlotter(tree, node_dict, column_names, max_depth, classes, model_name, label='all', filled=False, rounded=False, precision=3, fontsize=None, color_dict={'node': None, 'leaves': []}, edge_annotation=True, arrow_annotation_font_scale=0.5, debug=False)
 
+
    Bases: :py:obj:`sklearn.tree._export._MPLTreeExporter`
 
    .. py:method:: get_fill_color(node_id)

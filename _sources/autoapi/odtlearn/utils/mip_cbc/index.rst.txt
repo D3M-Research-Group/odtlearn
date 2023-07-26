@@ -1,0 +1,1175 @@
+:orphan:
+
+:py:mod:`odtlearn.utils.mip_cbc`
+================================
+
+.. py:module:: odtlearn.utils.mip_cbc
+
+.. autoapi-nested-parse::
+
+   Python-MIP interface to the COIN-OR Branch-and-Cut solver CBC
+
+   ..
+       !! processed by numpydoc !!
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.mip_cbc.SolverCbc
+   odtlearn.utils.mip_cbc.ModelOsi
+   odtlearn.utils.mip_cbc.SolverOsi
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.mip_cbc.cbc_set_parameter
+   odtlearn.utils.mip_cbc.feature_names
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.mip_cbc.logger
+   odtlearn.utils.mip_cbc.warningMessages
+   odtlearn.utils.mip_cbc.ffi
+   odtlearn.utils.mip_cbc.has_cbc
+   odtlearn.utils.mip_cbc.os_is_64_bit
+   odtlearn.utils.mip_cbc.INF
+   odtlearn.utils.mip_cbc.cut_idx
+   odtlearn.utils.mip_cbc.MAX_NAME_SIZE
+   odtlearn.utils.mip_cbc.DEF_PUMPP
+   odtlearn.utils.mip_cbc.pathmip
+   odtlearn.utils.mip_cbc.CHAR_ONE
+   odtlearn.utils.mip_cbc.CHAR_ZERO
+   odtlearn.utils.mip_cbc.DBL_PARAM_PRIMAL_TOL
+   odtlearn.utils.mip_cbc.DBL_PARAM_DUAL_TOL
+   odtlearn.utils.mip_cbc.DBL_PARAM_ZERO_TOL
+   odtlearn.utils.mip_cbc.DBL_PARAM_INT_TOL
+   odtlearn.utils.mip_cbc.DBL_PARAM_PRESOLVE_TOL
+   odtlearn.utils.mip_cbc.DBL_PARAM_TIME_LIMIT
+   odtlearn.utils.mip_cbc.DBL_PARAM_PSI
+   odtlearn.utils.mip_cbc.DBL_PARAM_CUTOFF
+   odtlearn.utils.mip_cbc.DBL_PARAM_ALLOWABLE_GAP
+   odtlearn.utils.mip_cbc.DBL_PARAM_GAP_RATIO
+   odtlearn.utils.mip_cbc.DBL_PARAM_MAX_SECS_NOT_IMPROV_FS
+   odtlearn.utils.mip_cbc.INT_PARAM_PERT_VALUE
+   odtlearn.utils.mip_cbc.INT_PARAM_IDIOT
+   odtlearn.utils.mip_cbc.INT_PARAM_STRONG_BRANCHING
+   odtlearn.utils.mip_cbc.INT_PARAM_CUT_DEPTH
+   odtlearn.utils.mip_cbc.INT_PARAM_MAX_NODES
+   odtlearn.utils.mip_cbc.INT_PARAM_NUMBER_BEFORE
+   odtlearn.utils.mip_cbc.INT_PARAM_FPUMP_ITS
+   odtlearn.utils.mip_cbc.INT_PARAM_MAX_SOLS
+   odtlearn.utils.mip_cbc.INT_PARAM_CUT_PASS_IN_TREE
+   odtlearn.utils.mip_cbc.INT_PARAM_THREADS
+   odtlearn.utils.mip_cbc.INT_PARAM_CUT_PASS
+   odtlearn.utils.mip_cbc.INT_PARAM_LOG_LEVEL
+   odtlearn.utils.mip_cbc.INT_PARAM_MAX_SAVED_SOLS
+   odtlearn.utils.mip_cbc.INT_PARAM_MULTIPLE_ROOTS
+   odtlearn.utils.mip_cbc.INT_PARAM_ROUND_INT_VARS
+   odtlearn.utils.mip_cbc.INT_PARAM_RANDOM_SEED
+   odtlearn.utils.mip_cbc.INT_PARAM_ELAPSED_TIME
+   odtlearn.utils.mip_cbc.INT_PARAM_CGRAPH
+   odtlearn.utils.mip_cbc.INT_PARAM_CLIQUE_MERGING
+   odtlearn.utils.mip_cbc.INT_PARAM_MAX_NODES_NOT_IMPROV_FS
+   odtlearn.utils.mip_cbc.Osi_getNumCols
+   odtlearn.utils.mip_cbc.Osi_getColSolution
+   odtlearn.utils.mip_cbc.Osi_getIntegerTolerance
+   odtlearn.utils.mip_cbc.Osi_isInteger
+   odtlearn.utils.mip_cbc.Osi_isProvenOptimal
+   odtlearn.utils.mip_cbc.Cbc_setIntParam
+   odtlearn.utils.mip_cbc.Cbc_setDblParam
+   odtlearn.utils.mip_cbc.Cbc_getSolverPtr
+   odtlearn.utils.mip_cbc.Cbc_generateCuts
+   odtlearn.utils.mip_cbc.Cbc_solveLinearProgram
+   odtlearn.utils.mip_cbc.Cbc_reset
+   odtlearn.utils.mip_cbc.Cbc_computeFeatures
+   odtlearn.utils.mip_cbc.Cbc_nFeatures
+   odtlearn.utils.mip_cbc.Cbc_featureName
+   odtlearn.utils.mip_cbc.OsiCuts_new
+   odtlearn.utils.mip_cbc.OsiCuts_addRowCut
+   odtlearn.utils.mip_cbc.OsiCuts_addGlobalRowCut
+   odtlearn.utils.mip_cbc.OsiCuts_sizeRowCuts
+   odtlearn.utils.mip_cbc.OsiCuts_nzRowCut
+   odtlearn.utils.mip_cbc.OsiCuts_idxRowCut
+   odtlearn.utils.mip_cbc.OsiCuts_coefRowCut
+   odtlearn.utils.mip_cbc.OsiCuts_rhsRowCut
+   odtlearn.utils.mip_cbc.OsiCuts_senseRowCut
+   odtlearn.utils.mip_cbc.OsiCuts_delete
+
+
+.. py:data:: logger
+
+   
+
+.. py:data:: warningMessages
+   :value: 0
+
+   
+
+.. py:data:: ffi
+
+   
+
+.. py:data:: has_cbc
+   :value: False
+
+   
+
+.. py:data:: os_is_64_bit
+
+   
+
+.. py:data:: INF
+
+   
+
+.. py:data:: cut_idx
+   :value: 0
+
+   
+
+.. py:data:: MAX_NAME_SIZE
+   :value: 512
+
+   
+
+.. py:data:: DEF_PUMPP
+   :value: 30
+
+   
+
+.. py:data:: pathmip
+
+   
+
+.. py:data:: CHAR_ONE
+
+   
+
+.. py:data:: CHAR_ZERO
+
+   
+
+.. py:data:: DBL_PARAM_PRIMAL_TOL
+   :value: 0
+
+   
+
+.. py:data:: DBL_PARAM_DUAL_TOL
+   :value: 1
+
+   
+
+.. py:data:: DBL_PARAM_ZERO_TOL
+   :value: 2
+
+   
+
+.. py:data:: DBL_PARAM_INT_TOL
+   :value: 3
+
+   
+
+.. py:data:: DBL_PARAM_PRESOLVE_TOL
+   :value: 4
+
+   
+
+.. py:data:: DBL_PARAM_TIME_LIMIT
+   :value: 5
+
+   
+
+.. py:data:: DBL_PARAM_PSI
+   :value: 6
+
+   
+
+.. py:data:: DBL_PARAM_CUTOFF
+   :value: 7
+
+   
+
+.. py:data:: DBL_PARAM_ALLOWABLE_GAP
+   :value: 8
+
+   
+
+.. py:data:: DBL_PARAM_GAP_RATIO
+   :value: 9
+
+   
+
+.. py:data:: DBL_PARAM_MAX_SECS_NOT_IMPROV_FS
+   :value: 10
+
+   
+
+.. py:data:: INT_PARAM_PERT_VALUE
+   :value: 0
+
+   
+
+.. py:data:: INT_PARAM_IDIOT
+   :value: 1
+
+   
+
+.. py:data:: INT_PARAM_STRONG_BRANCHING
+   :value: 2
+
+   
+
+.. py:data:: INT_PARAM_CUT_DEPTH
+   :value: 3
+
+   
+
+.. py:data:: INT_PARAM_MAX_NODES
+   :value: 4
+
+   
+
+.. py:data:: INT_PARAM_NUMBER_BEFORE
+   :value: 5
+
+   
+
+.. py:data:: INT_PARAM_FPUMP_ITS
+   :value: 6
+
+   
+
+.. py:data:: INT_PARAM_MAX_SOLS
+   :value: 7
+
+   
+
+.. py:data:: INT_PARAM_CUT_PASS_IN_TREE
+   :value: 8
+
+   
+
+.. py:data:: INT_PARAM_THREADS
+   :value: 9
+
+   
+
+.. py:data:: INT_PARAM_CUT_PASS
+   :value: 10
+
+   
+
+.. py:data:: INT_PARAM_LOG_LEVEL
+   :value: 11
+
+   
+
+.. py:data:: INT_PARAM_MAX_SAVED_SOLS
+   :value: 12
+
+   
+
+.. py:data:: INT_PARAM_MULTIPLE_ROOTS
+   :value: 13
+
+   
+
+.. py:data:: INT_PARAM_ROUND_INT_VARS
+   :value: 14
+
+   
+
+.. py:data:: INT_PARAM_RANDOM_SEED
+   :value: 15
+
+   
+
+.. py:data:: INT_PARAM_ELAPSED_TIME
+   :value: 16
+
+   
+
+.. py:data:: INT_PARAM_CGRAPH
+   :value: 17
+
+   
+
+.. py:data:: INT_PARAM_CLIQUE_MERGING
+   :value: 18
+
+   
+
+.. py:data:: INT_PARAM_MAX_NODES_NOT_IMPROV_FS
+   :value: 19
+
+   
+
+.. py:data:: Osi_getNumCols
+
+   
+
+.. py:data:: Osi_getColSolution
+
+   
+
+.. py:data:: Osi_getIntegerTolerance
+
+   
+
+.. py:data:: Osi_isInteger
+
+   
+
+.. py:data:: Osi_isProvenOptimal
+
+   
+
+.. py:data:: Cbc_setIntParam
+
+   
+
+.. py:data:: Cbc_setDblParam
+
+   
+
+.. py:data:: Cbc_getSolverPtr
+
+   
+
+.. py:data:: Cbc_generateCuts
+
+   
+
+.. py:data:: Cbc_solveLinearProgram
+
+   
+
+.. py:data:: Cbc_reset
+
+   
+
+.. py:data:: Cbc_computeFeatures
+
+   
+
+.. py:data:: Cbc_nFeatures
+
+   
+
+.. py:data:: Cbc_featureName
+
+   
+
+.. py:data:: OsiCuts_new
+
+   
+
+.. py:data:: OsiCuts_addRowCut
+
+   
+
+.. py:data:: OsiCuts_addGlobalRowCut
+
+   
+
+.. py:data:: OsiCuts_sizeRowCuts
+
+   
+
+.. py:data:: OsiCuts_nzRowCut
+
+   
+
+.. py:data:: OsiCuts_idxRowCut
+
+   
+
+.. py:data:: OsiCuts_coefRowCut
+
+   
+
+.. py:data:: OsiCuts_rhsRowCut
+
+   
+
+.. py:data:: OsiCuts_senseRowCut
+
+   
+
+.. py:data:: OsiCuts_delete
+
+   
+
+.. py:function:: cbc_set_parameter(model: mip.Solver, param: str, value: str)
+
+
+.. py:class:: SolverCbc(model: mip.Model, name: str, sense: str, verbose: bool)
+
+
+   Bases: :py:obj:`mip.Solver`
+
+   
+   The solver is an abstract class with the solver independent
+   API to communicate with the solver engine
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: add_var(obj: numbers.Real = 0, lb: numbers.Real = 0, ub: numbers.Real = float('inf'), coltype: str = 'C', column: Optional[mip.Column] = None, name: str = '')
+
+
+   .. py:method:: update_conflict_graph()
+
+
+   .. py:method:: cgraph_density() -> float
+
+      
+      Density of the conflict graph
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: conflicting(e1: Union[mip.LinExpr, mip.Var], e2: Union[mip.LinExpr, mip.Var]) -> bool
+
+      
+      Checks if two assignment to binary variables are in conflict,
+      returns none if no conflict graph is available
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: conflicting_nodes(v1: Union[mip.Var, mip.LinExpr]) -> Tuple[List[mip.Var], List[mip.Var]]
+
+      
+      Returns all assignment conflicting with the assignment in v1 in the
+      conflict graph.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_objective_const() -> numbers.Real
+
+
+   .. py:method:: get_objective() -> mip.LinExpr
+
+
+   .. py:method:: set_objective(lin_expr: mip.LinExpr, sense: str = '') -> None
+
+
+   .. py:method:: relax()
+
+
+   .. py:method:: get_max_seconds() -> numbers.Real
+
+
+   .. py:method:: set_max_seconds(max_seconds: numbers.Real)
+
+
+   .. py:method:: get_max_solutions() -> int
+
+
+   .. py:method:: set_max_solutions(max_solutions: int)
+
+
+   .. py:method:: get_max_nodes() -> int
+
+
+   .. py:method:: set_max_nodes(max_nodes: int)
+
+
+   .. py:method:: get_verbose() -> int
+
+
+   .. py:method:: set_verbose(verbose: int)
+
+
+   .. py:method:: var_set_var_type(var: mip.Var, value: str)
+
+
+   .. py:method:: var_set_obj(var: mip.Var, value: numbers.Real)
+
+
+   .. py:method:: generate_cuts(cut_types: Optional[List[mip.CutType]] = None, depth: int = 0, npass: int = 0, max_cuts: int = maxsize, min_viol: numbers.Real = 0.0001) -> mip.CutPool
+
+
+   .. py:method:: clique_merge(constrs: Optional[List[mip.Constr]] = None)
+
+
+   .. py:method:: optimize(relax: bool = False) -> mip.OptimizationStatus
+
+
+   .. py:method:: get_objective_sense() -> str
+
+
+   .. py:method:: set_objective_sense(sense: str)
+
+
+   .. py:method:: get_objective_value() -> numbers.Real
+
+
+   .. py:method:: get_status() -> mip.OptimizationStatus
+
+
+   .. py:method:: get_log() -> List[Tuple[numbers.Real, Tuple[numbers.Real, numbers.Real]]]
+
+
+   .. py:method:: get_objective_bound() -> numbers.Real
+
+
+   .. py:method:: var_get_x(var: mip.Var) -> Optional[numbers.Real]
+
+      
+      Assumes that the solution is available (should be checked
+      before calling it
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: get_num_solutions() -> int
+
+
+   .. py:method:: get_objective_value_i(i: int) -> numbers.Real
+
+
+   .. py:method:: var_get_xi(var: mip.Var, i: int) -> numbers.Real
+
+
+   .. py:method:: var_get_rc(var: mip.Var) -> numbers.Real
+
+
+   .. py:method:: var_get_lb(var: mip.Var) -> numbers.Real
+
+
+   .. py:method:: var_set_lb(var: mip.Var, value: numbers.Real)
+
+
+   .. py:method:: var_get_ub(var: mip.Var) -> numbers.Real
+
+
+   .. py:method:: var_set_ub(var: mip.Var, value: numbers.Real)
+
+
+   .. py:method:: var_get_name(idx: int) -> str
+
+
+   .. py:method:: var_get_index(name: str) -> int
+
+
+   .. py:method:: var_get_branch_priority(var: mip.Var) -> numbers.Real
+
+
+   .. py:method:: constr_get_index(name: str) -> int
+
+
+   .. py:method:: constr_get_rhs(idx: int) -> numbers.Real
+
+
+   .. py:method:: constr_set_rhs(idx: int, rhs: numbers.Real)
+
+
+   .. py:method:: var_get_obj(var: mip.Var) -> numbers.Real
+
+
+   .. py:method:: var_get_var_type(var: mip.Var) -> str
+
+
+   .. py:method:: var_set_column(var: mip.Var, value: mip.Column)
+      :abstractmethod:
+
+
+   .. py:method:: var_get_column(var: mip.Var) -> mip.Column
+
+
+   .. py:method:: add_constr(lin_expr: mip.LinExpr, name: str = '')
+
+
+   .. py:method:: add_lazy_constr(lin_expr: mip.LinExpr)
+
+
+   .. py:method:: add_sos(sos: List[Tuple[mip.Var, numbers.Real]], sos_type: int)
+
+
+   .. py:method:: add_cut(lin_expr: mip.LinExpr)
+
+
+   .. py:method:: write(file_path: str)
+
+
+   .. py:method:: read(file_path: str) -> None
+
+
+   .. py:method:: set_start(start: List[Tuple[mip.Var, numbers.Real]]) -> None
+
+
+   .. py:method:: num_cols() -> int
+
+
+   .. py:method:: num_int() -> int
+
+
+   .. py:method:: num_rows() -> int
+
+
+   .. py:method:: num_nz() -> int
+
+
+   .. py:method:: get_cutoff() -> numbers.Real
+
+
+   .. py:method:: set_cutoff(cutoff: numbers.Real)
+
+
+   .. py:method:: get_mip_gap_abs() -> numbers.Real
+
+
+   .. py:method:: set_mip_gap_abs(allowable_gap: numbers.Real)
+
+
+   .. py:method:: get_mip_gap() -> numbers.Real
+
+
+   .. py:method:: set_mip_gap(allowable_ratio_gap: numbers.Real)
+
+
+   .. py:method:: constr_get_expr(constr: mip.Constr) -> mip.LinExpr
+
+
+   .. py:method:: constr_get_name(idx: int) -> str
+
+
+   .. py:method:: set_processing_limits(max_time: numbers.Real = mip.INF, max_nodes: int = mip.INT_MAX, max_sol: int = mip.INT_MAX, max_seconds_same_incumbent: int = mip.INT_MAX, max_nodes_same_incumbent: float = mip.INF)
+
+
+   .. py:method:: get_emphasis() -> mip.SearchEmphasis
+
+
+   .. py:method:: set_emphasis(emph: mip.SearchEmphasis)
+
+
+   .. py:method:: set_num_threads(threads: int)
+
+
+   .. py:method:: remove_constrs(constrs: List[int])
+
+
+   .. py:method:: remove_vars(varsList: List[int])
+
+
+   .. py:method:: get_problem_name() -> str
+
+
+   .. py:method:: set_problem_name(name: str)
+
+
+   .. py:method:: get_pump_passes() -> int
+
+
+   .. py:method:: set_pump_passes(passes: int)
+
+
+   .. py:method:: constr_get_pi(constr: mip.Constr) -> Optional[numbers.Real]
+
+
+   .. py:method:: constr_get_slack(constr: mip.Constr) -> Optional[numbers.Real]
+
+
+   .. py:method:: feature_values() -> List[float]
+
+
+   .. py:method:: reset()
+
+
+
+.. py:function:: feature_names() -> List[str]
+
+
+.. py:class:: ModelOsi(osi_ptr)
+
+
+   Bases: :py:obj:`mip.Model`
+
+   
+   Mixed Integer Programming Model
+
+   This is the main class, providing methods for building, optimizing,
+   querying optimization results and re-optimizing Mixed-Integer Programming
+   Models.
+
+   To check how models are created please see the
+   :ref:`examples <chapExamples>` included.
+
+   Attributes:
+       vars(mip.VarList): list of problem variables (:class:`~mip.Var`)
+       constrs(mip.ConstrList): list of constraints (:class:`~mip.Constr`)
+
+   Examples:
+       >>> from mip import Model, MAXIMIZE, CBC, INTEGER, OptimizationStatus
+       >>> model = Model(sense=MAXIMIZE, solver_name=CBC)
+       >>> x = model.add_var(name='x', var_type=INTEGER, lb=0, ub=10)
+       >>> y = model.add_var(name='y', var_type=INTEGER, lb=0, ub=10)
+       >>> model += x + y <= 10
+       >>> model.objective = x + y
+       >>> status = model.optimize(max_seconds=2)
+       >>> status == OptimizationStatus.OPTIMAL
+       True
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: add_constr(lin_expr: mip.LinExpr, name: str = '') -> mip.Constr
+
+      
+      Creates a new constraint (row).
+
+      Adds a new constraint to the model, returning its reference.
+
+      Args:
+          lin_expr(mip.LinExpr): linear expression
+          name(str): optional constraint name, used when saving model to
+            lp or mps files
+          priority(mip.constants.ConstraintPriority): optional constraint
+            priority
+
+      Examples:
+
+      The following code adds the constraint :math:`x_1 + x_2 \leq 1`
+      (x1 and x2 should be created first using
+      :meth:`~mip.Model.add_var`)::
+
+          m += x1 + x2 <= 1
+
+      Which is equivalent to::
+
+          m.add_constr( x1 + x2 <= 1 )
+
+      Summation expressions can be used also, to add the constraint \
+      :math:`\displaystyle \sum_{i=0}^{n-1} x_i = y` and name this \
+      constraint :code:`cons1`::
+
+          m += xsum(x[i] for i in range(n)) == y, "cons1"
+
+      Which is equivalent to::
+
+          m.add_constr( xsum(x[i] for i in range(n)) == y, "cons1" )
+
+      :rtype: mip.Constr
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SolverOsi(model: mip.Model, osi_ptr=ffi.NULL)
+
+
+   Bases: :py:obj:`mip.Solver`
+
+   
+   Interface for the OsiSolverInterface, the generic solver interface of
+   COIN-OR. This solver has a restricted functionality (comparing to
+   SolverCbc) and it is used mainly in callbacks where only the pre-processed
+   model is available
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: add_var(name: str = '', obj: numbers.Real = 0, lb: numbers.Real = 0, ub: numbers.Real = INF, var_type: str = CONTINUOUS, column: mip.Column = None)
+
+
+   .. py:method:: add_constr(lin_expr: mip.LinExpr, name: str = '')
+
+
+   .. py:method:: add_cut(lin_expr: mip.LinExpr)
+
+
+   .. py:method:: add_lazy_constr(lin_expr: mip.LinExpr)
+
+
+   .. py:method:: get_objective_bound() -> numbers.Real
+      :abstractmethod:
+
+
+   .. py:method:: get_objective() -> mip.LinExpr
+
+
+   .. py:method:: get_objective_const() -> numbers.Real
+
+
+   .. py:method:: relax()
+
+
+   .. py:method:: optimize() -> mip.OptimizationStatus
+
+
+   .. py:method:: get_status() -> mip.OptimizationStatus
+
+
+   .. py:method:: get_objective_value() -> numbers.Real
+
+
+   .. py:method:: get_log() -> List[Tuple[numbers.Real, Tuple[numbers.Real, numbers.Real]]]
+
+
+   .. py:method:: get_objective_value_i(i: int) -> numbers.Real
+      :abstractmethod:
+
+
+   .. py:method:: get_num_solutions() -> int
+
+
+   .. py:method:: get_objective_sense() -> str
+
+
+   .. py:method:: set_objective_sense(sense: str)
+
+
+   .. py:method:: set_start(start: List[Tuple[mip.Var, numbers.Real]])
+      :abstractmethod:
+
+
+   .. py:method:: set_objective(lin_expr: mip.LinExpr, sense: str = '')
+
+
+   .. py:method:: set_objective_const(const: numbers.Real)
+      :abstractmethod:
+
+
+   .. py:method:: set_processing_limits(max_time: numbers.Real = INF, max_nodes: int = maxsize, max_sol: int = maxsize)
+      :abstractmethod:
+
+
+   .. py:method:: get_max_seconds() -> numbers.Real
+      :abstractmethod:
+
+
+   .. py:method:: set_max_seconds(max_seconds: numbers.Real)
+      :abstractmethod:
+
+
+   .. py:method:: get_max_solutions() -> int
+      :abstractmethod:
+
+
+   .. py:method:: set_max_solutions(max_solutions: int)
+      :abstractmethod:
+
+
+   .. py:method:: get_pump_passes() -> int
+      :abstractmethod:
+
+
+   .. py:method:: set_pump_passes(passes: int)
+      :abstractmethod:
+
+
+   .. py:method:: get_max_nodes() -> int
+      :abstractmethod:
+
+
+   .. py:method:: set_max_nodes(max_nodes: int)
+      :abstractmethod:
+
+
+   .. py:method:: set_num_threads(threads: int)
+      :abstractmethod:
+
+
+   .. py:method:: write(file_path: str)
+      :abstractmethod:
+
+
+   .. py:method:: read(file_path: str)
+      :abstractmethod:
+
+
+   .. py:method:: num_cols() -> int
+
+
+   .. py:method:: num_rows() -> int
+
+
+   .. py:method:: num_nz() -> int
+
+
+   .. py:method:: num_int() -> int
+
+
+   .. py:method:: get_emphasis() -> mip.SearchEmphasis
+      :abstractmethod:
+
+
+   .. py:method:: set_emphasis(emph: mip.SearchEmphasis)
+      :abstractmethod:
+
+
+   .. py:method:: get_cutoff() -> numbers.Real
+      :abstractmethod:
+
+
+   .. py:method:: set_cutoff(cutoff: numbers.Real)
+      :abstractmethod:
+
+
+   .. py:method:: get_mip_gap_abs() -> numbers.Real
+      :abstractmethod:
+
+
+   .. py:method:: set_mip_gap_abs(mip_gap_abs: numbers.Real)
+      :abstractmethod:
+
+
+   .. py:method:: get_mip_gap() -> numbers.Real
+      :abstractmethod:
+
+
+   .. py:method:: set_mip_gap(mip_gap: numbers.Real)
+      :abstractmethod:
+
+
+   .. py:method:: get_verbose() -> int
+      :abstractmethod:
+
+
+   .. py:method:: set_verbose(verbose: int)
+      :abstractmethod:
+
+
+   .. py:method:: constr_get_expr(constr: mip.Constr) -> mip.LinExpr
+
+
+   .. py:method:: constr_set_expr(constr: mip.Constr, value: mip.LinExpr) -> mip.LinExpr
+      :abstractmethod:
+
+
+   .. py:method:: constr_get_name(idx: int) -> str
+
+
+   .. py:method:: remove_constrs(constrsList: List[int])
+      :abstractmethod:
+
+
+   .. py:method:: constr_get_index(name: str) -> int
+
+
+   .. py:method:: constr_get_pi(constr: mip.Constr) -> Optional[numbers.Real]
+
+
+   .. py:method:: constr_get_slack(constr: mip.Constr) -> Optional[float]
+
+
+   .. py:method:: var_get_branch_priority(var: mip.Var) -> numbers.Real
+
+
+   .. py:method:: var_set_branch_priority(var: mip.Var, value: numbers.Real)
+
+
+   .. py:method:: var_get_lb(var: mip.Var) -> numbers.Real
+
+
+   .. py:method:: var_set_lb(var: mip.Var, value: numbers.Real)
+
+
+   .. py:method:: var_get_ub(var: mip.Var) -> numbers.Real
+
+
+   .. py:method:: var_set_ub(var: mip.Var, value: numbers.Real)
+
+
+   .. py:method:: var_get_obj(var: mip.Var) -> numbers.Real
+
+
+   .. py:method:: var_set_obj(var: mip.Var, value: numbers.Real)
+
+
+   .. py:method:: var_get_var_type(var: mip.Var) -> str
+
+
+   .. py:method:: var_set_var_type(var: mip.Var, value: str)
+
+
+   .. py:method:: var_get_column(var: mip.Var) -> mip.Column
+
+
+   .. py:method:: var_set_column(var: mip.Var, value: mip.Column)
+      :abstractmethod:
+
+
+   .. py:method:: var_get_rc(var: mip.Var) -> numbers.Real
+
+
+   .. py:method:: var_get_x(var: mip.Var) -> numbers.Real
+
+      
+      Assumes that the solution is available (should be checked
+      before calling it
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: var_get_xi(var: mip.Var, i: int) -> numbers.Real
+      :abstractmethod:
+
+
+   .. py:method:: var_get_name(idx: int) -> str
+
+
+   .. py:method:: remove_vars(varsList: List[int])
+      :abstractmethod:
+
+
+   .. py:method:: var_get_index(name: str) -> int
+
+
+   .. py:method:: get_problem_name() -> str
+      :abstractmethod:
+
+
+   .. py:method:: set_problem_name(name: str)
+      :abstractmethod:
+
+
+

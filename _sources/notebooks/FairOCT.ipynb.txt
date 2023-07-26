@@ -120,6 +120,7 @@
    "source": [
     "def test_FairTree_metrics(X, y, P, l, f, b):\n",
     "    fcl = FairOCT(\n",
+    "        solver=\"cbc\",\n",
     "        positive_class=1,\n",
     "        depth=2,\n",
     "        _lambda=0.01,\n",
@@ -151,6 +152,7 @@
    ],
    "source": [
     "fcl = FairOCT(\n",
+    "    solver=\"cbc\",\n",
     "    positive_class=1,\n",
     "    depth=2,\n",
     "    _lambda=0.01,\n",

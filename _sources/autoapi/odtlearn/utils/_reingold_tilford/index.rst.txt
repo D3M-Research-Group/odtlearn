@@ -37,6 +37,7 @@ Functions
 
 .. py:class:: DrawTree(tree, parent=None, depth=0, number=1)
 
+
    .. py:attribute:: lmost_sibling
 
       
@@ -82,5 +83,6 @@ Functions
 
 
 .. py:class:: Tree(label='', node_id=-1, *children)
+
 
 

@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>odtlearn.utils.solver - odtlearn 0.2.0 documentation</title>
+        <title>odtlearn.utils.solver - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+      <a href="../../../index.html"><div class="brand">odtlearn 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -174,10 +174,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -240,54 +244,295 @@
         </div>
         <article role="main">
           <h1>Source code for odtlearn.utils.solver</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">gurobipy</span> <span class="kn">import</span> <span class="n">LinExpr</span><span class="p">,</span> <span class="n">Model</span>
+<span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 
-<div class="viewcode-block" id="GUROBI"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.GUROBI">[docs]</a><span class="n">GUROBI</span> <span class="o">=</span> <span class="s2">"gurobi"</span></div>
+<span class="kn">from</span> <span class="nn">mip</span> <span class="kn">import</span> <span class="n">LinExpr</span><span class="p">,</span> <span class="n">Model</span><span class="p">,</span> <span class="n">xsum</span>
+
+<span class="kn">from</span> <span class="nn">odtlearn.utils.mip_cbc</span> <span class="kn">import</span> <span class="n">SolverCbc</span>
+
+<div class="viewcode-block" id="GRB_CBC_CONST_MAP"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.GRB_CBC_CONST_MAP">[docs]</a><span class="n">GRB_CBC_CONST_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="s2">"MAX"</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">"MIN"</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="Solver"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver">[docs]</a><span class="k">class</span> <span class="nc">Solver</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">"gurobi"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+    <span class="sd">"""</span>
+<span class="sd">    A wrapper class on top the python-mip Model and solver classes. This class contains functions for interacting</span>
+<span class="sd">    with the solver for setting up, optimizing, and getting optimal values of a model.</span>
+<span class="sd">    When using CBC, this class interacts with a slightly modified version of the SolverCbc class</span>
+<span class="sd">    from the python-mip package.</span>
+<span class="sd">    """</span>
 
-<div class="viewcode-block" id="Solver.set_param"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.set_param">[docs]</a>    <span class="k">def</span> <span class="nf">set_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">setParam</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solver_name</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver_name</span> <span class="o">=</span> <span class="n">solver_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_name_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="Solver.addVars"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.addVars">[docs]</a>    <span class="k">def</span> <span class="nf">addVars</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">indices</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">),</span> <span class="n">obj</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">vtype</span><span class="o">=</span><span class="s2">"C"</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
-    <span class="p">):</span>
-        <span class="n">zipped_indices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zip_indices</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addVars</span><span class="p">(</span>
-            <span class="n">zipped_indices</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">vtype</span><span class="o">=</span><span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span>
-        <span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver_name</span> <span class="o">==</span> <span class="s2">"cbc"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">solver_name</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">SolverCbc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"cbc"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">sense</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver_name</span> <span class="o">==</span> <span class="s2">"gurobi"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">solver_name</span><span class="o">=</span><span class="s2">"gurobi"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Solver </span><span class="si">{</span><span class="n">solver_name</span><span class="si">}</span><span class="s2"> not currently supported."</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Solver.zip_indices"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.zip_indices">[docs]</a>    <span class="k">def</span> <span class="nf">zip_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">):</span>
-        <span class="n">to_zip</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="viewcode-block" id="Solver.get_var_value"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.get_var_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objs</span><span class="p">,</span> <span class="n">var_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Get the value of a decision variable from a solved problem.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        objs: dict</span>
+<span class="sd">            A dictionary of the model variables</span>
+
+<span class="sd">        var_name: str | None, default=None</span>
+<span class="sd">            The name supplied when the decision variable was initialized.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        A dict with the values of each variable from the solution</span>
+<span class="sd">        """</span>
+        <span class="n">result_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">objs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_name_dict</span><span class="p">[</span><span class="n">var_name</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">result_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">var_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">x</span>
+        <span class="k">return</span> <span class="n">result_dict</span></div>
+
+<div class="viewcode-block" id="Solver.optimize"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback_action</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">"""Optimize the constructed model</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
+<span class="sd">            The input samples.</span>
+
+<span class="sd">        obj : DecisionTree object</span>
+<span class="sd">            A copy of the DecisionTree object that is passed to the callback action.</span>
+
+<span class="sd">        solver : Solver object</span>
+<span class="sd">            A copy of the Solver object that is passed to the callback action.</span>
+
+<span class="sd">        callback: bool, default=False</span>
+<span class="sd">            Boolean specifying whether this model uses a callback when solving the problem</span>
+
+<span class="sd">        callback_action: mip.ConstrsGenerator object</span>
+<span class="sd">            Function to be called when CBC reaches an integer solution</span>
+
+<span class="sd">        kwargs: Additional arguments to be passed to the callback action</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">callback_action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">lazy_constrs_generator</span> <span class="o">=</span> <span class="n">callback_action</span><span class="p">(</span>
+                    <span class="n">X</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Must supply callback action if callback=True"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Solver.prep_indices"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.prep_indices">[docs]</a>    <span class="k">def</span> <span class="nf">prep_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">indices</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Helper function for prepping variable indices to generate</span>
+<span class="sd">        decision variables with indices that mimic the structure of Gurobi-created</span>
+<span class="sd">        decision variables</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        indices: List</span>
+<span class="sd">            list of lists of indices.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        A list with the generated indices.</span>
+
+<span class="sd">        """</span>
+        <span class="n">prepped</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># if given an integer, create range</span>
         <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
-                <span class="n">to_zip</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">elem</span><span class="p">))</span>
+                <span class="n">prepped</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">elem</span><span class="p">)))</span>
             <span class="c1"># if given float, coerce to integer</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">:</span>
-                <span class="n">to_zip</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">elem</span><span class="p">)))</span>
+            <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">:</span>
+                <span class="n">prepped</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">elem</span><span class="p">))))</span>
             <span class="c1"># otherwise just pass the element to be zipped</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">to_zip</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
-        <span class="c1"># TO-DO: check that all elements are the same length?</span>
-        <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="n">to_zip</span><span class="p">)</span></div>
+                <span class="n">prepped</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">elem</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">prepped</span></div>
 
-<div class="viewcode-block" id="Solver.addConstrs"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.addConstrs">[docs]</a>    <span class="k">def</span> <span class="nf">addConstrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cons_expr_tuple</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">expr</span> <span class="ow">in</span> <span class="n">cons_expr_tuple</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">addConstr</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Solver.add_vars"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.add_vars">[docs]</a>    <span class="k">def</span> <span class="nf">add_vars</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">indices</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">),</span> <span class="n">obj</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">vtype</span><span class="o">=</span><span class="s2">"C"</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Create a dictionary with the decision variables with keys of the form</span>
+<span class="sd">        {name}[(element of indices list)] and then add the variables to the model</span>
 
-<div class="viewcode-block" id="Solver.addConstr"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.addConstr">[docs]</a>    <span class="k">def</span> <span class="nf">addConstr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cons_expr</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addConstr</span><span class="p">(</span><span class="n">cons_expr</span><span class="p">)</span></div>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *indices: List</span>
+<span class="sd">            Arbitrary list of indices to use to create the decision variables.</span>
 
-<div class="viewcode-block" id="Solver.obj_init"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.obj_init">[docs]</a>    <span class="k">def</span> <span class="nf">obj_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">LinExpr</span><span class="p">(</span><span class="n">arg1</span><span class="p">)</span></div>
+<span class="sd">        lb: double, default=0.0</span>
+<span class="sd">            Lower bound for new variable.</span>
 
-<div class="viewcode-block" id="Solver.setObjective"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.setObjective">[docs]</a>    <span class="k">def</span> <span class="nf">setObjective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">sense</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">sense</span><span class="p">)</span></div></div>
+<span class="sd">        ub: double, default=inf</span>
+<span class="sd">            Upper bound for new variable.</span>
+
+<span class="sd">        obj: double</span>
+<span class="sd">            Objective coefficient for new variable.</span>
+
+<span class="sd">        type: str, default="C"</span>
+<span class="sd">            Variable type for new variable. Accepted values are "C", "B", "I"</span>
+
+<span class="sd">        name: str, default=""</span>
+<span class="sd">            Name used when creating dictionary storing variables.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dictionary of new variable objects.</span>
+<span class="sd">        """</span>
+        <span class="n">var_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">name_element_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">prepped</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prep_indices</span><span class="p">(</span><span class="o">*</span><span class="n">indices</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prepped</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">prepped</span><span class="p">):</span>
+                <span class="n">name_element_dict</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s2">]"</span>
+                <span class="n">var_dict</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_var</span><span class="p">(</span>
+                    <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">var_type</span><span class="o">=</span><span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s2">]"</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">prepped</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="n">name_element_dict</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s2">]"</span>
+                <span class="n">var_dict</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_var</span><span class="p">(</span>
+                    <span class="n">lb</span><span class="o">=</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">ub</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">var_type</span><span class="o">=</span><span class="n">vtype</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s2">]"</span>
+                <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_name_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">name_element_dict</span>
+        <span class="k">return</span> <span class="n">var_dict</span></div>
+
+<div class="viewcode-block" id="Solver.add_constrs"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.add_constrs">[docs]</a>    <span class="k">def</span> <span class="nf">add_constrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cons_expr_tuple</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Add constraint expressions to the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cons_expr_tuple: List[LinExpr]</span>
+<span class="sd">            A list of constraint expressions to be added to the model.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        """</span>
+        <span class="k">for</span> <span class="n">cons</span> <span class="ow">in</span> <span class="n">cons_expr_tuple</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_constr</span><span class="p">(</span><span class="n">cons</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Solver.add_constr"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.add_constr">[docs]</a>    <span class="k">def</span> <span class="nf">add_constr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cons_expr</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Add a constraint expression to the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cons_expr: LinExpr</span>
+<span class="sd">            A constraint expression to be added to the model.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_constr</span><span class="p">(</span><span class="n">cons_expr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Solver.lin_expr"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.lin_expr">[docs]</a>    <span class="k">def</span> <span class="nf">lin_expr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Initialize a linear expression object</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        arg1: double | Variable , default=0.0</span>
+<span class="sd">            A constant or Variable to be used to initialize the linear expression</span>
+
+<span class="sd">        sense: str | None, default=None</span>
+<span class="sd">            Argument for specifying whether the expression is to be minimized or maximized.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Initalized LinExpr</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">LinExpr</span><span class="p">(</span><span class="n">const</span><span class="o">=</span><span class="n">arg1</span><span class="p">,</span> <span class="n">sense</span><span class="o">=</span><span class="n">sense</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Solver.set_objective"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.set_objective">[docs]</a>    <span class="k">def</span> <span class="nf">set_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="n">sense</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Take the linear expression and set it as the objective for the problem.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        expr: LinExpr</span>
+<span class="sd">            The linear expression to be used as the objective for the problem.</span>
+
+<span class="sd">        sense: str</span>
+<span class="sd">            A string specifying whether the objective should be minimized (1 or GRB.MINIMIZE)</span>
+<span class="sd">            or maximized (-1 or GRB.MAXIMIZE)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">objective</span> <span class="o">=</span> <span class="n">expr</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">sense</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="n">mapped_sense</span> <span class="o">=</span> <span class="n">GRB_CBC_CONST_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sense</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mapped_sense</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid objective type: </span><span class="si">{</span><span class="n">sense</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sense</span> <span class="o">=</span> <span class="n">mapped_sense</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">sense</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sense</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"MAX"</span><span class="p">,</span> <span class="s2">"MIN"</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid objective type: </span><span class="si">{</span><span class="n">sense</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Objective sense must be integer or string."</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">sense</span> <span class="o">=</span> <span class="n">sense</span></div>
+
+<div class="viewcode-block" id="Solver.quicksum"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.quicksum">[docs]</a>    <span class="k">def</span> <span class="nf">quicksum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terms</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Pass through function for python-mip quicksum function</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        terms: List[mip.Variable]</span>
+<span class="sd">            List of variables to be summed</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        LinExpr</span>
+
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">xsum</span><span class="p">(</span><span class="n">terms</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Solver.store_data"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.store_data">[docs]</a>    <span class="k">def</span> <span class="nf">store_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Store data to be used in the callback action. For Gurobi, data can</span>
+<span class="sd">        typically be stored as private attributes of the model (i.e., model._data_var).</span>
+<span class="sd">        For consistency across solvers, we store the data in the model._data attribute</span>
+<span class="sd">        as a dictionary.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key: str</span>
+<span class="sd">            The name under which to store the data</span>
+
+<span class="sd">        value: Any</span>
+<span class="sd">            The values to be stored in the dictionary.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">"_data"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div></div>
 </pre></div>
         </article>
       </div>

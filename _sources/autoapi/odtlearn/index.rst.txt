@@ -19,6 +19,7 @@ Submodules
    :titlesonly:
    :maxdepth: 1
 
+   constants/index.rst
    datasets/index.rst
    fair_oct/index.rst
    flow_oct/index.rst
@@ -32,4 +33,69 @@ Submodules
    opt_pt/index.rst
    robust_oct/index.rst
 
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.ODTL
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.name
+
+
+.. py:class:: ODTL
+
+
+   .. py:attribute:: MIN
+      :value: 'MIN'
+
+      
+
+   .. py:attribute:: MAX
+      :value: 'MAX'
+
+      
+
+   .. py:attribute:: MINIMIZE
+      :value: 'MIN'
+
+      
+
+   .. py:attribute:: MAXIMIZE
+      :value: 'MAX'
+
+      
+
+   .. py:attribute:: BINARY
+      :value: 'B'
+
+      
+
+   .. py:attribute:: CONTINUOUS
+      :value: 'C'
+
+      
+
+   .. py:attribute:: INTEGER
+      :value: 'I'
+
+      
+
+
+.. py:data:: name
+   :value: 'odtlearn'
+
+   
 

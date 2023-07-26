@@ -19,7 +19,8 @@ Classes
 
 
 
-.. py:class:: FlowOPT_IPW(depth=1, time_limit=60, num_threads=None, verbose=False)
+.. py:class:: FlowOPT_IPW(solver, depth=1, time_limit=60, num_threads=None, verbose=False)
+
 
    Bases: :py:obj:`odtlearn.flow_opt_ss.FlowOPTSingleSink`
 
@@ -30,18 +31,27 @@ Classes
 
    :Parameters:
 
-       **depth** : int
-           A parameter specifying the depth of the tree
+       **solver: str**
+           A string specifying the name of the solver to use
+           to solve the MIP. Options are "Gurobi" and "CBC".
+           If the CBC binaries are not found, Gurobi will be used by default.
+
+       **depth** : int, default=1
+           A parameter specifying the depth of the tree to learn.
 
        **time_limit** : int
-           The given time limit for solving the MIP in seconds
+           The given time limit for solving the MIP in seconds.
 
        **method** : str, default='IPW'
            The method of Prescriptive Trees to run. Choices in ('IPW', 'DM', 'DR), which represents the
-           inverse propensity weighting, direct method, and doubly robust methods, respectively
+           inverse propensity weighting, direct method, and doubly robust methods, respectively.
 
        **num_threads: int, default=None**
-           The number of threads the solver should use
+           The number of threads the solver should use. If not specified,
+           solver uses all available threads.
+
+       **verbose** : bool, default = False
+           Flag for logging solver outputs.
 
 
 
@@ -77,9 +87,6 @@ Classes
 
           **ipw** : array-like, shape (n_samples,)
               The inverse propensity weight estimates. An array of floats in [0, 1].
-
-          **verbose: bool, default=False**
-              Display Gurobi output.
 
       :Returns:
 
@@ -133,7 +140,8 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: FlowOPT_DM(depth=1, time_limit=60, num_threads=None, verbose=False)
+.. py:class:: FlowOPT_DM(solver, depth=1, time_limit=60, num_threads=None, verbose=False)
+
 
    Bases: :py:obj:`odtlearn.flow_opt_ms.FlowOPTMultipleSink`
 
@@ -231,7 +239,8 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: FlowOPT_DR(depth=1, time_limit=60, num_threads=None, verbose=False)
+.. py:class:: FlowOPT_DR(solver, depth=1, time_limit=60, num_threads=None, verbose=False)
+
 
    Bases: :py:obj:`odtlearn.flow_opt_ms.FlowOPTMultipleSink`
 

@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="odtlearn.flow_oct_ms" href="../flow_oct_ms/index.html" /><link rel="prev" title="odtlearn.fair_oct" href="../fair_oct/index.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>odtlearn.flow_oct - odtlearn 0.2.0 documentation</title>
+        <title>odtlearn.flow_oct - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+      <a href="../../../index.html"><div class="brand">odtlearn 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -174,10 +174,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utils/cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utils/gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../utils/scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -252,7 +256,7 @@
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.flow_oct.FlowOCT" title="odtlearn.flow_oct.FlowOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FlowOCT</span></code></a></p></td>
-<td><p>Helper class that provides a standard way to create an ABC using</p></td>
+<td><p>An optimal decision tree classifier, fitted on a given</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.flow_oct.BendersOCT" title="odtlearn.flow_oct.BendersOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BendersOCT</span></code></a></p></td>
 <td><p>Helper class that provides a standard way to create an ABC using</p></td>
@@ -261,10 +265,40 @@
 </table></div>
 <dl class="py class">
 <dt class="sig sig-object py" id="odtlearn.flow_oct.FlowOCT">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.flow_oct.</span></span><span class="sig-name descname"><span class="pre">FlowOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#FlowOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.FlowOCT" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.flow_oct.</span></span><span class="sig-name descname"><span class="pre">FlowOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#FlowOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.FlowOCT" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../flow_oct_ss/index.html#odtlearn.flow_oct_ss.FlowOCTSingleSink" title="odtlearn.flow_oct_ss.FlowOCTSingleSink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.flow_oct_ss.FlowOCTSingleSink</span></code></a></p>
-<p>Helper class that provides a standard way to create an ABC using
-inheritance.</p>
+<p>An optimal decision tree classifier, fitted on a given
+integer-valued data set to produce a provably optimal
+decision tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>solver: str</strong></dt><dd><p>A string specifying the name of the solver to use
+to solve the MIP. Options are “Gurobi” and “CBC”.
+If the CBC binaries are not found, Gurobi will be used by default.</p>
+</dd>
+<dt><strong>_lambda: float, default = 0</strong></dt><dd><p>The regularization parameter in the objective, taking values
+between 0 and 1, that controls
+the complexity of a the learned tree.</p>
+</dd>
+<dt><strong>obj_mode: str, default=”acc”</strong></dt><dd><p>The objective should be used to learn an optimal decision tree.
+The two options are “acc” and “balance”.
+The accuracy objective attempts to maximize prediction accuracy while the
+balance objective aims to learn a balanced optimal decision
+tree to better generalize to our of sample data.</p>
+</dd>
+<dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>A parameter specifying the depth of the tree to learn.</p>
+</dd>
+<dt><strong>time_limit</strong><span class="classifier">int, default=60</span></dt><dd><p>The given time limit for solving the MIP in seconds.</p>
+</dd>
+<dt><strong>num_threads: int, default=None</strong></dt><dd><p>The number of threads the solver should use. If not specified,
+solver uses all available threads</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool, default = False</span></dt><dd><p>Flag for logging solver outputs.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.flow_oct.FlowOCT.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#FlowOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.FlowOCT.fit" title="Permalink to this definition">#</a></dt>
@@ -292,39 +326,10 @@ seen during fit.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="odtlearn.flow_oct.BendersOCT">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.flow_oct.</span></span><span class="sig-name descname"><span class="pre">BendersOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#BendersOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.BendersOCT" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.flow_oct.</span></span><span class="sig-name descname"><span class="pre">BendersOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#BendersOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.BendersOCT" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../flow_oct_ss/index.html#odtlearn.flow_oct_ss.FlowOCTSingleSink" title="odtlearn.flow_oct_ss.FlowOCTSingleSink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.flow_oct_ss.FlowOCTSingleSink</span></code></a></p>
 <p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="odtlearn.flow_oct.BendersOCT.LazyConstraints">
-<span class="sig-name descname"><span class="pre">LazyConstraints</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#BendersOCT.LazyConstraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.BendersOCT.LazyConstraints" title="Permalink to this definition">#</a></dt>
-<dd><p>The following variables are used for the Benders problem to keep track
-of the times we call the callback.</p>
-<ul class="simple">
-<li><p>counter_integer tracks number of times we call the callback from an</p></li>
-</ul>
-<dl>
-<dt>integer node in the branch-&amp;-bound tree</dt><dd><ul class="simple">
-<li><p>time_integer tracks the associated time spent in the</p></li>
-</ul>
-<p>callback for these calls</p>
-</dd>
-</dl>
-<ul class="simple">
-<li><p>counter_general tracks number of times we call the callback from</p></li>
-</ul>
-<dl>
-<dt>a non-integer node in the branch-&amp;-bound tree</dt><dd><ul class="simple">
-<li><p>time_general tracks the associated time spent in the callback for</p></li>
-</ul>
-<p>these calls</p>
-</dd>
-</dl>
-<p>the ones ending with success are related to success calls.
-By success we mean ending up adding a lazy constraint
-to the model</p>
-</dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.flow_oct.BendersOCT.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#BendersOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.BendersOCT.fit" title="Permalink to this definition">#</a></dt>

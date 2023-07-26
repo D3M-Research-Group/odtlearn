@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="User Guide" href="user_guide/index.html" /><link rel="prev" title="Introduction" href="index.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>Installation Guide - odtlearn 0.2.0 documentation</title>
+        <title>Installation Guide - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+      <a href="index.html"><div class="brand">odtlearn 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -174,10 +174,14 @@
 <li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -258,6 +262,26 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="obtain-gurobi-license">
+<h2>Obtain Gurobi License<a class="headerlink" href="#obtain-gurobi-license" title="Permalink to this headline">#</a></h2>
+<p>To use Gurobi with ODTlearn, you must have a valid Gurobi License. <a class="reference external" href="https://www.gurobi.com/academia/academic-program-and-licenses/">Free licenses are available for academic use</a> and additional methods for obtaining a Gurobi license can be found <a class="reference external" href="https://www.gurobi.com/solutions/licensing/">here</a>.</p>
+</div>
+<div class="section" id="cbc-binaries">
+<h2>CBC Binaries<a class="headerlink" href="#cbc-binaries" title="Permalink to this headline">#</a></h2>
+<p><a class="reference external" href="https://github.com/coin-or/python-mip">Python-MIP</a> provides CBC binaries for 64-bit versions of Windows, Linux, and MacOS that run on Intel hardware, however we have observed that these binaries do not seem to work properly with lazy constraint generation, which is used in some of our MIO formulations. Thus, to ensure expected behavior when using ODTlearn, we strongly recommend building CBC from source. Below are the steps needed to compile CBC from source using <a class="reference external" href="https://github.com/coin-or/coinbrew">coinbrew</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">CBC</span>
+<span class="n">cd</span> <span class="n">CBC</span>
+<span class="n">wget</span> <span class="o">-</span><span class="n">nH</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">raw</span><span class="o">.</span><span class="n">githubusercontent</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">coin</span><span class="o">-</span><span class="ow">or</span><span class="o">/</span><span class="n">coinbrew</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">coinbrew</span>
+<span class="n">chmod</span> <span class="n">u</span><span class="o">+</span><span class="n">x</span> <span class="n">coinbrew</span> 
+<span class="n">bash</span> <span class="n">coinbrew</span> <span class="n">fetch</span> <span class="n">Cbc</span><span class="nd">@master</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">prompt</span>
+<span class="n">bash</span> <span class="n">coinbrew</span> <span class="n">build</span> <span class="n">Cbc</span><span class="nd">@stable</span><span class="o">/</span><span class="mf">2.10</span>
+
+<span class="n">export</span> <span class="n">DYLD_LIBRARY_PATH</span><span class="o">=/</span><span class="n">PATH</span><span class="o">/</span><span class="n">TO</span><span class="o">/</span><span class="n">CBC</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">lib</span>
+<span class="n">export</span> <span class="n">PMIP_CBC_LIBRARY</span><span class="o">=/</span><span class="n">PATH</span><span class="o">/</span><span class="n">TO</span><span class="o">/</span><span class="n">CBC</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">PLATFORM_SPECIFIC_SHARED_LIB</span>
+</pre></div>
+</div>
+<p>The last two steps are critical for ensuring that ODTlearn (through Python-MIP) uses the correct CBC binary. For Windows and MacOS the shared library name is <code class="docutils literal notranslate"><span class="pre">libCbc.dll</span></code> and <code class="docutils literal notranslate"><span class="pre">libCbc.dylib</span></code>, respectively. For Linux, the shared library name is <code class="docutils literal notranslate"><span class="pre">libCbcSolver.so</span></code>. To ensure that the environment variables persist, we suggest adding the last two lines to your <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> file.</p>
+</div>
 </div>
 
         </article>
@@ -322,6 +346,8 @@
 <li><a class="reference internal" href="#">Installation Guide</a><ul>
 <li><a class="reference internal" href="#install-python">Install Python</a></li>
 <li><a class="reference internal" href="#install-odtlearn">Install ODTlearn</a></li>
+<li><a class="reference internal" href="#obtain-gurobi-license">Obtain Gurobi License</a></li>
+<li><a class="reference internal" href="#cbc-binaries">CBC Binaries</a></li>
 </ul>
 </li>
 </ul>

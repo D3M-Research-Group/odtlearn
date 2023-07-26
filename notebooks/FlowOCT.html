@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="FairOCT Example" href="FairOCT.html" /><link rel="prev" title="Example Notebooks" href="index.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>FlowOCT Examples - odtlearn 0.2.0 documentation</title>
+        <title>FlowOCT Examples - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+      <a href="../index.html"><div class="brand">odtlearn 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -174,10 +174,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -771,18 +775,10 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">)</span>
 <span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-Restricted license - for non-production use only - expires 2023-10-25
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
@@ -790,7 +786,7 @@ Restricted license - for non-production use only - expires 2023-10-25
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-FlowOCT(depth=1,time_limit=60,num_threads=None,verbose=False)
+FlowOCT(solver=cbc,depth=1,time_limit=60,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -808,8 +804,14 @@ FlowOCT(depth=1,time_limit=60,num_threads=None,verbose=False)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Optimality gap is 0.0
-In-sample accuracy is 0.7692307692307693
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[6], line 2</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> predictions <span style="color: rgb(98,98,98)">=</span> stcl<span style="color: rgb(98,98,98)">.</span>predict(X)
+<span class="ansi-green-fg">----&gt; 2</span> <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">f</span><span style="color: rgb(175,0,0)">'</span><span style="color: rgb(175,0,0)">Optimality gap is </span><span class="ansi-bold" style="color: rgb(175,95,135)">{</span>stcl<span style="color: rgb(98,98,98)">.</span>_model<span style="color: rgb(98,98,98)">.</span>getAttr(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">MIPGap</span><span style="color: rgb(175,0,0)">"</span>)<span class="ansi-bold" style="color: rgb(175,95,135)">}</span><span style="color: rgb(175,0,0)">'</span>)
+<span class="ansi-green-intense-fg ansi-bold">      3</span> <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">f</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">In-sample accuracy is </span><span class="ansi-bold" style="color: rgb(175,95,135)">{</span>np<span style="color: rgb(98,98,98)">.</span>sum(predictions<span style="color: rgb(98,98,98)">==</span>y)<span style="color: rgb(98,98,98)">/</span>y<span style="color: rgb(98,98,98)">.</span>shape[<span style="color: rgb(98,98,98)">0</span>]<span class="ansi-bold" style="color: rgb(175,95,135)">}</span><span style="color: rgb(175,0,0)">"</span>)
+
+<span class="ansi-red-fg">AttributeError</span>: 'FlowOCT' object has no attribute '_model'
 </pre></div></div>
 </div>
 <p>As we can see above, we find the optimal tree and the in-sample accuracy is 76%.</p>
@@ -861,7 +863,7 @@ leaf 1
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">)</span>
 <span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -872,15 +874,14 @@ leaf 1
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-FlowOCT(depth=2,time_limit=60,num_threads=None,verbose=False)
+FlowOCT(solver=cbc,depth=2,time_limit=60,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Optimality gap is </span><span class="si">{</span><span class="n">stcl</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"MIPGap"</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -890,7 +891,6 @@ FlowOCT(depth=2,time_limit=60,num_threads=None,verbose=False)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Optimality gap is 0.0
 In-sample accuracy is 1.0
 </pre></div></div>
 </div>
@@ -920,7 +920,7 @@ In-sample accuracy is 1.0
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">_lambda</span><span class="o">=</span><span class="mf">0.51</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">_lambda</span><span class="o">=</span><span class="mf">0.51</span><span class="p">)</span>
 <span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -931,7 +931,7 @@ In-sample accuracy is 1.0
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-FlowOCT(depth=2,time_limit=60,num_threads=None,verbose=False)
+FlowOCT(solver=cbc,depth=2,time_limit=60,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1006,7 +1006,7 @@ In-sample accuracy is 0.9230769230769231
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl_acc</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl_acc</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">stcl_acc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl_acc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -1035,19 +1035,19 @@ In-sample accuracy is 0.8666666666666667
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-branch on X_0
+leaf 0
 #########node  2
-branch on X_1
+pruned
 #########node  3
-branch on X_1
+pruned
 #########node  4
-leaf 0
+pruned
 #########node  5
-leaf 0
+pruned
 #########node  6
-leaf 0
+pruned
 #########node  7
-leaf 0
+pruned
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1075,6 +1075,7 @@ leaf 0
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl_balance</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span>
+    <span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">,</span>
     <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
     <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"balance"</span><span class="p">,</span>
     <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
@@ -1174,7 +1175,7 @@ Index(['V2.1', 'V2.2', 'V2.3', 'V2.4', 'V2.5', 'V3.1', 'V3.2', 'V3.3', 'V3.4',
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">)</span>
 
 <span class="n">stcl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
@@ -1186,7 +1187,7 @@ Index(['V2.1', 'V2.2', 'V2.3', 'V2.4', 'V2.5', 'V3.1', 'V3.2', 'V3.3', 'V3.4',
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-BendersOCT(depth=3,time_limit=60,num_threads=None,verbose=False)
+BendersOCT(solver=cbc,depth=3,time_limit=60,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1203,19 +1204,19 @@ BendersOCT(depth=3,time_limit=60,num_threads=None,verbose=False)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-branch on V3.5
+branch on V4.2
 #########node  2
-branch on V5.1
+branch on V2.5
 #########node  3
-branch on V2.1
+branch on V2.5
 #########node  4
-branch on V4.1
+branch on V3.5
 #########node  5
-branch on V2.1
+branch on V2.3
 #########node  6
-branch on V2.2
+branch on V5.4
 #########node  7
-branch on V4.1
+branch on V2.1
 #########node  8
 leaf 3
 #########node  9
@@ -1223,15 +1224,15 @@ leaf 2
 #########node  10
 leaf 2
 #########node  11
-leaf 3
+leaf 1
 #########node  12
 leaf 2
 #########node  13
-leaf 2
-#########node  14
 leaf 3
-#########node  15
+#########node  14
 leaf 2
+#########node  15
+leaf 3
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1265,7 +1266,7 @@ leaf 2
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-The out-of-sample accuracy is 0.7004830917874396
+The out-of-sample accuracy is 0.5797101449275363
 </pre></div></div>
 </div>
 </div>

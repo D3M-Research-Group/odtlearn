@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>odtlearn.flow_oct_ss - odtlearn 0.2.0 documentation</title>
+        <title>odtlearn.flow_oct_ss - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">odtlearn 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -174,10 +174,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -240,14 +244,16 @@
         </div>
         <article role="main">
           <h1>Source code for odtlearn.flow_oct_ss</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">gurobipy</span> <span class="kn">import</span> <span class="n">GRB</span><span class="p">,</span> <span class="n">quicksum</span>
+<span></span><span class="c1"># from gurobipy import GRB, quicksum</span>
 
+<span class="kn">from</span> <span class="nn">odtlearn</span> <span class="kn">import</span> <span class="n">ODTL</span>
 <span class="kn">from</span> <span class="nn">odtlearn.opt_ct</span> <span class="kn">import</span> <span class="n">OptimalClassificationTree</span>
 
 
 <div class="viewcode-block" id="FlowOCTSingleSink"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_oct_ss/index.html#odtlearn.flow_oct_ss.FlowOCTSingleSink">[docs]</a><span class="k">class</span> <span class="nc">FlowOCTSingleSink</span><span class="p">(</span><span class="n">OptimalClassificationTree</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">,</span>
         <span class="n">_lambda</span><span class="p">,</span>
         <span class="n">depth</span><span class="p">,</span>
         <span class="n">time_limit</span><span class="p">,</span>
@@ -258,6 +264,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="n">_lambda</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">solver</span><span class="p">,</span>
             <span class="n">depth</span><span class="p">,</span>
             <span class="n">time_limit</span><span class="p">,</span>
             <span class="n">num_threads</span><span class="p">,</span>
@@ -266,19 +273,20 @@
 
     <span class="k">def</span> <span class="nf">_tree_struc_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># b[n,f] ==1 iff at node n we branch on feature f</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addVars</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">,</span> <span class="n">vtype</span><span class="o">=</span><span class="n">GRB</span><span class="o">.</span><span class="n">BINARY</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"b"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_vars</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">,</span> <span class="n">vtype</span><span class="o">=</span><span class="n">ODTL</span><span class="o">.</span><span class="n">BINARY</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"b"</span>
         <span class="p">)</span>
+
         <span class="c1"># p[n] == 1 iff at node n we do not branch and we make a prediction</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addVars</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">,</span> <span class="n">vtype</span><span class="o">=</span><span class="n">GRB</span><span class="o">.</span><span class="n">BINARY</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"p"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_vars</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">,</span> <span class="n">vtype</span><span class="o">=</span><span class="n">ODTL</span><span class="o">.</span><span class="n">BINARY</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"p"</span>
         <span class="p">)</span>
 
         <span class="c1"># For classification w[n,k]=1 iff at node n we predict class k</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addVars</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_vars</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="p">,</span>
-            <span class="n">vtype</span><span class="o">=</span><span class="n">GRB</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span>
+            <span class="n">vtype</span><span class="o">=</span><span class="n">ODTL</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span>
             <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">"w"</span><span class="p">,</span>
         <span class="p">)</span>
@@ -286,18 +294,19 @@
     <span class="k">def</span> <span class="nf">_flow_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># zeta[i,n] is the amount of flow through the edge connecting node n</span>
         <span class="c1"># to sink node t for data-point i</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addVars</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_vars</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">,</span>
-            <span class="n">vtype</span><span class="o">=</span><span class="n">GRB</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span>
+            <span class="n">vtype</span><span class="o">=</span><span class="n">ODTL</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span>
             <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">"zeta"</span><span class="p">,</span>
         <span class="p">)</span>
+
         <span class="c1"># z[i,n] is the incoming flow to branching node n for data-point i</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addVars</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_vars</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">,</span>
-            <span class="n">vtype</span><span class="o">=</span><span class="n">GRB</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span>
+            <span class="n">vtype</span><span class="o">=</span><span class="n">ODTL</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span>
             <span class="n">lb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="s2">"z"</span><span class="p">,</span>
         <span class="p">)</span>
@@ -308,26 +317,27 @@
 
     <span class="k">def</span> <span class="nf">_tree_structure_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addConstrs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_constrs</span><span class="p">(</span>
             <span class="p">(</span>
-                <span class="n">quicksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">quicksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">)</span>
                 <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
-                <span class="o">+</span> <span class="n">quicksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_ancestors</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">quicksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_ancestors</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
                 <span class="o">==</span> <span class="mi">1</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span>
         <span class="p">)</span>
 
         <span class="c1"># sum(w[n,k], k in labels) = p[n]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addConstrs</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">quicksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_constrs</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">quicksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">[</span><span class="n">n</span><span class="p">])</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span>
         <span class="p">)</span>
 
         <span class="c1"># p[n] + sum(p[m], m in A(n)) = 1   forall n in Leaves</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addConstrs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_constrs</span><span class="p">(</span>
             <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">+</span> <span class="n">quicksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_ancestors</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+                <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">quicksum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_ancestors</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
                 <span class="o">==</span> <span class="mi">1</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span>
@@ -338,7 +348,7 @@
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
             <span class="n">n_left</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_left_children</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
             <span class="n">n_right</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_right_children</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addConstrs</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_constrs</span><span class="p">(</span>
                 <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span>
                     <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n_left</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n_right</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span>
@@ -347,7 +357,8 @@
             <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addConstrs</span><span class="p">(</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_constrs</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span>
             <span class="p">)</span>
 
@@ -356,10 +367,10 @@
         <span class="c1"># changed this to loop over the indicies of X and check if the column values at a given idx</span>
         <span class="c1"># equals zero</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addConstrs</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_constrs</span><span class="p">(</span>
                 <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_left_children</span><span class="p">(</span><span class="n">n</span><span class="p">))]</span>
-                    <span class="o">&lt;=</span> <span class="n">quicksum</span><span class="p">(</span>
+                    <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">quicksum</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span>
                         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span>
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
@@ -370,10 +381,10 @@
 
         <span class="c1"># z[i,r(n)] &lt;= sum(b[n,f], f if x[i,f]=1) forall i, n in Nodes</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addConstrs</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_constrs</span><span class="p">(</span>
                 <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_right_children</span><span class="p">(</span><span class="n">n</span><span class="p">))]</span>
-                    <span class="o">&lt;=</span> <span class="n">quicksum</span><span class="p">(</span>
+                    <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">quicksum</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span>
                         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span>
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
@@ -384,7 +395,7 @@
 
         <span class="c1"># zeta[i,n] &lt;= w[n,y[i]]     forall n in N+L, i</span>
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addConstrs</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_constrs</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span>
             <span class="p">)</span>
 

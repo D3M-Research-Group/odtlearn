@@ -1,0 +1,419 @@
+:py:mod:`odtlearn.utils.cbc_solver`
+===================================
+
+.. py:module:: odtlearn.utils.cbc_solver
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.cbc_solver.CBCSolver
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.cbc_solver.GRB_CBC_CONST_MAP
+
+
+.. py:data:: GRB_CBC_CONST_MAP
+
+   
+
+.. py:class:: CBCSolver(verbose)
+
+
+   Bases: :py:obj:`odtlearn.utils.solver.Solver`
+
+   
+   The CBC solver interface. This class contains functions for interacting
+   with the solver for setting up, optimizing, and getting optimal values of a model.
+   This class interacts with a slightly modified version of the SolverCbc class
+   from the python-mip package.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: get_var_value(objs, var_name=None)
+
+      
+      Get the value of a decision variable from a solved problem.
+
+
+      :Parameters:
+
+          **objs: dict**
+              A dictionary of the model variables
+
+          **var_name: str | None, default=None**
+              The name supplied when the decision variable was initialized.
+
+      :Returns:
+
+          A dict with the values of each variable from the solution
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: optimize(X, obj, solver, callback=False, callback_action=None, **kwargs)
+
+      
+      Optimize the constructed model
+
+
+      :Parameters:
+
+          **X** : array-like, shape (n_samples, n_features)
+              The input samples.
+
+          **obj** : DecisionTree object
+              A copy of the DecisionTree object that is passed to the callback action.
+
+          **solver** : Solver object
+              A copy of the Solver object that is passed to the callback action.
+
+          **callback: bool, default=False**
+              Boolean specifying whether this model uses a callback when solving the problem
+
+          **callback_action: mip.ConstrsGenerator object**
+              Function to be called when CBC reaches an integer solution
+
+          **kwargs: Additional arguments to be passed to the callback action**
+              ..
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: prep_indices(*indices)
+
+      
+      Helper function for prepping variable indices to generate
+      decision variables with indices that mimic the structure of Gurobi-created
+      decision variables
+
+
+      :Parameters:
+
+          **indices: List**
+              list of lists of indices.
+
+      :Returns:
+
+          A list with the generated indices.
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: add_vars(*indices, lb=0.0, ub=float('inf'), obj=0.0, vtype='C', name: str = '')
+
+      
+      Create a dictionary with the decision variables with keys of the form
+      {name}[(element of indices list)] and then add the variables to the model
+
+
+      :Parameters:
+
+          **\*indices: List**
+              Arbitrary list of indices to use to create the decision variables.
+
+          **lb: double, default=0.0**
+              Lower bound for new variable.
+
+          **ub: double, default=inf**
+              Upper bound for new variable.
+
+          **obj: double**
+              Objective coefficient for new variable.
+
+          **type: str, default="C"**
+              Variable type for new variable. Accepted values are "C", "B", "I"
+
+          **name: str, default=""**
+              Name used when creating dictionary storing variables.
+
+      :Returns:
+
+          Dictionary of new variable objects.
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: add_constrs(cons_expr_tuple)
+
+      
+      Add constraint expressions to the model.
+
+
+      :Parameters:
+
+          **cons_expr_tuple: List[LinExpr]**
+              A list of constraint expressions to be added to the model.
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: add_constr(cons_expr)
+
+      
+      Add a constraint expression to the model.
+
+
+      :Parameters:
+
+          **cons_expr: LinExpr**
+              A constraint expression to be added to the model.
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: lin_expr(arg1=0.0, sense=None)
+
+      
+      Initialize a linear expression object
+
+
+      :Parameters:
+
+          **arg1: double | Variable , default=0.0**
+              A constant or Variable to be used to initialize the linear expression
+
+          **sense: str | None, default=None**
+              Argument for specifying whether the expression is to be minimized or maximized.
+
+      :Returns:
+
+          Initalized LinExpr
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: set_objective(expr, sense)
+
+      
+      Take the linear expression and set it as the objective for the problem.
+
+
+      :Parameters:
+
+          **expr: LinExpr**
+              The linear expression to be used as the objective for the problem.
+
+          **sense: str**
+              A string specifying whether the objective should be minimized (1 or GRB.MINIMIZE)
+              or maximized (-1 or GRB.MAXIMIZE)
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: quicksum(terms)
+
+      
+      Pass through function for python-mip quicksum function
+
+
+      :Parameters:
+
+          **terms: List[mip.Variable]**
+              List of variables to be summed
+
+      :Returns:
+
+          LinExpr
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: store_data(key, value)
+
+      
+      Store data to be used in the callback action. For Gurobi, data can
+      typically be stored as private attributes of the model (i.e., model._data_var).
+      For consistency across solvers, we store the data in the model._data attribute
+      as a dictionary.
+
+
+      :Parameters:
+
+          **key: str**
+              The name under which to store the data
+
+          **value: Any**
+              The values to be stored in the dictionary.
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+

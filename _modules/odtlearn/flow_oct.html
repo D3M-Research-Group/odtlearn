@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>odtlearn.flow_oct - odtlearn 0.2.0 documentation</title>
+        <title>odtlearn.flow_oct - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">odtlearn 0.2.0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">odtlearn 1.0.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">odtlearn 0.2.0 documentation</span>
+  <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -174,10 +174,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -240,18 +244,50 @@
         </div>
         <article role="main">
           <h1>Source code for odtlearn.flow_oct</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">gurobipy</span> <span class="kn">import</span> <span class="n">GRB</span><span class="p">,</span> <span class="n">LinExpr</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
+<span></span><span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">check_X_y</span>
 
+<span class="kn">from</span> <span class="nn">odtlearn</span> <span class="kn">import</span> <span class="n">ODTL</span>
 <span class="kn">from</span> <span class="nn">odtlearn.flow_oct_ss</span> <span class="kn">import</span> <span class="n">FlowOCTSingleSink</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.callbacks</span> <span class="kn">import</span> <span class="n">benders_callback</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.callbacks</span> <span class="kn">import</span> <span class="n">BendersCallback</span>
 <span class="kn">from</span> <span class="nn">odtlearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_binary</span><span class="p">,</span> <span class="n">check_columns_match</span>
 
 
 <div class="viewcode-block" id="FlowOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_oct/index.html#odtlearn.flow_oct.FlowOCT">[docs]</a><span class="k">class</span> <span class="nc">FlowOCT</span><span class="p">(</span><span class="n">FlowOCTSingleSink</span><span class="p">):</span>
+    <span class="sd">"""An optimal decision tree classifier, fitted on a given</span>
+<span class="sd">    integer-valued data set to produce a provably optimal</span>
+<span class="sd">    decision tree.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver: str</span>
+<span class="sd">        A string specifying the name of the solver to use</span>
+<span class="sd">        to solve the MIP. Options are "Gurobi" and "CBC".</span>
+<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">    _lambda: float, default = 0</span>
+<span class="sd">            The regularization parameter in the objective, taking values</span>
+<span class="sd">            between 0 and 1, that controls</span>
+<span class="sd">            the complexity of a the learned tree.</span>
+<span class="sd">    obj_mode: str, default="acc"</span>
+<span class="sd">        The objective should be used to learn an optimal decision tree.</span>
+<span class="sd">        The two options are "acc" and "balance".</span>
+<span class="sd">        The accuracy objective attempts to maximize prediction accuracy while the</span>
+<span class="sd">        balance objective aims to learn a balanced optimal decision</span>
+<span class="sd">        tree to better generalize to our of sample data.</span>
+<span class="sd">    depth : int, default=1</span>
+<span class="sd">        A parameter specifying the depth of the tree to learn.</span>
+<span class="sd">    time_limit : int, default=60</span>
+<span class="sd">        The given time limit for solving the MIP in seconds.</span>
+<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If not specified,</span>
+<span class="sd">        solver uses all available threads</span>
+<span class="sd">    verbose : bool, default = False</span>
+<span class="sd">        Flag for logging solver outputs.</span>
+<span class="sd">    """</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">,</span>
         <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span>
         <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -261,6 +297,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">solver</span><span class="p">,</span>
             <span class="n">_lambda</span><span class="p">,</span>
             <span class="n">depth</span><span class="p">,</span>
             <span class="n">time_limit</span><span class="p">,</span>
@@ -269,17 +306,23 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_define_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="n">LinExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">lin_expr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># obj = LinExpr(0)</span>
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">:</span>
-                <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">])</span>
+                <span class="c1"># obj.add(-1 * self._lambda * self._b[n, f])</span>
+                <span class="n">obj</span> <span class="o">+=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">"acc"</span><span class="p">,</span>
+            <span class="s2">"balance"</span><span class="p">,</span>
+        <span class="p">],</span> <span class="s2">"Wrong objective mode. obj_mode should be one of acc or balance."</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">"acc"</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
-                <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">obj</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">"balance"</span><span class="p">:</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
-                <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">obj</span> <span class="o">+=</span> <span class="p">(</span>
                     <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span>
                     <span class="o">*</span> <span class="p">(</span>
                         <span class="mi">1</span>
@@ -288,13 +331,7 @@
                     <span class="p">)</span>
                     <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
                 <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
-                <span class="s2">"acc"</span><span class="p">,</span>
-                <span class="s2">"balance"</span><span class="p">,</span>
-            <span class="p">],</span> <span class="s2">"Wrong objective mode. obj_mode should be one of acc or balance."</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">GRB</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ODTL</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlowOCT.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_oct/index.html#odtlearn.flow_oct.FlowOCT.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="c1"># extract column labels, unique classes and store X as a DataFrame</span>
@@ -309,12 +346,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_classes</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_main_problem</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback_action</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -348,6 +385,7 @@
 <div class="viewcode-block" id="BendersOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_oct/index.html#odtlearn.flow_oct.BendersOCT">[docs]</a><span class="k">class</span> <span class="nc">BendersOCT</span><span class="p">(</span><span class="n">FlowOCTSingleSink</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">,</span>
         <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">obj_mode</span><span class="o">=</span><span class="s2">"acc"</span><span class="p">,</span>
         <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -358,54 +396,39 @@
         <span class="sd">"""</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        _lambda: The regularization parameter in the objective</span>
-<span class="sd">        time_limit: The given time limit for solving the MIP</span>
-<span class="sd">        num_threads: Specify number of threads for Gurobi to use when solving</span>
-<span class="sd">        verbose: Display Gurobi model output</span>
+<span class="sd">        solver: str</span>
+<span class="sd">            A string specifying the name of the solver to use</span>
+<span class="sd">            to solve the MIP. Options are "Gurobi" and "CBC".</span>
+<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">        _lambda: float, default = 0</span>
+<span class="sd">            The regularization parameter in the objective,</span>
+<span class="sd">            taking values between 0 and 1, that controls</span>
+<span class="sd">            the complexity of a the learned tree.</span>
+<span class="sd">        obj_mode: str, default="acc"</span>
+<span class="sd">            The objective should be used to learn an optimal decision tree.</span>
+<span class="sd">            The two options are "acc" and "balance".</span>
+<span class="sd">            The accuracy objective attempts to maximize prediction accuracy while the</span>
+<span class="sd">            balance objective aims to learn a balanced optimal decision</span>
+<span class="sd">            tree to better generalize to our of sample data.</span>
+<span class="sd">        depth : int, default=1</span>
+<span class="sd">            A parameter specifying the depth of the tree to learn.</span>
+<span class="sd">        time_limit : int, default=60</span>
+<span class="sd">            The given time limit for solving the MIP in seconds.</span>
+<span class="sd">        num_threads: int, default=None</span>
+<span class="sd">            The number of threads the solver should use. If not specified,</span>
+<span class="sd">            solver uses all available threads</span>
+<span class="sd">        verbose : bool, default = False</span>
+<span class="sd">            Flag for logging solver outputs.</span>
 <span class="sd">        """</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">solver</span><span class="p">,</span>
             <span class="n">_lambda</span><span class="p">,</span>
             <span class="n">depth</span><span class="p">,</span>
             <span class="n">time_limit</span><span class="p">,</span>
             <span class="n">num_threads</span><span class="p">,</span>
             <span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span>
-
-        <span class="c1"># The cuts we add in the callback function would be treated as lazy constraints</span>
-<div class="viewcode-block" id="BendersOCT.LazyConstraints"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_oct/index.html#odtlearn.flow_oct.BendersOCT.LazyConstraints">[docs]</a>        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">LazyConstraints</span> <span class="o">=</span> <span class="mi">1</span></div>
-        <span class="sd">"""</span>
-<span class="sd">        The following variables are used for the Benders problem to keep track</span>
-<span class="sd">        of the times we call the callback.</span>
-
-<span class="sd">        - counter_integer tracks number of times we call the callback from an</span>
-<span class="sd">        integer node in the branch-&amp;-bound tree</span>
-<span class="sd">            - time_integer tracks the associated time spent in the</span>
-<span class="sd">            callback for these calls</span>
-<span class="sd">        - counter_general tracks number of times we call the callback from</span>
-<span class="sd">        a non-integer node in the branch-&amp;-bound tree</span>
-<span class="sd">            - time_general tracks the associated time spent in the callback for</span>
-<span class="sd">            these calls</span>
-
-<span class="sd">        the ones ending with success are related to success calls.</span>
-<span class="sd">        By success we mean ending up adding a lazy constraint</span>
-<span class="sd">        to the model</span>
-
-<span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_total_callback_time_integer</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_total_callback_time_integer_success</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_total_callback_time_general</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_total_callback_time_general_success</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_callback_counter_integer</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_callback_counter_integer_success</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_callback_counter_general</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_callback_counter_general_success</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="c1"># We also pass the following information to the model as we need them in the callback</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_main_grb_obj</span> <span class="o">=</span> <span class="bp">self</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="n">_lambda</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
@@ -414,30 +437,28 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tree_struc_variables</span><span class="p">()</span>
 
         <span class="c1"># g[i] is the objective value for the sub-problem[i]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">addVars</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">,</span> <span class="n">vtype</span><span class="o">=</span><span class="n">GRB</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"g"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_vars</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">,</span> <span class="n">vtype</span><span class="o">=</span><span class="n">ODTL</span><span class="o">.</span><span class="n">CONTINUOUS</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"g"</span>
         <span class="p">)</span>
-
-        <span class="c1"># we need these in the callback to have access to the value of the decision variables</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_vars_g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_g</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_vars_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_vars_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">_vars_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span>
 
     <span class="k">def</span> <span class="nf">_define_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tree_structure_constraints</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_define_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="n">LinExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">lin_expr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">:</span>
-                <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">])</span>
+                <span class="n">obj</span> <span class="o">+=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">"acc"</span><span class="p">,</span>
+            <span class="s2">"balance"</span><span class="p">,</span>
+        <span class="p">],</span> <span class="s2">"Wrong objective mode. obj_mode should be one of acc or balance."</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">"acc"</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
-                <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_g</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">"balance"</span><span class="p">:</span>
+                <span class="n">obj</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
-                <span class="n">obj</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">obj</span> <span class="o">+=</span> <span class="p">(</span>
                     <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span>
                     <span class="o">*</span> <span class="p">(</span>
                         <span class="mi">1</span>
@@ -446,13 +467,8 @@
                     <span class="p">)</span>
                     <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
-                <span class="s2">"acc"</span><span class="p">,</span>
-                <span class="s2">"balance"</span><span class="p">,</span>
-            <span class="p">],</span> <span class="s2">"Wrong objective mode. obj_mode should be one of acc or balance."</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">setObjective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">GRB</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ODTL</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BendersOCT.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_oct/index.html#odtlearn.flow_oct.BendersOCT.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 
@@ -468,12 +484,33 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_classes</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_main_problem</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">benders_callback</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getAttr</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">)</span>
+        <span class="c1"># we need these in the callback to have access to the value of the decision variables in the callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">store_data</span><span class="p">(</span><span class="s2">"g"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_g</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">store_data</span><span class="p">(</span><span class="s2">"b"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">store_data</span><span class="p">(</span><span class="s2">"p"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">store_data</span><span class="p">(</span><span class="s2">"w"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">)</span>
+        <span class="c1"># We also pass the following information to the model as we need them in the callback</span>
+        <span class="c1"># self._solver.model._self_obj = self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">store_data</span><span class="p">(</span><span class="s2">"self"</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="n">callback_action</span> <span class="o">=</span> <span class="n">BendersCallback</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="p">,</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="p">,</span>
+            <span class="n">callback</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">callback_action</span><span class="o">=</span><span class="n">callback_action</span><span class="p">,</span>
+            <span class="n">g</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_g</span><span class="p">,</span>
+            <span class="n">b</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span>
+            <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">,</span>
+            <span class="n">w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">get_var_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_p</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span></div>
 

@@ -17,6 +17,7 @@ Functions
 
    odtlearn.tests.conftest.pytest_addoption
    odtlearn.tests.conftest.pytest_configure
+   odtlearn.tests.conftest.skip_solver
 
 
 
@@ -24,5 +25,8 @@ Functions
 
 
 .. py:function:: pytest_configure(config)
+
+
+.. py:function:: skip_solver(request)
 
 
