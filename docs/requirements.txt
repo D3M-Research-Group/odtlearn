@@ -22,5 +22,5 @@ furo==2022.3.4
 ipykernel
 seaborn
 mip
-sphinx-autoapi==2.1.1
+sphinx-autoapi==2.0.1
 git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
