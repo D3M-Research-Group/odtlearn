@@ -1,11 +1,8 @@
-name: Run Python Tests
+name: Test compiling CBC on GH Actions
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - test_gh_actions
 
 jobs:
   build:
@@ -30,7 +27,7 @@ jobs:
           wget -nH https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
           bash coinbrew fetch Cbc@master --no-prompt --skip-update
           bash coinbrew build Cbc@stable/2.10 --no-prompt --tests=none
-      - name: Run tests with pytest
+      - name: Run simple test for RobustTreeClassifier
         run: |
           cd odtlearn/tests
           pytest -v

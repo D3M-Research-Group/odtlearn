@@ -9,8 +9,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PMIP_CBC_LIBRARY: "/home/runner/build/dist/lib/libCbc.so"
     steps:
       - uses: actions/checkout@v3
+      - name: Compile CBC binary
+        run : |
+          sudo apt-get install gcc g++ gfortran libgfortran-9-dev liblapack-dev libamd2 libcholmod3 libmetis-dev libsuitesparse-dev libnauty2-dev git
+          mkdir -p ~/build
+          cd ~/build
+          wget -nH https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
+          bash coinbrew fetch Cbc@master --no-prompt --skip-update
+          bash coinbrew build Cbc@stable/2.10 --no-prompt --tests=none
       - name: Build HTML
         uses: ammaraskar/sphinx-action@master
         with: 
