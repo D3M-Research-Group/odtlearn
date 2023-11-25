@@ -62,8 +62,8 @@ class RobustOCT(OptimalClassificationTree):
 
         Parameters
         ----------
-        grb_model :
-            The gurobi model solved to optimality (or reached to the time limit).
+        model :
+            The model solved to optimality (or reached to the time limit).
         b :
             The values of branching decision variable b.
         w :
@@ -131,7 +131,7 @@ class RobustOCT(OptimalClassificationTree):
                 if terminal:
                     break
                 else:
-                    for (f, theta) in self._f_theta_indices:
+                    for f, theta in self._f_theta_indices:
                         if self.b_value[node, f, theta] > 0.5:  # b[n,f]== 1
                             if X.at[i, f] >= theta + 1:
                                 node = self._tree.get_right_children(node)
@@ -361,7 +361,7 @@ class RobustOCT(OptimalClassificationTree):
                     assignment_nodes += [n]
                     break
             if not terminal:
-                for (f, theta) in self._solver.model._data["f_theta_indices"]:
+                for f, theta in self._solver.model._data["f_theta_indices"]:
                     if self.b_value[n, f, theta] > 0.5:  # b[n,f]== 1
                         print("Feature: ", f, ", Cutoff: ", theta)
                         break
