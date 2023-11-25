@@ -151,15 +151,35 @@ class Solver:
         prepped = self.prep_indices(*indices)
         if len(prepped) > 1:
             for element in product(*prepped):
-                name_element_dict[element] = f"{name}[{element}]"
+                name_element_dict[element] = (
+                    f"{name}_{element}".replace("[", "_")
+                    .replace("]", "_")
+                    .replace(" ", "_")
+                )
                 var_dict[element] = self.model.add_var(
-                    lb=lb, ub=ub, obj=obj, var_type=vtype, name=f"{name}[{element}]"
+                    lb=lb,
+                    ub=ub,
+                    obj=obj,
+                    var_type=vtype,
+                    name=f"{name}_{element}".replace("[", "_")
+                    .replace("]", "_")
+                    .replace(" ", "_"),
                 )
         else:
             for element in prepped[0]:
-                name_element_dict[element] = f"{name}[{element}]"
+                name_element_dict[element] = (
+                    f"{name}_{element}".replace("[", "_")
+                    .replace("]", "_")
+                    .replace(" ", "_")
+                )
                 var_dict[element] = self.model.add_var(
-                    lb=lb, ub=ub, obj=obj, var_type=vtype, name=f"{name}[{element}]"
+                    lb=lb,
+                    ub=ub,
+                    obj=obj,
+                    var_type=vtype,
+                    name=f"{name}_{element}".replace("[", "_")
+                    .replace("]", "_")
+                    .replace(" ", "_"),
                 )
         self.var_name_dict[name] = name_element_dict
         return var_dict
@@ -287,3 +307,31 @@ class Solver:
         except AttributeError:
             self.model._data = {}
         self.model._data[key] = value
+
+    @property
+    def optim_gap(self):
+        return self.model.gap
+
+    @property
+    def num_decision_vars(self):
+        return self.model.num_cols
+
+    @property
+    def num_integer_vars(self):
+        return self.model.num_int
+
+    @property
+    def num_non_zero(self):
+        return self.model.num_nz
+
+    @property
+    def num_solutions(self):
+        return self.model.num_solutions
+
+    @property
+    def num_constraints(self):
+        return self.model.num_rows
+
+    @property
+    def search_progress_log(self):
+        return self.model.search_progress_log
