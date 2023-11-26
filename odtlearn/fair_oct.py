@@ -209,6 +209,7 @@ class FairSPOCT(FairConstrainedOCT):
         time_limit=60,
         _lambda=0,
         obj_mode="acc",
+        fairness_bound=1,
         num_threads=None,
         verbose=False,
     ) -> None:
@@ -236,16 +237,18 @@ class FairSPOCT(FairConstrainedOCT):
             The accuracy objective attempts to maximize prediction accuracy while the
             balance objective aims to learn a balanced optimal decision
             tree to better generalize to our of sample data.
-        num_threads: int, default=None
-            The number of threads the solver should use. If None, it will use all avaiable threads
         fairness_bound: float (0,1], default=1
             The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness at all
+            the fairness constraint and 1 corresponds to no fairness constraint enforced
+        num_threads: int, default=None
+            The number of threads the solver should use. If None, it will use all avaiable threads
+
         """
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
 
         self._obj_mode = obj_mode
         self._positive_class = positive_class
+        self._fairness_bound = fairness_bound
 
     def _define_side_constraints(self):
         # Loop through all possible combinations of the protected feature
@@ -314,6 +317,7 @@ class FairCSPOCT(FairConstrainedOCT):
         time_limit=60,
         _lambda=0,
         obj_mode="acc",
+        fairness_bound=1,
         num_threads=None,
         verbose=False,
     ) -> None:
@@ -341,16 +345,17 @@ class FairCSPOCT(FairConstrainedOCT):
             The accuracy objective attempts to maximize prediction accuracy while the
             balance objective aims to learn a balanced optimal decision
             tree to better generalize to our of sample data.
-        num_threads: int, default=None
-            The number of threads the solver should use. If None, it will use all avaiable threads
         fairness_bound: float (0,1], default=1
             The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness at all
+            the fairness constraint and 1 corresponds to no fairness constraint enforced
+        num_threads: int, default=None
+            The number of threads the solver should use. If None, it will use all avaiable threads
         """
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
 
         self._obj_mode = obj_mode
         self._positive_class = positive_class
+        self._fairness_bound = fairness_bound
 
     def _define_side_constraints(self):
         # Loop through all possible combinations of the protected feature
@@ -441,6 +446,7 @@ class FairPEOCT(FairConstrainedOCT):
         time_limit=60,
         _lambda=0,
         obj_mode="acc",
+        fairness_bound=1,
         num_threads=None,
         verbose=False,
     ) -> None:
@@ -468,15 +474,16 @@ class FairPEOCT(FairConstrainedOCT):
             The accuracy objective attempts to maximize prediction accuracy while the
             balance objective aims to learn a balanced optimal decision
             tree to better generalize to our of sample data.
-        num_threads: int, default=None
-            The number of threads the solver should use. If None, it will use all avaiable threads
         fairness_bound: float (0,1], default=1
             The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness at all
+            the fairness constraint and 1 corresponds to no fairness constraint enforced
+        num_threads: int, default=None
+            The number of threads the solver should use. If None, it will use all avaiable threads
         """
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
         self._obj_mode = obj_mode
         self._positive_class = positive_class
+        self._fairness_bound = fairness_bound
 
     def _define_side_constraints(self):
         # Loop through all possible combinations of the protected feature
@@ -566,6 +573,7 @@ class FairEOppOCT(FairConstrainedOCT):
         time_limit=60,
         _lambda=0,
         obj_mode="acc",
+        fairness_bound=1,
         num_threads=None,
         verbose=False,
     ) -> None:
@@ -593,15 +601,16 @@ class FairEOppOCT(FairConstrainedOCT):
             The accuracy objective attempts to maximize prediction accuracy while the
             balance objective aims to learn a balanced optimal decision
             tree to better generalize to our of sample data.
-        num_threads: int, default=None
-            The number of threads the solver should use. If None, it will use all avaiable threads
         fairness_bound: float (0,1], default=1
             The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness at all
+            the fairness constraint and 1 corresponds to no fairness constraint enforced
+        num_threads: int, default=None
+            The number of threads the solver should use. If None, it will use all avaiable threads
         """
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
         self._obj_mode = obj_mode
         self._positive_class = positive_class
+        self._fairness_bound = fairness_bound
 
     def _define_side_constraints(self):
         # Loop through all possible combinations of the protected feature
@@ -632,6 +641,7 @@ class FairEOddsOCT(FairConstrainedOCT):
         time_limit=60,
         _lambda=0,
         obj_mode="acc",
+        fairness_bound=1,
         num_threads=None,
         verbose=False,
     ) -> None:
@@ -659,15 +669,16 @@ class FairEOddsOCT(FairConstrainedOCT):
             The accuracy objective attempts to maximize prediction accuracy while the
             balance objective aims to learn a balanced optimal decision
             tree to better generalize to our of sample data.
-        num_threads: int, default=None
-            The number of threads the solver should use. If None, it will use all avaiable threads
         fairness_bound: float (0,1], default=1
             The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness at all
+            the fairness constraint and 1 corresponds to no fairness constraint enforced
+        num_threads: int, default=None
+            The number of threads the solver should use. If None, it will use all avaiable threads
         """
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
         self._obj_mode = obj_mode
         self._positive_class = positive_class
+        self._fairness_bound = fairness_bound
 
     def _define_side_constraints(self):
         # Loop through all possible combinations of the protected feature
@@ -744,7 +755,7 @@ class FairOCT(FlowOCTMultipleSink):
             The type of fairness criteria that we want to enforce
         fairness_bound: float (0,1], default=1
             The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness at all
+            the fairness constraint and 1 corresponds to no fairness constraint enforced
         """
         warnings.warn(
             (
@@ -905,6 +916,104 @@ class FairOCT(FlowOCTMultipleSink):
                             & (self._X_p[self._legitimate_name] == l_value)
                         ]
                         self._add_fairness_constraint(p_df, p_prime_df)
+
+    def _define_objective(self):
+        # Max sum(sum(zeta[i,n,y(i)]))
+        obj = self._solver.lin_expr(0)
+        for n in self._tree.Nodes:
+            for f in self._X_col_labels:
+                obj += -1 * self._lambda * self._b[n, f]
+        if self._obj_mode == "acc":
+            for i in self._datapoints:
+                for n in self._tree.Nodes + self._tree.Leaves:
+                    obj += (1 - self._lambda) * (self._zeta[i, n, self._y[i]])
+        elif self._obj_mode == "balance":
+            for i in self._datapoints:
+                for n in self._tree.Nodes + self._tree.Leaves:
+                    obj += (
+                        (1 - self._lambda)
+                        * (
+                            1
+                            / self._y[self._y == self._y[i]].shape[0]
+                            / self._labels.shape[0]
+                        )
+                        * (self._zeta[i, n, self._y[i]])
+                    )
+        else:
+            raise ValueError(
+                "Invalid objective mode. obj_mode should be one of acc or balance."
+            )
+        self._solver.set_objective(obj, ODTL.MAXIMIZE)
+
+    def fit(self, X, y, protect_feat, legit_factor):
+        """
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape (n_samples, n_features)
+            The training input samples.
+        y : array-like, shape (n_samples,)
+            The target values (class labels in classification).
+        protect_feat : array-like, shape (n_samples,1) or (n_samples, n_p)
+            The protected feature columns (Race, gender, etc); Can have one or more columns
+        legit_factor : array-like, shape (n_samples,)
+            The legitimate factor column(e.g., prior number of criminal acts)
+        Returns
+        -------
+        self : object
+            Returns self.
+        """
+        self._extract_metadata(X, y, protect_feat)
+        self._protect_feat = protect_feat
+        self._legit_factor = legit_factor
+        self._class_name = "class_label"
+        self._legitimate_name = "legitimate_feature_name"
+        # this function returns converted X and y but we retain metadata
+        if isinstance(y, (pd.Series, pd.DataFrame)):
+            X, y = check_X_y(X, y.values.ravel())
+        else:
+            X, y = check_X_y(X, y)
+        # Raises ValueError if there is a column that has values other than 0 or 1
+        check_binary(X)
+        self._X_p = np.concatenate(
+            (protect_feat, legit_factor.reshape(-1, 1), y.reshape(-1, 1)), axis=1
+        )
+        self._X_p = pd.DataFrame(
+            self._X_p,
+            columns=(
+                self._protect_feat_col_labels.tolist()
+                + [self._legitimate_name, self._class_name]
+            ),
+        )
+        self._P_col_labels = self._protect_feat_col_labels
+        # Store the classes seen during fit
+        self._classes = unique_labels(y)
+        self._create_main_problem()
+        self._solver.optimize(self._X, self, self._solver)
+        self.b_value = self._solver.get_var_value(self._b, "b")
+        self.w_value = self._solver.get_var_value(self._w, "w")
+        self.p_value = self._solver.get_var_value(self._p, "p")
+        # Return the classifier
+        return self
+
+    def predict(self, X):
+        """Classify test points using the FairTree classifier
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The input samples.
+        Returns
+        -------
+        y : ndarray, shape (n_samples,)
+            The label for each sample is the label of the closest sample
+            seen during fit.
+        """
+        # Check is fit had been called
+        check_is_fitted(self, ["b_value", "w_value", "p_value"])
+        # This will again convert a pandas df to numpy array
+        # but we have the column information from when we called fit
+        X = check_array(X)
+        check_columns_match(self._X_col_labels, X)
+        return self._make_prediction(X)
 
     def get_SP(self, protect_feat, y):
         """
