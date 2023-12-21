@@ -387,8 +387,32 @@ def test_handle_pandas_cols(synthetic_data_1, f, pd_data, class_name):
         assert len(metric_val.keys()) == 16
 
 
+@pytest.mark.parametrize(
+    "class_name",
+    class_names(),
+)
 # test that assertion error is thrown when invalid objective mode is given
-def test_bad_obj_mode(synthetic_data_1):
+def test_bad_obj_mode(synthetic_data_1, class_name):
+    X, y, protect_feat, legit_factor = synthetic_data_1
+    with pytest.raises(
+        ValueError,
+        match="Invalid objective mode. obj_mode should be one of acc or balance.",
+    ):
+        fcl = class_name(
+            solver="cbc",
+            positive_class=1,
+            depth=2,
+            _lambda=0,
+            time_limit=100,
+            fairness_bound=1,
+            num_threads=None,
+            obj_mode="inacc",
+        )
+        fcl.fit(X, y, protect_feat, legit_factor)
+
+
+# test that assertion error is thrown when invalid objective mode is given
+def test_bad_obj_mode_dep(synthetic_data_1):
     X, y, protect_feat, legit_factor = synthetic_data_1
     with pytest.raises(
         ValueError,
