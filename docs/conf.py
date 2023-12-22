@@ -46,7 +46,7 @@ extensions = [
     "sphinx_copybutton",
     "numpydoc",
     # "sphinx_gallery.gen_gallery",
-    "sphinx_toggleprompt",
+    # "sphinx_toggleprompt",
     "nbsphinx",
     "autoapi.extension",
     "sphinx.ext.inheritance_diagram",
@@ -346,8 +346,8 @@ intersphinx_mapping = {
 # copybutton strip prompt text
 copybutton_prompt_text = ">>> "
 
-# toggle prompt
-toggleprompt_offset_right = 30
+# # toggle prompt
+# toggleprompt_offset_right = 30
 
 # GH REPO URL
 # rst_prolog = """
@@ -361,5 +361,5 @@ toggleprompt_offset_right = 30
 # NBSPHINX
 html_scaled_image_link = False
 
-nbsphinx_execute = "always"
+nbsphinx_execute = "auto"
 nbsphinx_allow_errors = True
