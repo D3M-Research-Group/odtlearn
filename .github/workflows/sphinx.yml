@@ -25,7 +25,7 @@ jobs:
       - name: Build HTML
         uses: ammaraskar/sphinx-action@master
         with: 
-          pre-build-command: "apt-get update -y --allow-releaseinfo-change && apt-get install -y git pandoc latexmk texlive-latex-recommended texlive-latex-extra dvipng texlive-fonts-recommended && pip install sphinx==5.2.0"
+          pre-build-command: "apt-get update -y --allow-releaseinfo-change && apt-get install -y git pandoc latexmk texlive-latex-recommended texlive-latex-extra dvipng texlive-fonts-recommended && pip install sphinx==7.2.6"
       - name: Upload artifacts
         uses: actions/upload-artifact@v1
         with:
