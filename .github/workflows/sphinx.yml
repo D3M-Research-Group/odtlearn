@@ -22,6 +22,10 @@ jobs:
           wget -nH https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
           bash coinbrew fetch Cbc@master --no-prompt --skip-update
           bash coinbrew build Cbc@stable/2.10 --no-prompt --tests=none
+      - name: Install Python 3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9.x'
       - name: Build HTML
         uses: ammaraskar/sphinx-action@master
         with: 
