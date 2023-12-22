@@ -7,7 +7,7 @@ nbsphinx==0.9.3
 sphinx-copybutton==0.5.2
 sphinx-gallery==0.14.0
 sphinx-math-dollar==1.2.1
-sphinx-prompt==1.8.0
+sphinx-prompt==1.7.0
 numpydoc==1.6.0
 pillow==9.2.0
 numpy==1.23.1
