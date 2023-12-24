@@ -9,7 +9,6 @@ import logging
 import multiprocessing as multip
 import numbers
 import os
-import tempfile
 from os.path import dirname, exists, isfile
 from sys import maxsize, platform
 from typing import Dict, List, Optional, Tuple, Union
@@ -1231,7 +1230,6 @@ class SolverCbc(Solver):
         )
 
         self.__clear_sol()
-        cbc_set_parameter(self, "presolve", "off")
         cbclib.Cbc_solve(self._model)
 
         if cbclib.Cbc_isAbandoned(self._model):
