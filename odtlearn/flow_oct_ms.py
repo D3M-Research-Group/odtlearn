@@ -12,7 +12,6 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
         num_threads,
         verbose,
     ) -> None:
-
         self._lambda = _lambda
 
         super().__init__(
@@ -28,16 +27,11 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
         self._b = self._solver.add_vars(
             self._tree.Nodes, self._X_col_labels, vtype=ODTL.BINARY, name="b"
         )
-        # self._b = self._model.addVars(
-        #     self._tree.Nodes, self._X_col_labels, vtype=ODTL.BINARY, name="b"
-        # )
+
         # p[n] == 1 iff at node n we do not branch and we make a prediction
         self._p = self._solver.add_vars(
             self._tree.Nodes + self._tree.Leaves, vtype=ODTL.BINARY, name="p"
         )
-        # self._p = self._model.addVars(
-        #     self._tree.Nodes + self._tree.Leaves, vtype=ODTL.BINARY, name="p"
-        # )
 
         # For classification w[n,k]=1 iff at node n we predict class k
         self._w = self._solver.add_vars(
@@ -47,13 +41,6 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
             lb=0,
             name="w",
         )
-        # self._w = self._model.addVars(
-        #     self._tree.Nodes + self._tree.Leaves,
-        #     self._labels,
-        #     vtype=ODTL.CONTINUOUS,
-        #     lb=0,
-        #     name="w",
-        # )
 
     def _flow_variables(self):
         # zeta[i,n,k] is the amount of flow through the edge connecting node n to sink node t,k for datapoint i
