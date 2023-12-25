@@ -1,16 +1,18 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en" data-content_root="">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="How to contribute to ODTlearn" href="../contributing.html" /><link rel="prev" title="FairOCT Example" href="FairOCT.html" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="How to contribute to ODTlearn" href="../contributing.html" /><link rel="prev" title="FairOCT Example" href="FairOCT.html" />
 
-    <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
-        <title>RobustTreeClassifier Examples - odtlearn 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
+        <title>RobustOCT Examples - odtlearn 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
     
     
 
@@ -37,10 +39,12 @@
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
@@ -148,7 +152,7 @@
   <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -156,7 +160,7 @@
   <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/optimal_classification_trees.html">Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/fair_optimal_classification_trees.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
@@ -166,17 +170,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../autoapi/odtlearn/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../autoapi/odtlearn/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of ODTlearn API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../autoapi/odtlearn/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of odtlearn</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../autoapi/odtlearn/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of odtlearn.utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/Tree/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.Tree</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/TreePlotter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.TreePlotter</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
@@ -201,10 +202,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example Notebooks</span></p>
 <ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Example Notebooks</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Example Notebooks</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">RobustTreeClassifier</span></code> Examples</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -229,7 +230,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -243,275 +246,28 @@
           </label>
         </div>
         <article role="main">
-          
-<style>
-/* CSS for nbsphinx extension */
-
-/* remove conflicting styling from Sphinx themes */
-div.nbinput.container div.prompt *,
-div.nboutput.container div.prompt *,
-div.nbinput.container div.input_area pre,
-div.nboutput.container div.output_area pre,
-div.nbinput.container div.input_area .highlight,
-div.nboutput.container div.output_area .highlight {
-    border: none;
-    padding: 0;
-    margin: 0;
-    box-shadow: none;
-}
-
-div.nbinput.container > div[class*=highlight],
-div.nboutput.container > div[class*=highlight] {
-    margin: 0;
-}
-
-div.nbinput.container div.prompt *,
-div.nboutput.container div.prompt * {
-    background: none;
-}
-
-div.nboutput.container div.output_area .highlight,
-div.nboutput.container div.output_area pre {
-    background: unset;
-}
-
-div.nboutput.container div.output_area div.highlight {
-    color: unset;  /* override Pygments text color */
-}
-
-/* avoid gaps between output lines */
-div.nboutput.container div[class*=highlight] pre {
-    line-height: normal;
-}
-
-/* input/output containers */
-div.nbinput.container,
-div.nboutput.container {
-    display: -webkit-flex;
-    display: flex;
-    align-items: flex-start;
-    margin: 0;
-    width: 100%;
-}
-@media (max-width: 540px) {
-    div.nbinput.container,
-    div.nboutput.container {
-        flex-direction: column;
-    }
-}
-
-/* input container */
-div.nbinput.container {
-    padding-top: 5px;
-}
-
-/* last container */
-div.nblast.container {
-    padding-bottom: 5px;
-}
-
-/* input prompt */
-div.nbinput.container div.prompt pre {
-    color: #307FC1;
-}
-
-/* output prompt */
-div.nboutput.container div.prompt pre {
-    color: #BF5B3D;
-}
-
-/* all prompts */
-div.nbinput.container div.prompt,
-div.nboutput.container div.prompt {
-    width: 4.5ex;
-    padding-top: 5px;
-    position: relative;
-    user-select: none;
-}
-
-div.nbinput.container div.prompt > div,
-div.nboutput.container div.prompt > div {
-    position: absolute;
-    right: 0;
-    margin-right: 0.3ex;
-}
-
-@media (max-width: 540px) {
-    div.nbinput.container div.prompt,
-    div.nboutput.container div.prompt {
-        width: unset;
-        text-align: left;
-        padding: 0.4em;
-    }
-    div.nboutput.container div.prompt.empty {
-        padding: 0;
-    }
-
-    div.nbinput.container div.prompt > div,
-    div.nboutput.container div.prompt > div {
-        position: unset;
-    }
-}
-
-/* disable scrollbars on prompts */
-div.nbinput.container div.prompt pre,
-div.nboutput.container div.prompt pre {
-    overflow: hidden;
-}
-
-/* input/output area */
-div.nbinput.container div.input_area,
-div.nboutput.container div.output_area {
-    -webkit-flex: 1;
-    flex: 1;
-    overflow: auto;
-}
-@media (max-width: 540px) {
-    div.nbinput.container div.input_area,
-    div.nboutput.container div.output_area {
-        width: 100%;
-    }
-}
-
-/* input area */
-div.nbinput.container div.input_area {
-    border: 1px solid #e0e0e0;
-    border-radius: 2px;
-    /*background: #f5f5f5;*/
-}
-
-/* override MathJax center alignment in output cells */
-div.nboutput.container div[class*=MathJax] {
-    text-align: left !important;
-}
-
-/* override sphinx.ext.imgmath center alignment in output cells */
-div.nboutput.container div.math p {
-    text-align: left;
-}
-
-/* standard error */
-div.nboutput.container div.output_area.stderr {
-    background: #fdd;
-}
-
-/* ANSI colors */
-.ansi-black-fg { color: #3E424D; }
-.ansi-black-bg { background-color: #3E424D; }
-.ansi-black-intense-fg { color: #282C36; }
-.ansi-black-intense-bg { background-color: #282C36; }
-.ansi-red-fg { color: #E75C58; }
-.ansi-red-bg { background-color: #E75C58; }
-.ansi-red-intense-fg { color: #B22B31; }
-.ansi-red-intense-bg { background-color: #B22B31; }
-.ansi-green-fg { color: #00A250; }
-.ansi-green-bg { background-color: #00A250; }
-.ansi-green-intense-fg { color: #007427; }
-.ansi-green-intense-bg { background-color: #007427; }
-.ansi-yellow-fg { color: #DDB62B; }
-.ansi-yellow-bg { background-color: #DDB62B; }
-.ansi-yellow-intense-fg { color: #B27D12; }
-.ansi-yellow-intense-bg { background-color: #B27D12; }
-.ansi-blue-fg { color: #208FFB; }
-.ansi-blue-bg { background-color: #208FFB; }
-.ansi-blue-intense-fg { color: #0065CA; }
-.ansi-blue-intense-bg { background-color: #0065CA; }
-.ansi-magenta-fg { color: #D160C4; }
-.ansi-magenta-bg { background-color: #D160C4; }
-.ansi-magenta-intense-fg { color: #A03196; }
-.ansi-magenta-intense-bg { background-color: #A03196; }
-.ansi-cyan-fg { color: #60C6C8; }
-.ansi-cyan-bg { background-color: #60C6C8; }
-.ansi-cyan-intense-fg { color: #258F8F; }
-.ansi-cyan-intense-bg { background-color: #258F8F; }
-.ansi-white-fg { color: #C5C1B4; }
-.ansi-white-bg { background-color: #C5C1B4; }
-.ansi-white-intense-fg { color: #A1A6B2; }
-.ansi-white-intense-bg { background-color: #A1A6B2; }
-
-.ansi-default-inverse-fg { color: #FFFFFF; }
-.ansi-default-inverse-bg { background-color: #000000; }
-
-.ansi-bold { font-weight: bold; }
-.ansi-underline { text-decoration: underline; }
-
-
-div.nbinput.container div.input_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight].math,
-div.nboutput.container div.output_area.rendered_html,
-div.nboutput.container div.output_area > div.output_javascript,
-div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 5px;
-    margin: 0;
-}
-
-/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
-div.nbinput.container div.input_area > div[class^='highlight'],
-div.nboutput.container div.output_area > div[class^='highlight']{
-    overflow-y: hidden;
-}
-
-/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt .copybtn {
-    display: none;
-}
-
-/* Some additional styling taken form the Jupyter notebook CSS */
-div.rendered_html table {
-  border: none;
-  border-collapse: collapse;
-  border-spacing: 0;
-  color: black;
-  font-size: 12px;
-  table-layout: fixed;
-}
-div.rendered_html thead {
-  border-bottom: 1px solid black;
-  vertical-align: bottom;
-}
-div.rendered_html tr,
-div.rendered_html th,
-div.rendered_html td {
-  text-align: right;
-  vertical-align: middle;
-  padding: 0.5em 0.5em;
-  line-height: normal;
-  white-space: normal;
-  max-width: none;
-  border: none;
-}
-div.rendered_html th {
-  font-weight: bold;
-}
-div.rendered_html tbody tr:nth-child(odd) {
-  background: #f5f5f5;
-}
-div.rendered_html tbody tr:hover {
-  background: rgba(66, 165, 245, 0.2);
-}
-</style>
-<div class="section" id="RobustTreeClassifier-Examples">
-<h1><code class="docutils literal notranslate"><span class="pre">RobustTreeClassifier</span></code> Examples<a class="headerlink" href="#RobustTreeClassifier-Examples" title="Permalink to this headline">#</a></h1>
+          <section id="RobustOCT-Examples">
+<h1><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples<a class="headerlink" href="#RobustOCT-Examples" title="Permalink to this heading">#</a></h1>
 <!-- <font size="3.5">We use a tailored Benders decomposition algorithm to solve this formulation:
 </font>
 
 
 <p align="left">
     <img src="./odtlearn/docs/_static/img/robust_algorithm.png" alt="robust_algorithm" style="width:500px;"/>
-</p>  --><div class="section" id="Example-1:-Synthetic-Data-Without-Specified-Shifts">
-<h2>Example 1: Synthetic Data Without Specified Shifts<a class="headerlink" href="#Example-1:-Synthetic-Data-Without-Specified-Shifts" title="Permalink to this headline">#</a></h2>
+</p>  --><section id="Example-1:-Synthetic-Data-Without-Specified-Shifts">
+<h2>Example 1: Synthetic Data Without Specified Shifts<a class="headerlink" href="#Example-1:-Synthetic-Data-Without-Specified-Shifts" title="Permalink to this heading">#</a></h2>
 <p>If costs and/or budget is not specified, then we will produce the same result as an optimal strong classification tree.</p>
 <p>As an example, say that we are given this training set:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">odtlearn.robust_oct</span> <span class="kn">import</span> <span class="n">RobustOCT</span>
 
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    X2</span>
 <span class="sd">    |               |</span>
 <span class="sd">    |               |</span>
@@ -522,7 +278,7 @@ div.rendered_html tbody tr:hover {
 <span class="sd">    0    - - - -    |    + + +</span>
 <span class="sd">    |    - - -      |</span>
 <span class="sd">    |______0________|_______1_______X1</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
     <span class="p">[</span>
         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
@@ -540,7 +296,7 @@ div.rendered_html tbody tr:hover {
         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
     <span class="p">]</span>
 <span class="p">)</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"X1"</span><span class="p">,</span> <span class="s2">"X2"</span><span class="p">])</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span> <span class="s2">&quot;X2&quot;</span><span class="p">])</span>
 
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 </pre></div>
@@ -548,15 +304,15 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>If either <code class="docutils literal notranslate"><span class="pre">costs</span></code> or <code class="docutils literal notranslate"><span class="pre">budget</span></code> is not specified, the optimal classification tree will be produced (i.e., a tree that does not account for distribution shifts).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">odtlearn.robust_oct</span> <span class="kn">import</span> <span class="n">RobustOCT</span>
 
 <span class="n">robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
-        <span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">,</span>
+        <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
         <span class="n">depth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">60</span>
+        <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
     <span class="p">)</span>
 <span class="n">robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -568,70 +324,97 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[2], line 9</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> robust_classifier <span style="color: rgb(98,98,98)">=</span> RobustOCT(
-<span class="ansi-green-intense-fg ansi-bold">      4</span>         solver<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">cbc</span><span style="color: rgb(175,0,0)">"</span>,
-<span class="ansi-green-intense-fg ansi-bold">      5</span>         depth <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(98,98,98)">2</span>,
-<span class="ansi-green-intense-fg ansi-bold">      6</span>         time_limit <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(98,98,98)">60</span>
-<span class="ansi-green-intense-fg ansi-bold">      7</span>     )
-<span class="ansi-green-intense-fg ansi-bold">      8</span> robust_classifier<span style="color: rgb(98,98,98)">.</span>fit(X, y)
-<span class="ansi-green-fg">----&gt; 9</span> predictions <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">predict</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">X</span><span class="ansi-yellow-bg">)</span>
+Set parameter Username
+Academic license - for non-commercial use only - expires 2024-06-27
+Set parameter TimeLimit to value 100
+Set parameter NodeLimit to value 1073741824
+Set parameter SolutionLimit to value 1073741824
+Set parameter LazyConstraints to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter Method to value 3
+Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
 
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:342</span>, in <span class="ansi-cyan-fg">RobustOCT.predict</span><span class="ansi-blue-fg">(self, X)</span>
-<span class="ansi-green-intense-fg ansi-bold">    339</span> df_test <span style="color: rgb(98,98,98)">=</span> check_same_as_X(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X_col_labels, X, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">test covariates</span><span style="color: rgb(175,0,0)">"</span>)
-<span class="ansi-green-intense-fg ansi-bold">    340</span> check_integer(df_test)
-<span class="ansi-green-fg">--&gt; 342</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_make_prediction</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">df_test</span><span class="ansi-yellow-bg">)</span>
+CPU model: Apple M1 Pro
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:127</span>, in <span class="ansi-cyan-fg">RobustOCT._make_prediction</span><span class="ansi-blue-fg">(self, X)</span>
-<span class="ansi-green-intense-fg ansi-bold">    125</span> terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>
-<span class="ansi-green-intense-fg ansi-bold">    126</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
-<span class="ansi-green-fg">--&gt; 127</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:  <span style="color: rgb(95,135,135)"># w[n,k] == 1</span>
-<span class="ansi-green-intense-fg ansi-bold">    128</span>         prediction <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [k]
-<span class="ansi-green-intense-fg ansi-bold">    129</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+Optimize a model with 7 rows, 33 columns and 20 nonzeros
+Model fingerprint: 0x78ba3dea
+Variable types: 13 continuous, 20 integer (20 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e-01, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 4 rows and 4 columns
+Presolve time: 0.01s
+Presolved: 3 rows, 29 columns, 12 nonzeros
+Variable types: 13 continuous, 16 integer (16 binary)
+Root relaxation presolved: 12 rows, 29 columns, 65 nonzeros
 
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+
+Root relaxation: objective 1.300000e+01, 5 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   13.00000    0    -          -   13.00000      -     -    0s
+     0     0   12.75000    0    -          -   12.75000      -     -    0s
+     0     0   12.75000    0    -          -   12.75000      -     -    0s
+     0     0   12.50000    0    6          -   12.50000      -     -    0s
+H    0     0                       7.2500000   12.50000  72.4%     -    0s
+H    0     0                      10.5000000   12.50000  19.0%     -    0s
+     0     0   12.38889    0    5   10.50000   12.38889  18.0%     -    0s
+     0     0   12.25000    0    7   10.50000   12.25000  16.7%     -    0s
+     0     0   12.25000    0    -   10.50000   12.25000  16.7%     -    0s
+*    0     0               0      12.2500000   12.25000  0.00%     -    0s
+
+Cutting planes:
+  Gomory: 1
+  MIR: 3
+  Lazy constraints: 44
+
+Explored 1 nodes (32 simplex iterations) in 0.06 seconds (0.00 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 12.25 10.5 7.25
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.225000000000e+01, best bound 1.225000000000e+01, gap 0.0000%
+
+User-callback calls 170, time in user-callback 0.02 sec
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-#########node  1
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[3], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">print_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:358</span>, in <span class="ansi-cyan-fg">RobustOCT.print_tree</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">    355</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">continue</span>
-<span class="ansi-green-intense-fg ansi-bold">    357</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
-<span class="ansi-green-fg">--&gt; 358</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:
-<span class="ansi-green-intense-fg ansi-bold">    359</span>         <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">leaf </span><span class="ansi-bold" style="color: rgb(175,95,135)">{}</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(98,98,98)">.</span>format(k))
-<span class="ansi-green-intense-fg ansi-bold">    360</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+#########node  1
+Feature:  X2 , Cutoff:  0
+#########node  2
+Feature:  X1 , Cutoff:  0
+#########node  3
+Feature:  X1 , Cutoff:  0
+#########node  4
+leaf 0
+#########node  5
+leaf 1
+#########node  6
+leaf 1
+#########node  7
+leaf 0
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -640,65 +423,20 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[4], line 2</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> fig, ax <span style="color: rgb(98,98,98)">=</span> plt<span style="color: rgb(98,98,98)">.</span>subplots(figsize<span style="color: rgb(98,98,98)">=</span>(<span style="color: rgb(98,98,98)">10</span>, <span style="color: rgb(98,98,98)">5</span>))
-<span class="ansi-green-fg">----&gt; 2</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">plot_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span style="color: rgb(98,98,98)">.</span>show()
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:423</span>, in <span class="ansi-cyan-fg">RobustOCT.plot_tree</span><span class="ansi-blue-fg">(self, label, filled, rounded, precision, ax, fontsize, color_dict, edge_annotation, arrow_annotation_font_scale, debug)</span>
-<span class="ansi-green-intense-fg ansi-bold">    421</span> node_dict <span style="color: rgb(98,98,98)">=</span> {}
-<span class="ansi-green-intense-fg ansi-bold">    422</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> node <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> np<span style="color: rgb(98,98,98)">.</span>arange(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree<span style="color: rgb(98,98,98)">.</span>total_nodes <span style="color: rgb(98,98,98)">+</span> <span style="color: rgb(98,98,98)">1</span>):
-<span class="ansi-green-fg">--&gt; 423</span>     node_dict[node] <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_get_node_status</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">b_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    425</span> exporter <span style="color: rgb(98,98,98)">=</span> MPLPlotter(
-<span class="ansi-green-intense-fg ansi-bold">    426</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree,
-<span class="ansi-green-intense-fg ansi-bold">    427</span>     node_dict,
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-intense-fg ansi-bold">    440</span>     debug<span style="color: rgb(98,98,98)">=</span>debug,
-<span class="ansi-green-intense-fg ansi-bold">    441</span> )
-<span class="ansi-green-intense-fg ansi-bold">    442</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> exporter<span style="color: rgb(98,98,98)">.</span>export(ax<span style="color: rgb(98,98,98)">=</span>ax)
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">RobustOCT._get_node_status</span><span class="ansi-blue-fg">(self, b, w, n)</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
-<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
-<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
-<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([w[n, k] <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
-<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
-<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
-<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
-<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
-<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([<span class="ansi-yellow-bg">w</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
-<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
-<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_6_1.png" src="../_images/notebooks_RobustOCT_6_1.png"/>
+<img alt="../_images/notebooks_RobustOCT_6_0.png" src="../_images/notebooks_RobustOCT_6_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="Example-2:-synthetic-data-with-specified-shifts">
-<h2>Example 2: synthetic data with specified shifts<a class="headerlink" href="#Example-2:-synthetic-data-with-specified-shifts" title="Permalink to this headline">#</a></h2>
-<p>We take the same synthetic data from Example 1, but now add distribution shifts with the following schema: - For 5 samples at <img alt="[0,0]" class="math" src="../_images/math/ebf9e680273a1d5e209eb0e2a4b13a19620a103b.png"/>, pay a cost of 1 to perturb <img alt="X_1" class="math" src="../_images/math/08fe31609cd48800a8b44af61f352242fc327578.png"/> and get <img alt="[1,0]" class="math" src="../_images/math/89373012d8df0f30839ffc7ef5cb142d7a990cb0.png"/> - For the 1 sample at <img alt="[1,1]" class="math" src="../_images/math/6cf1b5020649f69c2f029417055708155cca1ece.png"/>, pay a cost of 1 to perturb <img alt="X_2" class="math" src="../_images/math/468c3ea6b761e3ae0b6853569ec76f21642a0c03.png"/> to get <img alt="[1,0]" class="math" src="../_images/math/89373012d8df0f30839ffc7ef5cb142d7a990cb0.png"/> - All other perturbations are not allowed</p>
+</section>
+<section id="Example-2:-synthetic-data-with-specified-shifts">
+<h2>Example 2: synthetic data with specified shifts<a class="headerlink" href="#Example-2:-synthetic-data-with-specified-shifts" title="Permalink to this heading">#</a></h2>
+<p>We take the same synthetic data from Example 1, but now add distribution shifts with the following schema: - For 5 samples at <img class="math" src="../_images/math/ebf9e680273a1d5e209eb0e2a4b13a19620a103b.png" alt="[0,0]"/>, pay a cost of 1 to perturb <img class="math" src="../_images/math/08fe31609cd48800a8b44af61f352242fc327578.png" alt="X_1"/> and get <img class="math" src="../_images/math/89373012d8df0f30839ffc7ef5cb142d7a990cb0.png" alt="[1,0]"/> - For the 1 sample at <img class="math" src="../_images/math/6cf1b5020649f69c2f029417055708155cca1ece.png" alt="[1,1]"/>, pay a cost of 1 to perturb <img class="math" src="../_images/math/468c3ea6b761e3ae0b6853569ec76f21642a0c03.png" alt="X_2"/> to get <img class="math" src="../_images/math/89373012d8df0f30839ffc7ef5cb142d7a990cb0.png" alt="[1,0]"/> - All other perturbations are not allowed</p>
 <p>First, define these costs, which have the same shape and features as your input sample.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: 10 is a proxy for infinite cost, as it is over the allowed budgets we will specify</span>
@@ -706,13 +444,13 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
                   <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
                   <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
                   <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]])</span>
-<span class="n">costs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'X1'</span><span class="p">,</span> <span class="s1">'X2'</span><span class="p">])</span>
+<span class="n">costs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;X1&#39;</span><span class="p">,</span> <span class="s1">&#39;X2&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <!-- When the budget is 2 (corresponding to the variable &epsilon;), we don't see a change in the tree as the non-robust tree will have worst-case accuracy 11/13 and no other tree will have a better worst-case accuracy. --><p>When the budget is 2 (corresponding to the variable ε), we don’t see a change in the tree from Example 1 since for this dataset, the budget is small and thus the level of robustness is small.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Same data as Example 1</span>
@@ -733,14 +471,20 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
     <span class="p">]</span>
 <span class="p">)</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"X1"</span><span class="p">,</span> <span class="s2">"X2"</span><span class="p">])</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span> <span class="s2">&quot;X2&quot;</span><span class="p">])</span>
 
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-
-<span class="n">robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
-    <span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">,</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
+    <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
     <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+    <span class="n">time_limit</span><span class="o">=</span><span class="mi">100</span>
 <span class="p">)</span>
 <span class="n">robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -752,70 +496,107 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[6], line 29</span>
-<span class="ansi-green-intense-fg ansi-bold">     23</span> robust_classifier <span style="color: rgb(98,98,98)">=</span> RobustOCT(
-<span class="ansi-green-intense-fg ansi-bold">     24</span>     solver<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">cbc</span><span style="color: rgb(175,0,0)">"</span>,
-<span class="ansi-green-intense-fg ansi-bold">     25</span>     depth<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">2</span>,
-<span class="ansi-green-intense-fg ansi-bold">     26</span>     time_limit<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">60</span>,
-<span class="ansi-green-intense-fg ansi-bold">     27</span> )
-<span class="ansi-green-intense-fg ansi-bold">     28</span> robust_classifier<span style="color: rgb(98,98,98)">.</span>fit(X, y, costs<span style="color: rgb(98,98,98)">=</span>costs, budget<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">2</span>)
-<span class="ansi-green-fg">---&gt; 29</span> predictions <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">predict</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">X</span><span class="ansi-yellow-bg">)</span>
+Set parameter Username
+Academic license - for non-commercial use only - expires 2024-06-27
+Set parameter TimeLimit to value 100
+Set parameter NodeLimit to value 1073741824
+Set parameter SolutionLimit to value 1073741824
+Set parameter LazyConstraints to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter Method to value 3
+Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
 
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:342</span>, in <span class="ansi-cyan-fg">RobustOCT.predict</span><span class="ansi-blue-fg">(self, X)</span>
-<span class="ansi-green-intense-fg ansi-bold">    339</span> df_test <span style="color: rgb(98,98,98)">=</span> check_same_as_X(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X_col_labels, X, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">test covariates</span><span style="color: rgb(175,0,0)">"</span>)
-<span class="ansi-green-intense-fg ansi-bold">    340</span> check_integer(df_test)
-<span class="ansi-green-fg">--&gt; 342</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_make_prediction</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">df_test</span><span class="ansi-yellow-bg">)</span>
+CPU model: Apple M1 Pro
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:127</span>, in <span class="ansi-cyan-fg">RobustOCT._make_prediction</span><span class="ansi-blue-fg">(self, X)</span>
-<span class="ansi-green-intense-fg ansi-bold">    125</span> terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>
-<span class="ansi-green-intense-fg ansi-bold">    126</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
-<span class="ansi-green-fg">--&gt; 127</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:  <span style="color: rgb(95,135,135)"># w[n,k] == 1</span>
-<span class="ansi-green-intense-fg ansi-bold">    128</span>         prediction <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [k]
-<span class="ansi-green-intense-fg ansi-bold">    129</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+Optimize a model with 7 rows, 33 columns and 20 nonzeros
+Model fingerprint: 0x78ba3dea
+Variable types: 13 continuous, 20 integer (20 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e-01, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 4 rows and 4 columns
+Presolve time: 0.00s
+Presolved: 3 rows, 29 columns, 12 nonzeros
+Variable types: 13 continuous, 16 integer (16 binary)
+Root relaxation presolved: 12 rows, 29 columns, 65 nonzeros
 
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+
+Root relaxation: objective 1.300000e+01, 5 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   13.00000    0    -          -   13.00000      -     -    0s
+     0     0   12.75000    0    -          -   12.75000      -     -    0s
+     0     0   12.75000    0    -          -   12.75000      -     -    0s
+     0     0   12.50000    0    6          -   12.50000      -     -    0s
+H    0     0                       7.2500000   12.50000  72.4%     -    0s
+H    0     0                       8.5000000   12.50000  47.1%     -    0s
+     0     0   12.38889    0    5    8.50000   12.38889  45.8%     -    0s
+     0     0   12.27513    0   11    8.50000   12.27513  44.4%     -    0s
+     0     0   12.25000    0    9    8.50000   12.25000  44.1%     -    0s
+H    0     0                       9.2500000   12.25000  32.4%     -    0s
+H    0     0                       9.5000000   12.25000  28.9%     -    0s
+     0     0   12.25000    0    6    9.50000   12.25000  28.9%     -    0s
+     0     0   12.25000    0    -    9.50000   12.25000  28.9%     -    0s
+     0     0   12.23554    0   13    9.50000   12.23554  28.8%     -    0s
+     0     0   12.22893    0   11    9.50000   12.22893  28.7%     -    0s
+H    0     0                      10.2500000   12.22893  19.3%     -    0s
+     0     0   12.21106    0   11   10.25000   12.21106  19.1%     -    0s
+     0     0   12.19909    0   11   10.25000   12.19909  19.0%     -    0s
+     0     0   12.19909    0   11   10.25000   12.19909  19.0%     -    0s
+     0     0   12.19909    0   11   10.25000   12.19909  19.0%     -    0s
+     0     2   12.19909    0   11   10.25000   12.19909  19.0%     -    0s
+
+Cutting planes:
+  MIR: 5
+  Lazy constraints: 61
+
+Explored 21 nodes (130 simplex iterations) in 0.05 seconds (0.01 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 5: 10.25 9.5 9.25 ... 7.25
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.025000000000e+01, best bound 1.025000000000e+01, gap 0.0000%
+
+User-callback calls 257, time in user-callback 0.03 sec
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-#########node  1
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[7], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">print_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:358</span>, in <span class="ansi-cyan-fg">RobustOCT.print_tree</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">    355</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">continue</span>
-<span class="ansi-green-intense-fg ansi-bold">    357</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
-<span class="ansi-green-fg">--&gt; 358</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:
-<span class="ansi-green-intense-fg ansi-bold">    359</span>         <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">leaf </span><span class="ansi-bold" style="color: rgb(175,95,135)">{}</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(98,98,98)">.</span>format(k))
-<span class="ansi-green-intense-fg ansi-bold">    360</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+#########node  1
+Feature:  X2 , Cutoff:  0
+#########node  2
+Feature:  X1 , Cutoff:  0
+#########node  3
+Feature:  X1 , Cutoff:  0
+#########node  4
+leaf 0
+#########node  5
+leaf 1
+#########node  6
+leaf 1
+#########node  7
+leaf 0
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -824,56 +605,11 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[8], line 2</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> fig, ax <span style="color: rgb(98,98,98)">=</span> plt<span style="color: rgb(98,98,98)">.</span>subplots(figsize<span style="color: rgb(98,98,98)">=</span>(<span style="color: rgb(98,98,98)">10</span>, <span style="color: rgb(98,98,98)">5</span>))
-<span class="ansi-green-fg">----&gt; 2</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">plot_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span style="color: rgb(98,98,98)">.</span>show()
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:423</span>, in <span class="ansi-cyan-fg">RobustOCT.plot_tree</span><span class="ansi-blue-fg">(self, label, filled, rounded, precision, ax, fontsize, color_dict, edge_annotation, arrow_annotation_font_scale, debug)</span>
-<span class="ansi-green-intense-fg ansi-bold">    421</span> node_dict <span style="color: rgb(98,98,98)">=</span> {}
-<span class="ansi-green-intense-fg ansi-bold">    422</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> node <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> np<span style="color: rgb(98,98,98)">.</span>arange(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree<span style="color: rgb(98,98,98)">.</span>total_nodes <span style="color: rgb(98,98,98)">+</span> <span style="color: rgb(98,98,98)">1</span>):
-<span class="ansi-green-fg">--&gt; 423</span>     node_dict[node] <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_get_node_status</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">b_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    425</span> exporter <span style="color: rgb(98,98,98)">=</span> MPLPlotter(
-<span class="ansi-green-intense-fg ansi-bold">    426</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree,
-<span class="ansi-green-intense-fg ansi-bold">    427</span>     node_dict,
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-intense-fg ansi-bold">    440</span>     debug<span style="color: rgb(98,98,98)">=</span>debug,
-<span class="ansi-green-intense-fg ansi-bold">    441</span> )
-<span class="ansi-green-intense-fg ansi-bold">    442</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> exporter<span style="color: rgb(98,98,98)">.</span>export(ax<span style="color: rgb(98,98,98)">=</span>ax)
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">RobustOCT._get_node_status</span><span class="ansi-blue-fg">(self, b, w, n)</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
-<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
-<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
-<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([w[n, k] <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
-<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
-<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
-<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
-<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
-<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([<span class="ansi-yellow-bg">w</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
-<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
-<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_12_1.png" src="../_images/notebooks_RobustOCT_12_1.png"/>
+<img alt="../_images/notebooks_RobustOCT_13_0.png" src="../_images/notebooks_RobustOCT_13_0.png" />
 </div>
 </div>
 <!-- <font size="3.5">But when the budget is &epsilon;=5, we see a change in the tree, as we allow up to 5 points at [0,0] and [1,1] to switch to [1,0] to potentially be misclassified. With the non-robust tree, this would decrease our accuracy to 8/13 in worst-case.
@@ -882,10 +618,15 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 <font size="3.5">If we think it through, the expected tree will classify points at [0,1] as 1, and classify all else as 0, as the allowed perturbations will not change the assigned label, making the worst-case accuracy 10/13 (the maximum worst-case accuracy)
     </font> --><p>But when the budget is increased to 5 (adding more robustness), we see a change in the tree.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
+    <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">time_limit</span><span class="o">=</span><span class="mi">100</span>
+<span class="p">)</span>
+<span class="n">robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="n">predictions</span> <span class="o">=</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -895,68 +636,105 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[9], line 2</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> robust_classifier<span style="color: rgb(98,98,98)">.</span>fit(X, y, costs<span style="color: rgb(98,98,98)">=</span>costs, budget<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(98,98,98)">5</span>)
-<span class="ansi-green-fg">----&gt; 2</span> predictions <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">predict</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">X</span><span class="ansi-yellow-bg">)</span>
+Set parameter Username
+Academic license - for non-commercial use only - expires 2024-06-27
+Set parameter TimeLimit to value 100
+Set parameter NodeLimit to value 1073741824
+Set parameter SolutionLimit to value 1073741824
+Set parameter LazyConstraints to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter Method to value 3
+Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
 
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:342</span>, in <span class="ansi-cyan-fg">RobustOCT.predict</span><span class="ansi-blue-fg">(self, X)</span>
-<span class="ansi-green-intense-fg ansi-bold">    339</span> df_test <span style="color: rgb(98,98,98)">=</span> check_same_as_X(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X_col_labels, X, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">test covariates</span><span style="color: rgb(175,0,0)">"</span>)
-<span class="ansi-green-intense-fg ansi-bold">    340</span> check_integer(df_test)
-<span class="ansi-green-fg">--&gt; 342</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_make_prediction</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">df_test</span><span class="ansi-yellow-bg">)</span>
+CPU model: Apple M1 Pro
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:127</span>, in <span class="ansi-cyan-fg">RobustOCT._make_prediction</span><span class="ansi-blue-fg">(self, X)</span>
-<span class="ansi-green-intense-fg ansi-bold">    125</span> terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>
-<span class="ansi-green-intense-fg ansi-bold">    126</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
-<span class="ansi-green-fg">--&gt; 127</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:  <span style="color: rgb(95,135,135)"># w[n,k] == 1</span>
-<span class="ansi-green-intense-fg ansi-bold">    128</span>         prediction <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [k]
-<span class="ansi-green-intense-fg ansi-bold">    129</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
+Optimize a model with 7 rows, 33 columns and 20 nonzeros
+Model fingerprint: 0x78ba3dea
+Variable types: 13 continuous, 20 integer (20 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e-01, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 4 rows and 4 columns
+Presolve time: 0.00s
+Presolved: 3 rows, 29 columns, 12 nonzeros
+Variable types: 13 continuous, 16 integer (16 binary)
+Root relaxation presolved: 12 rows, 29 columns, 65 nonzeros
 
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+
+Root relaxation: objective 1.300000e+01, 5 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   13.00000    0    -          -   13.00000      -     -    0s
+     0     0   12.75000    0    -          -   12.75000      -     -    0s
+     0     0   12.75000    0    -          -   12.75000      -     -    0s
+     0     0   12.50000    0    6          -   12.50000      -     -    0s
+H    0     0                       7.2500000   12.50000  72.4%     -    0s
+H    0     0                       8.0000000   12.50000  56.2%     -    0s
+     0     0   12.38889    0    5    8.00000   12.38889  54.9%     -    0s
+     0     0   12.25000    0    9    8.00000   12.25000  53.1%     -    0s
+     0     0   12.25000    0    6    8.00000   12.25000  53.1%     -    0s
+     0     0   12.25000    0    -    8.00000   12.25000  53.1%     -    0s
+     0     0   12.25000    0    7    8.00000   12.25000  53.1%     -    0s
+     0     0   12.25000    0    7    8.00000   12.25000  53.1%     -    0s
+     0     2   12.25000    0    7    8.00000   12.25000  53.1%     -    0s
+*   10     5               3       9.5000000   11.25000  18.4%   6.2    0s
+
+Cutting planes:
+  MIR: 7
+  Lazy constraints: 69
+
+Explored 24 nodes (153 simplex iterations) in 0.04 seconds (0.00 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 9.5 8 7.25
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 9.500000000000e+00, best bound 9.500000000000e+00, gap 0.0000%
+
+User-callback calls 236, time in user-callback 0.02 sec
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[10], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">print_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:358</span>, in <span class="ansi-cyan-fg">RobustOCT.print_tree</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">    355</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">continue</span>
-<span class="ansi-green-intense-fg ansi-bold">    357</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
-<span class="ansi-green-fg">--&gt; 358</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:
-<span class="ansi-green-intense-fg ansi-bold">    359</span>         <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">leaf </span><span class="ansi-bold" style="color: rgb(175,95,135)">{}</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(98,98,98)">.</span>format(k))
-<span class="ansi-green-intense-fg ansi-bold">    360</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+Feature:  X2 , Cutoff:  0
+#########node  2
+leaf 0
+#########node  3
+Feature:  X1 , Cutoff:  0
+#########node  4
+pruned
+#########node  5
+pruned
+#########node  6
+leaf 1
+#########node  7
+leaf 0
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">robust_classifier</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -964,51 +742,15 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[11], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">plot_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:423</span>, in <span class="ansi-cyan-fg">RobustOCT.plot_tree</span><span class="ansi-blue-fg">(self, label, filled, rounded, precision, ax, fontsize, color_dict, edge_annotation, arrow_annotation_font_scale, debug)</span>
-<span class="ansi-green-intense-fg ansi-bold">    421</span> node_dict <span style="color: rgb(98,98,98)">=</span> {}
-<span class="ansi-green-intense-fg ansi-bold">    422</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> node <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> np<span style="color: rgb(98,98,98)">.</span>arange(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree<span style="color: rgb(98,98,98)">.</span>total_nodes <span style="color: rgb(98,98,98)">+</span> <span style="color: rgb(98,98,98)">1</span>):
-<span class="ansi-green-fg">--&gt; 423</span>     node_dict[node] <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_get_node_status</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">b_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    425</span> exporter <span style="color: rgb(98,98,98)">=</span> MPLPlotter(
-<span class="ansi-green-intense-fg ansi-bold">    426</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree,
-<span class="ansi-green-intense-fg ansi-bold">    427</span>     node_dict,
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-intense-fg ansi-bold">    440</span>     debug<span style="color: rgb(98,98,98)">=</span>debug,
-<span class="ansi-green-intense-fg ansi-bold">    441</span> )
-<span class="ansi-green-intense-fg ansi-bold">    442</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> exporter<span style="color: rgb(98,98,98)">.</span>export(ax<span style="color: rgb(98,98,98)">=</span>ax)
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">RobustOCT._get_node_status</span><span class="ansi-blue-fg">(self, b, w, n)</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
-<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
-<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
-<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([w[n, k] <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
-<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
-<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
-<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
-<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
-<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([<span class="ansi-yellow-bg">w</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
-<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
-<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
-</pre></div></div>
+<img alt="../_images/notebooks_RobustOCT_17_0.png" src="../_images/notebooks_RobustOCT_17_0.png" />
 </div>
 </div>
-<div class="section" id="Example-3:-UCI-data-example">
-<h2>Example 3: UCI data example<a class="headerlink" href="#Example-3:-UCI-data-example" title="Permalink to this headline">#</a></h2>
+</section>
+<section id="Example-3:-UCI-data-example">
+<h2>Example 3: UCI data example<a class="headerlink" href="#Example-3:-UCI-data-example" title="Permalink to this heading">#</a></h2>
 <p>Here, we’ll see the benefits of using robust optimization by perturbing the test set. We will use the MONK’s Problems dataset from the UCI Machine Learning Repository.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
@@ -1018,10 +760,10 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </div>
 <p>Fetch data and split to train and test</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">"""Fetch data and split to train and test"""</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Fetch data and split to train and test&quot;&quot;&quot;</span>
 <span class="n">data</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">robust_example</span><span class="p">()</span>
 
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
@@ -1032,33 +774,15 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </div>
 <p>For sake of comparison, train a classification tree that does not consider the scenario where there is a distribution shift:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">"""Train a non-robust tree for comparison"""</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Train a non-robust tree for comparison&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">odtlearn.robust_oct</span> <span class="kn">import</span> <span class="n">RobustOCT</span>
 
 <span class="c1"># If you define no uncertainty, you get an optimal tree without regularization that maximizes accuracy</span>
-<span class="n">non_robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">"cbc"</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
+<span class="n">non_robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
 <span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-RobustOCT(solver=cbc,depth=2,time_limit=60,num_threads=None,verbose=False)
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1067,31 +791,106 @@ RobustOCT(solver=cbc,depth=2,time_limit=60,num_threads=None,verbose=False)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-#########node  1
+Set parameter Username
+Academic license - for non-commercial use only - expires 2024-06-27
+Set parameter TimeLimit to value 300
+Set parameter NodeLimit to value 1073741824
+Set parameter SolutionLimit to value 1073741824
+Set parameter LazyConstraints to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter Method to value 3
+Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
+
+CPU model: Apple M1 Pro
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 7 rows, 173 columns and 47 nonzeros
+Model fingerprint: 0xafd32360
+Variable types: 126 continuous, 47 integer (47 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e-01, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 4 rows and 4 columns
+Presolve time: 0.00s
+Presolved: 3 rows, 169 columns, 39 nonzeros
+Variable types: 126 continuous, 43 integer (43 binary)
+Root relaxation presolved: 82 rows, 169 columns, 1072 nonzeros
+
+
+Root relaxation: objective 1.260000e+02, 5 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  126.00000    0    -          -  126.00000      -     -    0s
+     0     0  125.75000    0    -          -  125.75000      -     -    0s
+     0     0  125.75000    0    7          -  125.75000      -     -    0s
+H    0     0                      77.2500000  125.75000  62.8%     -    0s
+H    0     0                      78.0000000  125.75000  61.2%     -    0s
+     0     0  125.55000    0   13   78.00000  125.55000  61.0%     -    0s
+     0     0  125.54167    0   14   78.00000  125.54167  61.0%     -    0s
+     0     2  125.53640    0   23   78.00000  125.53640  60.9%     -    0s
+*  206   151              16      81.5000000  124.91667  53.3%  30.9    0s
+*  934   451               8      82.2500000  112.02237  36.2%  26.9    1s
+* 2715   519              15      83.2500000   95.50000  14.7%  21.4    1s
+
+Cutting planes:
+  MIR: 6
+  Lazy constraints: 994
+
+Explored 3627 nodes (70039 simplex iterations) in 1.70 seconds (1.53 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 5: 83.25 82.25 81.5 ... 77.25
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 8.325000000000e+01, best bound 8.325000000000e+01, gap 0.0000%
+
+User-callback calls 7707, time in user-callback 0.94 sec
 </pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+RobustOCT(solver=gurobi,depth=2,time_limit=300,num_threads=None,verbose=False)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[15], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">non_robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">print_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:358</span>, in <span class="ansi-cyan-fg">RobustOCT.print_tree</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">    355</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">continue</span>
-<span class="ansi-green-intense-fg ansi-bold">    357</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
-<span class="ansi-green-fg">--&gt; 358</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:
-<span class="ansi-green-intense-fg ansi-bold">    359</span>         <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">leaf </span><span class="ansi-bold" style="color: rgb(175,95,135)">{}</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(98,98,98)">.</span>format(k))
-<span class="ansi-green-intense-fg ansi-bold">    360</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+#########node  1
+Feature:  Feat5 , Cutoff:  1
+#########node  2
+Feature:  Feat3 , Cutoff:  2
+#########node  3
+Feature:  Feat2 , Cutoff:  1
+#########node  4
+leaf 0
+#########node  5
+leaf 1
+#########node  6
+leaf 1
+#########node  7
+leaf 0
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -1100,64 +899,19 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[16], line 2</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> fig, ax <span style="color: rgb(98,98,98)">=</span> plt<span style="color: rgb(98,98,98)">.</span>subplots(figsize<span style="color: rgb(98,98,98)">=</span>(<span style="color: rgb(98,98,98)">10</span>, <span style="color: rgb(98,98,98)">5</span>))
-<span class="ansi-green-fg">----&gt; 2</span> <span class="ansi-yellow-bg">non_robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">plot_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span style="color: rgb(98,98,98)">.</span>show()
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:423</span>, in <span class="ansi-cyan-fg">RobustOCT.plot_tree</span><span class="ansi-blue-fg">(self, label, filled, rounded, precision, ax, fontsize, color_dict, edge_annotation, arrow_annotation_font_scale, debug)</span>
-<span class="ansi-green-intense-fg ansi-bold">    421</span> node_dict <span style="color: rgb(98,98,98)">=</span> {}
-<span class="ansi-green-intense-fg ansi-bold">    422</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> node <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> np<span style="color: rgb(98,98,98)">.</span>arange(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree<span style="color: rgb(98,98,98)">.</span>total_nodes <span style="color: rgb(98,98,98)">+</span> <span style="color: rgb(98,98,98)">1</span>):
-<span class="ansi-green-fg">--&gt; 423</span>     node_dict[node] <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_get_node_status</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">b_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    425</span> exporter <span style="color: rgb(98,98,98)">=</span> MPLPlotter(
-<span class="ansi-green-intense-fg ansi-bold">    426</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree,
-<span class="ansi-green-intense-fg ansi-bold">    427</span>     node_dict,
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-intense-fg ansi-bold">    440</span>     debug<span style="color: rgb(98,98,98)">=</span>debug,
-<span class="ansi-green-intense-fg ansi-bold">    441</span> )
-<span class="ansi-green-intense-fg ansi-bold">    442</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> exporter<span style="color: rgb(98,98,98)">.</span>export(ax<span style="color: rgb(98,98,98)">=</span>ax)
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">RobustOCT._get_node_status</span><span class="ansi-blue-fg">(self, b, w, n)</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
-<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
-<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
-<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([w[n, k] <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
-<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
-<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
-<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
-<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
-<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([<span class="ansi-yellow-bg">w</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
-<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
-<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_24_1.png" src="../_images/notebooks_RobustOCT_24_1.png"/>
+<img alt="../_images/notebooks_RobustOCT_26_0.png" src="../_images/notebooks_RobustOCT_26_0.png" />
 </div>
 </div>
-<p>Train a robust tree. First, define the uncertainty. Here, we will generate a probability of certainty for each feature randomly (in practice, you would need to use some guess from domain knowledge). For simplicity, we will not change this probability by data sample <img alt="i" class="math" src="../_images/math/5aa339d4daf45a810dda332e3c80a0698e526e04.png"/>. We also define <img alt="\lambda = 0.9" class="math" src="../_images/math/50d821c5e3b3d624d499af661a86eb2bfcebbfa8.png"/>, which in practice must be tuned.</p>
+<p>Train a robust tree. First, define the uncertainty. Here, we will generate a probability of certainty for each feature randomly (in practice, you would need to use some guess from domain knowledge). For simplicity, we will not change this probability by data sample <img class="math" src="../_images/math/5aa339d4daf45a810dda332e3c80a0698e526e04.png" alt="i"/>. We also define <img class="math" src="../_images/math/50d821c5e3b3d624d499af661a86eb2bfcebbfa8.png" alt="\lambda = 0.9"/>, which in practice must be tuned.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">"""Generate q_f values for each feature (i.e. probability of certainty for feature f)"""</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Generate q_f values for each feature (i.e. probability of certainty for feature f)&quot;&quot;&quot;</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
 <span class="n">q_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
 <span class="c1"># Snap q_f to range [0,1]</span>
@@ -1169,7 +923,7 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1180,10 +934,10 @@ array([0.94967142, 0.88617357, 0.96476885, 1.        , 0.87658466,
 </div>
 <p>Calibrate the <code class="docutils literal notranslate"><span class="pre">costs</span></code> and <code class="docutils literal notranslate"><span class="pre">budget</span></code> parameters for the <code class="docutils literal notranslate"><span class="pre">fit</span></code> function.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">"""Define budget of uncertainty"""</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Define budget of uncertainty&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">log</span>
 
 <span class="n">l</span> <span class="o">=</span> <span class="mf">0.9</span>  <span class="c1"># Lambda value between 0 and 1</span>
@@ -1193,7 +947,7 @@ array([0.94967142, 0.88617357, 0.96476885, 1.        , 0.87658466,
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1202,17 +956,17 @@ array([0.94967142, 0.88617357, 0.96476885, 1.        , 0.87658466,
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">"""Based on q_f values, create costs of uncertainty"""</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Based on q_f values, create costs of uncertainty&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
 <span class="n">costs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-<span class="n">costs</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"float"</span><span class="p">)</span>
+<span class="n">costs</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">q_f</span><span class="p">)):</span>
     <span class="k">if</span> <span class="n">q_f</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">costs</span><span class="p">[</span><span class="n">costs</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">f</span><span class="p">]]</span> <span class="o">=</span> <span class="n">budget</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># no uncertainty = "infinite" cost</span>
+        <span class="n">costs</span><span class="p">[</span><span class="n">costs</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">f</span><span class="p">]]</span> <span class="o">=</span> <span class="n">budget</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># no uncertainty = &quot;infinite&quot; cost</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">costs</span><span class="p">[</span><span class="n">costs</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">f</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">q_f</span><span class="p">[</span><span class="n">f</span><span class="p">])</span>
 
@@ -1221,12 +975,12 @@ array([0.94967142, 0.88617357, 0.96476885, 1.        , 0.87658466,
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
 <div>
-<style scoped="">
+<style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
     }
@@ -1239,158 +993,134 @@ array([0.94967142, 0.88617357, 0.96476885, 1.        , 0.87658466,
         text-align: right;
     }
 </style>
-<div class="table-wrapper"><table border="1" class="dataframe">
-<thead>
-<tr style="text-align: right;">
-<th></th>
-<th>Feat0</th>
-<th>Feat1</th>
-<th>Feat2</th>
-<th>Feat3</th>
-<th>Feat4</th>
-<th>Feat5</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>0</th>
-<td>2.989182</td>
-<td>2.173081</td>
-<td>3.345825</td>
-<td>14.275425</td>
-<td>2.0922</td>
-<td>2.092213</td>
-</tr>
-<tr>
-<th>1</th>
-<td>2.989182</td>
-<td>2.173081</td>
-<td>3.345825</td>
-<td>14.275425</td>
-<td>2.0922</td>
-<td>2.092213</td>
-</tr>
-<tr>
-<th>2</th>
-<td>2.989182</td>
-<td>2.173081</td>
-<td>3.345825</td>
-<td>14.275425</td>
-<td>2.0922</td>
-<td>2.092213</td>
-</tr>
-<tr>
-<th>3</th>
-<td>2.989182</td>
-<td>2.173081</td>
-<td>3.345825</td>
-<td>14.275425</td>
-<td>2.0922</td>
-<td>2.092213</td>
-</tr>
-<tr>
-<th>4</th>
-<td>2.989182</td>
-<td>2.173081</td>
-<td>3.345825</td>
-<td>14.275425</td>
-<td>2.0922</td>
-<td>2.092213</td>
-</tr>
-<tr>
-<th>...</th>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr>
-<th>121</th>
-<td>2.989182</td>
-<td>2.173081</td>
-<td>3.345825</td>
-<td>14.275425</td>
-<td>2.0922</td>
-<td>2.092213</td>
-</tr>
-<tr>
-<th>122</th>
-<td>2.989182</td>
-<td>2.173081</td>
-<td>3.345825</td>
-<td>14.275425</td>
-<td>2.0922</td>
-<td>2.092213</td>
-</tr>
-<tr>
-<th>123</th>
-<td>2.989182</td>
-<td>2.173081</td>
-<td>3.345825</td>
-<td>14.275425</td>
-<td>2.0922</td>
-<td>2.092213</td>
-</tr>
-<tr>
-<th>124</th>
-<td>2.989182</td>
-<td>2.173081</td>
-<td>3.345825</td>
-<td>14.275425</td>
-<td>2.0922</td>
-<td>2.092213</td>
-</tr>
-<tr>
-<th>125</th>
-<td>2.989182</td>
-<td>2.173081</td>
-<td>3.345825</td>
-<td>14.275425</td>
-<td>2.0922</td>
-<td>2.092213</td>
-</tr>
-</tbody>
-</table></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Feat0</th>
+      <th>Feat1</th>
+      <th>Feat2</th>
+      <th>Feat3</th>
+      <th>Feat4</th>
+      <th>Feat5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2.989182</td>
+      <td>2.173081</td>
+      <td>3.345825</td>
+      <td>14.275425</td>
+      <td>2.0922</td>
+      <td>2.092213</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2.989182</td>
+      <td>2.173081</td>
+      <td>3.345825</td>
+      <td>14.275425</td>
+      <td>2.0922</td>
+      <td>2.092213</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2.989182</td>
+      <td>2.173081</td>
+      <td>3.345825</td>
+      <td>14.275425</td>
+      <td>2.0922</td>
+      <td>2.092213</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2.989182</td>
+      <td>2.173081</td>
+      <td>3.345825</td>
+      <td>14.275425</td>
+      <td>2.0922</td>
+      <td>2.092213</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2.989182</td>
+      <td>2.173081</td>
+      <td>3.345825</td>
+      <td>14.275425</td>
+      <td>2.0922</td>
+      <td>2.092213</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>121</th>
+      <td>2.989182</td>
+      <td>2.173081</td>
+      <td>3.345825</td>
+      <td>14.275425</td>
+      <td>2.0922</td>
+      <td>2.092213</td>
+    </tr>
+    <tr>
+      <th>122</th>
+      <td>2.989182</td>
+      <td>2.173081</td>
+      <td>3.345825</td>
+      <td>14.275425</td>
+      <td>2.0922</td>
+      <td>2.092213</td>
+    </tr>
+    <tr>
+      <th>123</th>
+      <td>2.989182</td>
+      <td>2.173081</td>
+      <td>3.345825</td>
+      <td>14.275425</td>
+      <td>2.0922</td>
+      <td>2.092213</td>
+    </tr>
+    <tr>
+      <th>124</th>
+      <td>2.989182</td>
+      <td>2.173081</td>
+      <td>3.345825</td>
+      <td>14.275425</td>
+      <td>2.0922</td>
+      <td>2.092213</td>
+    </tr>
+    <tr>
+      <th>125</th>
+      <td>2.989182</td>
+      <td>2.173081</td>
+      <td>3.345825</td>
+      <td>14.275425</td>
+      <td>2.0922</td>
+      <td>2.092213</td>
+    </tr>
+  </tbody>
+</table>
 <p>126 rows × 6 columns</p>
 </div></div>
 </div>
 <p>Train the robust tree using the costs and budget.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
+    <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
     <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">time_limit</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span>
+    <span class="n">time_limit</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[20], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> robust_classifier <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">RobustOCT</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">depth</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">2</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">time_limit</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">120</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span> robust_classifier<span style="color: rgb(98,98,98)">.</span>fit(X_train, y_train, costs<span style="color: rgb(98,98,98)">=</span>costs, budget<span style="color: rgb(98,98,98)">=</span>budget)
-
-<span class="ansi-red-fg">TypeError</span>: __init__() missing 1 required positional argument: 'solver'
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1399,31 +1129,106 @@ Cell <span class="ansi-green-fg">In[20], line 1</span>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-#########node  1
+Set parameter Username
+Academic license - for non-commercial use only - expires 2024-06-27
+Set parameter TimeLimit to value 200
+Set parameter NodeLimit to value 1073741824
+Set parameter SolutionLimit to value 1073741824
+Set parameter LazyConstraints to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter Method to value 3
+Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
+
+CPU model: Apple M1 Pro
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 7 rows, 173 columns and 47 nonzeros
+Model fingerprint: 0xafd32360
+Variable types: 126 continuous, 47 integer (47 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e-01, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 4 rows and 4 columns
+Presolve time: 0.00s
+Presolved: 3 rows, 169 columns, 39 nonzeros
+Variable types: 126 continuous, 43 integer (43 binary)
+Root relaxation presolved: 82 rows, 169 columns, 1072 nonzeros
+
+
+Root relaxation: objective 1.260000e+02, 5 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  126.00000    0    -          -  126.00000      -     -    0s
+     0     0  125.75000    0    -          -  125.75000      -     -    0s
+     0     0  125.75000    0    7          -  125.75000      -     -    0s
+H    0     0                      77.2500000  125.75000  62.8%     -    0s
+H    0     0                      78.0000000  125.75000  61.2%     -    0s
+     0     0  125.55000    0   13   78.00000  125.55000  61.0%     -    0s
+     0     0  125.54167    0   14   78.00000  125.54167  61.0%     -    0s
+     0     2  125.53640    0   23   78.00000  125.53640  60.9%     -    0s
+*  472   333              14      78.5000000  122.24074  55.7%  29.0    1s
+* 2519   887              14      79.5000000   99.00000  24.5%  20.5    3s
+  3648   758   85.00000   20    2   79.50000   90.91667  14.4%  19.2    5s
+
+Cutting planes:
+  MIR: 6
+  Lazy constraints: 1319
+
+Explored 5135 nodes (84698 simplex iterations) in 8.19 seconds (3.26 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 4: 79.5 78.5 78 77.25
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 7.950000000000e+01, best bound 7.950000000000e+01, gap 0.0000%
+
+User-callback calls 11149, time in user-callback 6.77 sec
 </pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+RobustOCT(solver=gurobi,depth=2,time_limit=200,num_threads=None,verbose=False)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[21], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">print_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:358</span>, in <span class="ansi-cyan-fg">RobustOCT.print_tree</span><span class="ansi-blue-fg">(self)</span>
-<span class="ansi-green-intense-fg ansi-bold">    355</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">continue</span>
-<span class="ansi-green-intense-fg ansi-bold">    357</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
-<span class="ansi-green-fg">--&gt; 358</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:
-<span class="ansi-green-intense-fg ansi-bold">    359</span>         <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">leaf </span><span class="ansi-bold" style="color: rgb(175,95,135)">{}</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(98,98,98)">.</span>format(k))
-<span class="ansi-green-intense-fg ansi-bold">    360</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+#########node  1
+Feature:  Feat3 , Cutoff:  2
+#########node  2
+leaf 0
+#########node  3
+Feature:  Feat2 , Cutoff:  1
+#########node  4
+pruned
+#########node  5
+pruned
+#########node  6
+leaf 1
+#########node  7
+leaf 0
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -1432,78 +1237,33 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[22], line 2</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> fig, ax <span style="color: rgb(98,98,98)">=</span> plt<span style="color: rgb(98,98,98)">.</span>subplots(figsize<span style="color: rgb(98,98,98)">=</span>(<span style="color: rgb(98,98,98)">10</span>, <span style="color: rgb(98,98,98)">5</span>))
-<span class="ansi-green-fg">----&gt; 2</span> <span class="ansi-yellow-bg">robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">plot_tree</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> plt<span style="color: rgb(98,98,98)">.</span>show()
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:423</span>, in <span class="ansi-cyan-fg">RobustOCT.plot_tree</span><span class="ansi-blue-fg">(self, label, filled, rounded, precision, ax, fontsize, color_dict, edge_annotation, arrow_annotation_font_scale, debug)</span>
-<span class="ansi-green-intense-fg ansi-bold">    421</span> node_dict <span style="color: rgb(98,98,98)">=</span> {}
-<span class="ansi-green-intense-fg ansi-bold">    422</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> node <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> np<span style="color: rgb(98,98,98)">.</span>arange(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree<span style="color: rgb(98,98,98)">.</span>total_nodes <span style="color: rgb(98,98,98)">+</span> <span style="color: rgb(98,98,98)">1</span>):
-<span class="ansi-green-fg">--&gt; 423</span>     node_dict[node] <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_get_node_status</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">b_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    425</span> exporter <span style="color: rgb(98,98,98)">=</span> MPLPlotter(
-<span class="ansi-green-intense-fg ansi-bold">    426</span>     <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_tree,
-<span class="ansi-green-intense-fg ansi-bold">    427</span>     node_dict,
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-intense-fg ansi-bold">    440</span>     debug<span style="color: rgb(98,98,98)">=</span>debug,
-<span class="ansi-green-intense-fg ansi-bold">    441</span> )
-<span class="ansi-green-intense-fg ansi-bold">    442</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> exporter<span style="color: rgb(98,98,98)">.</span>export(ax<span style="color: rgb(98,98,98)">=</span>ax)
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">RobustOCT._get_node_status</span><span class="ansi-blue-fg">(self, b, w, n)</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
-<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
-<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
-<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([w[n, k] <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
-<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
-<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:102</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span>     p_sum <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">sum</span>(w[m, k] <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels)
-<span class="ansi-green-intense-fg ansi-bold">    100</span> <span style="color: rgb(95,135,135)"># to determine if a leaf, we look at its w value</span>
-<span class="ansi-green-intense-fg ansi-bold">    101</span> <span style="color: rgb(95,135,135)"># and find for which label the value &gt; 0.5</span>
-<span class="ansi-green-fg">--&gt; 102</span> col_idx <span style="color: rgb(98,98,98)">=</span> np<span style="color: rgb(98,98,98)">.</span>asarray([<span class="ansi-yellow-bg">w</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">n</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels])<span style="color: rgb(98,98,98)">.</span>nonzero()[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    103</span> <span style="color: rgb(95,135,135)"># col_idx = np.asarray(w[n, :] &gt; 0.5).nonzero().flatten()</span>
-<span class="ansi-green-intense-fg ansi-bold">    104</span> <span style="color: rgb(95,135,135)"># assuming here that we can only have one column &gt; 0.5</span>
-<span class="ansi-green-intense-fg ansi-bold">    105</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">len</span>(col_idx) <span style="color: rgb(98,98,98)">&gt;</span> <span style="color: rgb(98,98,98)">0</span>:
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_33_1.png" src="../_images/notebooks_RobustOCT_33_1.png"/>
+<img alt="../_images/notebooks_RobustOCT_35_0.png" src="../_images/notebooks_RobustOCT_35_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
 
 <span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Non-robust training accuracy: "</span><span class="p">,</span>
+    <span class="s2">&quot;Non-robust training accuracy: &quot;</span><span class="p">,</span>
     <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)),</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Robust training accuracy:     "</span><span class="p">,</span>
+    <span class="s2">&quot;Robust training accuracy:     &quot;</span><span class="p">,</span>
     <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)),</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Non-robust test accuracy:     "</span><span class="p">,</span>
+    <span class="s2">&quot;Non-robust test accuracy:     &quot;</span><span class="p">,</span>
     <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)),</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Robust test accuracy:         "</span><span class="p">,</span>
+    <span class="s2">&quot;Robust test accuracy:         &quot;</span><span class="p">,</span>
     <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)),</span>
 <span class="p">)</span>
 </pre></div>
@@ -1514,45 +1274,19 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[23], line 5</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-bold" style="color: rgb(0,135,0)">from</span> <span class="ansi-bold" style="color: rgb(0,0,255)">sklearn</span><span class="ansi-bold" style="color: rgb(0,0,255)">.</span><span class="ansi-bold" style="color: rgb(0,0,255)">metrics</span> <span class="ansi-bold" style="color: rgb(0,135,0)">import</span> accuracy_score
-<span class="ansi-green-intense-fg ansi-bold">      3</span> <span style="color: rgb(0,135,0)">print</span>(
-<span class="ansi-green-intense-fg ansi-bold">      4</span>     <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Non-robust training accuracy: </span><span style="color: rgb(175,0,0)">"</span>,
-<span class="ansi-green-fg">----&gt; 5</span>     accuracy_score(y_train, <span class="ansi-yellow-bg">non_robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">predict</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">X_train</span><span class="ansi-yellow-bg">)</span>),
-<span class="ansi-green-intense-fg ansi-bold">      6</span> )
-<span class="ansi-green-intense-fg ansi-bold">      7</span> <span style="color: rgb(0,135,0)">print</span>(
-<span class="ansi-green-intense-fg ansi-bold">      8</span>     <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Robust training accuracy:     </span><span style="color: rgb(175,0,0)">"</span>,
-<span class="ansi-green-intense-fg ansi-bold">      9</span>     accuracy_score(y_train, robust_classifier<span style="color: rgb(98,98,98)">.</span>predict(X_train)),
-<span class="ansi-green-intense-fg ansi-bold">     10</span> )
-<span class="ansi-green-intense-fg ansi-bold">     11</span> <span style="color: rgb(0,135,0)">print</span>(
-<span class="ansi-green-intense-fg ansi-bold">     12</span>     <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Non-robust test accuracy:     </span><span style="color: rgb(175,0,0)">"</span>,
-<span class="ansi-green-intense-fg ansi-bold">     13</span>     accuracy_score(y_test, non_robust_classifier<span style="color: rgb(98,98,98)">.</span>predict(X_test)),
-<span class="ansi-green-intense-fg ansi-bold">     14</span> )
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:342</span>, in <span class="ansi-cyan-fg">RobustOCT.predict</span><span class="ansi-blue-fg">(self, X)</span>
-<span class="ansi-green-intense-fg ansi-bold">    339</span> df_test <span style="color: rgb(98,98,98)">=</span> check_same_as_X(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X_col_labels, X, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">test covariates</span><span style="color: rgb(175,0,0)">"</span>)
-<span class="ansi-green-intense-fg ansi-bold">    340</span> check_integer(df_test)
-<span class="ansi-green-fg">--&gt; 342</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_make_prediction</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">df_test</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:127</span>, in <span class="ansi-cyan-fg">RobustOCT._make_prediction</span><span class="ansi-blue-fg">(self, X)</span>
-<span class="ansi-green-intense-fg ansi-bold">    125</span> terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>
-<span class="ansi-green-intense-fg ansi-bold">    126</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
-<span class="ansi-green-fg">--&gt; 127</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:  <span style="color: rgb(95,135,135)"># w[n,k] == 1</span>
-<span class="ansi-green-intense-fg ansi-bold">    128</span>         prediction <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [k]
-<span class="ansi-green-intense-fg ansi-bold">    129</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
+Non-robust training accuracy:  0.6666666666666666
+Robust training accuracy:      0.6587301587301587
+Non-robust test accuracy:      0.5813953488372093
+Robust test accuracy:          0.5581395348837209
 </pre></div></div>
 </div>
 <p>To measure the performance of the trained models, perturb the test data based off of our known certainties of each feature (to simulate a distribtion shift), and then see how well each tree performs against the perturbed data</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">perturb</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">q_f</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
-    <span class="sd">"""Perturb X given q_f based off of the symmetric geometric distribution"""</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perturb X given q_f based off of the symmetric geometric distribution&quot;&quot;&quot;</span>
     <span class="n">new_data</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="c1"># Perturbation of features</span>
@@ -1565,7 +1299,7 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
     <span class="k">return</span> <span class="n">new_data</span>
 
 
-<span class="sd">"""Obtain 1000 different perturbed test sets, and record accuracies"""</span>
+<span class="sd">&quot;&quot;&quot;Obtain 1000 different perturbed test sets, and record accuracies&quot;&quot;&quot;</span>
 <span class="n">non_robust_acc</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">robust_acc</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1001</span><span class="p">):</span>
@@ -1577,45 +1311,16 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[24], line 20</span>
-<span class="ansi-green-intense-fg ansi-bold">     18</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> s <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">range</span>(<span style="color: rgb(98,98,98)">1</span>, <span style="color: rgb(98,98,98)">1001</span>):
-<span class="ansi-green-intense-fg ansi-bold">     19</span>     X_test_perturbed <span style="color: rgb(98,98,98)">=</span> perturb(X_test, q_f, s)
-<span class="ansi-green-fg">---&gt; 20</span>     non_robust_pred <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">non_robust_classifier</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">predict</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">X_test_perturbed</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     21</span>     robust_pred <span style="color: rgb(98,98,98)">=</span> robust_classifier<span style="color: rgb(98,98,98)">.</span>predict(X_test_perturbed)
-<span class="ansi-green-intense-fg ansi-bold">     22</span>     non_robust_acc <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [accuracy_score(y_test, non_robust_pred)]
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:342</span>, in <span class="ansi-cyan-fg">RobustOCT.predict</span><span class="ansi-blue-fg">(self, X)</span>
-<span class="ansi-green-intense-fg ansi-bold">    339</span> df_test <span style="color: rgb(98,98,98)">=</span> check_same_as_X(<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_X_col_labels, X, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">test covariates</span><span style="color: rgb(175,0,0)">"</span>)
-<span class="ansi-green-intense-fg ansi-bold">    340</span> check_integer(df_test)
-<span class="ansi-green-fg">--&gt; 342</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_make_prediction</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">df_test</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn/robust_oct.py:127</span>, in <span class="ansi-cyan-fg">RobustOCT._make_prediction</span><span class="ansi-blue-fg">(self, X)</span>
-<span class="ansi-green-intense-fg ansi-bold">    125</span> terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>
-<span class="ansi-green-intense-fg ansi-bold">    126</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> k <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_labels:
-<span class="ansi-green-fg">--&gt; 127</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">w_value</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">node</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">k</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">&gt;</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">0.5</span>:  <span style="color: rgb(95,135,135)"># w[n,k] == 1</span>
-<span class="ansi-green-intense-fg ansi-bold">    128</span>         prediction <span style="color: rgb(98,98,98)">+</span><span style="color: rgb(98,98,98)">=</span> [k]
-<span class="ansi-green-intense-fg ansi-bold">    129</span>         terminal <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>
-
-<span class="ansi-red-fg">TypeError</span>: '&gt;' not supported between instances of 'NoneType' and 'float'
-</pre></div></div>
-</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"Worst-case accuracy (Non-Robust Tree): "</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">non_robust_acc</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Worst-case accuracy (Robust Tree):     "</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">robust_acc</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Worst-case accuracy (Non-Robust Tree): &quot;</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">non_robust_acc</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Worst-case accuracy (Robust Tree):     &quot;</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">robust_acc</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="s2">"Average accuracy (Non-Robust Tree):    "</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">non_robust_acc</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_robust_acc</span><span class="p">)</span>
+    <span class="s2">&quot;Average accuracy (Non-Robust Tree):    &quot;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">non_robust_acc</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_robust_acc</span><span class="p">)</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Average accuracy (Robust Tree):        "</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">robust_acc</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">robust_acc</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Average accuracy (Robust Tree):        &quot;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">robust_acc</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">robust_acc</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1624,27 +1329,21 @@ File <span class="ansi-green-fg">/usr/local/lib/python3.8/site-packages/odtlearn
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[25], line 1</span>
-<span class="ansi-green-fg">----&gt; 1</span> <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Worst-case accuracy (Non-Robust Tree): </span><span style="color: rgb(175,0,0)">"</span>, <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">min</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">non_robust_acc</span><span class="ansi-yellow-bg">)</span>)
-<span class="ansi-green-intense-fg ansi-bold">      2</span> <span style="color: rgb(0,135,0)">print</span>(<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Worst-case accuracy (Robust Tree):     </span><span style="color: rgb(175,0,0)">"</span>, <span style="color: rgb(0,135,0)">min</span>(robust_acc))
-<span class="ansi-green-intense-fg ansi-bold">      3</span> <span style="color: rgb(0,135,0)">print</span>(
-<span class="ansi-green-intense-fg ansi-bold">      4</span>     <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">Average accuracy (Non-Robust Tree):    </span><span style="color: rgb(175,0,0)">"</span>, <span style="color: rgb(0,135,0)">sum</span>(non_robust_acc) <span style="color: rgb(98,98,98)">/</span> <span style="color: rgb(0,135,0)">len</span>(non_robust_acc)
-<span class="ansi-green-intense-fg ansi-bold">      5</span> )
-
-<span class="ansi-red-fg">ValueError</span>: min() arg is an empty sequence
+Worst-case accuracy (Non-Robust Tree):  0.4418604651162791
+Worst-case accuracy (Robust Tree):      0.5116279069767442
+Average accuracy (Non-Robust Tree):     0.5660930232558059
+Average accuracy (Robust Tree):         0.5584186046511533
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="References">
-<h2>References<a class="headerlink" href="#References" title="Permalink to this headline">#</a></h2>
+</section>
+<section id="References">
+<h2>References<a class="headerlink" href="#References" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Justin, N., Aghaei, S., Gómez, A., &amp; Vayanos, P. (2022). Optimal robust classification trees. <em>The AAAI-2022 Workshop on Adversarial Machine Learning and Beyond</em>. <a class="reference external" href="https://openreview.net/pdf?id=HbasA9ysA3">https://openreview.net/pdf?id=HbasA9ysA3</a></p></li>
 <li><p>Dua, D. and Graff, C. (2019). <a class="reference external" href="http://archive.ics.uci.edu/ml">UCI Machine Learning Repository</a>. Irvine, CA: University of California, School of Information and Computer Science.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>
@@ -1658,10 +1357,10 @@ Cell <span class="ansi-green-fg">In[25], line 1</span>
                 </div>
                 <div class="title">How to contribute to ODTlearn</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="FairOCT.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -1699,13 +1398,13 @@ Cell <span class="ansi-green-fg">In[25], line 1</span>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">RobustTreeClassifier</span></code> Examples</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a><ul>
 <li><a class="reference internal" href="#Example-1:-Synthetic-Data-Without-Specified-Shifts">Example 1: Synthetic Data Without Specified Shifts</a></li>
 <li><a class="reference internal" href="#Example-2:-synthetic-data-with-specified-shifts">Example 2: synthetic data with specified shifts</a></li>
 <li><a class="reference internal" href="#Example-3:-UCI-data-example">Example 3: UCI data example</a></li>
@@ -1721,14 +1420,12 @@ Cell <span class="ansi-green-fg">In[25], line 1</span>
       
     </aside>
   </div>
-</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/scripts/furo.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/toggleprompt.js"></script>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=4ea706d9"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     </body>
 </html>

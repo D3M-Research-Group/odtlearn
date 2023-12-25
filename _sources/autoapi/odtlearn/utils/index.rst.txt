@@ -15,9 +15,6 @@ Submodules
    binarize/index.rst
    callback_helpers/index.rst
    callbacks/index.rst
-   cbc_solver/index.rst
-   gb_solver/index.rst
-   scip_solver/index.rst
    solver/index.rst
    validation/index.rst
 

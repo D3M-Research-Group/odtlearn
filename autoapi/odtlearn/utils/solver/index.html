@@ -1,16 +1,17 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en" data-content_root="">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" /><link rel="next" title="odtlearn.utils.validation" href="../validation/index.html" /><link rel="prev" title="odtlearn.utils.scip_solver" href="../scip_solver/index.html" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" /><link rel="next" title="odtlearn.utils.validation" href="../validation/index.html" /><link rel="prev" title="odtlearn.utils.callbacks" href="../callbacks/index.html" />
 
-    <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
+    <!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>odtlearn.utils.solver - odtlearn 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=36a5483c" />
     
     
 
@@ -37,10 +38,12 @@
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
@@ -148,7 +151,7 @@
   <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -156,7 +159,7 @@
   <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation Guide</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../user_guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../user_guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/optimal_classification_trees.html">Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/fair_optimal_classification_trees.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
@@ -166,17 +169,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../../../../api.html">ODTlearn API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current has-children"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l3 current has-children"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../../../api.html">ODTlearn API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of ODTlearn API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current has-children"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of odtlearn</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 current has-children"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils</span></code></a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of odtlearn.utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="../Tree/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.Tree</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../TreePlotter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.TreePlotter</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
@@ -201,10 +201,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example Notebooks</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustTreeClassifier</span></code> Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -229,7 +229,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -243,41 +245,38 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="module-odtlearn.utils.solver">
-<span id="odtlearn-utils-solver"></span><h1><a class="reference internal" href="#module-odtlearn.utils.solver" title="odtlearn.utils.solver"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a><a class="headerlink" href="#module-odtlearn.utils.solver" title="Permalink to this headline">#</a></h1>
-<div class="section" id="module-contents">
-<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">#</a></h2>
-<div class="section" id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">#</a></h3>
-<div class="table-wrapper"><table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
-</colgroup>
+          <section id="module-odtlearn.utils.solver">
+<span id="odtlearn-utils-solver"></span><h1><a class="reference internal" href="#module-odtlearn.utils.solver" title="odtlearn.utils.solver"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a><a class="headerlink" href="#module-odtlearn.utils.solver" title="Permalink to this heading">#</a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">#</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.solver.Solver" title="odtlearn.utils.solver.Solver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solver</span></code></a></p></td>
 <td><p>A wrapper class on top the python-mip Model and solver classes. This class contains functions for interacting</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
 </div>
-<div class="section" id="attributes">
-<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">#</a></h3>
-<div class="table-wrapper"><table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%"/>
-<col style="width: 90%"/>
-</colgroup>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.solver.GRB_CBC_CONST_MAP" title="odtlearn.utils.solver.GRB_CBC_CONST_MAP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GRB_CBC_CONST_MAP</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 <dl class="py data">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.GRB_CBC_CONST_MAP">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.solver.</span></span><span class="sig-name descname"><span class="pre">GRB_CBC_CONST_MAP</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#GRB_CBC_CONST_MAP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.GRB_CBC_CONST_MAP" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.utils.solver.</span></span><span class="sig-name descname"><span class="pre">Solver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver" title="Permalink to this definition">#</a></dt>
@@ -285,12 +284,47 @@
 with the solver for setting up, optimizing, and getting optimal values of a model.
 When using CBC, this class interacts with a slightly modified version of the SolverCbc class
 from the python-mip package.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.optim_gap">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">optim_gap</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.optim_gap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.optim_gap" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.num_decision_vars">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_decision_vars</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.num_decision_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.num_decision_vars" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.num_integer_vars">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_integer_vars</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.num_integer_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.num_integer_vars" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.num_non_zero">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_non_zero</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.num_non_zero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.num_non_zero" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.num_solutions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_solutions</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.num_solutions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.num_solutions" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.num_constraints">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_constraints</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.num_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.num_constraints" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.search_progress_log">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">search_progress_log</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.search_progress_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.search_progress_log" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.get_var_value">
 <span class="sig-name descname"><span class="pre">get_var_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.get_var_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.get_var_value" title="Permalink to this definition">#</a></dt>
 <dd><p>Get the value of a decision variable from a solved problem.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>objs: dict</strong></dt><dd><p>A dictionary of the model variables</p>
 </dd>
@@ -298,19 +332,20 @@ from the python-mip package.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>A dict with the values of each variable from the solution</dt><dd></dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.optimize">
 <span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback_action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.optimize" title="Permalink to this definition">#</a></dt>
 <dd><p>Optimize the constructed model</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input samples.</p>
 </dd>
@@ -325,13 +360,14 @@ from the python-mip package.</p>
 <dt><strong>kwargs: Additional arguments to be passed to the callback action</strong></dt><dd></dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>None</dt><dd></dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.prep_indices">
 <span class="sig-name descname"><span class="pre">prep_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.prep_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.prep_indices" title="Permalink to this definition">#</a></dt>
@@ -339,26 +375,27 @@ from the python-mip package.</p>
 decision variables with indices that mimic the structure of Gurobi-created
 decision variables</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>indices: List</strong></dt><dd><p>list of lists of indices.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>A list with the generated indices.</dt><dd></dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.add_vars">
-<span class="sig-name descname"><span class="pre">add_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ub</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">float('inf')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.add_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.add_vars" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ub</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">float('inf')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'C'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.add_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.add_vars" title="Permalink to this definition">#</a></dt>
 <dd><p>Create a dictionary with the decision variables with keys of the form
 {name}[(element of indices list)] and then add the variables to the model</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>*indices: List</strong></dt><dd><p>Arbitrary list of indices to use to create the decision variables.</p>
 </dd>
@@ -374,55 +411,58 @@ decision variables</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>Dictionary of new variable objects.</dt><dd></dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.add_constrs">
 <span class="sig-name descname"><span class="pre">add_constrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cons_expr_tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.add_constrs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.add_constrs" title="Permalink to this definition">#</a></dt>
 <dd><p>Add constraint expressions to the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>cons_expr_tuple: List[LinExpr]</strong></dt><dd><p>A list of constraint expressions to be added to the model.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>None</dt><dd></dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.add_constr">
 <span class="sig-name descname"><span class="pre">add_constr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cons_expr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.add_constr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.add_constr" title="Permalink to this definition">#</a></dt>
 <dd><p>Add a constraint expression to the model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>cons_expr: LinExpr</strong></dt><dd><p>A constraint expression to be added to the model.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>None</dt><dd></dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.lin_expr">
 <span class="sig-name descname"><span class="pre">lin_expr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sense</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.lin_expr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.lin_expr" title="Permalink to this definition">#</a></dt>
 <dd><p>Initialize a linear expression object</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>arg1: double | Variable , default=0.0</strong></dt><dd><p>A constant or Variable to be used to initialize the linear expression</p>
 </dd>
@@ -430,19 +470,20 @@ decision variables</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>Initalized LinExpr</dt><dd></dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.set_objective">
 <span class="sig-name descname"><span class="pre">set_objective</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sense</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.set_objective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.set_objective" title="Permalink to this definition">#</a></dt>
 <dd><p>Take the linear expression and set it as the objective for the problem.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>expr: LinExpr</strong></dt><dd><p>The linear expression to be used as the objective for the problem.</p>
 </dd>
@@ -451,31 +492,33 @@ or maximized (-1 or GRB.MAXIMIZE)</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>None</dt><dd></dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.quicksum">
 <span class="sig-name descname"><span class="pre">quicksum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">terms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.quicksum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.quicksum" title="Permalink to this definition">#</a></dt>
 <dd><p>Pass through function for python-mip quicksum function</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>terms: List[mip.Variable]</strong></dt><dd><p>List of variables to be summed</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>LinExpr</dt><dd></dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.store_data">
 <span class="sig-name descname"><span class="pre">store_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.store_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.store_data" title="Permalink to this definition">#</a></dt>
@@ -484,7 +527,7 @@ typically be stored as private attributes of the model (i.e., model._data_var).
 For consistency across solvers, we store the data in the model._data attribute
 as a dictionary.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>key: str</strong></dt><dd><p>The name under which to store the data</p>
 </dd>
@@ -492,17 +535,19 @@ as a dictionary.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>None</dt><dd></dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
+
 </dd></dl>
-</div>
-</div>
-</div>
+
+</section>
+</section>
+</section>
 
         </article>
       </div>
@@ -516,16 +561,16 @@ as a dictionary.</p>
                 </div>
                 <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="../scip_solver/index.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+          <a class="prev-page" href="../callbacks/index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></div>
+                <div class="title"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></div>
                 
               </div>
             </a>
@@ -557,7 +602,7 @@ as a dictionary.</p>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -566,7 +611,30 @@ as a dictionary.</p>
 <li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a><ul>
 <li><a class="reference internal" href="#module-contents">Module Contents</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
-<li><a class="reference internal" href="#attributes">Attributes</a></li>
+<li><a class="reference internal" href="#attributes">Attributes</a><ul>
+<li><a class="reference internal" href="#odtlearn.utils.solver.GRB_CBC_CONST_MAP"><code class="docutils literal notranslate"><span class="pre">GRB_CBC_CONST_MAP</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver"><code class="docutils literal notranslate"><span class="pre">Solver</span></code></a><ul>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.optim_gap"><code class="docutils literal notranslate"><span class="pre">Solver.optim_gap</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.num_decision_vars"><code class="docutils literal notranslate"><span class="pre">Solver.num_decision_vars</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.num_integer_vars"><code class="docutils literal notranslate"><span class="pre">Solver.num_integer_vars</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.num_non_zero"><code class="docutils literal notranslate"><span class="pre">Solver.num_non_zero</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.num_solutions"><code class="docutils literal notranslate"><span class="pre">Solver.num_solutions</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.num_constraints"><code class="docutils literal notranslate"><span class="pre">Solver.num_constraints</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.search_progress_log"><code class="docutils literal notranslate"><span class="pre">Solver.search_progress_log</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.get_var_value"><code class="docutils literal notranslate"><span class="pre">Solver.get_var_value()</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.optimize"><code class="docutils literal notranslate"><span class="pre">Solver.optimize()</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.prep_indices"><code class="docutils literal notranslate"><span class="pre">Solver.prep_indices()</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.add_vars"><code class="docutils literal notranslate"><span class="pre">Solver.add_vars()</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.add_constrs"><code class="docutils literal notranslate"><span class="pre">Solver.add_constrs()</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.add_constr"><code class="docutils literal notranslate"><span class="pre">Solver.add_constr()</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.lin_expr"><code class="docutils literal notranslate"><span class="pre">Solver.lin_expr()</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.set_objective"><code class="docutils literal notranslate"><span class="pre">Solver.set_objective()</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.quicksum"><code class="docutils literal notranslate"><span class="pre">Solver.quicksum()</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.store_data"><code class="docutils literal notranslate"><span class="pre">Solver.store_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -580,14 +648,12 @@ as a dictionary.</p>
       
     </aside>
   </div>
-</div><script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/jquery.js"></script>
-    <script src="../../../../_static/underscore.js"></script>
-    <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/scripts/furo.js"></script>
-    <script src="../../../../_static/clipboard.min.js"></script>
-    <script src="../../../../_static/copybutton.js"></script>
-    <script src="../../../../_static/toggleprompt.js"></script>
+</div><script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js?v=af2ce170"></script>
+    <script src="../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=4ea706d9"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     </body>
 </html>

@@ -1,16 +1,17 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en" data-content_root="">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Robust Optimal Classification Trees" href="optimal_robust_classification_trees.html" /><link rel="prev" title="Optimal Classification Trees" href="optimal_classification_trees.html" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Robust Optimal Classification Trees" href="optimal_robust_classification_trees.html" /><link rel="prev" title="Optimal Classification Trees" href="optimal_classification_trees.html" />
 
-    <meta name="generator" content="sphinx-4.4.0, furo 2022.03.04"/>
+    <!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>Fair Optimal Classification Trees - odtlearn 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
     
     
 
@@ -37,10 +38,12 @@
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
@@ -148,7 +151,7 @@
   <span class="sidebar-brand-text">odtlearn 1.0.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -156,7 +159,7 @@
   <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="optimal_classification_trees.html">Optimal Classification Trees</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
@@ -166,17 +169,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../autoapi/odtlearn/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../autoapi/odtlearn/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of ODTlearn API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../autoapi/odtlearn/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of odtlearn</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../autoapi/odtlearn/utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of odtlearn.utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/Tree/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.Tree</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/TreePlotter/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.TreePlotter</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/binarize/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callback_helpers/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callback_helpers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callbacks/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.callbacks</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/cbc_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.cbc_solver</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/gb_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.gb_solver</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/scip_solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.scip_solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/solver/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.solver</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
@@ -201,10 +201,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example Notebooks</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustTreeClassifier</span></code> Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -229,7 +229,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -243,45 +245,45 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="fair-optimal-classification-trees">
-<h1>Fair Optimal Classification Trees<a class="headerlink" href="#fair-optimal-classification-trees" title="Permalink to this headline">#</a></h1>
+          <section id="fair-optimal-classification-trees">
+<h1>Fair Optimal Classification Trees<a class="headerlink" href="#fair-optimal-classification-trees" title="Permalink to this heading">#</a></h1>
 <p>In recent years, decision-makers have begun to use machine learning algorithms in socially sensitive, high-stakes domains with increasing frequency. For example, machine learning algorithms help decide who to give access to credit, government benefits, and public services, help guide policing, or assist with screening decisions for jobs/college admissions. Yet, decision-making systems based on standard machine learning algorithms may result in discriminative decisions as they may treat individuals unequally based on membership to a category or a group known as a protected or sensitive attribute. These attributes include but are not limited to age, disability, ethnicity, gender, marital status, national origin, race, religion, and sexual orientation.</p>
 <p>FairTree is an extension of the optimal classification tree to learn optimal and fair decision trees satisfying the most common fairness requirements in the literature, including statistical parity, conditional statistical parity, predictive equality, equal opportunity, and equalized odds. Additional fairness metrics can be added upon request. In line with the literature FairTree currently provides an implementation for binary classification.</p>
 <p>In addition to the typical inputs of binary classification problems, users must specify protected features as well as the positive label value. The positive label corresponds to the desired outcome in the classification problem. For example, in a hiring problem where one wants to decide whether to interview someone or not, being invited for an interview is regarded as the positive outcome.</p>
-<div class="section" id="fairness-metrics">
-<h2>Fairness Metrics<a class="headerlink" href="#fairness-metrics" title="Permalink to this headline">#</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">FairTreeClassifier</span></code> is able to incorporate arbitrary domain specific fairness constraints when learning optimal classification trees. The type of fairness metric used is specified by the <code class="docutils literal notranslate"><span class="pre">fairness_type</span></code> parameter while the <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code><img alt="\in (0,1]" class="math" src="../_images/math/d1fd5bb898fb44a0a0e47482b5b75e50d17c48da.png"/> parameter controls how strictly the fairness constraints are enforced. As the <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code> approaches zero, the fairness constraints become more strict. Setting <code class="docutils literal notranslate"><span class="pre">fairness_bound=1</span></code> is equivalent to enforcing no fairness constraint.</p>
+<section id="fairness-metrics">
+<h2>Fairness Metrics<a class="headerlink" href="#fairness-metrics" title="Permalink to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">FairTreeClassifier</span></code> is able to incorporate arbitrary domain specific fairness constraints when learning optimal classification trees. The type of fairness metric used is specified by the <code class="docutils literal notranslate"><span class="pre">fairness_type</span></code> parameter while the <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code><img class="math" src="../_images/math/d1fd5bb898fb44a0a0e47482b5b75e50d17c48da.png" alt="\in (0,1]"/> parameter controls how strictly the fairness constraints are enforced. As the <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code> approaches zero, the fairness constraints become more strict. Setting <code class="docutils literal notranslate"><span class="pre">fairness_bound=1</span></code> is equivalent to enforcing no fairness constraint.</p>
 <p>The following sections introduces the fairness metrics that are available to use with the <code class="docutils literal notranslate"><span class="pre">FairTreeClassifier</span></code>. The example notebook showcases statistical parity (SP) and predictive equality (PE). For a complete treatment of FairTrees, see the corresponding paper (Jo et al., 2021).</p>
-<div class="section" id="statistical-parity">
-<h3>Statistical Parity<a class="headerlink" href="#statistical-parity" title="Permalink to this headline">#</a></h3>
-<p>A classifier satisfies statistical parity if the probability of receiving a positive class is equal across all protected groups. For example, in the hiring problem mentioned above, it may be appropriate to impose that the probability of receiving an interview should be similar across genders if people from different genders are equally likely to be meritorious. With the <code class="docutils literal notranslate"><span class="pre">FairTreeClassifier</span></code> one can bound the difference of the probability of receiving a positive class between two groups by setting <code class="docutils literal notranslate"><span class="pre">fairness_type="SP"</span></code> and choosing a value for <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code> between zero and 1.</p>
-</div>
-<div class="section" id="conditional-statistical-parity">
-<h3>Conditional Statistical Parity<a class="headerlink" href="#conditional-statistical-parity" title="Permalink to this headline">#</a></h3>
+<section id="statistical-parity">
+<h3>Statistical Parity<a class="headerlink" href="#statistical-parity" title="Permalink to this heading">#</a></h3>
+<p>A classifier satisfies statistical parity if the probability of receiving a positive class is equal across all protected groups. For example, in the hiring problem mentioned above, it may be appropriate to impose that the probability of receiving an interview should be similar across genders if people from different genders are equally likely to be meritorious. With the <code class="docutils literal notranslate"><span class="pre">FairTreeClassifier</span></code> one can bound the difference of the probability of receiving a positive class between two groups by setting <code class="docutils literal notranslate"><span class="pre">fairness_type=&quot;SP&quot;</span></code> and choosing a value for <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code> between zero and 1.</p>
+</section>
+<section id="conditional-statistical-parity">
+<h3>Conditional Statistical Parity<a class="headerlink" href="#conditional-statistical-parity" title="Permalink to this heading">#</a></h3>
 <p>A classifier satisfies conditional statistical parity across protected groups if the probability of predicting the positive outcome is similar between all groups conditional on some feature, e.g., a legitimate feature that can justify differences across protected groups.</p>
-<p>For example, in the problem of matching people experiencing homelessness to scarce housing resources, it is natural to require that the probability of receiving a resource among all individuals with the same vulnerability (risk) score should be similar across genders, races, or other protected attributes. The user needs to specify the value of the legitimate feature of each data point in vector <img alt="l" class="math" src="../_images/math/470aa65888a2971c9346e573f12b37ea406b8ec9.png"/>.</p>
-<p>By setting <code class="docutils literal notranslate"><span class="pre">fairness_type="CSP"</span></code> and choosing a <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code> value between zero and one, a user can bound the difference of the conditional probability of receiving a positive class between two groups.</p>
-</div>
-<div class="section" id="predictive-equality">
-<h3>Predictive Equality<a class="headerlink" href="#predictive-equality" title="Permalink to this headline">#</a></h3>
-<p>A classifier satisfies predictive equality if it results in the same false positive rates across protected groups. For example, this fairness notion may be useful when using machine learning to predict if a convicted person will recidivate to decide if it is appropriate to release them on bail. Indeed, predictive equality in this context requires that, among defendants who would not have gone on to recidivate if released, detention rates should be similar across all races. One can bound the difference of false-positive rates between two groups choosing a <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code> value between zero and one and by setting <code class="docutils literal notranslate"><span class="pre">fairness_type="PE"</span></code>.</p>
-</div>
-<div class="section" id="equal-opportunity">
-<h3>Equal Opportunity<a class="headerlink" href="#equal-opportunity" title="Permalink to this headline">#</a></h3>
-<p>A classifier satisfies equal opportunity if it results in the same true positive rates across protected groups. One can bound the difference of true-positive rates between two groups by setting <code class="docutils literal notranslate"><span class="pre">fairness_type="EOpp"</span></code> and choosing a <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code> value between zero and one.</p>
-</div>
-<div class="section" id="equalized-odds">
-<h3>Equalized Odds<a class="headerlink" href="#equalized-odds" title="Permalink to this headline">#</a></h3>
+<p>For example, in the problem of matching people experiencing homelessness to scarce housing resources, it is natural to require that the probability of receiving a resource among all individuals with the same vulnerability (risk) score should be similar across genders, races, or other protected attributes. The user needs to specify the value of the legitimate feature of each data point in vector <img class="math" src="../_images/math/470aa65888a2971c9346e573f12b37ea406b8ec9.png" alt="l"/>.</p>
+<p>By setting <code class="docutils literal notranslate"><span class="pre">fairness_type=&quot;CSP&quot;</span></code> and choosing a <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code> value between zero and one, a user can bound the difference of the conditional probability of receiving a positive class between two groups.</p>
+</section>
+<section id="predictive-equality">
+<h3>Predictive Equality<a class="headerlink" href="#predictive-equality" title="Permalink to this heading">#</a></h3>
+<p>A classifier satisfies predictive equality if it results in the same false positive rates across protected groups. For example, this fairness notion may be useful when using machine learning to predict if a convicted person will recidivate to decide if it is appropriate to release them on bail. Indeed, predictive equality in this context requires that, among defendants who would not have gone on to recidivate if released, detention rates should be similar across all races. One can bound the difference of false-positive rates between two groups choosing a <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code> value between zero and one and by setting <code class="docutils literal notranslate"><span class="pre">fairness_type=&quot;PE&quot;</span></code>.</p>
+</section>
+<section id="equal-opportunity">
+<h3>Equal Opportunity<a class="headerlink" href="#equal-opportunity" title="Permalink to this heading">#</a></h3>
+<p>A classifier satisfies equal opportunity if it results in the same true positive rates across protected groups. One can bound the difference of true-positive rates between two groups by setting <code class="docutils literal notranslate"><span class="pre">fairness_type=&quot;EOpp&quot;</span></code> and choosing a <code class="docutils literal notranslate"><span class="pre">fairness_bound</span></code> value between zero and one.</p>
+</section>
+<section id="equalized-odds">
+<h3>Equalized Odds<a class="headerlink" href="#equalized-odds" title="Permalink to this heading">#</a></h3>
 <p>A classifier satisfies equalized odds if the predicted outcome and protected feature are independent conditional on the outcome. In other words, equalized odds require the same true positive and false positive rates across protected groups. For example, in the college admissions process, equalized odds require that no matter the applicant’s gender, they should get admitted at equal rates if they are qualified (or unqualified). One can use the equalized odds metric by specifying `fairness_type=EOdds”.</p>
-</div>
-</div>
-<div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Jo, N., Aghaei, S., Benson, J., Gómez, A., &amp; Vayanos, P. (2022). Learning optimal fair classification trees. arXiv preprint arXiv:2201.09932. https://arxiv.org/pdf/2201.09932.pdf</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>
@@ -295,10 +297,10 @@
                 </div>
                 <div class="title">Robust Optimal Classification Trees</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="optimal_classification_trees.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -336,7 +338,7 @@
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -363,14 +365,12 @@
       
     </aside>
   </div>
-</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/scripts/furo.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/toggleprompt.js"></script>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=af2ce170"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=4ea706d9"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     </body>
 </html>
