@@ -3,11 +3,12 @@ The purpose of this notebook is to demonstrate how users can leverage the object
 
 The figure below shows a simplified version of the class structure for optimal classification trees with fairness constraints. The `ConstrainedOCT` class includes an abstract method `_define_side_constraints()` which will be added to the optimization problem on top of the tree structure, flow, and arc constraints declared by the `FlowOCTMultipleSink` class. The `FairConstrainedOCT` class provides a method for adding a two-sided fairness constraint and the classes that inherit from it contain methods calculating the particular fairness notion of interest. However, for our example, we want a one-sided bound instead of a two-sided bound. In other words, we want the difference between two groups to not exceed a desired value rather than be bounded in absolute value.
 
-![Simplified class diagram for ODTlearn](/docs/_static/img/constrained_class_diagram.jpg)
+<img src="../_static/img/constrained_class_diagram.jpg" alt="Simplified class diagram for ODTlearn" style="width:600px;display:block;margin-left:auto;margin-right:auto;"/>
 
 To achieve this goal of creating an optimal classification tree with a one-sided fairness constraint, we will create a new class called `FairConstrainedOneSideOCT` that will inherit from `ConstrainedOCT`, and we will define a new method `_add_one_sided_fairness_constraint()` as shown in the class diagram below. While it is likely feasible to modify the `FairConstrainedOCT` class to allow users to specify whether they want a one-sided or two-sided fairness constraint when they initialize one of the four different `Fair*OCT` classes, such an approach leads to duplicated code and increased code complexity which makes future modifications to the code more complicated.
 
-![Simplified class diagram for ODTlearn with one-sided constrained class](/docs/_static/img/constrained_class_diagram.jpg)
+<img src="../_static/img/with_one_sided.jpg" alt="Simplified class diagram for ODTlearn with one-sided constrained class" style="width:600px;display:block;margin-left:auto;margin-right:auto;">
+
 
 First we need to initialize the `FairConstrainedOneSideOCT` class and have it inherit from `ConstrainedOCT`.
 
