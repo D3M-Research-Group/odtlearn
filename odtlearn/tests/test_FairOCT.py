@@ -1,11 +1,52 @@
+from itertools import product
+
 import numpy as np
 import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 from sklearn.exceptions import NotFittedError
 
-from odtlearn.fair_oct import FairOCT
+from odtlearn.fair_oct import (
+    FairCSPOCT,
+    FairEOddsOCT,
+    FairEOppOCT,
+    FairOCT,
+    FairPEOCT,
+    FairSPOCT,
+)
 from odtlearn.flow_oct import FlowOCT
+
+
+# @pytest.fixture
+def class_names():
+    return [
+        FairCSPOCT,
+        FairEOddsOCT,
+        FairEOppOCT,
+        # FairOCT,
+        FairPEOCT,
+        FairSPOCT,
+    ]
+
+
+# @pytest.fixture
+def solvers():
+    return ["gurobi", "cbc"]
+
+
+# @pytest.fixture
+def objectives():
+    return ["acc", "balance"]
+
+
+# @pytest.fixture
+def obj_solver_class_combo():
+    return list(product(*[objectives(), solvers(), class_names()]))
+
+
+# @pytest.fixture
+def obj_class_combo():
+    return list(product(*[objectives(), class_names()]))
 
 
 # fmt: off
@@ -57,14 +98,29 @@ def synthetic_data_1():
 
 # fmt: on
 @pytest.mark.parametrize(
-    "obj_mode, solver",
-    [("acc", "gurobi"), ("balance", "gurobi"), ("acc", "cbc"), ("balance", "cbc")],
+    "obj_mode, solver, fair_class",
+    obj_solver_class_combo()
+    # [("acc", "gurobi"), ("balance", "gurobi"), ("acc", "cbc"), ("balance", "cbc")],
 )
-def test_FairOCT_same_predictions(synthetic_data_1, obj_mode, solver, skip_solver):
+def test_FairOCT_same_predictions(
+    synthetic_data_1, obj_mode, solver, fair_class, skip_solver
+):
     if skip_solver:
         pytest.skip(reason="Testing on github actions")
     X, y, protect_feat, legit_factor = synthetic_data_1
-    fcl = FairOCT(
+
+    fcl = fair_class(
+        solver=solver,
+        positive_class=1,
+        depth=2,
+        _lambda=0,
+        time_limit=100,
+        fairness_bound=1,
+        num_threads=None,
+        obj_mode=obj_mode,
+    )
+
+    fcl_dep = FairOCT(
         solver=solver,
         positive_class=1,
         depth=2,
@@ -91,28 +147,46 @@ def test_FairOCT_same_predictions(synthetic_data_1, obj_mode, solver, skip_solve
     fcl.fit(X, y, protect_feat, legit_factor)
     fcl_pred = fcl.predict(X)
 
+    fcl_dep.fit(X, y, protect_feat, legit_factor)
+    fcl_dep_pred = fcl_dep.predict(X)
+
     assert_allclose(fcl_pred, stcl_pred)
+    assert_allclose(fcl_dep_pred, stcl_pred)
 
 
 @pytest.mark.parametrize(
-    "f, b, g0_value, solver",
+    "f, b, g0_value, solver, class_name",
     [
-        ("SP", 1, 0.214, "gurobi"),
-        ("SP", 0.2, 0.5, "gurobi"),
-        ("PE", 1, 0.111, "gurobi"),
-        ("PE", 0.04, 0, "gurobi"),
-        ("SP", 1, 0.214, "cbc"),
-        ("SP", 0.2, 0.5, "cbc"),
-        ("PE", 1, 0.111, "cbc"),
-        ("PE", 0.04, 0, "cbc"),
+        ("SP", 1, 0.214, "gurobi", FairSPOCT),
+        ("SP", 0.2, 0.5, "gurobi", FairSPOCT),
+        ("PE", 1, 0.111, "gurobi", FairPEOCT),
+        ("PE", 0.04, 0, "gurobi", FairPEOCT),
+        ("SP", 1, 0.214, "cbc", FairSPOCT),
+        ("SP", 0.2, 0.5, "cbc", FairSPOCT),
+        ("PE", 1, 0.111, "cbc", FairPEOCT),
+        ("PE", 0.04, 0, "cbc", FairPEOCT),
     ],
 )
-def test_FairOCT_metrics(synthetic_data_1, f, b, g0_value, solver, skip_solver):
+def test_FairOCT_metrics(
+    synthetic_data_1, f, b, g0_value, solver, class_name, skip_solver
+):
     if skip_solver:
         pytest.skip(reason="Testing on github actions")
 
     X, y, protect_feat, legit_factor = synthetic_data_1
-    fcl = FairOCT(
+
+    fcl = class_name(
+        solver=solver,
+        positive_class=1,
+        depth=2,
+        _lambda=0,
+        time_limit=100,
+        fairness_bound=b,
+        num_threads=None,
+        obj_mode="acc",
+    )
+
+    fcl_dep = FairOCT(
         solver=solver,
         positive_class=1,
         depth=2,
@@ -125,21 +199,28 @@ def test_FairOCT_metrics(synthetic_data_1, f, b, g0_value, solver, skip_solver):
     )
 
     fcl.fit(X, y, protect_feat, legit_factor)
+    fcl_dep.fit(X, y, protect_feat, legit_factor)
     if f == "SP":
-        sp_val = fcl.get_SP(protect_feat, fcl.predict(X))
+        sp_val_dep = fcl_dep.get_SP(protect_feat, fcl.predict(X))
+        sp_val = fcl.calc_metric(protect_feat, fcl.predict(X))
         assert_allclose(np.round(sp_val[(0, 1)], 3), g0_value)
+        assert_allclose(np.round(sp_val_dep[(0, 1)], 3), g0_value)
     else:
-        eq_val = fcl.get_EqOdds(protect_feat, y, fcl.predict(X))
+        eq_val_dep = fcl_dep.get_EqOdds(protect_feat, y, fcl.predict(X))
+        eq_val = fcl.calc_metric(protect_feat, y, fcl.predict(X))
         assert_allclose(np.round(eq_val[(0, 0, 1)], 3), g0_value)
+        assert_allclose(np.round(eq_val_dep[(0, 0, 1)], 3), g0_value)
 
 
 @pytest.mark.parametrize(
-    "obj_mode",
-    ["acc", "balance"],
+    "obj_mode, class_name",
+    obj_class_combo(),
 )
 # test that tree is fitted before trying to fit, predict, print, or plot
-def test_check_fit(synthetic_data_1, obj_mode):
-    X, y, protect_feat, legit_factor = synthetic_data_1
+def test_check_fit(synthetic_data_1, obj_mode, class_name):
+    X, _, _, _ = synthetic_data_1
+
+    # check first for depreciated class
     fcl = FairOCT(
         solver="cbc",
         positive_class=1,
@@ -178,10 +259,54 @@ def test_check_fit(synthetic_data_1, obj_mode):
     ):
         fcl.plot_tree()
 
+    # now do for new version of classes
+    fcl = class_name(
+        solver="cbc",
+        positive_class=1,
+        depth=2,
+        _lambda=0,
+        time_limit=100,
+        fairness_bound=1,
+        num_threads=None,
+        obj_mode=obj_mode,
+    )
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {fcl.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        fcl.predict(X)
 
-def test_FairOCT_visualize_tree(synthetic_data_1):
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {fcl.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        fcl.print_tree()
+
+    with pytest.raises(
+        NotFittedError,
+        match=(
+            f"This {fcl.__class__.__name__} instance is not fitted yet. Call 'fit' with "
+            f"appropriate arguments before using this estimator."
+        ),
+    ):
+        fcl.plot_tree()
+
+
+@pytest.mark.parametrize(
+    "class_name",
+    class_names(),
+)
+def test_FairOCT_visualize_tree(synthetic_data_1, class_name):
     X, y, protect_feat, legit_factor = synthetic_data_1
-    fcl = FairOCT(
+
+    # first test depreciated version
+    fcl_dep = FairOCT(
         solver="cbc",
         positive_class=1,
         depth=2,
@@ -193,26 +318,42 @@ def test_FairOCT_visualize_tree(synthetic_data_1):
         obj_mode="acc",
     )
 
+    fcl_dep.fit(X, y, protect_feat, legit_factor)
+    fcl_dep.print_tree()
+    fcl_dep.plot_tree()
+
+    # now test each class
+    fcl = class_name(
+        solver="cbc",
+        positive_class=1,
+        depth=2,
+        _lambda=0,
+        time_limit=100,
+        fairness_bound=1,
+        num_threads=None,
+        obj_mode="acc",
+    )
+
     fcl.fit(X, y, protect_feat, legit_factor)
     fcl.print_tree()
     fcl.plot_tree()
 
 
 @pytest.mark.parametrize(
-    "f, pd_data",
+    "f, pd_data, class_name",
     [
-        ("SP", True),
-        ("SP", False),
-        ("PE", True),
-        ("PE", False),
-        ("CSP", True),
-        ("CSP", False),
-        ("CPE", True),
-        ("CPE", False),
+        ("SP", True, FairSPOCT),
+        ("SP", False, FairSPOCT),
+        ("PE", True, FairPEOCT),
+        ("PE", False, FairPEOCT),
+        ("CSP", True, FairCSPOCT),
+        ("CSP", False, FairCSPOCT),
+        ("CPE", True, FairEOddsOCT),
+        ("CPE", False, FairEOddsOCT),
     ],
 )
 # test that we can properly handle data passed as pd.DataFrame
-def test_handle_pandas_cols(synthetic_data_1, f, pd_data):
+def test_handle_pandas_cols(synthetic_data_1, f, pd_data, class_name):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
         solver="cbc",
@@ -246,8 +387,32 @@ def test_handle_pandas_cols(synthetic_data_1, f, pd_data):
         assert len(metric_val.keys()) == 16
 
 
+@pytest.mark.parametrize(
+    "class_name",
+    class_names(),
+)
 # test that assertion error is thrown when invalid objective mode is given
-def test_bad_obj_mode(synthetic_data_1):
+def test_bad_obj_mode(synthetic_data_1, class_name):
+    X, y, protect_feat, legit_factor = synthetic_data_1
+    with pytest.raises(
+        ValueError,
+        match="Invalid objective mode. obj_mode should be one of acc or balance.",
+    ):
+        fcl = class_name(
+            solver="cbc",
+            positive_class=1,
+            depth=2,
+            _lambda=0,
+            time_limit=100,
+            fairness_bound=1,
+            num_threads=None,
+            obj_mode="inacc",
+        )
+        fcl.fit(X, y, protect_feat, legit_factor)
+
+
+# test that assertion error is thrown when invalid objective mode is given
+def test_bad_obj_mode_dep(synthetic_data_1):
     X, y, protect_feat, legit_factor = synthetic_data_1
     with pytest.raises(
         ValueError,

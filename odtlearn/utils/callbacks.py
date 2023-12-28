@@ -54,7 +54,7 @@ def benders_subproblem(main_model_obj, b, p, w, i):
 
 class BendersCallback(ConstrsGenerator):
     """
-    This class contains a function that is called by the sovler at
+    This class contains a function that is called by the solver at
     every node through the branch-&-bound tree while we solve the model.
 
     We are specifically interested at nodes
@@ -141,7 +141,7 @@ def robust_tree_subproblem(
 
 class RobustBendersCallback(ConstrsGenerator):
     """
-    This class contains the functioncalled by the solver at every node through
+    This class contains the function called by the solver at every node through
     the branch-&-bound tree while we solve the model.
     We are specifically interested at nodes where we get an integer solution for the master problem.
     When we get an integer solution for b and p, for every datapoint we solve the subproblem
@@ -164,7 +164,6 @@ class RobustBendersCallback(ConstrsGenerator):
             {k: model.translate(v).x for k, v in self.w.items()},
             {k: model.translate(v).x for k, v in self.t.items()},
         )
-
         # Initialize a blank-slate xi
         initial_xi = {}
         for c in self.obj._solver.model._data["cat_features"]:
