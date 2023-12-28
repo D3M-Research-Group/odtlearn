@@ -32,6 +32,16 @@ class RobustOCT(OptimalClassificationTree):
         solver uses all available threads.
     verbose : bool, default = False
         Flag for logging solver outputs.
+
+    Notes
+    -----
+        RobustOCT cannot be used with the CBC solver because the LP solver
+        used in the presolving step removes all tree structure variables from
+        the problem formulation. Currently, the CBC C interface does not properly
+        pass parameters to the LP solver to disable presolving as described
+        in this Github issue <https://github.com/coin-or/Cbc/issues/512>.
+        Until this issue with the CBC C interface is fixed, RobustOCT will
+        raise a `NotImplementedError` if called with `solver="cbc"`
     """
 
     def __init__(
@@ -42,6 +52,14 @@ class RobustOCT(OptimalClassificationTree):
         num_threads=None,
         verbose=False,
     ) -> None:
+        # check whether user is trying to use CBC, if so raise error
+        if solver.lower() == "cbc":
+            raise NotImplementedError(
+                "Cannot use CBC for optimal decision trees that use lazy"
+                "constraint callbacks. "
+                "For more details see the RobustOCT documentation:"
+                "https://d3m-research-group.github.io/odtlearn/autoapi/odtlearn/robust_oct/index.html#odtlearn.robust_oct.RobustOCT"  # noqa: E501
+            )
         super().__init__(
             solver,
             depth,
@@ -131,7 +149,7 @@ class RobustOCT(OptimalClassificationTree):
                 if terminal:
                     break
                 else:
-                    for (f, theta) in self._f_theta_indices:
+                    for f, theta in self._f_theta_indices:
                         if self.b_value[node, f, theta] > 0.5:  # b[n,f]== 1
                             if X.at[i, f] >= theta + 1:
                                 node = self._tree.get_right_children(node)
@@ -361,7 +379,7 @@ class RobustOCT(OptimalClassificationTree):
                     assignment_nodes += [n]
                     break
             if not terminal:
-                for (f, theta) in self._solver.model._data["f_theta_indices"]:
+                for f, theta in self._solver.model._data["f_theta_indices"]:
                     if self.b_value[n, f, theta] > 0.5:  # b[n,f]== 1
                         print("Feature: ", f, ", Cutoff: ", theta)
                         break

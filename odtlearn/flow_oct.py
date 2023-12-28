@@ -173,8 +173,24 @@ class BendersOCT(FlowOCTSingleSink):
             solver uses all available threads
         verbose : bool, default = False
             Flag for logging solver outputs.
-        """
 
+        Notes
+        -----
+            BendersOCT cannot be used with the CBC solver because the LP solver used in
+            the presolving step removes all tree structure variables from
+            the problem formulation.Currently, the CBC C interface does not properly
+            pass parameters to the LP solver to disable presolving as described
+            in this Github issue <https://github.com/coin-or/Cbc/issues/512>.
+            Until this issue with the CBC C interface is fixed, BendersOCT
+            will raise a `NotImplementedError` if called with `solver="cbc"`
+        """
+        if solver.lower() == "cbc":
+            raise NotImplementedError(
+                "Cannot use CBC for optimal decision trees that use lazy"
+                "constraint callbacks. "
+                "For more details see the BendersOCT documentation:"
+                "https://d3m-research-group.github.io/odtlearn/autoapi/odtlearn/flow_oct/index.html#odtlearn.flow_oct.BendersOCT"  # noqa: E501
+            )
         super().__init__(
             solver,
             _lambda,
@@ -225,7 +241,6 @@ class BendersOCT(FlowOCTSingleSink):
         self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
     def fit(self, X, y):
-
         # extract column labels, unique classes and store X as a DataFrame
         self._extract_metadata(X, y)
 
