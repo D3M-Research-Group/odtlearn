@@ -163,6 +163,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/fair_optimal_classification_trees.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/optimal_prescriptive_trees.html">Optimal Prescriptive Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/adding_constraints.html">Adding side constraints to optimal classification trees</a></li>
 </ul>
 </li>
 </ul>
@@ -181,6 +182,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/constrained_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constrained_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -300,7 +302,7 @@
 
 <div class="viewcode-block" id="BendersCallback"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callbacks/index.html#odtlearn.utils.callbacks.BendersCallback">[docs]</a><span class="k">class</span> <span class="nc">BendersCallback</span><span class="p">(</span><span class="n">ConstrsGenerator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class contains a function that is called by the sovler at</span>
+<span class="sd">    This class contains a function that is called by the solver at</span>
 <span class="sd">    every node through the branch-&amp;-bound tree while we solve the model.</span>
 
 <span class="sd">    We are specifically interested at nodes</span>
@@ -387,7 +389,7 @@
 
 <div class="viewcode-block" id="RobustBendersCallback"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callbacks/index.html#odtlearn.utils.callbacks.RobustBendersCallback">[docs]</a><span class="k">class</span> <span class="nc">RobustBendersCallback</span><span class="p">(</span><span class="n">ConstrsGenerator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This class contains the functioncalled by the solver at every node through</span>
+<span class="sd">    This class contains the function called by the solver at every node through</span>
 <span class="sd">    the branch-&amp;-bound tree while we solve the model.</span>
 <span class="sd">    We are specifically interested at nodes where we get an integer solution for the master problem.</span>
 <span class="sd">    When we get an integer solution for b and p, for every datapoint we solve the subproblem</span>
@@ -410,7 +412,6 @@
             <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
             <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
         <span class="p">)</span>
-
         <span class="c1"># Initialize a blank-slate xi</span>
         <span class="n">initial_xi</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">&quot;cat_features&quot;</span><span class="p">]:</span>

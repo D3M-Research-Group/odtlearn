@@ -1,0 +1,46 @@
+:py:mod:`odtlearn.constrained_oct`
+==================================
+
+.. py:module:: odtlearn.constrained_oct
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.constrained_oct.ConstrainedOCT
+
+
+
+
+.. py:class:: ConstrainedOCT(solver, _lambda, depth, time_limit, num_threads, verbose)
+
+
+   Bases: :py:obj:`odtlearn.flow_oct_ms.FlowOCTMultipleSink`
+
+   
+   Helper class that provides a standard way to create an ABC using
+   inheritance.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

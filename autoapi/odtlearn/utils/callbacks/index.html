@@ -164,6 +164,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/fair_optimal_classification_trees.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/optimal_prescriptive_trees.html">Optimal Prescriptive Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../user_guide/adding_constraints.html">Adding side constraints to optimal classification trees</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +183,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../constrained_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constrained_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -255,10 +257,10 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.BendersCallback" title="odtlearn.utils.callbacks.BendersCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BendersCallback</span></code></a></p></td>
-<td><p>This class contains a function that is called by the sovler at</p></td>
+<td><p>This class contains a function that is called by the solver at</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.RobustBendersCallback" title="odtlearn.utils.callbacks.RobustBendersCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RobustBendersCallback</span></code></a></p></td>
-<td><p>This class contains the functioncalled by the solver at every node through</p></td>
+<td><p>This class contains the function called by the solver at every node through</p></td>
 </tr>
 </tbody>
 </table>
@@ -287,7 +289,7 @@
 <dt class="sig sig-object py" id="odtlearn.utils.callbacks.BendersCallback">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">BendersCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#BendersCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.BendersCallback" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">mip.ConstrsGenerator</span></code></p>
-<p>This class contains a function that is called by the sovler at
+<p>This class contains a function that is called by the solver at
 every node through the branch-&amp;-bound tree while we solve the model.</p>
 <p>We are specifically interested at nodes
 where we get an integer solution for the master problem.
@@ -348,7 +350,7 @@ npass(int): current number of cut passes in this node</p>
 <dt class="sig sig-object py" id="odtlearn.utils.callbacks.RobustBendersCallback">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">RobustBendersCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#RobustBendersCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.RobustBendersCallback" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">mip.ConstrsGenerator</span></code></p>
-<p>This class contains the functioncalled by the solver at every node through
+<p>This class contains the function called by the solver at every node through
 the branch-&amp;-bound tree while we solve the model.
 We are specifically interested at nodes where we get an integer solution for the master problem.
 When we get an integer solution for b and p, for every datapoint we solve the subproblem

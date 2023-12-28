@@ -163,6 +163,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../user_guide/fair_optimal_classification_trees.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../user_guide/optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../user_guide/optimal_prescriptive_trees.html">Optimal Prescriptive Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../user_guide/adding_constraints.html">Adding side constraints to optimal classification trees</a></li>
 </ul>
 </li>
 </ul>
@@ -181,6 +182,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/constrained_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constrained_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -308,8 +310,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        grb_model :</span>
-<span class="sd">            The gurobi model solved to optimality (or reached to the time limit).</span>
+<span class="sd">        model :</span>
+<span class="sd">            The model solved to optimality (or reached to the time limit).</span>
 <span class="sd">        b :</span>
 <span class="sd">            The values of branching decision variable b.</span>
 <span class="sd">        w :</span>
@@ -377,7 +379,7 @@
                 <span class="k">if</span> <span class="n">terminal</span><span class="p">:</span>
                     <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_theta_indices</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_f_theta_indices</span><span class="p">:</span>
                         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">[</span><span class="n">node</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># b[n,f]== 1</span>
                             <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">theta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
                                 <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_right_children</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
@@ -607,7 +609,7 @@
                     <span class="n">assignment_nodes</span> <span class="o">+=</span> <span class="p">[</span><span class="n">n</span><span class="p">]</span>
                     <span class="k">break</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">terminal</span><span class="p">:</span>
-                <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">&quot;f_theta_indices&quot;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">&quot;f_theta_indices&quot;</span><span class="p">]:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>  <span class="c1"># b[n,f]== 1</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Feature: &quot;</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;, Cutoff: &quot;</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
                         <span class="k">break</span></div>

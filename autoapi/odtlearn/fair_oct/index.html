@@ -164,6 +164,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/fair_optimal_classification_trees.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../user_guide/optimal_prescriptive_trees.html">Optimal Prescriptive Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../user_guide/adding_constraints.html">Adding side constraints to optimal classification trees</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +183,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../constrained_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constrained_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3 current current-page"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flow_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_oct</span></code></a></li>
@@ -254,6 +256,24 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.fair_oct.FairConstrainedOCT" title="odtlearn.fair_oct.FairConstrainedOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairConstrainedOCT</span></code></a></p></td>
+<td><p>Helper class that provides a standard way to create an ABC using</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.fair_oct.FairSPOCT" title="odtlearn.fair_oct.FairSPOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairSPOCT</span></code></a></p></td>
+<td><p>Helper class that provides a standard way to create an ABC using</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.fair_oct.FairCSPOCT" title="odtlearn.fair_oct.FairCSPOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairCSPOCT</span></code></a></p></td>
+<td><p>Helper class that provides a standard way to create an ABC using</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.fair_oct.FairPEOCT" title="odtlearn.fair_oct.FairPEOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairPEOCT</span></code></a></p></td>
+<td><p>Helper class that provides a standard way to create an ABC using</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.fair_oct.FairEOppOCT" title="odtlearn.fair_oct.FairEOppOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairEOppOCT</span></code></a></p></td>
+<td><p>Helper class that provides a standard way to create an ABC using</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.fair_oct.FairEOddsOCT" title="odtlearn.fair_oct.FairEOddsOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairEOddsOCT</span></code></a></p></td>
+<td><p>Helper class that provides a standard way to create an ABC using</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.fair_oct.FairOCT" title="odtlearn.fair_oct.FairOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairOCT</span></code></a></p></td>
 <td><p>Helper class that provides a standard way to create an ABC using</p></td>
 </tr>
@@ -261,14 +281,14 @@
 </table>
 </div>
 <dl class="py class">
-<dt class="sig sig-object py" id="odtlearn.fair_oct.FairOCT">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.fair_oct.</span></span><span class="sig-name descname"><span class="pre">FairOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairOCT" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../flow_oct_ms/index.html#odtlearn.flow_oct_ms.FlowOCTMultipleSink" title="odtlearn.flow_oct_ms.FlowOCTMultipleSink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.flow_oct_ms.FlowOCTMultipleSink</span></code></a></p>
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairConstrainedOCT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.fair_oct.</span></span><span class="sig-name descname"><span class="pre">FairConstrainedOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairConstrainedOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairConstrainedOCT" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../constrained_oct/index.html#odtlearn.constrained_oct.ConstrainedOCT" title="odtlearn.constrained_oct.ConstrainedOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.constrained_oct.ConstrainedOCT</span></code></a></p>
 <p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="odtlearn.fair_oct.FairOCT.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legit_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairOCT.fit" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairConstrainedOCT.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legit_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairConstrainedOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairConstrainedOCT.fit" title="Permalink to this definition">#</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -292,8 +312,8 @@ inheritance.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="odtlearn.fair_oct.FairOCT.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairOCT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairOCT.predict" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairConstrainedOCT.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairConstrainedOCT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairConstrainedOCT.predict" title="Permalink to this definition">#</a></dt>
 <dd><p>Classify test points using the FairTree classifier</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -310,6 +330,167 @@ seen during fit.</p>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairSPOCT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.fair_oct.</span></span><span class="sig-name descname"><span class="pre">FairSPOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairSPOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairSPOCT" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#odtlearn.fair_oct.FairConstrainedOCT" title="odtlearn.fair_oct.FairConstrainedOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairConstrainedOCT</span></code></a></p>
+<p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairSPOCT.calc_metric">
+<span class="sig-name descname"><span class="pre">calc_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairSPOCT.calc_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairSPOCT.calc_metric" title="Permalink to this definition">#</a></dt>
+<dd><p>This function returns the statistical parity value for any given protected level and outcome value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>protect_feat</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
+The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
+<li><p><strong>y</strong> – array-like, shape (n_samples,)
+The target values (class labels in classification).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return sp_dict<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary with key =(p,t) and value = P(Y=t|P=p)</p>
+</dd>
+</dl>
+<p>where p is a protected level and t is an outcome value</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairCSPOCT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.fair_oct.</span></span><span class="sig-name descname"><span class="pre">FairCSPOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairCSPOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairCSPOCT" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#odtlearn.fair_oct.FairConstrainedOCT" title="odtlearn.fair_oct.FairConstrainedOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairConstrainedOCT</span></code></a></p>
+<p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairCSPOCT.calc_metric">
+<span class="sig-name descname"><span class="pre">calc_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legit_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairCSPOCT.calc_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairCSPOCT.calc_metric" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the conditional statistical parity value for any given
+protected level, legitimate feature value and outcome value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>protect_feat</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
+The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
+<li><p><strong>legit_fact</strong> – array-like, shape (n_samples,)
+The legitimate factor column(e.g., prior number of criminal acts)</p></li>
+<li><p><strong>y</strong> – array-like, shape (n_samples,)
+The target values (class labels in classification).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return csp_dict<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary with key =(p, f, t) and value = P(Y=t|P=p, L=f) where p is a protected level
+and t is an outcome value and l is the value of the legitimate feature</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairPEOCT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.fair_oct.</span></span><span class="sig-name descname"><span class="pre">FairPEOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairPEOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairPEOCT" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#odtlearn.fair_oct.FairConstrainedOCT" title="odtlearn.fair_oct.FairConstrainedOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairConstrainedOCT</span></code></a></p>
+<p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairPEOCT.calc_metric">
+<span class="sig-name descname"><span class="pre">calc_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairPEOCT.calc_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairPEOCT.calc_metric" title="Permalink to this definition">#</a></dt>
+<dd><p>This function returns the false positive and true positive rate value
+for any given protected level, outcome value and prediction value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>protect_feat</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
+The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
+<li><p><strong>y</strong> – array-like, shape (n_samples,)
+The true target values (class labels in classification).</p></li>
+<li><p><strong>y_pred</strong> – array-like, shape (n_samples,)
+The predicted values (class labels in classification).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return eq_dict<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairEOppOCT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.fair_oct.</span></span><span class="sig-name descname"><span class="pre">FairEOppOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairEOppOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairEOppOCT" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#odtlearn.fair_oct.FairConstrainedOCT" title="odtlearn.fair_oct.FairConstrainedOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairConstrainedOCT</span></code></a></p>
+<p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairEOppOCT.calc_metric">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calc_metric</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairEOppOCT.calc_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairEOppOCT.calc_metric" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairEOddsOCT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.fair_oct.</span></span><span class="sig-name descname"><span class="pre">FairEOddsOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairEOddsOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairEOddsOCT" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#odtlearn.fair_oct.FairConstrainedOCT" title="odtlearn.fair_oct.FairConstrainedOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FairConstrainedOCT</span></code></a></p>
+<p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairOCT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.fair_oct.</span></span><span class="sig-name descname"><span class="pre">FairOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'acc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairOCT" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../flow_oct_ms/index.html#odtlearn.flow_oct_ms.FlowOCTMultipleSink" title="odtlearn.flow_oct_ms.FlowOCTMultipleSink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.flow_oct_ms.FlowOCTMultipleSink</span></code></a></p>
+<p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairOCT.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legit_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairOCT.fit" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">{array-like, sparse matrix}, shape (n_samples, n_features)</span></dt><dd><p>The training input samples.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The target values (class labels in classification).</p>
+</dd>
+<dt><strong>protect_feat</strong><span class="classifier">array-like, shape (n_samples,1) or (n_samples, n_p)</span></dt><dd><p>The protected feature columns (Race, gender, etc); Can have one or more columns</p>
+</dd>
+<dt><strong>legit_factor</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The legitimate factor column(e.g., prior number of criminal acts)</p>
+</dd>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>Returns self.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.fair_oct.FairOCT.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairOCT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairOCT.predict" title="Permalink to this definition">#</a></dt>
+<dd><p>Classify test points using the FairTree classifier
+Parameters
+———-
+X : array-like, shape (n_samples, n_features)</p>
+<blockquote>
+<div><p>The input samples.</p>
+</div></blockquote>
+<section id="returns">
+<h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading">#</a></h4>
+<dl class="simple">
+<dt>y<span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The label for each sample is the label of the closest sample
+seen during fit.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 <dl class="py method">
@@ -474,6 +655,28 @@ The predicted values (class labels in classification).</p></li>
 <li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a><ul>
 <li><a class="reference internal" href="#module-contents">Module Contents</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairConstrainedOCT"><code class="docutils literal notranslate"><span class="pre">FairConstrainedOCT</span></code></a><ul>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairConstrainedOCT.fit"><code class="docutils literal notranslate"><span class="pre">FairConstrainedOCT.fit()</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairConstrainedOCT.predict"><code class="docutils literal notranslate"><span class="pre">FairConstrainedOCT.predict()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairSPOCT"><code class="docutils literal notranslate"><span class="pre">FairSPOCT</span></code></a><ul>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairSPOCT.calc_metric"><code class="docutils literal notranslate"><span class="pre">FairSPOCT.calc_metric()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairCSPOCT"><code class="docutils literal notranslate"><span class="pre">FairCSPOCT</span></code></a><ul>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairCSPOCT.calc_metric"><code class="docutils literal notranslate"><span class="pre">FairCSPOCT.calc_metric()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairPEOCT"><code class="docutils literal notranslate"><span class="pre">FairPEOCT</span></code></a><ul>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairPEOCT.calc_metric"><code class="docutils literal notranslate"><span class="pre">FairPEOCT.calc_metric()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairEOppOCT"><code class="docutils literal notranslate"><span class="pre">FairEOppOCT</span></code></a><ul>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairEOppOCT.calc_metric"><code class="docutils literal notranslate"><span class="pre">FairEOppOCT.calc_metric()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#odtlearn.fair_oct.FairEOddsOCT"><code class="docutils literal notranslate"><span class="pre">FairEOddsOCT</span></code></a></li>
 <li><a class="reference internal" href="#odtlearn.fair_oct.FairOCT"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code></a><ul>
 <li><a class="reference internal" href="#odtlearn.fair_oct.FairOCT.fit"><code class="docutils literal notranslate"><span class="pre">FairOCT.fit()</span></code></a></li>
 <li><a class="reference internal" href="#odtlearn.fair_oct.FairOCT.predict"><code class="docutils literal notranslate"><span class="pre">FairOCT.predict()</span></code></a></li>
