@@ -1,7 +1,7 @@
 # User Guide
 
 ```{toctree}
-:maxdepth: 3
+:maxdepth: 1
 
 optimal_classification_trees
 fair_optimal_classification_trees
