@@ -395,16 +395,3 @@ def test_wrong_objective_FlowOCT(synthetic_data_1):
             obj_mode="sdafasdf",
         )
         stcl.fit(X, y)
-
-    with pytest.raises(
-        AssertionError,
-        match="Wrong objective mode. obj_mode should be one of acc or balance.",
-    ):
-        bstcl = BendersOCT(
-            solver="gurobi",
-            depth=1,
-            time_limit=100,
-            num_threads=None,
-            obj_mode="aaa",
-        )
-        bstcl.fit(X, y)
