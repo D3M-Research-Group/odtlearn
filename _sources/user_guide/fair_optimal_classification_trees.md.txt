@@ -37,4 +37,4 @@ A classifier satisfies equal opportunity if it results in the same true positive
 A classifier satisfies equalized odds if the predicted outcome and protected feature are independent conditional on the outcome. In other words, equalized odds require the same true positive and false positive rates across protected groups. For example, in the college admissions process, equalized odds require that no matter the applicant’s gender, they should get admitted at equal rates if they are qualified (or unqualified). One can use the equalized odds metric by specifying `fairness_type=EOdds".
 
 ## References
-* Jo, N., Aghaei, S., Benson, J., Gómez, A., & Vayanos, P. (2022). Learning optimal fair classification trees. arXiv preprint arXiv:2201.09932. https://arxiv.org/pdf/2201.09932.pdf
+* Jo, N., Aghaei, S., Benson, J., Gómez, A., & Vayanos, P. (2022). Learning optimal fair classification trees. arXiv preprint arXiv:2201.09932. <https://arxiv.org/pdf/2201.09932.pdf>

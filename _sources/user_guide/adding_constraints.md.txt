@@ -123,4 +123,4 @@ class FairOneSideSPOCT(FairConstrainedOneSideOCT):
                 self._add_fairness_constraint(p_df, p_prime_df)
 ```
 
-The process for other notions of fairness including conditional statistical parity, equalized odds, and predictive equity is similar but with different formulas for calculating $p$ and $p'$. For additional details on how $p$ and $p'$ as well as further information about the fair optimal classification tree MIO formulation, please see the FairOCT paper: https://arxiv.org/abs/2201.09932. 
+The process for other notions of fairness including conditional statistical parity, equalized odds, and predictive equity is similar but with different formulas for calculating $p$ and $p'$. For additional details on how $p$ and $p'$ as well as further information about the fair optimal classification tree MIO formulation, please see the FairOCT paper: <https://arxiv.org/abs/2201.09932>. 

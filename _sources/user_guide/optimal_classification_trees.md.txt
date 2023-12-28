@@ -30,5 +30,5 @@ StrongTree requires all the input features to be binary, i.e., all the elements 
 ODTlearn provides a function called `binarize` for taking care of the binarization step. When provided a data frame with only categorical/integer columns, the function outputs a binarized data frame.
 
 ## References
-* Aghaei, S., Gómez, A., & Vayanos, P. (2021). Strong optimal classification trees. arXiv preprint arXiv:2103.15965. https://arxiv.org/abs/2103.15965
+* Aghaei, S., Gómez, A., & Vayanos, P. (2021). Strong optimal classification trees. arXiv preprint arXiv:2103.15965. <https://arxiv.org/abs/2103.15965>
 

@@ -23,4 +23,4 @@ For details on how the costs and budgets are mathematically derived from specifi
 -->
 
 ## References
-* Justin, N., Aghaei, S., Gómez, A., & Vayanos, P. (2021). Optimal robust classification trees. *The AAAI-2022 Workshop on Adversarial Machine Learning and Beyond*. https://openreview.net/pdf?id=HbasA9ysA3
+* Justin, N., Aghaei, S., Gómez, A., & Vayanos, P. (2021). Optimal robust classification trees. *The AAAI-2022 Workshop on Adversarial Machine Learning and Beyond*. <https://openreview.net/pdf?id=HbasA9ysA3>
