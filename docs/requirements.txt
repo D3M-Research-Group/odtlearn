@@ -21,4 +21,5 @@ ipykernel==6.15.1
 seaborn==0.12.2
 mip==1.15.0
 sphinx-autoapi==3.0.0
+lxml[html_clean]
 git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
