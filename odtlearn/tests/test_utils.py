@@ -22,9 +22,21 @@ def example_data():
         "White",
     ]
     sex_list = ["M", "F", "M", "M", "F", "M", "F", "M", "M", "F"]
+    cont_col = [
+        0.60715055,
+        0.86282283,
+        0.93035626,
+        0.85418288,
+        0.9338212,
+        0.38013132,
+        0.36491731,
+        0.72397201,
+        0.70701631,
+        0.08178343,
+    ]
     df = pd.DataFrame(
-        list(zip(sex_list, race_list, number_of_child_list, age_list)),
-        columns=["sex", "race", "num_child", "age"],
+        list(zip(sex_list, race_list, number_of_child_list, age_list, cont_col)),
+        columns=["sex", "race", "num_child", "age", "cont_val"],
     )
     return df
 
@@ -89,33 +101,97 @@ def comparison_data():
             "age_40": {0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1, 9: 1},
         }
     )
-    return both_cols, cat_cols_only, int_cols_only
+    cont_cols_only = pd.DataFrame.from_dict(
+        {
+            "cont_val_0.0": {
+                0: 0,
+                1: 0,
+                2: 0,
+                3: 0,
+                4: 0,
+                5: 0,
+                6: 0,
+                7: 0,
+                8: 0,
+                9: 1,
+            },
+            "cont_val_1.0": {
+                0: 0,
+                1: 0,
+                2: 0,
+                3: 0,
+                4: 0,
+                5: 1,
+                6: 1,
+                7: 0,
+                8: 0,
+                9: 1,
+            },
+            "cont_val_2.0": {
+                0: 1,
+                1: 0,
+                2: 0,
+                3: 0,
+                4: 0,
+                5: 1,
+                6: 1,
+                7: 0,
+                8: 1,
+                9: 1,
+            },
+            "cont_val_3.0": {
+                0: 1,
+                1: 1,
+                2: 1,
+                3: 1,
+                4: 1,
+                5: 1,
+                6: 1,
+                7: 1,
+                8: 1,
+                9: 1,
+            },
+        }
+    )
+
+    return both_cols, cat_cols_only, int_cols_only, cont_cols_only
 
 
 def test_binarize_need_lists(example_data):
     df = example_data
     with pytest.raises(
         AssertionError,
-        match="Must provide at least one of the two options of a list "
-        "of categorical columns or binary columns to binarize.",
+        match="Must provide at least one of the three options of a list "
+        "of categorical columns or integer columns or real valued columns to binarize.",
     ):
-        binarize(df, categorical_cols=[], integer_cols=[])
+        binarize(df, categorical_cols=[], integer_cols=[], real_cols=[])
 
 
 def test_binarize_correctness(example_data, comparison_data):
     df = example_data
-    both_cols, cat_cols_only, int_cols_only = comparison_data
+    both_cols, cat_cols_only, int_cols_only, cont_cols_only = comparison_data
     assert_allclose(
         binarize(
-            df, categorical_cols=["sex", "race"], integer_cols=["num_child", "age"]
+            df,
+            categorical_cols=["sex", "race"],
+            integer_cols=["num_child", "age"],
+            real_cols=[],
         ),
         both_cols,
     )
     assert_allclose(
-        binarize(df, categorical_cols=["sex", "race"], integer_cols=[]), cat_cols_only
+        binarize(df, categorical_cols=["sex", "race"], integer_cols=[], real_cols=[]),
+        cat_cols_only,
     )
 
     assert_allclose(
-        binarize(df, categorical_cols=[], integer_cols=["num_child", "age"]),
+        binarize(
+            df, categorical_cols=[], integer_cols=["num_child", "age"], real_cols=[]
+        ),
         int_cols_only,
+    )
+
+    assert_allclose(
+        binarize(df, categorical_cols=[], integer_cols=[], real_cols=["cont_val"]),
+        cont_cols_only,
     )
