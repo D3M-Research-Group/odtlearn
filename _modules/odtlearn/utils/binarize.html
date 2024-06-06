@@ -181,7 +181,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/constrained_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constrained_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
@@ -248,19 +247,29 @@
           <h1>Source code for odtlearn.utils.binarize</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">KBinsDiscretizer</span><span class="p">,</span> <span class="n">OneHotEncoder</span>
 
 
-<div class="viewcode-block" id="binarize"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/binarize/index.html#odtlearn.utils.binarize.binarize">[docs]</a><span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">categorical_cols</span><span class="p">,</span> <span class="n">integer_cols</span><span class="p">):</span>
+<div class="viewcode-block" id="binarize"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/binarize/index.html#odtlearn.utils.binarize.binarize">[docs]</a><span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">categorical_cols</span><span class="p">,</span> <span class="n">integer_cols</span><span class="p">,</span> <span class="n">real_cols</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    df: pandas dataframe</span>
-<span class="sd">          A dataframe with only categorical/integer columns. There should not be any NA values.</span>
+<span class="sd">        A dataframe with only categorical/integer columns. There should not be any NA values.</span>
 <span class="sd">    categorical_cols: list</span>
-<span class="sd">                      a list consisting of the names of categorical columns of df</span>
+<span class="sd">        A list consisting of the names of categorical columns of df</span>
 <span class="sd">    integer_cols: list</span>
-<span class="sd">                      a list consisting of the names of integer columns of df</span>
+<span class="sd">        A list consisting of the names of integer columns of df</span>
+<span class="sd">    real_cols: list</span>
+<span class="sd">        A list consisting of the names of real columns of df</span>
+<span class="sd">    n_bins: int</span>
+<span class="sd">        The number of bins to be used for encoding real columns</span>
+<span class="sd">    bin_strategy: str</span>
+<span class="sd">        The strategy to be used for discretizing real columns. It can be one of the following:</span>
+<span class="sd">        &#39;uniform&#39;: All bins in each feature have identical widths.</span>
+<span class="sd">        &#39;quantile&#39;: All bins in each feature have the same number of points.</span>
 
 <span class="sd">    return</span>
 <span class="sd">    ----------</span>
@@ -271,12 +280,30 @@
 <span class="sd">    of one if and only if the original column has the corresponding level.</span>
 <span class="sd">    A similar approach for encoding integer features is used with a slight change.</span>
 <span class="sd">    The new binary column should have a value of one if and only if the main column</span>
-<span class="sd">     has the corresponding value or any value smaller than it.</span>
+<span class="sd">    has the corresponding value or any value smaller than it.</span>
+<span class="sd">    We first discretize the real columns according to the number of bins and the discretization strategy</span>
+<span class="sd">    and then treat them as integer columns.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">assert</span> <span class="p">(</span>
-        <span class="nb">len</span><span class="p">(</span><span class="n">categorical_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">integer_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-    <span class="p">),</span> <span class="s2">&quot;Must provide at least one of the two options of a list of categorical columns or binary columns to binarize.&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">categorical_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">integer_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">real_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span>
+        <span class="s2">&quot;Must provide at least one of the three options of a list of categorical columns &quot;</span>
+        <span class="s2">&quot;or integer columns or real valued columns to binarize.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">real_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_bins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The number of bins must be provided for encoding real columns.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">real_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">bin_strategy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The bin strategy must be provided for encoding real columns.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span><span class="n">real_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="ow">and</span> <span class="n">bin_strategy</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="ow">or</span> <span class="n">bin_strategy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;quantile&quot;</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;The bin strategy must be one of the following: &#39;uniform&#39; or &#39;quantile&#39;.&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">categorical_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">X_cat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">categorical_cols</span><span class="p">])</span>
@@ -284,7 +311,14 @@
         <span class="n">X_cat_enc</span> <span class="o">=</span> <span class="n">enc</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_cat</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
         <span class="n">categorical_cols_enc</span> <span class="o">=</span> <span class="n">enc</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">(</span><span class="n">categorical_cols</span><span class="p">)</span>
         <span class="n">X_cat_enc</span> <span class="o">=</span> <span class="n">X_cat_enc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">real_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># We first bucketize the real columns according to number of bins and the</span>
+        <span class="c1"># discretization strategy and then treat them as integer columns</span>
+        <span class="n">discretizer_unif</span> <span class="o">=</span> <span class="n">KBinsDiscretizer</span><span class="p">(</span>
+            <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">encode</span><span class="o">=</span><span class="s2">&quot;ordinal&quot;</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="n">bin_strategy</span>
+        <span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">real_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">discretizer_unif</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">real_cols</span><span class="p">])</span>
+        <span class="n">integer_cols</span> <span class="o">=</span> <span class="n">integer_cols</span> <span class="o">+</span> <span class="n">real_cols</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">integer_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">X_int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">integer_cols</span><span class="p">])</span>
         <span class="n">enc</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="s2">&quot;if_binary&quot;</span><span class="p">)</span>

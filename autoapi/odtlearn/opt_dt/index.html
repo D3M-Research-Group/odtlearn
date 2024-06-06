@@ -182,7 +182,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../constrained_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constrained_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
@@ -268,6 +267,41 @@
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
 <p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.opt_dt.OptimalDecisionTree.optim_gap">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">optim_gap</span></span><a class="reference internal" href="../../../_modules/odtlearn/opt_dt.html#OptimalDecisionTree.optim_gap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.opt_dt.OptimalDecisionTree.optim_gap" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.opt_dt.OptimalDecisionTree.num_decision_vars">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_decision_vars</span></span><a class="reference internal" href="../../../_modules/odtlearn/opt_dt.html#OptimalDecisionTree.num_decision_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.opt_dt.OptimalDecisionTree.num_decision_vars" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.opt_dt.OptimalDecisionTree.num_integer_vars">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_integer_vars</span></span><a class="reference internal" href="../../../_modules/odtlearn/opt_dt.html#OptimalDecisionTree.num_integer_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.opt_dt.OptimalDecisionTree.num_integer_vars" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.opt_dt.OptimalDecisionTree.num_non_zero">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_non_zero</span></span><a class="reference internal" href="../../../_modules/odtlearn/opt_dt.html#OptimalDecisionTree.num_non_zero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.opt_dt.OptimalDecisionTree.num_non_zero" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.opt_dt.OptimalDecisionTree.num_solutions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_solutions</span></span><a class="reference internal" href="../../../_modules/odtlearn/opt_dt.html#OptimalDecisionTree.num_solutions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.opt_dt.OptimalDecisionTree.num_solutions" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.opt_dt.OptimalDecisionTree.num_constraints">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_constraints</span></span><a class="reference internal" href="../../../_modules/odtlearn/opt_dt.html#OptimalDecisionTree.num_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.opt_dt.OptimalDecisionTree.num_constraints" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="odtlearn.opt_dt.OptimalDecisionTree.search_progress_log">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">search_progress_log</span></span><a class="reference internal" href="../../../_modules/odtlearn/opt_dt.html#OptimalDecisionTree.search_progress_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.opt_dt.OptimalDecisionTree.search_progress_log" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.opt_dt.OptimalDecisionTree.fit">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/opt_dt.html#OptimalDecisionTree.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.opt_dt.OptimalDecisionTree.fit" title="Permalink to this definition">#</a></dt>
@@ -347,6 +381,13 @@ inheritance.</p>
 <li><a class="reference internal" href="#module-contents">Module Contents</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a><ul>
 <li><a class="reference internal" href="#odtlearn.opt_dt.OptimalDecisionTree"><code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree</span></code></a><ul>
+<li><a class="reference internal" href="#odtlearn.opt_dt.OptimalDecisionTree.optim_gap"><code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree.optim_gap</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.opt_dt.OptimalDecisionTree.num_decision_vars"><code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree.num_decision_vars</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.opt_dt.OptimalDecisionTree.num_integer_vars"><code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree.num_integer_vars</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.opt_dt.OptimalDecisionTree.num_non_zero"><code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree.num_non_zero</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.opt_dt.OptimalDecisionTree.num_solutions"><code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree.num_solutions</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.opt_dt.OptimalDecisionTree.num_constraints"><code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree.num_constraints</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.opt_dt.OptimalDecisionTree.search_progress_log"><code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree.search_progress_log</span></code></a></li>
 <li><a class="reference internal" href="#odtlearn.opt_dt.OptimalDecisionTree.fit"><code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree.fit()</span></code></a></li>
 <li><a class="reference internal" href="#odtlearn.opt_dt.OptimalDecisionTree.predict"><code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree.predict()</span></code></a></li>
 </ul>

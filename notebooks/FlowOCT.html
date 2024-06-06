@@ -183,7 +183,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/constrained_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constrained_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
@@ -249,13 +248,12 @@
         </div>
         <article role="main">
           <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span>
 
 <span class="kn">from</span> <span class="nn">odtlearn.flow_oct</span> <span class="kn">import</span> <span class="n">FlowOCT</span><span class="p">,</span> <span class="n">BendersOCT</span>
 <span class="kn">from</span> <span class="nn">odtlearn.utils.binarize</span> <span class="kn">import</span> <span class="n">binarize</span>
@@ -268,7 +266,7 @@
 <h2>Example 0: Binarization<a class="headerlink" href="#Example-0:-Binarization" title="Permalink to this heading">#</a></h2>
 <p>The following example shows how to binarize a dataset with categorical and integer features using the built-in function <code class="docutils literal notranslate"><span class="pre">binarize</span></code>.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">number_of_child_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
@@ -294,18 +292,18 @@
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_enc</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span>
-    <span class="n">df</span><span class="p">,</span> <span class="n">categorical_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">],</span> <span class="n">integer_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;num_child&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">categorical_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">],</span> <span class="n">integer_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;num_child&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">],</span> <span class="n">real_cols</span><span class="o">=</span><span class="p">[]</span>
 <span class="p">)</span>
 <span class="n">df_enc</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -502,7 +500,7 @@
 <p>In this part, we study a simple example and investigate different parameter combinations to provide intuition on how they affect the structure of the tree.</p>
 <p>First we generate the data for our example. The diagram within the code block shows the training dataset. Our dataset has two binary features (X1 and X2) and two class labels (+1 and -1).</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">odtlearn.datasets</span> <span class="kn">import</span> <span class="n">flow_oct_example</span>
@@ -529,7 +527,7 @@
 <h3>Tree with <code class="docutils literal notranslate"><span class="pre">depth</span> <span class="pre">=</span> <span class="pre">1</span></code><a class="headerlink" href="#Tree-with-depth-=-1" title="Permalink to this heading">#</a></h3>
 <p>In the following, we fit a classification tree of depth 1, i.e., a tree with a single branching node and two leaf nodes.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
@@ -575,7 +573,7 @@ Root relaxation: objective 1.000000e+01, 2 iterations, 0.00 seconds (0.00 work u
 
 *    0     0               0      10.0000000   10.00000  0.00%     -    0s
 
-Explored 1 nodes (2 simplex iterations) in 0.01 seconds (0.00 work units)
+Explored 1 nodes (2 simplex iterations) in 0.00 seconds (0.00 work units)
 Thread count was 8 (of 8 available processors)
 
 Solution count 2: 10 9
@@ -585,7 +583,7 @@ Best objective 1.000000000000e+01, best bound 1.000000000000e+01, gap 0.0000%
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -594,11 +592,11 @@ FlowOCT(solver=gurobi,depth=1,time_limit=100,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimality gap is </span><span class="si">{</span><span class="n">stcl</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">optim_gap</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimality gap is </span><span class="si">{</span><span class="n">stcl</span><span class="o">.</span><span class="n">optim_gap</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;In-sample accuracy is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">predictions</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -612,10 +610,29 @@ Optimality gap is 0.0
 In-sample accuracy is 0.7692307692307693
 </pre></div></div>
 </div>
+<p>Users can access statistics from the optimization run such as optimality gap, number of nodes, number of constraints, etc. Directly as properties of the initialized class or through the <code class="docutils literal notranslate"><span class="pre">_solver</span></code> object. For example, one can access the optimality gap and the number of solutions after fitting the optimal decision tree through the <code class="docutils literal notranslate"><span class="pre">optim_gap</span></code> and <code class="docutils literal notranslate"><span class="pre">num_solutions</span></code> properties.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimality gap is </span><span class="si">{</span><span class="n">stcl</span><span class="o">.</span><span class="n">optim_gap</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of solutions </span><span class="si">{</span><span class="n">stcl</span><span class="o">.</span><span class="n">num_solutions</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Optimality gap is 0.0
+Number of solutions 2
+</pre></div></div>
+</div>
 <p>As we can see above, we find the optimal tree and the in-sample accuracy is 76%.</p>
 <p>ODTlearn provides two different ways of visualizing the structure of the tree. The first method prints the structure of the tree in the console:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
@@ -637,7 +654,7 @@ leaf 1
 </div>
 <p>The second method plots the structure of the tree using <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -650,7 +667,7 @@ leaf 1
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_13_0.png" src="../_images/notebooks_FlowOCT_13_0.png" />
+<img alt="../_images/notebooks_FlowOCT_15_0.png" src="../_images/notebooks_FlowOCT_15_0.png" />
 </div>
 </div>
 </section>
@@ -658,7 +675,7 @@ leaf 1
 <h3>Tree with <code class="docutils literal notranslate"><span class="pre">depth</span> <span class="pre">=</span> <span class="pre">2</span></code><a class="headerlink" href="#Tree-with-depth-=-2" title="Permalink to this heading">#</a></h3>
 <p>Now we increase the depth of the tree to achieve higher accuracy.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">)</span>
@@ -715,7 +732,7 @@ Best objective 1.300000000000e+01, best bound 1.300000000000e+01, gap 0.0000%
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -724,7 +741,7 @@ FlowOCT(solver=gurobi,depth=2,time_limit=60,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -742,7 +759,7 @@ In-sample accuracy is 1.0
 </div>
 <p>As we can see, with depth 2, we can achieve 100% in-sample accuracy.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -755,7 +772,7 @@ In-sample accuracy is 1.0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_18_0.png" src="../_images/notebooks_FlowOCT_18_0.png" />
+<img alt="../_images/notebooks_FlowOCT_20_0.png" src="../_images/notebooks_FlowOCT_20_0.png" />
 </div>
 </div>
 </section>
@@ -763,7 +780,7 @@ In-sample accuracy is 1.0
 <h3>Tree with <code class="docutils literal notranslate"><span class="pre">depth=2</span></code> and Positive <code class="docutils literal notranslate"><span class="pre">_lambda</span></code><a class="headerlink" href="#Tree-with-depth=2-and-Positive-_lambda" title="Permalink to this heading">#</a></h3>
 <p>As we saw in the above example, with depth 2, we can fully classify the training data. However if we add a regularization term with a high enough value of <code class="docutils literal notranslate"><span class="pre">_lambda</span></code>, we can justify pruning one of the branching nodes to get a sparser tree. In the following, we observe that as we increase <code class="docutils literal notranslate"><span class="pre">_lambda</span></code> from 0 to 0.51, one of the branching nodes gets pruned and as a result, the in-sample accuracy drops to 92%.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">_lambda</span><span class="o">=</span><span class="mf">0.51</span><span class="p">)</span>
@@ -811,7 +828,7 @@ Root relaxation: objective 5.105000e+00, 14 iterations, 0.00 seconds (0.00 work 
      0     0    5.10500    0    2    3.92000    5.10500  30.2%     -    0s
 H    0     0                       4.8600000    5.10500  5.04%     -    0s
 
-Explored 1 nodes (14 simplex iterations) in 0.01 seconds (0.00 work units)
+Explored 1 nodes (14 simplex iterations) in 0.00 seconds (0.00 work units)
 Thread count was 8 (of 8 available processors)
 
 Solution count 3: 4.86 3.92 -0
@@ -821,7 +838,7 @@ Best objective 4.860000000000e+00, best bound 4.860000000000e+00, gap 0.0000%
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -830,7 +847,7 @@ FlowOCT(solver=gurobi,depth=2,time_limit=60,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -847,7 +864,7 @@ In-sample accuracy is 0.9230769230769231
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -860,7 +877,7 @@ In-sample accuracy is 0.9230769230769231
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_22_0.png" src="../_images/notebooks_FlowOCT_22_0.png" />
+<img alt="../_images/notebooks_FlowOCT_24_0.png" src="../_images/notebooks_FlowOCT_24_0.png" />
 </div>
 </div>
 </section>
@@ -869,7 +886,7 @@ In-sample accuracy is 0.9230769230769231
 <h2>Example 2: Different Objective Functions<a class="headerlink" href="#Example-2:-Different-Objective-Functions" title="Permalink to this heading">#</a></h2>
 <p>In the following, we have a toy example with an imbalanced data, with the positive class being the minority class.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
@@ -898,10 +915,10 @@ In-sample accuracy is 0.9230769230769231
 <section id="Tree-with-classification-accuracy-objective">
 <h3>Tree with classification accuracy objective<a class="headerlink" href="#Tree-with-classification-accuracy-objective" title="Permalink to this heading">#</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl_acc</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl_acc</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">)</span>
 <span class="n">stcl_acc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 <br/></pre></div>
 </div>
@@ -916,7 +933,6 @@ Academic license - for non-commercial use only - expires 2024-06-27
 Set parameter TimeLimit to value 60
 Set parameter NodeLimit to value 1073741824
 Set parameter SolutionLimit to value 1073741824
-Set parameter LazyConstraints to value 1
 Set parameter IntFeasTol to value 1e-06
 Set parameter Method to value 3
 Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
@@ -924,69 +940,52 @@ Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
 CPU model: Apple M1 Pro
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 
-Optimize a model with 14 rows, 42 columns and 44 nonzeros
-Model fingerprint: 0x012b1ab9
-Variable types: 29 continuous, 13 integer (13 binary)
+Optimize a model with 314 rows, 237 columns and 734 nonzeros
+Model fingerprint: 0xa5b9a46b
+Variable types: 224 continuous, 13 integer (13 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
   Objective range  [1e+00, 1e+00]
   Bounds range     [1e+00, 1e+00]
   RHS range        [1e+00, 1e+00]
-Presolve removed 4 rows and 4 columns
+Found heuristic solution: objective -0.0000000
+Presolve removed 269 rows and 203 columns
 Presolve time: 0.00s
-Presolved: 10 rows, 38 columns, 36 nonzeros
-Variable types: 29 continuous, 9 integer (9 binary)
-Root relaxation presolved: 10 rows, 36 columns, 46 nonzeros
+Presolved: 45 rows, 34 columns, 134 nonzeros
+Found heuristic solution: objective 13.0000000
+Variable types: 27 continuous, 7 integer (7 binary)
 
-
-Root relaxation: objective 1.500000e+01, 2 iterations, 0.00 seconds (0.00 work units)
+Root relaxation: objective 1.400000e+01, 32 iterations, 0.00 seconds (0.00 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0   15.00000    0    -          -   15.00000      -     -    0s
-     0     0   14.00000    0    -          -   14.00000      -     -    0s
-     0     0   14.00000    0    -          -   14.00000      -     -    0s
-     0     0   14.00000    0    -          -   14.00000      -     -    0s
-     0     0   14.00000    0    -          -   14.00000      -     -    0s
-     0     0   14.00000    0    -          -   14.00000      -     -    0s
-     0     0   14.00000    0    6          -   14.00000      -     -    0s
-H    0     0                      13.0000000   14.00000  7.69%     -    0s
-     0     0   14.00000    0    -   13.00000   14.00000  7.69%     -    0s
-     0     0   14.00000    0    4   13.00000   14.00000  7.69%     -    0s
-     0     0   14.00000    0    6   13.00000   14.00000  7.69%     -    0s
-     0     0   13.80000    0    6   13.00000   13.80000  6.15%     -    0s
-     0     0   13.66667    0    6   13.00000   13.66667  5.13%     -    0s
-     0     0   13.66667    0    6   13.00000   13.66667  5.13%     -    0s
-     0     2   13.66667    0    6   13.00000   13.66667  5.13%     -    0s
+     0     0   14.00000    0    1   13.00000   14.00000  7.69%     -    0s
 
 Cutting planes:
-  MIR: 3
-  Flow cover: 4
-  Lazy constraints: 24
+  MIR: 1
+  Flow cover: 1
 
-Explored 6 nodes (43 simplex iterations) in 0.02 seconds (0.00 work units)
+Explored 1 nodes (32 simplex iterations) in 0.00 seconds (0.00 work units)
 Thread count was 8 (of 8 available processors)
 
-Solution count 1: 13
+Solution count 2: 13 -0
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 1.300000000000e+01, best bound 1.300000000000e+01, gap 0.0000%
-
-User-callback calls 221, time in user-callback 0.01 sec
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-BendersOCT(solver=gurobi,depth=2,time_limit=60,num_threads=None,verbose=False)
+FlowOCT(solver=gurobi,depth=2,time_limit=60,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl_acc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -1003,7 +1002,7 @@ In-sample accuracy is 0.8666666666666667
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl_acc</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
@@ -1016,23 +1015,23 @@ In-sample accuracy is 0.8666666666666667
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-branch on X_0
+leaf 0
 #########node  2
-branch on X_1
+pruned
 #########node  3
-branch on X_1
+pruned
 #########node  4
-leaf 0
+pruned
 #########node  5
-leaf 0
+pruned
 #########node  6
-leaf 0
+pruned
 #########node  7
-leaf 0
+pruned
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -1045,14 +1044,14 @@ leaf 0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_29_0.png" src="../_images/notebooks_FlowOCT_29_0.png" />
+<img alt="../_images/notebooks_FlowOCT_31_0.png" src="../_images/notebooks_FlowOCT_31_0.png" />
 </div>
 </div>
 </section>
 <section id="Tree-with-Balanced-Classification-Accuracy-Objective">
 <h3>Tree with Balanced Classification Accuracy Objective<a class="headerlink" href="#Tree-with-Balanced-Classification-Accuracy-Objective" title="Permalink to this heading">#</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl_balance</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span>
@@ -1114,7 +1113,7 @@ Cutting planes:
   MIR: 1
   Flow cover: 1
 
-Explored 1 nodes (36 simplex iterations) in 0.00 seconds (0.00 work units)
+Explored 1 nodes (36 simplex iterations) in 0.01 seconds (0.00 work units)
 Thread count was 8 (of 8 available processors)
 
 Solution count 3: 0.673077 0.5 -0
@@ -1126,7 +1125,7 @@ In-sample accuracy is 0.8
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -1139,7 +1138,7 @@ In-sample accuracy is 0.8
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_32_0.png" src="../_images/notebooks_FlowOCT_32_0.png" />
+<img alt="../_images/notebooks_FlowOCT_34_0.png" src="../_images/notebooks_FlowOCT_34_0.png" />
 </div>
 </div>
 <p>As we can see, when we maximize accuracy, i.e., when <code class="docutils literal notranslate"><span class="pre">obj_mode</span> <span class="pre">=</span> <span class="pre">'acc'</span></code>, the optimal tree is just a single node without branching, predicting the majority class for the whole dataset. But when we change the objective mode to balanced accuracy, we account for the minority class by sacrificing the overal accuracy.</p>
@@ -1149,7 +1148,7 @@ In-sample accuracy is 0.8
 <h2>Example 3: UCI Data Example<a class="headerlink" href="#Example-3:-UCI-Data-Example" title="Permalink to this heading">#</a></h2>
 <p>In this section, we fit a tree of depth 3 on a real world dataset called the <code class="docutils literal notranslate"><span class="pre">`balance</span></code> dataset &lt;<a class="reference external" href="https://archive.ics.uci.edu/ml/datasets/Balance+Scale">https://archive.ics.uci.edu/ml/datasets/Balance+Scale</a>&gt;`__ from the UCI Machine Learning repository.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -1159,7 +1158,7 @@ In-sample accuracy is 0.8
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># read data</span>
@@ -1178,7 +1177,7 @@ shape(625, 21)
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1190,7 +1189,7 @@ Index([&#39;V2.1&#39;, &#39;V2.2&#39;, &#39;V2.3&#39;, &#39;V2.4&#39;, &#39;V2.5
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
@@ -1202,7 +1201,7 @@ Index([&#39;V2.1&#39;, &#39;V2.2&#39;, &#39;V2.3&#39;, &#39;V2.4&#39;, &#39;V2.5
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1250,7 +1249,7 @@ Root barrier log...
 
 Ordering time: 0.00s
 
-Barrier performed 0 iterations in 0.18 seconds (0.00 work units)
+Barrier performed 0 iterations in 0.19 seconds (0.00 work units)
 Barrier solve interrupted - model solved by another algorithm
 
 
@@ -1273,27 +1272,28 @@ H 1310   970                     291.0000000  412.40000  41.7%  75.5    4s
   1568  1140  353.62500   27   27  291.00000  408.55187  40.4%  70.0   10s
   1641  1190  354.00000   43   21  291.00000  403.00436  38.5%  82.0   15s
 H 2163  1398                     293.0000000  400.54472  36.7%  92.9   19s
-  2327  1443  399.64465   48   27  293.00000  399.64465  36.4%  92.2   20s
+  2268  1447  368.74304   47    6  293.00000  399.64465  36.4%  92.8   20s
 * 2375  1361             111     296.0000000  399.64465  35.0%  91.6   20s
 H 3419  1561                     299.0000000  398.14472  33.2%  86.5   22s
 H 4454  1024                     312.0000000  398.14472  27.6%  85.7   23s
-  6323  1758  351.06250   59   15  312.00000  367.56601  17.8%  84.0   25s
- 12327  3931  314.50000   61    4  312.00000  345.59655  10.8%  80.1   30s
-H17827  5595                     314.0000000  338.16497  7.70%  67.8   31s
- 25506  8599  329.85714   80   15  314.00000  331.00000  5.41%  59.9   35s
-H31789  9084                     315.0000000  329.54167  4.62%  57.5   38s
- 32844  9456  324.87500   56    9  315.00000  329.05882  4.46%  57.1   40s
-H35037  8771                     316.0000000  328.02174  3.80%  56.5   40s
-H36500  6760                     318.0000000  327.50000  2.99%  56.0   41s
- 44613  6611     cutoff   67       318.00000  324.00000  1.89%  53.7   45s
- 57158  4133     cutoff   93       318.00000  321.00000  0.94%  50.0   50s
+  5480  1432  322.16667   55   11  312.00000  371.70642  19.1%  85.6   25s
+ 11187  3403  320.50000   62   14  312.00000  350.17385  12.2%  81.8   30s
+H17827  5595                     314.0000000  338.16497  7.70%  67.8   33s
+ 20984  7312  316.00000   97    8  314.00000  333.50000  6.21%  63.7   35s
+ 30728  9829  315.00000   45   12  314.00000  330.00000  5.10%  57.8   40s
+H31789  9084                     315.0000000  329.54167  4.62%  57.5   41s
+H35037  8771                     316.0000000  328.02174  3.80%  56.5   43s
+H36500  6760                     318.0000000  327.50000  2.99%  56.0   44s
+ 38253  6870  326.77500   83   19  318.00000  327.00000  2.83%  55.5   45s
+ 49506  5331  319.00000   86    8  318.00000  322.00000  1.26%  52.3   50s
+ 62681  3064  318.36691  104   16  318.00000  320.00000  0.63%  48.4   55s
 
 Cutting planes:
   MIR: 120
   Flow cover: 193
   Lazy constraints: 236
 
-Explored 70775 nodes (3292092 simplex iterations) in 54.97 seconds (141.79 work units)
+Explored 70775 nodes (3292092 simplex iterations) in 58.43 seconds (141.79 work units)
 Thread count was 8 (of 8 available processors)
 
 Solution count 10: 318 316 315 ... 290
@@ -1301,11 +1301,11 @@ Solution count 10: 318 316 315 ... 290
 Optimal solution found (tolerance 1.00e-04)
 Best objective 3.180000000000e+02, best bound 3.180000000000e+02, gap 0.0000%
 
-User-callback calls 150649, time in user-callback 1.65 sec
+User-callback calls 150219, time in user-callback 1.71 sec
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1314,7 +1314,7 @@ BendersOCT(solver=gurobi,depth=3,time_limit=200,num_threads=None,verbose=True)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
@@ -1359,7 +1359,7 @@ leaf 3
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
@@ -1372,11 +1372,11 @@ leaf 3
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_40_0.png" src="../_images/notebooks_FlowOCT_40_0.png" />
+<img alt="../_images/notebooks_FlowOCT_42_0.png" src="../_images/notebooks_FlowOCT_42_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_pred</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>

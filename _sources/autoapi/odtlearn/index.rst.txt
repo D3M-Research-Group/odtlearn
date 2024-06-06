@@ -19,7 +19,6 @@ Submodules
    :titlesonly:
    :maxdepth: 1
 
-   constants/index.rst
    constrained_oct/index.rst
    datasets/index.rst
    fair_oct/index.rst

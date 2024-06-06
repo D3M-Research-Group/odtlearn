@@ -43,6 +43,27 @@ Classes
 
    ..
        !! processed by numpydoc !!
+   .. py:property:: optim_gap
+
+
+   .. py:property:: num_decision_vars
+
+
+   .. py:property:: num_integer_vars
+
+
+   .. py:property:: num_non_zero
+
+
+   .. py:property:: num_solutions
+
+
+   .. py:property:: num_constraints
+
+
+   .. py:property:: search_progress_log
+
+
    .. py:method:: fit()
       :abstractmethod:
 

@@ -182,7 +182,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../constrained_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constrained_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
@@ -256,7 +255,7 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.binarize.binarize" title="odtlearn.utils.binarize.binarize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">binarize</span></code></a>(df, categorical_cols, integer_cols)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.binarize.binarize" title="odtlearn.utils.binarize.binarize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">binarize</span></code></a>(df, categorical_cols, integer_cols, real_cols)</p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p></p></dd>
@@ -268,15 +267,23 @@
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.binarize.binarize">
-<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.binarize.</span></span><span class="sig-name descname"><span class="pre">binarize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorical_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integer_cols</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/binarize.html#binarize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.binarize.binarize" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">odtlearn.utils.binarize.</span></span><span class="sig-name descname"><span class="pre">binarize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorical_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integer_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uniform'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/binarize.html#binarize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.binarize.binarize" title="Permalink to this definition">#</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>df: pandas dataframe</strong></dt><dd><p>A dataframe with only categorical/integer columns. There should not be any NA values.</p>
 </dd>
-<dt><strong>categorical_cols: list</strong></dt><dd><p>a list consisting of the names of categorical columns of df</p>
+<dt><strong>categorical_cols: list</strong></dt><dd><p>A list consisting of the names of categorical columns of df</p>
 </dd>
-<dt><strong>integer_cols: list</strong></dt><dd><p>a list consisting of the names of integer columns of df</p>
+<dt><strong>integer_cols: list</strong></dt><dd><p>A list consisting of the names of integer columns of df</p>
+</dd>
+<dt><strong>real_cols: list</strong></dt><dd><p>A list consisting of the names of real columns of df</p>
+</dd>
+<dt><strong>n_bins: int</strong></dt><dd><p>The number of bins to be used for encoding real columns</p>
+</dd>
+<dt><strong>bin_strategy: str</strong></dt><dd><p>The strategy to be used for discretizing real columns. It can be one of the following:
+‘uniform’: All bins in each feature have identical widths.
+‘quantile’: All bins in each feature have the same number of points.</p>
 </dd>
 </dl>
 </dd>

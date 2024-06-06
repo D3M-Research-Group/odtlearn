@@ -181,7 +181,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/odtlearn/utils/validation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.validation</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/constants/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constants</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/constrained_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.constrained_oct</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.datasets</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/odtlearn/fair_oct/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.fair_oct</span></code></a></li>
@@ -321,7 +320,35 @@
 
     <span class="nd">@abstractmethod</span>
 <div class="viewcode-block" id="OptimalDecisionTree.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/opt_dt/index.html#odtlearn.opt_dt.OptimalDecisionTree.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+        <span class="k">pass</span></div>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="OptimalDecisionTree.optim_gap"><a class="viewcode-back" href="../../autoapi/odtlearn/opt_dt/index.html#odtlearn.opt_dt.OptimalDecisionTree.optim_gap">[docs]</a>    <span class="k">def</span> <span class="nf">optim_gap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">gap</span></div>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="OptimalDecisionTree.num_decision_vars"><a class="viewcode-back" href="../../autoapi/odtlearn/opt_dt/index.html#odtlearn.opt_dt.OptimalDecisionTree.num_decision_vars">[docs]</a>    <span class="k">def</span> <span class="nf">num_decision_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">num_cols</span></div>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="OptimalDecisionTree.num_integer_vars"><a class="viewcode-back" href="../../autoapi/odtlearn/opt_dt/index.html#odtlearn.opt_dt.OptimalDecisionTree.num_integer_vars">[docs]</a>    <span class="k">def</span> <span class="nf">num_integer_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">num_int</span></div>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="OptimalDecisionTree.num_non_zero"><a class="viewcode-back" href="../../autoapi/odtlearn/opt_dt/index.html#odtlearn.opt_dt.OptimalDecisionTree.num_non_zero">[docs]</a>    <span class="k">def</span> <span class="nf">num_non_zero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">num_nz</span></div>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="OptimalDecisionTree.num_solutions"><a class="viewcode-back" href="../../autoapi/odtlearn/opt_dt/index.html#odtlearn.opt_dt.OptimalDecisionTree.num_solutions">[docs]</a>    <span class="k">def</span> <span class="nf">num_solutions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">num_solutions</span></div>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="OptimalDecisionTree.num_constraints"><a class="viewcode-back" href="../../autoapi/odtlearn/opt_dt/index.html#odtlearn.opt_dt.OptimalDecisionTree.num_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">num_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">num_rows</span></div>
+
+    <span class="nd">@property</span>
+<div class="viewcode-block" id="OptimalDecisionTree.search_progress_log"><a class="viewcode-back" href="../../autoapi/odtlearn/opt_dt/index.html#odtlearn.opt_dt.OptimalDecisionTree.search_progress_log">[docs]</a>    <span class="k">def</span> <span class="nf">search_progress_log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">search_progress_log</span></div></div>
 </pre></div>
         </article>
       </div>

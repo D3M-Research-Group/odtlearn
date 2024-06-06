@@ -17,7 +17,7 @@ Functions
 
 
 
-.. py:function:: binarize(df, categorical_cols, integer_cols)
+.. py:function:: binarize(df, categorical_cols, integer_cols, real_cols, n_bins=4, bin_strategy='uniform')
 
    
 
@@ -29,10 +29,21 @@ Functions
            A dataframe with only categorical/integer columns. There should not be any NA values.
 
        **categorical_cols: list**
-           a list consisting of the names of categorical columns of df
+           A list consisting of the names of categorical columns of df
 
        **integer_cols: list**
-           a list consisting of the names of integer columns of df
+           A list consisting of the names of integer columns of df
+
+       **real_cols: list**
+           A list consisting of the names of real columns of df
+
+       **n_bins: int**
+           The number of bins to be used for encoding real columns
+
+       **bin_strategy: str**
+           The strategy to be used for discretizing real columns. It can be one of the following:
+           'uniform': All bins in each feature have identical widths.
+           'quantile': All bins in each feature have the same number of points.
 
 
 
