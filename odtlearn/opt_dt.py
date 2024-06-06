@@ -74,3 +74,31 @@ class OptimalDecisionTree(ABC):
     @abstractmethod
     def predict(self):
         pass
+
+    @property
+    def optim_gap(self):
+        return self._solver.model.gap
+
+    @property
+    def num_decision_vars(self):
+        return self._solver.model.num_cols
+
+    @property
+    def num_integer_vars(self):
+        return self._solver.model.num_int
+
+    @property
+    def num_non_zero(self):
+        return self._solver.model.num_nz
+
+    @property
+    def num_solutions(self):
+        return self._solver.model.num_solutions
+
+    @property
+    def num_constraints(self):
+        return self._solver.model.num_rows
+
+    @property
+    def search_progress_log(self):
+        return self._solver.model.search_progress_log
