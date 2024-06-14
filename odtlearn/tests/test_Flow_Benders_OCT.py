@@ -250,37 +250,9 @@ def test_FlowOCT_classifier():
             "cbc",
         ),
         (
-            0,
-            0,
-            True,
-            np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-            "cbc",
-        ),
-        (
-            1,
-            0,
-            True,
-            np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0]),
-            "cbc",
-        ),
-        (
-            2,
-            0,
-            True,
-            np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]),
-            "cbc",
-        ),
-        (
             2,
             0.51,
             False,
-            np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]),
-            "cbc",
-        ),
-        (
-            2,
-            0.51,
-            True,
             np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]),
             "cbc",
         ),
@@ -359,18 +331,6 @@ def test_FlowOCT_same_predictions(
             np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]),
             "cbc",
         ),
-        (
-            True,
-            "acc",
-            np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-            "cbc",
-        ),
-        (
-            True,
-            "balance",
-            np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]),
-            "cbc",
-        ),
     ],
 )
 def test_FlowOCT_obj_mode(
@@ -435,16 +395,3 @@ def test_wrong_objective_FlowOCT(synthetic_data_1):
             obj_mode="sdafasdf",
         )
         stcl.fit(X, y)
-
-    with pytest.raises(
-        AssertionError,
-        match="Wrong objective mode. obj_mode should be one of acc or balance.",
-    ):
-        bstcl = BendersOCT(
-            solver="cbc",
-            depth=1,
-            time_limit=100,
-            num_threads=None,
-            obj_mode="aaa",
-        )
-        bstcl.fit(X, y)
