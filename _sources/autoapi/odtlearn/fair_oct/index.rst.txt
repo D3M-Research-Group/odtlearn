@@ -107,13 +107,13 @@ Classes
 
 
 
-   ============================================================================================  ==========
-                                                 **_add_fairness_constraint(p_df, p_prime_df)**  Add the fairness constraint to the MIP problem for the given protected groups.  
-                                                      **_extract_metadata(X, y, protect_feat)**  Extract metadata from the input data.  
-                                                                        **_define_objective()**  Define the objective function for the MIP problem.  
-   **:meth:`fit <odtlearn.fair_oct.FairConstrainedOCT.fit>`(X, y, protect_feat, legit_factor)**  Fit the fair constrained optimal classification tree on the given data.  
-                          **:meth:`predict <odtlearn.fair_oct.FairConstrainedOCT.predict>`(X)**  Predict the class labels for the given input data using the fitted model.  
-   ============================================================================================  ==========
+   ==============================================  ==========
+   **_add_fairness_constraint(p_df, p_prime_df)**  Add the fairness constraint to the MIP problem for the given protected groups.  
+        **_extract_metadata(X, y, protect_feat)**  Extract metadata from the input data.  
+                          **_define_objective()**  Define the objective function for the MIP problem.  
+        **fit(X, y, protect_feat, legit_factor)**  Fit the fair constrained optimal classification tree on the given data.  
+                                   **predict(X)**  Predict the class labels for the given input data using the fitted model.  
+   ==============================================  ==========
 
    ..
        !! processed by numpydoc !!
