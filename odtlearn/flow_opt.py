@@ -43,24 +43,28 @@ class FlowOPT_IPW(FlowOPTSingleSink):
 
     Notes
     -----
-    This class inherits from the `FlowOPTSingleSink` class and provides a user-friendly interface
+    This class inherits from the :mod:`odtlearn.flow_opt_ss.FlowOPTSingleSink` class
+    and provides a user-friendly interface
     for learning optimal prescriptive trees with inverse probability weighting (IPW) objective.
 
     The IPW objective is used to account for potential confounding factors in observational data
     and to estimate the causal effect of treatments on outcomes. The inverse probability weights
     are computed based on the propensity scores of receiving each treatment given the observed covariates.
 
-    The class extends the functionality of `FlowOPTSingleSink` by adding the `_ipw` attribute to store
+    The class extends the functionality of :mod:`odtlearn.flow_opt_ss.FlowOPTSingleSink` by adding
+    the `_ipw` attribute to store
     the inverse probability weights and overriding the `fit` method to accept the IPW as an additional argument.
 
     The `_define_objective` method is implemented to define the IPW objective function for the optimization problem.
     The objective maximizes the weighted sum of outcomes, where the weights are the product of the IPW and the
     treatment assignments.
 
-    The class inherits the `predict`, `print_tree`, and `plot_tree` methods from the `OptimalPrescriptiveTree`
+    The class inherits the `predict`, `print_tree`, and `plot_tree` methods from the
+    :mod:`odtlearn.opt_pt.OptimalPrescriptiveTree`
     class to make predictions and visualize the learned tree.
 
     Example usage:
+
     ```python
     # Create an instance of FlowOPT_IPW
     opt_tree = FlowOPT_IPW(depth=3, time_limit=600, verbose=True)
