@@ -261,28 +261,66 @@
 
 <div class="viewcode-block" id="FlowOPT_IPW"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_IPW">[docs]</a><span class="k">class</span> <span class="nc">FlowOPT_IPW</span><span class="p">(</span><span class="n">FlowOPTSingleSink</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    An optimal decision tree that prescribes treatments (as opposed to predicting class labels),</span>
-<span class="sd">    fitted on a binary-valued observational data set.</span>
+<span class="sd">    A user-facing class for learning optimal prescriptive trees with inverse probability weighting (IPW) objective.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    solver: str</span>
-<span class="sd">        A string specifying the name of the solver to use</span>
-<span class="sd">        to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">    depth : int, default=1</span>
-<span class="sd">        A parameter specifying the depth of the tree to learn.</span>
-<span class="sd">    time_limit : int</span>
-<span class="sd">        The given time limit for solving the MIP in seconds.</span>
-<span class="sd">    method : str, default=&#39;IPW&#39;</span>
-<span class="sd">        The method of Prescriptive Trees to run. Choices in (&#39;IPW&#39;, &#39;DM&#39;, &#39;DR), which represents the</span>
-<span class="sd">        inverse propensity weighting, direct method, and doubly robust methods, respectively.</span>
-<span class="sd">    num_threads: int, default=None</span>
-<span class="sd">        The number of threads the solver should use. If not specified,</span>
-<span class="sd">        solver uses all available threads.</span>
-<span class="sd">    verbose : bool, default = False</span>
-<span class="sd">        Flag for logging solver outputs.</span>
+<span class="sd">    solver : str, default=&quot;gurobi&quot;</span>
+<span class="sd">        The solver to use for the optimization problem. Can be either &quot;gurobi&quot; or &quot;cbc&quot;.</span>
+<span class="sd">    depth : int</span>
+<span class="sd">        The maximum depth of the tree to be learned.</span>
+<span class="sd">    time_limit : int, default=300</span>
+<span class="sd">        The time limit (in seconds) for solving the optimization problem.</span>
+<span class="sd">    num_threads : int, default=1</span>
+<span class="sd">        The number of threads to use for solving the optimization problem.</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Whether to print verbose output during the tree learning process.</span>
 
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _ipw : numpy.ndarray</span>
+<span class="sd">        The inverse probability weights for each datapoint.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit(X, y, t, ipw)</span>
+<span class="sd">        Fit the optimal prescriptive tree using the provided data and inverse probability weights.</span>
+<span class="sd">    _define_objective()</span>
+<span class="sd">        Define the objective function for the optimization problem.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This class inherits from the `FlowOPTSingleSink` class and provides a user-friendly interface</span>
+<span class="sd">    for learning optimal prescriptive trees with inverse probability weighting (IPW) objective.</span>
+
+<span class="sd">    The IPW objective is used to account for potential confounding factors in observational data</span>
+<span class="sd">    and to estimate the causal effect of treatments on outcomes. The inverse probability weights</span>
+<span class="sd">    are computed based on the propensity scores of receiving each treatment given the observed covariates.</span>
+
+<span class="sd">    The class extends the functionality of `FlowOPTSingleSink` by adding the `_ipw` attribute to store</span>
+<span class="sd">    the inverse probability weights and overriding the `fit` method to accept the IPW as an additional argument.</span>
+
+<span class="sd">    The `_define_objective` method is implemented to define the IPW objective function for the optimization problem.</span>
+<span class="sd">    The objective maximizes the weighted sum of outcomes, where the weights are the product of the IPW and the</span>
+<span class="sd">    treatment assignments.</span>
+
+<span class="sd">    The class inherits the `predict`, `print_tree`, and `plot_tree` methods from the `OptimalPrescriptiveTree`</span>
+<span class="sd">    class to make predictions and visualize the learned tree.</span>
+
+<span class="sd">    Example usage:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    # Create an instance of FlowOPT_IPW</span>
+<span class="sd">    opt_tree = FlowOPT_IPW(depth=3, time_limit=600, verbose=True)</span>
+
+<span class="sd">    # Fit the optimal prescriptive tree using data and IPW</span>
+<span class="sd">    opt_tree.fit(X, y, t, ipw)</span>
+
+<span class="sd">    # Make predictions</span>
+<span class="sd">    predictions = opt_tree.predict(X_new)</span>
+
+<span class="sd">    # Plot the learned tree</span>
+<span class="sd">    opt_tree.plot_tree()</span>
+<span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -302,7 +340,7 @@
         <span class="p">)</span>
 
 <div class="viewcode-block" id="FlowOPT_IPW.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_IPW.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ipw</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to fit the PrescriptiveTree class on the data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to fit the FlowOPT_IPW class on the data</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -354,7 +392,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FlowOPT_IPW.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_IPW.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method for making prescriptions using a PrescriptiveTree classifier</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method for making prescriptions using a FlowOPT_IPW classifier</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -380,6 +418,62 @@
 
 
 <div class="viewcode-block" id="FlowOPT_DM"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DM">[docs]</a><span class="k">class</span> <span class="nc">FlowOPT_DM</span><span class="p">(</span><span class="n">FlowOPTMultipleSink</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A user-facing class for learning optimal prescriptive trees with direct method (DM) objective.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver : str, default=&quot;gurobi&quot;</span>
+<span class="sd">        The solver to use for the optimization problem. Can be either &quot;gurobi&quot; or &quot;cbc&quot;.</span>
+<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">    depth : int, default=1</span>
+<span class="sd">        The maximum depth of the tree to be learned.</span>
+<span class="sd">    time_limit : int, default=60</span>
+<span class="sd">        The time limit (in seconds) for solving the optimization problem.</span>
+<span class="sd">    num_threads : int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If not specified,</span>
+<span class="sd">        the solver uses all available threads.</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Whether to print verbose output during the tree learning process.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit(X, t, y, y_hat)</span>
+<span class="sd">        Fit the optimal prescriptive tree using the provided data and counterfactual predictions.</span>
+<span class="sd">    predict(X)</span>
+<span class="sd">        Make treatment recommendations for the given input samples.</span>
+<span class="sd">    _define_objective()</span>
+<span class="sd">        Define the objective function for the optimization problem.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This class inherits from the `FlowOPTMultipleSink` class and provides a user-friendly interface</span>
+<span class="sd">    for learning optimal prescriptive trees with the direct method (DM) objective.</span>
+
+<span class="sd">    The DM objective aims to maximize the expected outcome by directly using the counterfactual</span>
+<span class="sd">    predictions (y_hat) for each treatment option. The counterfactual predictions represent the</span>
+<span class="sd">    estimated outcomes for each individual under different treatment scenarios.</span>
+
+<span class="sd">    The class extends the functionality of `FlowOPTMultipleSink` by overriding the `fit` method to</span>
+<span class="sd">    accept the counterfactual predictions (y_hat) as an additional argument.</span>
+
+<span class="sd">    The `_define_objective` method is implemented to define the DM objective function for the</span>
+<span class="sd">    optimization problem. The objective maximizes the sum of the counterfactual predictions weighted</span>
+<span class="sd">    by the treatment assignments.</span>
+
+<span class="sd">    Example usage:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    # Create an instance of FlowOPT_DM</span>
+<span class="sd">    opt_tree = FlowOPT_DM(depth=3, time_limit=600, verbose=True)</span>
+
+<span class="sd">    # Fit the optimal prescriptive tree using data and counterfactual predictions</span>
+<span class="sd">    opt_tree.fit(X, t, y, y_hat)</span>
+
+<span class="sd">    # Make treatment recommendations</span>
+<span class="sd">    recommendations = opt_tree.predict(X_new)</span>
+<span class="sd">    ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver</span><span class="p">,</span>
@@ -388,27 +482,6 @@
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        An optimal decision tree that prescribes treatments (as opposed to predicting class labels),</span>
-<span class="sd">        fitted on a binary-valued observational data set.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        solver: str</span>
-<span class="sd">            A string specifying the name of the solver to use</span>
-<span class="sd">            to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">        depth : int, default=1</span>
-<span class="sd">            A parameter specifying the depth of the tree to learn.</span>
-<span class="sd">        time_limit : int, default=60</span>
-<span class="sd">            The given time limit for solving the MIP in seconds.</span>
-<span class="sd">        num_threads: int, default=None</span>
-<span class="sd">            The number of threads the solver should use. If not specified,</span>
-<span class="sd">            solver uses all available threads</span>
-<span class="sd">        verbose: bool, default=False</span>
-<span class="sd">            Flag for logging solver outputs.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">solver</span><span class="p">,</span>
             <span class="n">depth</span><span class="p">,</span>
@@ -430,7 +503,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ODTL</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlowOPT_DM.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DM.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to fit the PrescriptiveTree class on the data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to fit the FlowOPT_DM class on the data</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -483,7 +556,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FlowOPT_DM.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DM.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Classify test points using the StrongTree classifier</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Classify test points</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -510,33 +583,72 @@
 
 
 <div class="viewcode-block" id="FlowOPT_DR"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DR">[docs]</a><span class="k">class</span> <span class="nc">FlowOPT_DR</span><span class="p">(</span><span class="n">FlowOPTMultipleSink</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A user-facing class for learning optimal prescriptive trees with doubly robust (DR) objective.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver : str, default=&quot;gurobi&quot;</span>
+<span class="sd">        The solver to use for the optimization problem. Can be either &quot;gurobi&quot; or &quot;cbc&quot;.</span>
+<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">    depth : int, default=1</span>
+<span class="sd">        The maximum depth of the tree to be learned.</span>
+<span class="sd">    time_limit : int, default=60</span>
+<span class="sd">        The time limit (in seconds) for solving the optimization problem.</span>
+<span class="sd">    num_threads : int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If not specified,</span>
+<span class="sd">        the solver uses all available threads.</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Whether to print verbose output during the tree learning process.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit(X, t, y, ipw, y_hat)</span>
+<span class="sd">        Fit the optimal prescriptive tree using the provided data, inverse propensity weights,</span>
+<span class="sd">        and counterfactual predictions.</span>
+<span class="sd">    predict(X)</span>
+<span class="sd">        Make treatment recommendations for the given input samples.</span>
+<span class="sd">    _define_objective()</span>
+<span class="sd">        Define the objective function for the optimization problem.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This class inherits from the `FlowOPTMultipleSink` class and provides a user-friendly interface</span>
+<span class="sd">    for learning optimal prescriptive trees with the doubly robust (DR) objective.</span>
+
+<span class="sd">    The DR objective combines the inverse probability weighting (IPW) and the direct method (DM)</span>
+<span class="sd">    to obtain a more robust estimate of the treatment effect. It utilizes both the observed outcomes</span>
+<span class="sd">    and the counterfactual predictions, along with the inverse propensity weights.</span>
+
+<span class="sd">    The class extends the functionality of `FlowOPTMultipleSink` by overriding the `fit` method to</span>
+<span class="sd">    accept the inverse propensity weights (ipw) and counterfactual predictions (y_hat) as additional</span>
+<span class="sd">    arguments.</span>
+
+<span class="sd">    The `_define_objective` method is implemented to define the DR objective function for the</span>
+<span class="sd">    optimization problem. The objective maximizes the sum of the counterfactual predictions weighted</span>
+<span class="sd">    by the treatment assignments, plus an additional term that adjusts for the difference between the</span>
+<span class="sd">    observed outcomes and the counterfactual predictions, weighted by the inverse propensity weights.</span>
+
+<span class="sd">    Example usage:</span>
+<span class="sd">    ```python</span>
+<span class="sd">    # Create an instance of FlowOPT_DR</span>
+<span class="sd">    opt_tree = FlowOPT_DR(depth=3, time_limit=600, verbose=True)</span>
+
+<span class="sd">    # Fit the optimal prescriptive tree using data, inverse propensity weights, and counterfactual predictions</span>
+<span class="sd">    opt_tree.fit(X, t, y, ipw, y_hat)</span>
+
+<span class="sd">    # Make treatment recommendations</span>
+<span class="sd">    recommendations = opt_tree.predict(X_new)</span>
+<span class="sd">    ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        An optimal decision tree that prescribes treatments (as opposed to predicting class labels),</span>
-<span class="sd">        fitted on a binary-valued observational data set.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        solver: str</span>
-<span class="sd">            A string specifying the name of the solver to use</span>
-<span class="sd">            to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">        depth : int</span>
-<span class="sd">            A parameter specifying the depth of the tree</span>
-<span class="sd">        time_limit : int</span>
-<span class="sd">            The given time limit for solving the MIP in seconds</span>
-<span class="sd">        num_threads: int, default=None</span>
-<span class="sd">            The number of threads the solver should use</span>
-<span class="sd">        verbose: bool, default=False</span>
-<span class="sd">            Display solver output.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlowOPT_DR.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DR.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ipw</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to fit the PrescriptiveTree class on the data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to fit the FlowOPT_DR class on the data</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -592,7 +704,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FlowOPT_DR.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DR.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Classify test points using the StrongTree classifier</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Classify test points using FlowOPT_DR</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

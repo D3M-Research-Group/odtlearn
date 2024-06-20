@@ -26,26 +26,274 @@ Functions
 
 .. py:function:: get_left_exp_integer(solver, main_grb_obj, n, i)
 
+   
+   Get the expression for the left branch constraint in the Benders' subproblem.
+
+
+   :Parameters:
+
+       **solver** : Solver
+           The solver object used for solving the optimization problem.
+
+       **main_grb_obj** : object
+           The main Gurobi model object.
+
+       **n** : int
+           The index of the current node.
+
+       **i** : int
+           The index of the current datapoint.
+
+   :Returns:
+
+       **lhs** : LinExpr
+           The left-hand side expression of the left branch constraint.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:function:: get_right_exp_integer(solver, main_grb_obj, n, i)
 
+   
+   Get the expression for the right branch constraint in the Benders' subproblem.
+
+
+   :Parameters:
+
+       **solver** : Solver
+           The solver object used for solving the optimization problem.
+
+       **main_grb_obj** : object
+           The main Gurobi model object.
+
+       **n** : int
+           The index of the current node.
+
+       **i** : int
+           The index of the current datapoint.
+
+   :Returns:
+
+       **lhs** : LinExpr
+           The left-hand side expression of the right branch constraint.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:function:: get_target_exp_integer(main_grb_obj, n, i)
 
+   
+   Get the expression for the target constraint in the Benders' subproblem.
+
+
+   :Parameters:
+
+       **main_grb_obj** : object
+           The main Gurobi model object.
+
+       **n** : int
+           The index of the current node.
+
+       **i** : int
+           The index of the current datapoint.
+
+   :Returns:
+
+       **lhs** : LinExpr
+           The left-hand side expression of the target constraint.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:function:: get_cut_integer(solver, main_grb_obj, left, right, target, i)
 
+   
+   Get the Benders' cut expression for the current subproblem.
+
+
+   :Parameters:
+
+       **solver** : Solver
+           The solver object used for solving the optimization problem.
+
+       **main_grb_obj** : object
+           The main Gurobi model object.
+
+       **left** : list
+           The list of nodes in the left branch of the current subproblem.
+
+       **right** : list
+           The list of nodes in the right branch of the current subproblem.
+
+       **target** : list
+           The list of target nodes in the current subproblem.
+
+       **i** : int
+           The index of the current datapoint.
+
+   :Returns:
+
+       **lhs** : LinExpr
+           The left-hand side expression of the Benders' cut.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:function:: get_cut_expression(master, solver, X, b, w, path, xi, v, i, f_theta_indices)
 
+   
+   Get the cut expression for the RobustOCT subproblem.
+
+
+   :Parameters:
+
+       **master** : object
+           The master problem object.
+
+       **solver** : Solver
+           The solver object used for solving the optimization problem.
+
+       **X** : DataFrame
+           The input data.
+
+       **b** : dict
+           The dictionary of binary decision variables representing the branching decisions.
+
+       **w** : dict
+           The dictionary of binary decision variables representing the prediction decisions.
+
+       **path** : list
+           The current path in the tree.
+
+       **xi** : dict
+           The dictionary of feature perturbations.
+
+       **v** : bool
+           The label perturbation flag.
+
+       **i** : int
+           The index of the current datapoint.
+
+       **f_theta_indices** : list
+           The list of feature-threshold index pairs.
+
+   :Returns:
+
+       **expr** : LinExpr
+           The cut expression for the current subproblem.
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:function:: get_all_terminal_paths(master, b, w, terminal_nodes=[], path_dict={}, feature_path_dict={}, assignment_dict={}, cutoff_dict={}, curr_node=1, curr_path=[1], curr_feature_path=[], curr_cutoff_path=[])
 
    
-   find all terminal paths
+   Find all terminal paths in the decision tree.
 
 
+   :Parameters:
 
+       **master** : object
+           The master problem object.
+
+       **b** : dict
+           The dictionary of binary decision variables representing the branching decisions.
+
+       **w** : dict
+           The dictionary of binary decision variables representing the prediction decisions.
+
+       **terminal_nodes** : list, optional
+           The list of terminal nodes.
+
+       **path_dict** : dict, optional
+           The dictionary storing the paths to each terminal node.
+
+       **feature_path_dict** : dict, optional
+           The dictionary storing the feature paths to each terminal node.
+
+       **assignment_dict** : dict, optional
+           The dictionary storing the class assignments at each terminal node.
+
+       **cutoff_dict** : dict, optional
+           The dictionary storing the cutoff values along each path.
+
+       **curr_node** : int, optional
+           The current node being processed.
+
+       **curr_path** : list, optional
+           The current path being traversed.
+
+       **curr_feature_path** : list, optional
+           The current feature path being traversed.
+
+       **curr_cutoff_path** : list, optional
+           The current cutoff path being traversed.
+
+   :Returns:
+
+       tuple
+           A tuple containing the updated terminal_nodes, path_dict, feature_path_dict,
+           assignment_dict, and cutoff_dict.
 
 
 
@@ -65,10 +313,27 @@ Functions
 .. py:function:: get_nominal_path(master, b, w, i)
 
    
-   Get the nominal path for a correctly classified point
+   Get the nominal path for a correctly classified datapoint.
 
 
+   :Parameters:
 
+       **master** : object
+           The master problem object.
+
+       **b** : dict
+           The dictionary of binary decision variables representing the branching decisions.
+
+       **w** : dict
+           The dictionary of binary decision variables representing the prediction decisions.
+
+       **i** : int
+           The index of the current datapoint.
+
+   :Returns:
+
+       tuple
+           A tuple containing the nominal path and the predicted class label.
 
 
 
@@ -87,4 +352,63 @@ Functions
 
 .. py:function:: shortest_path_solver(master, i, label, terminal_nodes, terminal_path_dict, terminal_features_dict, terminal_assignments_dict, terminal_cutoffs_dict, initial_xi, initial_mins, initial_maxes)
 
+   
+   Solve the shortest path problem for a given datapoint.
+
+
+   :Parameters:
+
+       **master** : object
+           The master problem object.
+
+       **i** : int
+           The index of the current datapoint.
+
+       **label** : int
+           The true class label of the datapoint.
+
+       **terminal_nodes** : list
+           The list of terminal nodes.
+
+       **terminal_path_dict** : dict
+           The dictionary storing the paths to each terminal node.
+
+       **terminal_features_dict** : dict
+           The dictionary storing the feature paths to each terminal node.
+
+       **terminal_assignments_dict** : dict
+           The dictionary storing the class assignments at each terminal node.
+
+       **terminal_cutoffs_dict** : dict
+           The dictionary storing the cutoff values along each path.
+
+       **initial_xi** : dict
+           The initial dictionary of feature perturbations.
+
+       **initial_mins** : dict
+           The initial dictionary of minimum feature values.
+
+       **initial_maxes** : dict
+           The initial dictionary of maximum feature values.
+
+   :Returns:
+
+       tuple
+           A tuple containing the best path, best cost, feature perturbations (xi),
+           and label perturbation flag (v).
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 

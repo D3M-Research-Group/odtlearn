@@ -23,8 +23,26 @@ Classes
    Bases: :py:obj:`odtlearn.opt_dt.OptimalDecisionTree`
 
    
-   Helper class that provides a standard way to create an ABC using
-   inheritance.
+   A class for learning optimal classification trees using mixed-integer programming.
+
+
+   :Parameters:
+
+       **solver** : str
+           The solver to use for the MIP formulation. Currently, only "gurobi" and "CBC" are supported.
+
+       **depth** : int
+           The maximum depth of the tree to be learned.
+
+       **time_limit** : int
+           The time limit (in seconds) for solving the MIP formulation.
+
+       **num_threads** : int, optional
+           The number of threads the solver should use. If not specified,
+           solver uses all available threads
+
+       **verbose** : bool, default=False
+           Whether to print verbose output during the tree learning process.
 
 
 
@@ -34,12 +52,35 @@ Classes
 
 
 
+   .. rubric:: Notes
+
+   This class extends the `OptimalDecisionTree` base class to learn optimal classification
+   trees. It formulates the problem as a mixed-integer
+   program and solves it using either the Gurobi or CBC solver.
 
 
 
+   :Attributes:
+
+       **b_value** : numpy.ndarray
+           The values of the branching decision variables in the learned tree.
+
+       **w_value** : numpy.ndarray
+           The values of the prediction decision variables in the learned tree.
+
+       **p_value** : numpy.ndarray
+           The values of the pruning decision variables in the learned tree.
+
+   .. rubric:: Methods
 
 
 
+   =======================  ==========
+             **fit(X, y)**  Fit the optimal classification tree to the given training data.  
+            **predict(X)**  Make predictions using the fitted optimal classification tree.  
+          **print_tree()**  Print the structure of the fitted optimal classification tree.  
+   **plot_tree(**kwargs)**  Plot the fitted optimal classification tree using matplotlib.  
+   =======================  ==========
 
    ..
        !! processed by numpydoc !!
@@ -68,7 +109,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
-   .. py:method:: plot_tree(label='all', filled=True, rounded=False, precision=3, ax=None, fontsize=None, color_dict={'node': None, 'leaves': []}, edge_annotation=True, arrow_annotation_font_scale=0.8, debug=False)
+   .. py:method:: plot_tree(label='all', filled=True, rounded=False, precision=3, ax=None, fontsize=None, color_dict={'node': None, 'leaves': []}, edge_annotation=True, arrow_annotation_font_scale=0.8, debug=False, feature_names=None)
 
       
       Plot the fitted tree with the branching features, the threshold values for
@@ -118,6 +159,11 @@ Classes
           **color_dict: dict, default={"node": None, "leaves": []}**
               A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
               If None, the colors are chosen using the sklearn `plot_tree` color palette
+
+          **feature_names** : list of str, default=None
+              A list of feature names to use for the plot. If None, the feature names from the
+              fitted tree will be used. The feature names should be in the same order as the
+              columns of the data used to fit the tree.
 
 
 

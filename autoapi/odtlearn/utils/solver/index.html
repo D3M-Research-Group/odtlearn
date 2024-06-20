@@ -285,41 +285,6 @@
 with the solver for setting up, optimizing, and getting optimal values of a model.
 When using CBC, this class interacts with a slightly modified version of the SolverCbc class
 from the python-mip package.</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.optim_gap">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">optim_gap</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.optim_gap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.optim_gap" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.num_decision_vars">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_decision_vars</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.num_decision_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.num_decision_vars" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.num_integer_vars">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_integer_vars</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.num_integer_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.num_integer_vars" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.num_non_zero">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_non_zero</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.num_non_zero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.num_non_zero" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.num_solutions">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_solutions</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.num_solutions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.num_solutions" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.num_constraints">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_constraints</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.num_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.num_constraints" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.search_progress_log">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">search_progress_log</span></span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.search_progress_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.search_progress_log" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.solver.Solver.get_var_value">
 <span class="sig-name descname"><span class="pre">get_var_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/solver.html#Solver.get_var_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.solver.Solver.get_var_value" title="Permalink to this definition">#</a></dt>
@@ -615,13 +580,6 @@ as a dictionary.</p>
 <li><a class="reference internal" href="#attributes">Attributes</a><ul>
 <li><a class="reference internal" href="#odtlearn.utils.solver.GRB_CBC_CONST_MAP"><code class="docutils literal notranslate"><span class="pre">GRB_CBC_CONST_MAP</span></code></a></li>
 <li><a class="reference internal" href="#odtlearn.utils.solver.Solver"><code class="docutils literal notranslate"><span class="pre">Solver</span></code></a><ul>
-<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.optim_gap"><code class="docutils literal notranslate"><span class="pre">Solver.optim_gap</span></code></a></li>
-<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.num_decision_vars"><code class="docutils literal notranslate"><span class="pre">Solver.num_decision_vars</span></code></a></li>
-<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.num_integer_vars"><code class="docutils literal notranslate"><span class="pre">Solver.num_integer_vars</span></code></a></li>
-<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.num_non_zero"><code class="docutils literal notranslate"><span class="pre">Solver.num_non_zero</span></code></a></li>
-<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.num_solutions"><code class="docutils literal notranslate"><span class="pre">Solver.num_solutions</span></code></a></li>
-<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.num_constraints"><code class="docutils literal notranslate"><span class="pre">Solver.num_constraints</span></code></a></li>
-<li><a class="reference internal" href="#odtlearn.utils.solver.Solver.search_progress_log"><code class="docutils literal notranslate"><span class="pre">Solver.search_progress_log</span></code></a></li>
 <li><a class="reference internal" href="#odtlearn.utils.solver.Solver.get_var_value"><code class="docutils literal notranslate"><span class="pre">Solver.get_var_value()</span></code></a></li>
 <li><a class="reference internal" href="#odtlearn.utils.solver.Solver.optimize"><code class="docutils literal notranslate"><span class="pre">Solver.optimize()</span></code></a></li>
 <li><a class="reference internal" href="#odtlearn.utils.solver.Solver.prep_indices"><code class="docutils literal notranslate"><span class="pre">Solver.prep_indices()</span></code></a></li>

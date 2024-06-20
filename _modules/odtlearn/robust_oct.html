@@ -260,7 +260,7 @@
 
 
 <div class="viewcode-block" id="RobustOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/robust_oct/index.html#odtlearn.robust_oct.RobustOCT">[docs]</a><span class="k">class</span> <span class="nc">RobustOCT</span><span class="p">(</span><span class="n">OptimalClassificationTree</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;An optimal robust decision tree classifier, fitted on a given integer-valued</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An optimal robust decision tree classifier, fit on a given integer-valued</span>
 <span class="sd">    data set and a given cost-and-budget uncertainty set to produce a tree robust</span>
 <span class="sd">    against distribution shifts.</span>
 
@@ -625,6 +625,7 @@
         <span class="n">edge_annotation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">arrow_annotation_font_scale</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
         <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">feature_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot the fitted tree with the branching features, the threshold values for</span>
 <span class="sd">        each branching node&#39;s test, and the predictions asserted for each assignment node</span>
@@ -662,6 +663,11 @@
 <span class="sd">        color_dict: dict, default={&quot;node&quot;: None, &quot;leaves&quot;: []}</span>
 <span class="sd">            A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.</span>
 <span class="sd">            If None, the colors are chosen using the sklearn `plot_tree` color palette</span>
+
+<span class="sd">        feature_names : list of str, default=None</span>
+<span class="sd">            A list of feature names to use for the plot. If None, the feature names from the</span>
+<span class="sd">            fitted tree will be used. The feature names should be in the same order as the</span>
+<span class="sd">            columns of the data used to fit the tree.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;b_value&quot;</span><span class="p">,</span> <span class="s2">&quot;w_value&quot;</span><span class="p">])</span>
 
@@ -669,10 +675,19 @@
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">total_nodes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">node_dict</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_node_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
 
+        <span class="c1"># Use the provided feature names if available, otherwise use the original feature names</span>
+        <span class="k">if</span> <span class="n">feature_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_names</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span>
+            <span class="p">),</span> <span class="s2">&quot;The number of provided feature names does not match the number of columns in the data&quot;</span>
+            <span class="n">column_names</span> <span class="o">=</span> <span class="n">feature_names</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">column_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span>
+
         <span class="n">exporter</span> <span class="o">=</span> <span class="n">MPLPlotter</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="p">,</span>
             <span class="n">node_dict</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">,</span>
+            <span class="n">column_names</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_classes</span><span class="p">,</span>
             <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>

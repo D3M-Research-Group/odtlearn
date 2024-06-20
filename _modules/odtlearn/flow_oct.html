@@ -255,35 +255,66 @@
 
 
 <div class="viewcode-block" id="FlowOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_oct/index.html#odtlearn.flow_oct.FlowOCT">[docs]</a><span class="k">class</span> <span class="nc">FlowOCT</span><span class="p">(</span><span class="n">FlowOCTSingleSink</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;An optimal decision tree classifier, fitted on a given</span>
-<span class="sd">    integer-valued data set to produce a provably optimal</span>
-<span class="sd">    decision tree.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An optimal decision tree classifier, fitted on a given integer-valued data set</span>
+<span class="sd">    to produce a provably optimal decision tree.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    solver: str</span>
-<span class="sd">        A string specifying the name of the solver to use</span>
-<span class="sd">        to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">    _lambda: float, default = 0</span>
-<span class="sd">            The regularization parameter in the objective, taking values</span>
-<span class="sd">            between 0 and 1, that controls</span>
-<span class="sd">            the complexity of a the learned tree.</span>
-<span class="sd">    obj_mode: str, default=&quot;acc&quot;</span>
-<span class="sd">        The objective should be used to learn an optimal decision tree.</span>
-<span class="sd">        The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
-<span class="sd">        The accuracy objective attempts to maximize prediction accuracy while the</span>
-<span class="sd">        balance objective aims to learn a balanced optimal decision</span>
-<span class="sd">        tree to better generalize to our of sample data.</span>
+<span class="sd">    solver : str</span>
+<span class="sd">        The solver to use for the MIP formulation. Currently, only &quot;gurobi&quot; and &quot;CBC&quot; are supported.</span>
+<span class="sd">    _lambda : float, default=0</span>
+<span class="sd">        The regularization parameter for controlling the complexity of the learned tree.</span>
+<span class="sd">    obj_mode : str, default=&quot;acc&quot;</span>
+<span class="sd">        The objective mode to be used for learning the optimal decision tree.</span>
+<span class="sd">        Options are &quot;acc&quot; (accuracy) and &quot;balance&quot;.</span>
 <span class="sd">    depth : int, default=1</span>
-<span class="sd">        A parameter specifying the depth of the tree to learn.</span>
+<span class="sd">        The maximum depth of the tree to be learned.</span>
 <span class="sd">    time_limit : int, default=60</span>
-<span class="sd">        The given time limit for solving the MIP in seconds.</span>
-<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The time limit (in seconds) for solving the MIP formulation.</span>
+<span class="sd">    num_threads : int, default=None</span>
 <span class="sd">        The number of threads the solver should use. If not specified,</span>
 <span class="sd">        solver uses all available threads</span>
-<span class="sd">    verbose : bool, default = False</span>
-<span class="sd">        Flag for logging solver outputs.</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Whether to print verbose output during the tree learning process.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit(X, y)</span>
+<span class="sd">        Fit the optimal classification tree to the given training data.</span>
+<span class="sd">    predict(X)</span>
+<span class="sd">        Make predictions using the fitted optimal classification tree.</span>
+<span class="sd">    _define_objective()</span>
+<span class="sd">        Define the objective function for the optimization problem.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This class extends the `FlowOCTSingleSink` class and provides the implementation for learning</span>
+<span class="sd">    optimal classification trees using the flow-based formulation with a single sink node.</span>
+
+<span class="sd">    The `FlowOCT` class is a user-facing class that can be instantiated directly to learn optimal</span>
+<span class="sd">    classification trees. It inherits the basic structure and functionality from the `FlowOCTSingleSink`</span>
+<span class="sd">    class and adds the specific objective function and model fitting process.</span>
+
+<span class="sd">    The class supports two objective modes: &quot;acc&quot; (accuracy) and &quot;balance&quot;. The accuracy objective</span>
+<span class="sd">    aims to maximize the prediction accuracy of the learned tree, while the balance objective aims</span>
+<span class="sd">    to learn a balanced optimal decision tree to better generalize to out-of-sample data.</span>
+
+<span class="sd">    The `fit` method is used to fit the optimal classification tree to the given training data. It</span>
+<span class="sd">    preprocesses the input data, creates the main optimization problem, and solves it using the</span>
+<span class="sd">    specified solver and parameters.</span>
+
+<span class="sd">    The `predict` method is used to make predictions using the fitted optimal classification tree.</span>
+<span class="sd">    It takes the input data and traverses the tree based on the learned branching and prediction</span>
+<span class="sd">    decisions to generate the predictions.</span>
+
+<span class="sd">    The `_define_objective` method defines the objective function for the optimization problem based</span>
+<span class="sd">    on the selected objective mode. It incorporates the regularization term and the accuracy or</span>
+<span class="sd">    balance objective term.</span>
+
+<span class="sd">    Users can instantiate the `FlowOCT` class directly and use it to learn optimal classification</span>
+<span class="sd">    trees by calling the `fit` method with the training data and then using the `predict` method</span>
+<span class="sd">    to make predictions on new data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -384,6 +415,81 @@
 
 
 <div class="viewcode-block" id="BendersOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_oct/index.html#odtlearn.flow_oct.BendersOCT">[docs]</a><span class="k">class</span> <span class="nc">BendersOCT</span><span class="p">(</span><span class="n">FlowOCTSingleSink</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An optimal decision tree classifier using Benders&#39; decomposition, fitted on a given integer-valued</span>
+<span class="sd">    data set to produce a provably optimal decision tree.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver : str</span>
+<span class="sd">        The solver to use for the MIP formulation. Currently, only &quot;gurobi&quot; and &quot;CBC&quot; are supported.</span>
+<span class="sd">    _lambda : float, default=0</span>
+<span class="sd">        The regularization parameter for controlling the complexity of the learned tree.</span>
+<span class="sd">    obj_mode : str, default=&quot;acc&quot;</span>
+<span class="sd">        The objective mode to be used for learning the optimal decision tree.</span>
+<span class="sd">        Options are &quot;acc&quot; (accuracy) and &quot;balance&quot;.</span>
+<span class="sd">    depth : int, default=1</span>
+<span class="sd">        The maximum depth of the tree to be learned.</span>
+<span class="sd">    time_limit : int, default=60</span>
+<span class="sd">        The time limit (in seconds) for solving the MIP formulation.</span>
+<span class="sd">    num_threads : int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If not specified,</span>
+<span class="sd">        solver uses all available threads</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Whether to print verbose output during the tree learning process.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit(X, y)</span>
+<span class="sd">        Fit the optimal classification tree using Benders&#39; decomposition to the given training data.</span>
+<span class="sd">    predict(X)</span>
+<span class="sd">        Make predictions using the fitted optimal classification tree.</span>
+<span class="sd">    _define_variables()</span>
+<span class="sd">        Define the decision variables used in the Benders&#39; decomposition formulation.</span>
+<span class="sd">    _define_constraints()</span>
+<span class="sd">        Define the constraints used in the Benders&#39; decomposition formulation.</span>
+<span class="sd">    _define_objective()</span>
+<span class="sd">        Define the objective function for the Benders&#39; decomposition formulation.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This class extends the `FlowOCTSingleSink` class and provides the implementation for learning</span>
+<span class="sd">    optimal classification trees using Benders&#39; decomposition with a single sink node.</span>
+
+<span class="sd">    The `BendersOCT` class is a user-facing class that can be instantiated directly to learn optimal</span>
+<span class="sd">    classification trees using Benders&#39; decomposition. It inherits the basic structure and functionality</span>
+<span class="sd">    from the `FlowOCTSingleSink` class and adds the specific Benders&#39; decomposition formulation.</span>
+
+<span class="sd">    Benders&#39; decomposition is a technique used to solve large-scale optimization problems by decomposing</span>
+<span class="sd">    them into smaller subproblems. In the context of optimal classification trees, Benders&#39; decomposition</span>
+<span class="sd">    is used to decompose the problem into a master problem and multiple subproblems, one for each datapoint.</span>
+
+<span class="sd">    The master problem focuses on the tree structure and branching decisions, while the subproblems</span>
+<span class="sd">    optimize the class predictions for each datapoint based on the fixed tree structure. The master</span>
+<span class="sd">    problem and subproblems are solved iteratively until convergence is reached.</span>
+
+<span class="sd">    The `_define_variables` method defines the decision variables specific to the Benders&#39; decomposition</span>
+<span class="sd">    formulation, including the variables for the subproblem objective values.</span>
+
+<span class="sd">    The `_define_constraints` method defines the constraints specific to the Benders&#39; decomposition</span>
+<span class="sd">    formulation, which ensure the proper linking of the master problem and subproblems.</span>
+
+<span class="sd">    The `_define_objective` method defines the objective function for the Benders&#39; decomposition</span>
+<span class="sd">    formulation, which includes the regularization term and the objective values from the subproblems.</span>
+
+<span class="sd">    The `fit` method is used to fit the optimal classification tree using Benders&#39; decomposition to</span>
+<span class="sd">    the given training data. It preprocesses the input data, creates the main optimization problem,</span>
+<span class="sd">    and solves it using the specified solver and parameters.</span>
+
+<span class="sd">    The `predict` method is used to make predictions using the fitted optimal classification tree.</span>
+<span class="sd">    It takes the input data and traverses the tree based on the learned branching and prediction</span>
+<span class="sd">    decisions to generate the predictions.</span>
+
+<span class="sd">    Users can instantiate the `BendersOCT` class directly and use it to learn optimal classification</span>
+<span class="sd">    trees using Benders&#39; decomposition by calling the `fit` method with the training data and then</span>
+<span class="sd">    using the `predict` method to make predictions on new data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver</span><span class="p">,</span>
@@ -394,33 +500,6 @@
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        solver: str</span>
-<span class="sd">            A string specifying the name of the solver to use</span>
-<span class="sd">            to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">        _lambda: float, default = 0</span>
-<span class="sd">            The regularization parameter in the objective,</span>
-<span class="sd">            taking values between 0 and 1, that controls</span>
-<span class="sd">            the complexity of a the learned tree.</span>
-<span class="sd">        obj_mode: str, default=&quot;acc&quot;</span>
-<span class="sd">            The objective should be used to learn an optimal decision tree.</span>
-<span class="sd">            The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
-<span class="sd">            The accuracy objective attempts to maximize prediction accuracy while the</span>
-<span class="sd">            balance objective aims to learn a balanced optimal decision</span>
-<span class="sd">            tree to better generalize to our of sample data.</span>
-<span class="sd">        depth : int, default=1</span>
-<span class="sd">            A parameter specifying the depth of the tree to learn.</span>
-<span class="sd">        time_limit : int, default=60</span>
-<span class="sd">            The given time limit for solving the MIP in seconds.</span>
-<span class="sd">        num_threads: int, default=None</span>
-<span class="sd">            The number of threads the solver should use. If not specified,</span>
-<span class="sd">            solver uses all available threads</span>
-<span class="sd">        verbose : bool, default = False</span>
-<span class="sd">            Flag for logging solver outputs.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">solver</span><span class="p">,</span>

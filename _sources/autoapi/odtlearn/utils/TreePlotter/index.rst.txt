@@ -22,6 +22,132 @@ Classes
 
    Bases: :py:obj:`sklearn.tree._export._MPLTreeExporter`
 
+   
+   A class for plotting optimal decision trees using Matplotlib.
+
+
+   :Parameters:
+
+       **tree** : object
+           The decision tree object to be plotted.
+
+       **node_dict** : dict
+           A dictionary containing information about each node in the tree.
+
+       **column_names** : list
+           A list of feature names used in the decision tree.
+
+       **max_depth** : int
+           The maximum depth of the tree to plot.
+
+       **classes** : list
+           A list of class names for the target variable.
+
+       **model_name** : str
+           The name of the model used to generate the decision tree.
+
+       **label** : str, optional (default="all")
+           The type of labels to display on the nodes. Can be "all", "root", or None.
+
+       **filled** : bool, optional (default=False)
+           Whether to fill the nodes with color.
+
+       **rounded** : bool, optional (default=False)
+           Whether to use rounded corners for the node boxes.
+
+       **precision** : int, optional (default=3)
+           The number of decimal places to display for the cutoff values.
+
+       **fontsize** : int or None, optional (default=None)
+           The font size for the node labels. If None, the fontsize is automatically adjusted.
+
+       **color_dict** : dict, optional
+           A dictionary specifying the colors for nodes and leaves.
+           Default: {"node": None, "leaves": []}
+
+       **edge_annotation** : bool, optional (default=True)
+           Whether to display annotations on the edges.
+
+       **arrow_annotation_font_scale** : float, optional (default=0.5)
+           The font scale for the arrow annotations.
+
+       **debug** : bool, optional (default=False)
+           Whether to print debug information.
+
+
+
+
+
+
+
+
+
+
+
+
+   :Attributes:
+
+       **classes** : list
+           A list of class names for the target variable.
+
+       **max_depth** : int
+           The maximum depth of the tree to plot.
+
+       **tree** : object
+           The decision tree object to be plotted.
+
+       **node_dict** : dict
+           A dictionary containing information about each node in the tree.
+
+       **column_names** : list
+           A list of feature names used in the decision tree.
+
+       **feature_names** : list
+           A list of feature names used in the decision tree.
+
+       **class_names** : list
+           A list of class names for the target variable.
+
+       **color_options** : list
+           A list of color options for the nodes and leaves.
+
+       **color_dict** : dict
+           A dictionary specifying the colors for nodes and leaves.
+
+       **edge_annotation** : bool
+           Whether to display annotations on the edges.
+
+       **arrow_annotation_font_scale** : float
+           The font scale for the arrow annotations.
+
+       **debug** : bool
+           Whether to print debug information.
+
+       **model_name** : str
+           The name of the model used to generate the decision tree.
+
+       **characters** : list
+           A list of special characters used for formatting the node labels.
+
+       **bbox_args** : dict
+           A dictionary of arguments for the bounding box of the nodes.
+
+       **arrow_args** : dict
+           A dictionary of arguments for the arrow style.
+
+   .. rubric:: Methods
+
+
+
+   ===============================================================  ==========
+                                       **get_fill_color(node_id)**  Returns the fill color for a given node.  
+   **node_to_str(node_id, leaf, selected_feature, cutoff, value)**  Converts a node to a string representation.  
+                                 **export(ax=None, distance=1.0)**  Exports the decision tree plot to a Matplotlib axis.  
+                      **recurse(node, ax, max_x, max_y, depth=0)**  Recursively plots the nodes and edges of the decision tree.  
+   ===============================================================  ==========
+
+   ..
+       !! processed by numpydoc !!
    .. py:method:: get_fill_color(node_id)
 
 

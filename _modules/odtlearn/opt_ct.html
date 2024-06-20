@@ -254,6 +254,50 @@
 
 
 <div class="viewcode-block" id="OptimalClassificationTree"><a class="viewcode-back" href="../../autoapi/odtlearn/opt_ct/index.html#odtlearn.opt_ct.OptimalClassificationTree">[docs]</a><span class="k">class</span> <span class="nc">OptimalClassificationTree</span><span class="p">(</span><span class="n">OptimalDecisionTree</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for learning optimal classification trees using mixed-integer programming.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver : str</span>
+<span class="sd">        The solver to use for the MIP formulation. Currently, only &quot;gurobi&quot; and &quot;CBC&quot; are supported.</span>
+<span class="sd">    depth : int</span>
+<span class="sd">        The maximum depth of the tree to be learned.</span>
+<span class="sd">    time_limit : int</span>
+<span class="sd">        The time limit (in seconds) for solving the MIP formulation.</span>
+<span class="sd">    num_threads : int, optional</span>
+<span class="sd">        The number of threads the solver should use. If not specified,</span>
+<span class="sd">        solver uses all available threads</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Whether to print verbose output during the tree learning process.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    b_value : numpy.ndarray</span>
+<span class="sd">        The values of the branching decision variables in the learned tree.</span>
+<span class="sd">    w_value : numpy.ndarray</span>
+<span class="sd">        The values of the prediction decision variables in the learned tree.</span>
+<span class="sd">    p_value : numpy.ndarray</span>
+<span class="sd">        The values of the pruning decision variables in the learned tree.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit(X, y)</span>
+<span class="sd">        Fit the optimal classification tree to the given training data.</span>
+<span class="sd">    predict(X)</span>
+<span class="sd">        Make predictions using the fitted optimal classification tree.</span>
+<span class="sd">    print_tree()</span>
+<span class="sd">        Print the structure of the fitted optimal classification tree.</span>
+<span class="sd">    plot_tree(**kwargs)</span>
+<span class="sd">        Plot the fitted optimal classification tree using matplotlib.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This class extends the `OptimalDecisionTree` base class to learn optimal classification</span>
+<span class="sd">    trees. It formulates the problem as a mixed-integer</span>
+<span class="sd">    program and solves it using either the Gurobi or CBC solver.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver</span><span class="p">,</span>
@@ -422,8 +466,10 @@
         <span class="n">edge_annotation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">arrow_annotation_font_scale</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
         <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">feature_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot the fitted tree with the branching features, the threshold values for</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the fitted tree with the branching features, the threshold values for</span>
 <span class="sd">        each branching node&#39;s test, and the predictions asserted for each assignment node</span>
 <span class="sd">        using matplotlib. The method uses the Gurobi model&#39;s name for determining how</span>
 <span class="sd">        to generate the tree. It does some preprocessing before passing the tree to the</span>
@@ -459,6 +505,11 @@
 <span class="sd">        color_dict: dict, default={&quot;node&quot;: None, &quot;leaves&quot;: []}</span>
 <span class="sd">            A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.</span>
 <span class="sd">            If None, the colors are chosen using the sklearn `plot_tree` color palette</span>
+
+<span class="sd">        feature_names : list of str, default=None</span>
+<span class="sd">            A list of feature names to use for the plot. If None, the feature names from the</span>
+<span class="sd">            fitted tree will be used. The feature names should be in the same order as the</span>
+<span class="sd">            columns of the data used to fit the tree.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;b_value&quot;</span><span class="p">,</span> <span class="s2">&quot;w_value&quot;</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span>
 
@@ -468,10 +519,19 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">,</span> <span class="n">node</span>
             <span class="p">)</span>
 
+        <span class="c1"># Use the provided feature names if available, otherwise use the original feature names</span>
+        <span class="k">if</span> <span class="n">feature_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_names</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span>
+            <span class="p">),</span> <span class="s2">&quot;The number of provided feature names does not match the number of columns in the data&quot;</span>
+            <span class="n">column_names</span> <span class="o">=</span> <span class="n">feature_names</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">column_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span>
+
         <span class="n">exporter</span> <span class="o">=</span> <span class="n">MPLPlotter</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="p">,</span>
             <span class="n">node_dict</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">,</span>
+            <span class="n">column_names</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">depth</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_classes</span><span class="p">,</span>
             <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>

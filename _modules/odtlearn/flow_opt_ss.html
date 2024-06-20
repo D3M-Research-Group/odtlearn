@@ -250,6 +250,74 @@
 
 
 <div class="viewcode-block" id="FlowOPTSingleSink"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt_ss/index.html#odtlearn.flow_opt_ss.FlowOPTSingleSink">[docs]</a><span class="k">class</span> <span class="nc">FlowOPTSingleSink</span><span class="p">(</span><span class="n">OptimalPrescriptiveTree</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for learning optimal prescriptive trees with a single sink node using flow optimization.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver : str</span>
+<span class="sd">        The solver to use for the optimization problem. Can be either &quot;gurobi&quot; or &quot;cbc&quot;.</span>
+<span class="sd">    depth : int</span>
+<span class="sd">        The maximum depth of the tree to be learned.</span>
+<span class="sd">    time_limit : int</span>
+<span class="sd">        The time limit (in seconds) for solving the optimization problem.</span>
+<span class="sd">    num_threads : int</span>
+<span class="sd">        The number of threads to use for solving the optimization problem.</span>
+<span class="sd">    verbose : bool</span>
+<span class="sd">        Whether to print verbose output during the tree learning process.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _b : dict</span>
+<span class="sd">        A dictionary of binary decision variables representing the branching decisions at each node.</span>
+<span class="sd">    _p : dict</span>
+<span class="sd">        A dictionary of binary decision variables representing the prediction decisions at each node.</span>
+<span class="sd">    _w : dict</span>
+<span class="sd">        A dictionary of continuous decision variables representing the treatment weights at each node.</span>
+<span class="sd">    _z : dict</span>
+<span class="sd">        A dictionary of continuous decision variables representing the flow of each datapoint to each node.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    _tree_struc_variables()</span>
+<span class="sd">        Defines the decision variables related to the tree structure.</span>
+<span class="sd">    _flow_variables()</span>
+<span class="sd">        Defines the decision variables related to the flow of datapoints.</span>
+<span class="sd">    _define_variables()</span>
+<span class="sd">        Defines all the decision variables used in the optimization problem.</span>
+<span class="sd">    _tree_structure_constraints()</span>
+<span class="sd">        Defines the constraints related to the tree structure.</span>
+<span class="sd">    _flow_constraints()</span>
+<span class="sd">        Defines the constraints related to the flow of datapoints.</span>
+<span class="sd">    _define_constraints()</span>
+<span class="sd">        Defines all the constraints used in the optimization problem.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is a base class and should not be instantiated directly. Instead, use one of the</span>
+<span class="sd">    derived classes that implement a specific prescriptive tree method, such as `FlowOPT_IPW`.</span>
+
+<span class="sd">    This class extends the `OptimalPrescriptiveTree` class to learn optimal prescriptive trees</span>
+<span class="sd">    with a single sink node using flow optimization. It formulates the problem as a mixed-integer</span>
+<span class="sd">    program (MIP) and solves it using either the Gurobi or CBC solver.</span>
+
+<span class="sd">    The key idea is to model the flow of each datapoint through the tree, allowing it to reach</span>
+<span class="sd">    a single sink node (i.e., leaf) with a specific treatment recommendation. The objective</span>
+<span class="sd">    is to optimize the treatment recommendation based on the characteristics of each datapoint.</span>
+
+<span class="sd">    The class defines decision variables and constraints specific to the flow optimization</span>
+<span class="sd">    formulation with a single sink node. The `_define_variables` method defines the decision</span>
+<span class="sd">    variables, including the tree structure variables (`_b`, `_p`, `_w`) and the flow variable (`_z`).</span>
+
+<span class="sd">    The `_define_constraints` method defines the constraints, including the tree structure</span>
+<span class="sd">    constraints and flow constraints. These constraints ensure the validity of the tree structure</span>
+<span class="sd">    and the proper flow of datapoints through the tree to a single sink node.</span>
+
+<span class="sd">    The class inherits the `fit`, `predict`, `print_tree`, and `plot_tree` methods from the</span>
+<span class="sd">    `OptimalPrescriptiveTree` class to learn the optimal prescriptive tree, make predictions,</span>
+<span class="sd">    and visualize the learned tree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver</span><span class="p">,</span>

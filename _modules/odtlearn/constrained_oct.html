@@ -251,28 +251,30 @@
 
 
 <div class="viewcode-block" id="ConstrainedOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/constrained_oct/index.html#odtlearn.constrained_oct.ConstrainedOCT">[docs]</a><span class="k">class</span> <span class="nc">ConstrainedOCT</span><span class="p">(</span><span class="n">FlowOCTMultipleSink</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A parent class for classification trees that incorporate</span>
+<span class="sd">    side-constraints when fitting a tree (e.g., fairness constraints, etc.)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver: str</span>
+<span class="sd">        A string specifying the name of the solver to use</span>
+<span class="sd">        to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
+<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">    positive_class : int</span>
+<span class="sd">        The value of the class label which is corresponding to the desired outcome</span>
+<span class="sd">    depth : int, default= 1</span>
+<span class="sd">        A parameter specifying the depth of the tree</span>
+<span class="sd">    time_limit : int, default= 60</span>
+<span class="sd">        The given time limit (in seconds) for solving the MIO problem</span>
+<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If None, it will use all avaiable threads</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A parent class for classification trees that incorporate</span>
-<span class="sd">        side-constraints when fitting a tree (e.g., fairness constraints, etc.)</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        solver: str</span>
-<span class="sd">            A string specifying the name of the solver to use</span>
-<span class="sd">            to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">        positive_class : int</span>
-<span class="sd">            The value of the class label which is corresponding to the desired outcome</span>
-<span class="sd">        depth : int, default= 1</span>
-<span class="sd">            A parameter specifying the depth of the tree</span>
-<span class="sd">        time_limit : int, default= 60</span>
-<span class="sd">            The given time limit (in seconds) for solving the MIO problem</span>
-<span class="sd">        num_threads: int, default=None</span>
-<span class="sd">            The number of threads the solver should use. If None, it will use all avaiable threads</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
 
     <span class="nd">@abstractmethod</span>

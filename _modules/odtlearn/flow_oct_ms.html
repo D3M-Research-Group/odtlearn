@@ -250,6 +250,77 @@
 
 
 <div class="viewcode-block" id="FlowOCTMultipleSink"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_oct_ms/index.html#odtlearn.flow_oct_ms.FlowOCTMultipleSink">[docs]</a><span class="k">class</span> <span class="nc">FlowOCTMultipleSink</span><span class="p">(</span><span class="n">OptimalClassificationTree</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A base class for learning optimal classification trees using flow-based formulation with multiple sink nodes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver : str</span>
+<span class="sd">        The solver to use for the MIP formulation. Currently, only &quot;gurobi&quot; and &quot;CBC&quot; are supported.</span>
+<span class="sd">    _lambda : float</span>
+<span class="sd">        The regularization parameter for controlling the complexity of the learned tree.</span>
+<span class="sd">    depth : int</span>
+<span class="sd">        The maximum depth of the tree to be learned.</span>
+<span class="sd">    time_limit : int</span>
+<span class="sd">        The time limit (in seconds) for solving the MIP formulation.</span>
+<span class="sd">    num_threads : int, optional</span>
+<span class="sd">        The number of threads the solver should use. If not specified,</span>
+<span class="sd">        solver uses all available threads</span>
+<span class="sd">    verbose : bool, default=False</span>
+<span class="sd">        Whether to print verbose output during the tree learning process.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _b : dict</span>
+<span class="sd">        A dictionary of binary decision variables representing the branching decisions at each node.</span>
+<span class="sd">    _p : dict</span>
+<span class="sd">        A dictionary of binary decision variables representing the prediction decisions at each node.</span>
+<span class="sd">    _w : dict</span>
+<span class="sd">        A dictionary of continuous decision variables representing the prediction weights at each node.</span>
+<span class="sd">    _zeta : dict</span>
+<span class="sd">        A dictionary of binary decision variables representing the flow of each datapoint to each label at each node.</span>
+<span class="sd">    _z : dict</span>
+<span class="sd">        A dictionary of binary decision variables representing the flow of each datapoint to each node.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    _tree_struc_variables()</span>
+<span class="sd">        Defines the decision variables related to the tree structure.</span>
+<span class="sd">    _flow_variables()</span>
+<span class="sd">        Defines the decision variables related to the flow of datapoints.</span>
+<span class="sd">    _define_variables()</span>
+<span class="sd">        Defines all the decision variables used in the optimization problem.</span>
+<span class="sd">    _tree_structure_constraints()</span>
+<span class="sd">        Defines the constraints related to the tree structure.</span>
+<span class="sd">    _flow_constraints()</span>
+<span class="sd">        Defines the constraints related to the flow of datapoints.</span>
+<span class="sd">    _arc_constraints()</span>
+<span class="sd">        Defines the constraints related to the arcs between nodes.</span>
+<span class="sd">    _define_constraints()</span>
+<span class="sd">        Defines all the constraints used in the optimization problem.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This class extends the `OptimalClassificationTree` class and provides the basic structure and</span>
+<span class="sd">    common functionality for flow-based optimal classification tree learning with multiple sink nodes.</span>
+
+<span class="sd">    The key idea behind the flow-based formulation with multiple sink nodes is to model the flow of</span>
+<span class="sd">    each datapoint through the tree, allowing it to reach multiple sink nodes (i.e., leaves) with</span>
+<span class="sd">    different class predictions. The objective is to optimize the class predictions based on the</span>
+<span class="sd">    characteristics of each datapoint.</span>
+
+<span class="sd">    The class defines decision variables and constraints specific to the flow-based formulation</span>
+<span class="sd">    with multiple sink nodes. The `_define_variables` method defines the decision variables,</span>
+<span class="sd">    including the tree structure variables (`_b`, `_p`, `_w`) and the flow variables (`_zeta`, `_z`).</span>
+
+<span class="sd">    The `_define_constraints` method defines the constraints, including the tree structure</span>
+<span class="sd">    constraints, flow constraints, and arc constraints. These constraints ensure the validity</span>
+<span class="sd">    of the tree structure and the proper flow of datapoints through the tree to multiple sink nodes.</span>
+
+<span class="sd">    Users should not instantiate this class directly, but instead use one of its derived classes</span>
+<span class="sd">    such as `FlowOCT` for learning optimal classification trees.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver</span><span class="p">,</span>

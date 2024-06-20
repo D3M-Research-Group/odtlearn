@@ -256,28 +256,28 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_left_exp_integer" title="odtlearn.utils.callback_helpers.get_left_exp_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_left_exp_integer</span></code></a>(solver, main_grb_obj, n, i)</p></td>
-<td><p></p></td>
+<td><p>Get the expression for the left branch constraint in the Benders' subproblem.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_right_exp_integer" title="odtlearn.utils.callback_helpers.get_right_exp_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_right_exp_integer</span></code></a>(solver, main_grb_obj, n, i)</p></td>
-<td><p></p></td>
+<td><p>Get the expression for the right branch constraint in the Benders' subproblem.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_target_exp_integer" title="odtlearn.utils.callback_helpers.get_target_exp_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_target_exp_integer</span></code></a>(main_grb_obj, n, i)</p></td>
-<td><p></p></td>
+<td><p>Get the expression for the target constraint in the Benders' subproblem.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_cut_integer" title="odtlearn.utils.callback_helpers.get_cut_integer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cut_integer</span></code></a>(solver, main_grb_obj, left, right, ...)</p></td>
-<td><p></p></td>
+<td><p>Get the Benders' cut expression for the current subproblem.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_cut_expression" title="odtlearn.utils.callback_helpers.get_cut_expression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cut_expression</span></code></a>(master, solver, X, b, w, path, xi, ...)</p></td>
-<td><p></p></td>
+<td><p>Get the cut expression for the RobustOCT subproblem.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_all_terminal_paths" title="odtlearn.utils.callback_helpers.get_all_terminal_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_terminal_paths</span></code></a>(master, b, w[, terminal_nodes, ...])</p></td>
-<td><p>find all terminal paths</p></td>
+<td><p>Find all terminal paths in the decision tree.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.get_nominal_path" title="odtlearn.utils.callback_helpers.get_nominal_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_nominal_path</span></code></a>(master, b, w, i)</p></td>
-<td><p>Get the nominal path for a correctly classified point</p></td>
+<td><p>Get the nominal path for a correctly classified datapoint.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callback_helpers.shortest_path_solver" title="odtlearn.utils.callback_helpers.shortest_path_solver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shortest_path_solver</span></code></a>(master, i, label, terminal_nodes, ...)</p></td>
-<td><p></p></td>
+<td><p>Solve the shortest path problem for a given datapoint.</p></td>
 </tr>
 </tbody>
 </table>
@@ -285,44 +285,256 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_left_exp_integer">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_left_exp_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_grb_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_left_exp_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_left_exp_integer" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Get the expression for the left branch constraint in the Benders’ subproblem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>solver</strong><span class="classifier">Solver</span></dt><dd><p>The solver object used for solving the optimization problem.</p>
+</dd>
+<dt><strong>main_grb_obj</strong><span class="classifier">object</span></dt><dd><p>The main Gurobi model object.</p>
+</dd>
+<dt><strong>n</strong><span class="classifier">int</span></dt><dd><p>The index of the current node.</p>
+</dd>
+<dt><strong>i</strong><span class="classifier">int</span></dt><dd><p>The index of the current datapoint.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>lhs</strong><span class="classifier">LinExpr</span></dt><dd><p>The left-hand side expression of the left branch constraint.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_right_exp_integer">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_right_exp_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_grb_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_right_exp_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_right_exp_integer" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Get the expression for the right branch constraint in the Benders’ subproblem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>solver</strong><span class="classifier">Solver</span></dt><dd><p>The solver object used for solving the optimization problem.</p>
+</dd>
+<dt><strong>main_grb_obj</strong><span class="classifier">object</span></dt><dd><p>The main Gurobi model object.</p>
+</dd>
+<dt><strong>n</strong><span class="classifier">int</span></dt><dd><p>The index of the current node.</p>
+</dd>
+<dt><strong>i</strong><span class="classifier">int</span></dt><dd><p>The index of the current datapoint.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>lhs</strong><span class="classifier">LinExpr</span></dt><dd><p>The left-hand side expression of the right branch constraint.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_target_exp_integer">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_target_exp_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_grb_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_target_exp_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_target_exp_integer" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Get the expression for the target constraint in the Benders’ subproblem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>main_grb_obj</strong><span class="classifier">object</span></dt><dd><p>The main Gurobi model object.</p>
+</dd>
+<dt><strong>n</strong><span class="classifier">int</span></dt><dd><p>The index of the current node.</p>
+</dd>
+<dt><strong>i</strong><span class="classifier">int</span></dt><dd><p>The index of the current datapoint.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>lhs</strong><span class="classifier">LinExpr</span></dt><dd><p>The left-hand side expression of the target constraint.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_cut_integer">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_cut_integer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_grb_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_cut_integer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_cut_integer" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Get the Benders’ cut expression for the current subproblem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>solver</strong><span class="classifier">Solver</span></dt><dd><p>The solver object used for solving the optimization problem.</p>
+</dd>
+<dt><strong>main_grb_obj</strong><span class="classifier">object</span></dt><dd><p>The main Gurobi model object.</p>
+</dd>
+<dt><strong>left</strong><span class="classifier">list</span></dt><dd><p>The list of nodes in the left branch of the current subproblem.</p>
+</dd>
+<dt><strong>right</strong><span class="classifier">list</span></dt><dd><p>The list of nodes in the right branch of the current subproblem.</p>
+</dd>
+<dt><strong>target</strong><span class="classifier">list</span></dt><dd><p>The list of target nodes in the current subproblem.</p>
+</dd>
+<dt><strong>i</strong><span class="classifier">int</span></dt><dd><p>The index of the current datapoint.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>lhs</strong><span class="classifier">LinExpr</span></dt><dd><p>The left-hand side expression of the Benders’ cut.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_cut_expression">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_cut_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_theta_indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_cut_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_cut_expression" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Get the cut expression for the RobustOCT subproblem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>master</strong><span class="classifier">object</span></dt><dd><p>The master problem object.</p>
+</dd>
+<dt><strong>solver</strong><span class="classifier">Solver</span></dt><dd><p>The solver object used for solving the optimization problem.</p>
+</dd>
+<dt><strong>X</strong><span class="classifier">DataFrame</span></dt><dd><p>The input data.</p>
+</dd>
+<dt><strong>b</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of binary decision variables representing the branching decisions.</p>
+</dd>
+<dt><strong>w</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of binary decision variables representing the prediction decisions.</p>
+</dd>
+<dt><strong>path</strong><span class="classifier">list</span></dt><dd><p>The current path in the tree.</p>
+</dd>
+<dt><strong>xi</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of feature perturbations.</p>
+</dd>
+<dt><strong>v</strong><span class="classifier">bool</span></dt><dd><p>The label perturbation flag.</p>
+</dd>
+<dt><strong>i</strong><span class="classifier">int</span></dt><dd><p>The index of the current datapoint.</p>
+</dd>
+<dt><strong>f_theta_indices</strong><span class="classifier">list</span></dt><dd><p>The list of feature-threshold index pairs.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>expr</strong><span class="classifier">LinExpr</span></dt><dd><p>The cut expression for the current subproblem.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_all_terminal_paths">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_all_terminal_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_path_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assignment_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curr_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curr_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curr_feature_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curr_cutoff_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_all_terminal_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_all_terminal_paths" title="Permalink to this definition">#</a></dt>
-<dd><p>find all terminal paths</p>
+<dd><p>Find all terminal paths in the decision tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>master</strong><span class="classifier">object</span></dt><dd><p>The master problem object.</p>
+</dd>
+<dt><strong>b</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of binary decision variables representing the branching decisions.</p>
+</dd>
+<dt><strong>w</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of binary decision variables representing the prediction decisions.</p>
+</dd>
+<dt><strong>terminal_nodes</strong><span class="classifier">list, optional</span></dt><dd><p>The list of terminal nodes.</p>
+</dd>
+<dt><strong>path_dict</strong><span class="classifier">dict, optional</span></dt><dd><p>The dictionary storing the paths to each terminal node.</p>
+</dd>
+<dt><strong>feature_path_dict</strong><span class="classifier">dict, optional</span></dt><dd><p>The dictionary storing the feature paths to each terminal node.</p>
+</dd>
+<dt><strong>assignment_dict</strong><span class="classifier">dict, optional</span></dt><dd><p>The dictionary storing the class assignments at each terminal node.</p>
+</dd>
+<dt><strong>cutoff_dict</strong><span class="classifier">dict, optional</span></dt><dd><p>The dictionary storing the cutoff values along each path.</p>
+</dd>
+<dt><strong>curr_node</strong><span class="classifier">int, optional</span></dt><dd><p>The current node being processed.</p>
+</dd>
+<dt><strong>curr_path</strong><span class="classifier">list, optional</span></dt><dd><p>The current path being traversed.</p>
+</dd>
+<dt><strong>curr_feature_path</strong><span class="classifier">list, optional</span></dt><dd><p>The current feature path being traversed.</p>
+</dd>
+<dt><strong>curr_cutoff_path</strong><span class="classifier">list, optional</span></dt><dd><p>The current cutoff path being traversed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>tuple</dt><dd><p>A tuple containing the updated terminal_nodes, path_dict, feature_path_dict,
+assignment_dict, and cutoff_dict.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.get_nominal_path">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">get_nominal_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#get_nominal_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.get_nominal_path" title="Permalink to this definition">#</a></dt>
-<dd><p>Get the nominal path for a correctly classified point</p>
+<dd><p>Get the nominal path for a correctly classified datapoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>master</strong><span class="classifier">object</span></dt><dd><p>The master problem object.</p>
+</dd>
+<dt><strong>b</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of binary decision variables representing the branching decisions.</p>
+</dd>
+<dt><strong>w</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of binary decision variables representing the prediction decisions.</p>
+</dd>
+<dt><strong>i</strong><span class="classifier">int</span></dt><dd><p>The index of the current datapoint.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>tuple</dt><dd><p>A tuple containing the nominal path and the predicted class label.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callback_helpers.shortest_path_solver">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callback_helpers.</span></span><span class="sig-name descname"><span class="pre">shortest_path_solver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_path_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_features_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_assignments_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_cutoffs_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_xi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_mins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_maxes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callback_helpers.html#shortest_path_solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callback_helpers.shortest_path_solver" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Solve the shortest path problem for a given datapoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>master</strong><span class="classifier">object</span></dt><dd><p>The master problem object.</p>
+</dd>
+<dt><strong>i</strong><span class="classifier">int</span></dt><dd><p>The index of the current datapoint.</p>
+</dd>
+<dt><strong>label</strong><span class="classifier">int</span></dt><dd><p>The true class label of the datapoint.</p>
+</dd>
+<dt><strong>terminal_nodes</strong><span class="classifier">list</span></dt><dd><p>The list of terminal nodes.</p>
+</dd>
+<dt><strong>terminal_path_dict</strong><span class="classifier">dict</span></dt><dd><p>The dictionary storing the paths to each terminal node.</p>
+</dd>
+<dt><strong>terminal_features_dict</strong><span class="classifier">dict</span></dt><dd><p>The dictionary storing the feature paths to each terminal node.</p>
+</dd>
+<dt><strong>terminal_assignments_dict</strong><span class="classifier">dict</span></dt><dd><p>The dictionary storing the class assignments at each terminal node.</p>
+</dd>
+<dt><strong>terminal_cutoffs_dict</strong><span class="classifier">dict</span></dt><dd><p>The dictionary storing the cutoff values along each path.</p>
+</dd>
+<dt><strong>initial_xi</strong><span class="classifier">dict</span></dt><dd><p>The initial dictionary of feature perturbations.</p>
+</dd>
+<dt><strong>initial_mins</strong><span class="classifier">dict</span></dt><dd><p>The initial dictionary of minimum feature values.</p>
+</dd>
+<dt><strong>initial_maxes</strong><span class="classifier">dict</span></dt><dd><p>The initial dictionary of maximum feature values.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>tuple</dt><dd><p>A tuple containing the best path, best cost, feature perturbations (xi),
+and label perturbation flag (v).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 </section>

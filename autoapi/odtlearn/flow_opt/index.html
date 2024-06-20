@@ -256,13 +256,13 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.flow_opt.FlowOPT_IPW" title="odtlearn.flow_opt.FlowOPT_IPW"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FlowOPT_IPW</span></code></a></p></td>
-<td><p>An optimal decision tree that prescribes treatments (as opposed to predicting class labels),</p></td>
+<td><p>A user-facing class for learning optimal prescriptive trees with inverse probability weighting (IPW) objective.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.flow_opt.FlowOPT_DM" title="odtlearn.flow_opt.FlowOPT_DM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FlowOPT_DM</span></code></a></p></td>
-<td><p>Helper class that provides a standard way to create an ABC using</p></td>
+<td><p>A user-facing class for learning optimal prescriptive trees with direct method (DM) objective.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.flow_opt.FlowOPT_DR" title="odtlearn.flow_opt.FlowOPT_DR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FlowOPT_DR</span></code></a></p></td>
-<td><p>Helper class that provides a standard way to create an ABC using</p></td>
+<td><p>A user-facing class for learning optimal prescriptive trees with doubly robust (DR) objective.</p></td>
 </tr>
 </tbody>
 </table>
@@ -271,34 +271,72 @@
 <dt class="sig sig-object py" id="odtlearn.flow_opt.FlowOPT_IPW">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.flow_opt.</span></span><span class="sig-name descname"><span class="pre">FlowOPT_IPW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_opt.html#FlowOPT_IPW"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_opt.FlowOPT_IPW" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../flow_opt_ss/index.html#odtlearn.flow_opt_ss.FlowOPTSingleSink" title="odtlearn.flow_opt_ss.FlowOPTSingleSink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.flow_opt_ss.FlowOPTSingleSink</span></code></a></p>
-<p>An optimal decision tree that prescribes treatments (as opposed to predicting class labels),
-fitted on a binary-valued observational data set.</p>
+<p>A user-facing class for learning optimal prescriptive trees with inverse probability weighting (IPW) objective.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>solver: str</strong></dt><dd><p>A string specifying the name of the solver to use
-to solve the MIP. Options are “Gurobi” and “CBC”.
-If the CBC binaries are not found, Gurobi will be used by default.</p>
+<dt><strong>solver</strong><span class="classifier">str, default=”gurobi”</span></dt><dd><p>The solver to use for the optimization problem. Can be either “gurobi” or “cbc”.</p>
 </dd>
-<dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>A parameter specifying the depth of the tree to learn.</p>
+<dt><strong>depth</strong><span class="classifier">int</span></dt><dd><p>The maximum depth of the tree to be learned.</p>
 </dd>
-<dt><strong>time_limit</strong><span class="classifier">int</span></dt><dd><p>The given time limit for solving the MIP in seconds.</p>
+<dt><strong>time_limit</strong><span class="classifier">int, default=300</span></dt><dd><p>The time limit (in seconds) for solving the optimization problem.</p>
 </dd>
-<dt><strong>method</strong><span class="classifier">str, default=’IPW’</span></dt><dd><p>The method of Prescriptive Trees to run. Choices in (‘IPW’, ‘DM’, ‘DR), which represents the
-inverse propensity weighting, direct method, and doubly robust methods, respectively.</p>
+<dt><strong>num_threads</strong><span class="classifier">int, default=1</span></dt><dd><p>The number of threads to use for solving the optimization problem.</p>
 </dd>
-<dt><strong>num_threads: int, default=None</strong></dt><dd><p>The number of threads the solver should use. If not specified,
-solver uses all available threads.</p>
-</dd>
-<dt><strong>verbose</strong><span class="classifier">bool, default = False</span></dt><dd><p>Flag for logging solver outputs.</p>
+<dt><strong>verbose</strong><span class="classifier">bool, default=False</span></dt><dd><p>Whether to print verbose output during the tree learning process.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>This class inherits from the <cite>FlowOPTSingleSink</cite> class and provides a user-friendly interface
+for learning optimal prescriptive trees with inverse probability weighting (IPW) objective.</p>
+<p>The IPW objective is used to account for potential confounding factors in observational data
+and to estimate the causal effect of treatments on outcomes. The inverse probability weights
+are computed based on the propensity scores of receiving each treatment given the observed covariates.</p>
+<p>The class extends the functionality of <cite>FlowOPTSingleSink</cite> by adding the <cite>_ipw</cite> attribute to store
+the inverse probability weights and overriding the <cite>fit</cite> method to accept the IPW as an additional argument.</p>
+<p>The <cite>_define_objective</cite> method is implemented to define the IPW objective function for the optimization problem.
+The objective maximizes the weighted sum of outcomes, where the weights are the product of the IPW and the
+treatment assignments.</p>
+<p>The class inherits the <cite>predict</cite>, <cite>print_tree</cite>, and <cite>plot_tree</cite> methods from the <cite>OptimalPrescriptiveTree</cite>
+class to make predictions and visualize the learned tree.</p>
+<p>Example usage:
+<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
+# Create an instance of FlowOPT_IPW
+opt_tree = FlowOPT_IPW(depth=3, time_limit=600, verbose=True)</p>
+<p># Fit the optimal prescriptive tree using data and IPW
+opt_tree.fit(X, y, t, ipw)</p>
+<p># Make predictions
+predictions = opt_tree.predict(X_new)</p>
+<p># Plot the learned tree
+opt_tree.plot_tree()
+<a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>_ipw</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>The inverse probability weights for each datapoint.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>fit(X, y, t, ipw)</strong></p></td>
+<td><p>Fit the optimal prescriptive tree using the provided data and inverse probability weights.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>_define_objective()</strong></p></td>
+<td><p>Define the objective function for the optimization problem.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.flow_opt.FlowOPT_IPW.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_opt.html#FlowOPT_IPW.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_opt.FlowOPT_IPW.fit" title="Permalink to this definition">#</a></dt>
-<dd><p>Method to fit the PrescriptiveTree class on the data</p>
+<dd><p>Method to fit the FlowOPT_IPW class on the data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -324,7 +362,7 @@ solver uses all available threads.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.flow_opt.FlowOPT_IPW.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_opt.html#FlowOPT_IPW.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_opt.FlowOPT_IPW.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>Method for making prescriptions using a PrescriptiveTree classifier</p>
+<dd><p>Method for making prescriptions using a FlowOPT_IPW classifier</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -347,12 +385,65 @@ solver uses all available threads.</p>
 <dt class="sig sig-object py" id="odtlearn.flow_opt.FlowOPT_DM">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.flow_opt.</span></span><span class="sig-name descname"><span class="pre">FlowOPT_DM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_opt.html#FlowOPT_DM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_opt.FlowOPT_DM" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../flow_opt_ms/index.html#odtlearn.flow_opt_ms.FlowOPTMultipleSink" title="odtlearn.flow_opt_ms.FlowOPTMultipleSink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.flow_opt_ms.FlowOPTMultipleSink</span></code></a></p>
-<p>Helper class that provides a standard way to create an ABC using
-inheritance.</p>
+<p>A user-facing class for learning optimal prescriptive trees with direct method (DM) objective.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>solver</strong><span class="classifier">str, default=”gurobi”</span></dt><dd><p>The solver to use for the optimization problem. Can be either “gurobi” or “cbc”.
+If the CBC binaries are not found, Gurobi will be used by default.</p>
+</dd>
+<dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>The maximum depth of the tree to be learned.</p>
+</dd>
+<dt><strong>time_limit</strong><span class="classifier">int, default=60</span></dt><dd><p>The time limit (in seconds) for solving the optimization problem.</p>
+</dd>
+<dt><strong>num_threads</strong><span class="classifier">int, default=None</span></dt><dd><p>The number of threads the solver should use. If not specified,
+the solver uses all available threads.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool, default=False</span></dt><dd><p>Whether to print verbose output during the tree learning process.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This class inherits from the <cite>FlowOPTMultipleSink</cite> class and provides a user-friendly interface
+for learning optimal prescriptive trees with the direct method (DM) objective.</p>
+<p>The DM objective aims to maximize the expected outcome by directly using the counterfactual
+predictions (y_hat) for each treatment option. The counterfactual predictions represent the
+estimated outcomes for each individual under different treatment scenarios.</p>
+<p>The class extends the functionality of <cite>FlowOPTMultipleSink</cite> by overriding the <cite>fit</cite> method to
+accept the counterfactual predictions (y_hat) as an additional argument.</p>
+<p>The <cite>_define_objective</cite> method is implemented to define the DM objective function for the
+optimization problem. The objective maximizes the sum of the counterfactual predictions weighted
+by the treatment assignments.</p>
+<p>Example usage:
+<a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a>python
+# Create an instance of FlowOPT_DM
+opt_tree = FlowOPT_DM(depth=3, time_limit=600, verbose=True)</p>
+<p># Fit the optimal prescriptive tree using data and counterfactual predictions
+opt_tree.fit(X, t, y, y_hat)</p>
+<p># Make treatment recommendations
+recommendations = opt_tree.predict(X_new)
+<a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
+<p class="rubric">Methods</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>fit(X, t, y, y_hat)</strong></p></td>
+<td><p>Fit the optimal prescriptive tree using the provided data and counterfactual predictions.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>predict(X)</strong></p></td>
+<td><p>Make treatment recommendations for the given input samples.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>_define_objective()</strong></p></td>
+<td><p>Define the objective function for the optimization problem.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.flow_opt.FlowOPT_DM.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_hat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_opt.html#FlowOPT_DM.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_opt.FlowOPT_DM.fit" title="Permalink to this definition">#</a></dt>
-<dd><p>Method to fit the PrescriptiveTree class on the data</p>
+<dd><p>Method to fit the FlowOPT_DM class on the data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -378,7 +469,7 @@ inheritance.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.flow_opt.FlowOPT_DM.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_opt.html#FlowOPT_DM.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_opt.FlowOPT_DM.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>Classify test points using the StrongTree classifier</p>
+<dd><p>Classify test points</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -402,12 +493,67 @@ seen during fit.</p>
 <dt class="sig sig-object py" id="odtlearn.flow_opt.FlowOPT_DR">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.flow_opt.</span></span><span class="sig-name descname"><span class="pre">FlowOPT_DR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_opt.html#FlowOPT_DR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_opt.FlowOPT_DR" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../flow_opt_ms/index.html#odtlearn.flow_opt_ms.FlowOPTMultipleSink" title="odtlearn.flow_opt_ms.FlowOPTMultipleSink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.flow_opt_ms.FlowOPTMultipleSink</span></code></a></p>
-<p>Helper class that provides a standard way to create an ABC using
-inheritance.</p>
+<p>A user-facing class for learning optimal prescriptive trees with doubly robust (DR) objective.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>solver</strong><span class="classifier">str, default=”gurobi”</span></dt><dd><p>The solver to use for the optimization problem. Can be either “gurobi” or “cbc”.
+If the CBC binaries are not found, Gurobi will be used by default.</p>
+</dd>
+<dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>The maximum depth of the tree to be learned.</p>
+</dd>
+<dt><strong>time_limit</strong><span class="classifier">int, default=60</span></dt><dd><p>The time limit (in seconds) for solving the optimization problem.</p>
+</dd>
+<dt><strong>num_threads</strong><span class="classifier">int, default=None</span></dt><dd><p>The number of threads the solver should use. If not specified,
+the solver uses all available threads.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool, default=False</span></dt><dd><p>Whether to print verbose output during the tree learning process.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This class inherits from the <cite>FlowOPTMultipleSink</cite> class and provides a user-friendly interface
+for learning optimal prescriptive trees with the doubly robust (DR) objective.</p>
+<p>The DR objective combines the inverse probability weighting (IPW) and the direct method (DM)
+to obtain a more robust estimate of the treatment effect. It utilizes both the observed outcomes
+and the counterfactual predictions, along with the inverse propensity weights.</p>
+<p>The class extends the functionality of <cite>FlowOPTMultipleSink</cite> by overriding the <cite>fit</cite> method to
+accept the inverse propensity weights (ipw) and counterfactual predictions (y_hat) as additional
+arguments.</p>
+<p>The <cite>_define_objective</cite> method is implemented to define the DR objective function for the
+optimization problem. The objective maximizes the sum of the counterfactual predictions weighted
+by the treatment assignments, plus an additional term that adjusts for the difference between the
+observed outcomes and the counterfactual predictions, weighted by the inverse propensity weights.</p>
+<p>Example usage:
+<a href="#id17"><span class="problematic" id="id18">``</span></a><a href="#id19"><span class="problematic" id="id20">`</span></a>python
+# Create an instance of FlowOPT_DR
+opt_tree = FlowOPT_DR(depth=3, time_limit=600, verbose=True)</p>
+<p># Fit the optimal prescriptive tree using data, inverse propensity weights, and counterfactual predictions
+opt_tree.fit(X, t, y, ipw, y_hat)</p>
+<p># Make treatment recommendations
+recommendations = opt_tree.predict(X_new)
+<a href="#id21"><span class="problematic" id="id22">``</span></a><a href="#id23"><span class="problematic" id="id24">`</span></a></p>
+<p class="rubric">Methods</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>fit(X, t, y, ipw, y_hat)</strong></p></td>
+<td><p>Fit the optimal prescriptive tree using the provided data, inverse propensity weights, and counterfactual predictions.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>predict(X)</strong></p></td>
+<td><p>Make treatment recommendations for the given input samples.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>_define_objective()</strong></p></td>
+<td><p>Define the objective function for the optimization problem.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.flow_opt.FlowOPT_DR.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_hat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_opt.html#FlowOPT_DR.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_opt.FlowOPT_DR.fit" title="Permalink to this definition">#</a></dt>
-<dd><p>Method to fit the PrescriptiveTree class on the data</p>
+<dd><p>Method to fit the FlowOPT_DR class on the data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -435,7 +581,7 @@ inheritance.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.flow_opt.FlowOPT_DR.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_opt.html#FlowOPT_DR.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_opt.FlowOPT_DR.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>Classify test points using the StrongTree classifier</p>
+<dd><p>Classify test points using FlowOPT_DR</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">

@@ -259,7 +259,7 @@
 <td><p>This class contains a function that is called by the solver at</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.RobustBendersCallback" title="odtlearn.utils.callbacks.RobustBendersCallback"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RobustBendersCallback</span></code></a></p></td>
-<td><p>This class contains the function called by the solver at every node through</p></td>
+<td><p>A callback class for generating Benders' cuts in the Robust Tree optimization.</p></td>
 </tr>
 </tbody>
 </table>
@@ -271,10 +271,10 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.benders_subproblem" title="odtlearn.utils.callbacks.benders_subproblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">benders_subproblem</span></code></a>(main_model_obj, b, p, w, i)</p></td>
-<td><p></p></td>
+<td><p>Solve the Benders' subproblem for a given datapoint.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#odtlearn.utils.callbacks.robust_tree_subproblem" title="odtlearn.utils.callbacks.robust_tree_subproblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">robust_tree_subproblem</span></code></a>(master, i, terminal_nodes, ...)</p></td>
-<td><p></p></td>
+<td><p>Solve the robust tree subproblem for a given datapoint.</p></td>
 </tr>
 </tbody>
 </table>
@@ -282,7 +282,30 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callbacks.benders_subproblem">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">benders_subproblem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_model_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#benders_subproblem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.benders_subproblem" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Solve the Benders’ subproblem for a given datapoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>main_model_obj</strong><span class="classifier">object</span></dt><dd><p>The main model object.</p>
+</dd>
+<dt><strong>b</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of binary decision variables representing the branching decisions.</p>
+</dd>
+<dt><strong>p</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of binary decision variables representing the prediction decisions.</p>
+</dd>
+<dt><strong>w</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of binary decision variables representing the class assignments.</p>
+</dd>
+<dt><strong>i</strong><span class="classifier">int</span></dt><dd><p>The index of the current datapoint.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>tuple</dt><dd><p>A tuple containing the subproblem value, left nodes, right nodes, and target nodes.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="odtlearn.utils.callbacks.BendersCallback">
@@ -301,41 +324,19 @@ the optimal solution.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.callbacks.BendersCallback.generate_constrs">
 <span class="sig-name descname"><span class="pre">generate_constrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">mip.Model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#BendersCallback.generate_constrs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.BendersCallback.generate_constrs" title="Permalink to this definition">#</a></dt>
-<dd><p>Method called by the solver engine to generate <em>cuts</em> or <em>lazy constraints</em>.</p>
-<blockquote>
-<div><p>After analyzing the contents of the solution in model
-variables <code class="xref py py-attr docutils literal notranslate"><span class="pre">vars</span></code>, whose solution values can
-be queried with the <code class="xref py py-attr docutils literal notranslate"><span class="pre">x</span></code> attribute, one or more
-constraints may be generated and added to the solver with
-the <code class="xref py py-meth docutils literal notranslate"><span class="pre">add_cut()</span></code> method for cuts. This method
-can be called by the solver engine in two situations, in the first
-one a fractional solution is found and one or more inequalities
-can be generated (cutting planes) to remove this fractional
-solution. In the second case an integer feasible solution is found
-and then a new constraint can be generated (lazy constraint) to
-report that this integer solution is not feasible.  To control when
-the constraint generator will be called set your
-<code class="xref py py-class docutils literal notranslate"><span class="pre">ConstrsGenerator</span></code> object in the attributes
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">cuts_generator</span></code> or
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">lazy_constrs_generator</span></code> (adding
-to both is also possible).</p>
-</div></blockquote>
-<p>Args:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>model(mip.Model): model for which cuts may be generated. Please note</dt><dd><p>that this model may have fewer variables than the original
-model due to pre-processing. If you want to generate cuts
-in terms of the original variables, one alternative is to
-query variables by their names, checking which ones remain
-in this pre-processed problem. In this procedure you can
-query model properties and add cuts (<code class="xref py py-meth docutils literal notranslate"><span class="pre">add_cut()</span></code>) or lazy constraints
-(<code class="xref py py-meth docutils literal notranslate"><span class="pre">add_lazy_constr()</span></code>), but you cannot
-perform other model modifications, such as add columns.</p>
+<dd><p>Generate Benders’ cuts at the current node in the branch-and-bound tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">Model</span></dt><dd><p>The optimization model.</p>
+</dd>
+<dt><strong>depth</strong><span class="classifier">int, optional</span></dt><dd><p>The depth of the current node in the branch-and-bound tree.</p>
+</dd>
+<dt><strong>npass</strong><span class="classifier">int, optional</span></dt><dd><p>The pass number in the branch-and-bound process.</p>
 </dd>
 </dl>
-<p>depth(int): depth of the search tree (0 is the root node)
-npass(int): current number of cut passes in this node</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -343,57 +344,118 @@ npass(int): current number of cut passes in this node</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.callbacks.robust_tree_subproblem">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">robust_tree_subproblem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_path_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_features_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_assignments_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">terminal_cutoffs_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_xi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_mins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_maxes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#robust_tree_subproblem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.robust_tree_subproblem" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Solve the robust tree subproblem for a given datapoint.</p>
+<p>The robust tree subproblem aims to find the shortest path from the root node to a terminal node
+that minimizes the cost while satisfying the robustness constraints. It takes into account the
+feature perturbations and label perturbations to ensure the robustness of the solution.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>master</strong><span class="classifier">object</span></dt><dd><p>The master problem object containing the problem data and variables.</p>
+</dd>
+<dt><strong>i</strong><span class="classifier">int</span></dt><dd><p>The index of the current datapoint.</p>
+</dd>
+<dt><strong>terminal_nodes</strong><span class="classifier">list</span></dt><dd><p>The list of terminal nodes in the decision tree.</p>
+</dd>
+<dt><strong>terminal_path_dict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary mapping each terminal node to its corresponding path from the root node.</p>
+</dd>
+<dt><strong>terminal_features_dict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary mapping each terminal node to the list of features encountered along its path.</p>
+</dd>
+<dt><strong>terminal_assignments_dict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary mapping each terminal node to its class assignment.</p>
+</dd>
+<dt><strong>terminal_cutoffs_dict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary mapping each terminal node to the list of cutoff values encountered along its path.</p>
+</dd>
+<dt><strong>initial_xi</strong><span class="classifier">dict, optional</span></dt><dd><p>The initial dictionary of feature perturbations. Default is an empty dictionary.</p>
+</dd>
+<dt><strong>initial_mins</strong><span class="classifier">dict, optional</span></dt><dd><p>The initial dictionary of minimum feature values. Default is an empty dictionary.</p>
+</dd>
+<dt><strong>initial_maxes</strong><span class="classifier">dict, optional</span></dt><dd><p>The initial dictionary of maximum feature values. Default is an empty dictionary.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt>tuple</dt><dd><p>A tuple containing the following elements:
+- target : list</p>
+<blockquote>
+<div><p>The list of nodes whose edges to the sink node are part of the minimum cut.</p>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>xi<span class="classifier">dict</span></dt><dd><p>The dictionary of feature perturbations that achieve the minimum cost.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>cost<span class="classifier">float</span></dt><dd><p>The minimum cost of the robust tree subproblem.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>v<span class="classifier">bool</span></dt><dd><p>A boolean indicating whether the label of the datapoint is perturbed in the optimal solution.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="odtlearn.utils.callbacks.RobustBendersCallback">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.utils.callbacks.</span></span><span class="sig-name descname"><span class="pre">RobustBendersCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#RobustBendersCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.RobustBendersCallback" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">mip.ConstrsGenerator</span></code></p>
-<p>This class contains the function called by the solver at every node through
-the branch-&amp;-bound tree while we solve the model.
-We are specifically interested at nodes where we get an integer solution for the master problem.
-When we get an integer solution for b and p, for every datapoint we solve the subproblem
-which is a minimum cut and check if g[i] &lt;= value of subproblem[i].
-If this is violated we add the corresponding benders constraint as lazy constraint to the master
-problem and proceed. Whenever we have no violated constraint, it means that we have found the optimal solution.</p>
+<p>A callback class for generating Benders’ cuts in the Robust Tree optimization.</p>
+<p>This class contains a function that is called by the solver at every node in the
+branch-and-bound tree while solving the model. It checks for integer solutions to
+the master problem and generates Benders’ cuts based on the subproblem solutions
+in the Robust Tree optimization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">DataFrame</span></dt><dd><p>The input data.</p>
+</dd>
+<dt><strong>obj</strong><span class="classifier">object</span></dt><dd><p>The main model object.</p>
+</dd>
+<dt><strong>solver</strong><span class="classifier">Solver</span></dt><dd><p>The solver object used for solving the optimization problem.</p>
+</dd>
+<dt><strong>b</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of decision variables representing the branching decisions.</p>
+</dd>
+<dt><strong>w</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of decision variables representing the class assignments.</p>
+</dd>
+<dt><strong>t</strong><span class="classifier">dict</span></dt><dd><p>The dictionary of decision variables representing the subproblem objective values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>generate_constrs(model, depth=0, npass=0)</strong></p></td>
+<td><p>Generate Benders’ cuts at the current node in the branch-and-bound tree.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.callbacks.RobustBendersCallback.generate_constrs">
 <span class="sig-name descname"><span class="pre">generate_constrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">mip.Model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/callbacks.html#RobustBendersCallback.generate_constrs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.callbacks.RobustBendersCallback.generate_constrs" title="Permalink to this definition">#</a></dt>
-<dd><p>Method called by the solver engine to generate <em>cuts</em> or <em>lazy constraints</em>.</p>
-<blockquote>
-<div><p>After analyzing the contents of the solution in model
-variables <code class="xref py py-attr docutils literal notranslate"><span class="pre">vars</span></code>, whose solution values can
-be queried with the <code class="xref py py-attr docutils literal notranslate"><span class="pre">x</span></code> attribute, one or more
-constraints may be generated and added to the solver with
-the <code class="xref py py-meth docutils literal notranslate"><span class="pre">add_cut()</span></code> method for cuts. This method
-can be called by the solver engine in two situations, in the first
-one a fractional solution is found and one or more inequalities
-can be generated (cutting planes) to remove this fractional
-solution. In the second case an integer feasible solution is found
-and then a new constraint can be generated (lazy constraint) to
-report that this integer solution is not feasible.  To control when
-the constraint generator will be called set your
-<code class="xref py py-class docutils literal notranslate"><span class="pre">ConstrsGenerator</span></code> object in the attributes
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">cuts_generator</span></code> or
-<code class="xref py py-attr docutils literal notranslate"><span class="pre">lazy_constrs_generator</span></code> (adding
-to both is also possible).</p>
-</div></blockquote>
-<p>Args:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>model(mip.Model): model for which cuts may be generated. Please note</dt><dd><p>that this model may have fewer variables than the original
-model due to pre-processing. If you want to generate cuts
-in terms of the original variables, one alternative is to
-query variables by their names, checking which ones remain
-in this pre-processed problem. In this procedure you can
-query model properties and add cuts (<code class="xref py py-meth docutils literal notranslate"><span class="pre">add_cut()</span></code>) or lazy constraints
-(<code class="xref py py-meth docutils literal notranslate"><span class="pre">add_lazy_constr()</span></code>), but you cannot
-perform other model modifications, such as add columns.</p>
+<dd><p>Generate Benders’ cuts at the current node in the branch-and-bound tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>model</strong><span class="classifier">Model</span></dt><dd><p>The optimization model.</p>
+</dd>
+<dt><strong>depth</strong><span class="classifier">int, optional</span></dt><dd><p>The depth of the current node in the branch-and-bound tree.</p>
+</dd>
+<dt><strong>npass</strong><span class="classifier">int, optional</span></dt><dd><p>The pass number in the branch-and-bound process.</p>
 </dd>
 </dl>
-<p>depth(int): depth of the search tree (0 is the root node)
-npass(int): current number of cut passes in this node</p>
-</div></blockquote>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

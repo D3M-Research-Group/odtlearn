@@ -260,6 +260,70 @@
 
 
 <div class="viewcode-block" id="FairConstrainedOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairConstrainedOCT">[docs]</a><span class="k">class</span> <span class="nc">FairConstrainedOCT</span><span class="p">(</span><span class="n">ConstrainedOCT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for fair constrained optimal classification trees.</span>
+
+<span class="sd">    This class extends the `ConstrainedOCT` class and provides a framework for implementing</span>
+<span class="sd">    fair constrained optimal classification trees. It includes methods for adding fairness</span>
+<span class="sd">    constraints, extracting metadata from the input data, and defining the objective function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver : str</span>
+<span class="sd">        The name of the solver to use for solving the MIP problem.</span>
+<span class="sd">    _lambda : float</span>
+<span class="sd">        The regularization parameter in the objective. Must be in the interval [0, 1).</span>
+<span class="sd">    depth : int</span>
+<span class="sd">        The maximum depth of the tree.</span>
+<span class="sd">    time_limit : int</span>
+<span class="sd">        The time limit (in seconds) for solving the MIP problem.</span>
+<span class="sd">    num_threads : int, optional</span>
+<span class="sd">        The number of threads to use for solving the MIP problem. If None, all available threads are used.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Whether to display verbose output during the solving process.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _obj_mode : str</span>
+<span class="sd">        The objective mode used for learning the optimal tree. Must be either &#39;acc&#39; or &#39;balance&#39;.</span>
+<span class="sd">    _positive_class : int</span>
+<span class="sd">        The value of the positive class label.</span>
+<span class="sd">    _fairness_bound : float</span>
+<span class="sd">        The bound of the fairness constraint. Must be in the interval (0, 1].</span>
+<span class="sd">    _protect_feat_col_labels : list of str</span>
+<span class="sd">        The column labels of the protected features.</span>
+<span class="sd">    _protect_feat_col_dtypes : list of dtype</span>
+<span class="sd">        The data types of the protected feature columns.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    _add_fairness_constraint(p_df, p_prime_df)</span>
+<span class="sd">        Add the fairness constraint to the MIP problem for the given protected groups.</span>
+<span class="sd">    _extract_metadata(X, y, protect_feat)</span>
+<span class="sd">        Extract metadata from the input data.</span>
+<span class="sd">    _define_objective()</span>
+<span class="sd">        Define the objective function for the MIP problem.</span>
+<span class="sd">    fit(X, y, protect_feat, legit_factor)</span>
+<span class="sd">        Fit the fair constrained optimal classification tree on the given data.</span>
+<span class="sd">    predict(X)</span>
+<span class="sd">        Predict the class labels for the given input data using the fitted model.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is a base class and should not be instantiated directly. Instead, use one of the</span>
+<span class="sd">    derived classes that implement a specific fairness constraint, such as `FairSPOCT`,</span>
+<span class="sd">    `FairCSPOCT`, `FairPEOCT`, `FairEOppOCT`, or `FairEOddsOCT`.</span>
+
+<span class="sd">    The `fit` method expects the input data `X`, target labels `y`, protected features</span>
+<span class="sd">    `protect_feat`, and legitimate factors `legit_factor` (if applicable) to be provided.</span>
+<span class="sd">    The protected features should be binary-valued, and the legitimate factors should be</span>
+<span class="sd">    numeric.</span>
+
+<span class="sd">    The `predict` method expects the input data `X` to have the same columns as the data</span>
+<span class="sd">    used for fitting the model.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -276,6 +340,21 @@
             <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_add_fairness_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_df</span><span class="p">,</span> <span class="n">p_prime_df</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add the fairness constraint to the MIP problem.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_df : pandas.DataFrame</span>
+<span class="sd">            The subset of the data corresponding to the protected group p.</span>
+<span class="sd">        p_prime_df : pandas.DataFrame</span>
+<span class="sd">            The subset of the data corresponding to the protected group p&#39;.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        constraint_added : bool</span>
+<span class="sd">            Whether the fairness constraint was successfully added.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">count_p</span> <span class="o">=</span> <span class="n">p_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">count_p_prime</span> <span class="o">=</span> <span class="n">p_prime_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">constraint_added</span> <span class="o">=</span> <span class="kc">False</span>
@@ -448,6 +527,38 @@
 
 
 <div class="viewcode-block" id="FairSPOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairSPOCT">[docs]</a><span class="k">class</span> <span class="nc">FairSPOCT</span><span class="p">(</span><span class="n">FairConstrainedOCT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An optimal classification tree fit on a given binary-valued data set</span>
+<span class="sd">    with a fairness side-constraint requiring statistical parity (SP) between protected groups.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver: str</span>
+<span class="sd">        A string specifying the name of the solver to use</span>
+<span class="sd">        to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
+<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">    positive_class : int</span>
+<span class="sd">        The value of the class label which is corresponding to the desired outcome</span>
+<span class="sd">    depth : int, default = 1</span>
+<span class="sd">        A parameter specifying the depth of the tree</span>
+<span class="sd">    time_limit : int, default= 60</span>
+<span class="sd">        The given time limit (in seconds) for solving the MIO problem</span>
+<span class="sd">    _lambda : float, default = 0</span>
+<span class="sd">        The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
+<span class="sd">    obj_mode: str, default=&quot;acc&quot;</span>
+<span class="sd">        The objective should be used to learn an optimal decision tree.</span>
+<span class="sd">        The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
+<span class="sd">        The accuracy objective attempts to maximize prediction accuracy while the</span>
+<span class="sd">        balance objective aims to learn a balanced optimal decision</span>
+<span class="sd">        tree to better generalize to our of sample data.</span>
+<span class="sd">    fairness_bound: float (0,1], default=1</span>
+<span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
+<span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
+<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If None, it will use all avaiable threads</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver</span><span class="p">,</span>
@@ -460,37 +571,7 @@
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        An optimal classification tree fit on a given binary-valued data set</span>
-<span class="sd">        with a fairness side-constraint requiring statistical parity (SP) between protected groups.</span>
 
-<span class="sd">                Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        solver: str</span>
-<span class="sd">            A string specifying the name of the solver to use</span>
-<span class="sd">            to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">        positive_class : int</span>
-<span class="sd">            The value of the class label which is corresponding to the desired outcome</span>
-<span class="sd">        depth : int, default = 1</span>
-<span class="sd">            A parameter specifying the depth of the tree</span>
-<span class="sd">        time_limit : int, default= 60</span>
-<span class="sd">            The given time limit (in seconds) for solving the MIO problem</span>
-<span class="sd">        _lambda : float, default = 0</span>
-<span class="sd">            The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
-<span class="sd">        obj_mode: str, default=&quot;acc&quot;</span>
-<span class="sd">            The objective should be used to learn an optimal decision tree.</span>
-<span class="sd">            The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
-<span class="sd">            The accuracy objective attempts to maximize prediction accuracy while the</span>
-<span class="sd">            balance objective aims to learn a balanced optimal decision</span>
-<span class="sd">            tree to better generalize to our of sample data.</span>
-<span class="sd">        fairness_bound: float (0,1], default=1</span>
-<span class="sd">            The bound of the fairness constraint. The smaller the value the stricter</span>
-<span class="sd">            the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
-<span class="sd">        num_threads: int, default=None</span>
-<span class="sd">            The number of threads the solver should use. If None, it will use all avaiable threads</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
@@ -556,6 +637,37 @@
 
 
 <div class="viewcode-block" id="FairCSPOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairCSPOCT">[docs]</a><span class="k">class</span> <span class="nc">FairCSPOCT</span><span class="p">(</span><span class="n">FairConstrainedOCT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An optimal classification tree fit on a given binary-valued data set</span>
+<span class="sd">    with a fairness side-constraint requiring conditional statistical parity (CSP) between protected groups.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver: str</span>
+<span class="sd">        A string specifying the name of the solver to use</span>
+<span class="sd">        to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
+<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">    positive_class : int</span>
+<span class="sd">        The value of the class label which is corresponding to the desired outcome</span>
+<span class="sd">    depth : int, default = 1</span>
+<span class="sd">        A parameter specifying the depth of the tree</span>
+<span class="sd">    time_limit : int, default= 60</span>
+<span class="sd">        The given time limit (in seconds) for solving the MIO problem</span>
+<span class="sd">    _lambda : float, default = 0</span>
+<span class="sd">        The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
+<span class="sd">    obj_mode: str, default=&quot;acc&quot;</span>
+<span class="sd">        The objective should be used to learn an optimal decision tree.</span>
+<span class="sd">        The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
+<span class="sd">        The accuracy objective attempts to maximize prediction accuracy while the</span>
+<span class="sd">        balance objective aims to learn a balanced optimal decision</span>
+<span class="sd">        tree to better generalize to our of sample data.</span>
+<span class="sd">    fairness_bound: float (0,1], default=1</span>
+<span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
+<span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
+<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If None, it will use all avaiable threads</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver</span><span class="p">,</span>
@@ -568,36 +680,7 @@
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        An optimal classification tree fit on a given binary-valued data set</span>
-<span class="sd">        with a fairness side-constraint requiring conditional statistical parity (CSP) between protected groups.</span>
 
-<span class="sd">                Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        solver: str</span>
-<span class="sd">            A string specifying the name of the solver to use</span>
-<span class="sd">            to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">        positive_class : int</span>
-<span class="sd">            The value of the class label which is corresponding to the desired outcome</span>
-<span class="sd">        depth : int, default = 1</span>
-<span class="sd">            A parameter specifying the depth of the tree</span>
-<span class="sd">        time_limit : int, default= 60</span>
-<span class="sd">            The given time limit (in seconds) for solving the MIO problem</span>
-<span class="sd">        _lambda : float, default = 0</span>
-<span class="sd">            The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
-<span class="sd">        obj_mode: str, default=&quot;acc&quot;</span>
-<span class="sd">            The objective should be used to learn an optimal decision tree.</span>
-<span class="sd">            The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
-<span class="sd">            The accuracy objective attempts to maximize prediction accuracy while the</span>
-<span class="sd">            balance objective aims to learn a balanced optimal decision</span>
-<span class="sd">            tree to better generalize to our of sample data.</span>
-<span class="sd">        fairness_bound: float (0,1], default=1</span>
-<span class="sd">            The bound of the fairness constraint. The smaller the value the stricter</span>
-<span class="sd">            the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
-<span class="sd">        num_threads: int, default=None</span>
-<span class="sd">            The number of threads the solver should use. If None, it will use all avaiable threads</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
@@ -685,6 +768,37 @@
 
 
 <div class="viewcode-block" id="FairPEOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairPEOCT">[docs]</a><span class="k">class</span> <span class="nc">FairPEOCT</span><span class="p">(</span><span class="n">FairConstrainedOCT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An optimal classification tree fit on a given binary-valued data set</span>
+<span class="sd">    with a fairness side-constraint requiring predictive equity (PE) between protected groups.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver: str</span>
+<span class="sd">        A string specifying the name of the solver to use</span>
+<span class="sd">        to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
+<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">    positive_class : int</span>
+<span class="sd">        The value of the class label which is corresponding to the desired outcome</span>
+<span class="sd">    depth : int, default = 1</span>
+<span class="sd">        A parameter specifying the depth of the tree</span>
+<span class="sd">    time_limit : int, default= 60</span>
+<span class="sd">        The given time limit (in seconds) for solving the MIO problem</span>
+<span class="sd">    _lambda : float, default = 0</span>
+<span class="sd">        The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
+<span class="sd">    obj_mode: str, default=&quot;acc&quot;</span>
+<span class="sd">        The objective should be used to learn an optimal decision tree.</span>
+<span class="sd">        The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
+<span class="sd">        The accuracy objective attempts to maximize prediction accuracy while the</span>
+<span class="sd">        balance objective aims to learn a balanced optimal decision</span>
+<span class="sd">        tree to better generalize to our of sample data.</span>
+<span class="sd">    fairness_bound: float (0,1], default=1</span>
+<span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
+<span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
+<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If None, it will use all avaiable threads</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver</span><span class="p">,</span>
@@ -697,36 +811,7 @@
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        An optimal classification tree fit on a given binary-valued data set</span>
-<span class="sd">        with a fairness side-constraint requiring predictive equity (PE) between protected groups.</span>
 
-<span class="sd">                Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        solver: str</span>
-<span class="sd">            A string specifying the name of the solver to use</span>
-<span class="sd">            to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">        positive_class : int</span>
-<span class="sd">            The value of the class label which is corresponding to the desired outcome</span>
-<span class="sd">        depth : int, default = 1</span>
-<span class="sd">            A parameter specifying the depth of the tree</span>
-<span class="sd">        time_limit : int, default= 60</span>
-<span class="sd">            The given time limit (in seconds) for solving the MIO problem</span>
-<span class="sd">        _lambda : float, default = 0</span>
-<span class="sd">            The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
-<span class="sd">        obj_mode: str, default=&quot;acc&quot;</span>
-<span class="sd">            The objective should be used to learn an optimal decision tree.</span>
-<span class="sd">            The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
-<span class="sd">            The accuracy objective attempts to maximize prediction accuracy while the</span>
-<span class="sd">            balance objective aims to learn a balanced optimal decision</span>
-<span class="sd">            tree to better generalize to our of sample data.</span>
-<span class="sd">        fairness_bound: float (0,1], default=1</span>
-<span class="sd">            The bound of the fairness constraint. The smaller the value the stricter</span>
-<span class="sd">            the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
-<span class="sd">        num_threads: int, default=None</span>
-<span class="sd">            The number of threads the solver should use. If None, it will use all avaiable threads</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
@@ -812,6 +897,37 @@
 
 
 <div class="viewcode-block" id="FairEOppOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairEOppOCT">[docs]</a><span class="k">class</span> <span class="nc">FairEOppOCT</span><span class="p">(</span><span class="n">FairConstrainedOCT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An optimal classification tree fit on a given binary-valued data set</span>
+<span class="sd">    with a fairness side-constraint requiring equality of opportunity (EOpp) between protected groups.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver: str</span>
+<span class="sd">        A string specifying the name of the solver to use</span>
+<span class="sd">        to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
+<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">    positive_class : int</span>
+<span class="sd">        The value of the class label which is corresponding to the desired outcome</span>
+<span class="sd">    depth : int, default = 1</span>
+<span class="sd">        A parameter specifying the depth of the tree</span>
+<span class="sd">    time_limit : int, default= 60</span>
+<span class="sd">        The given time limit (in seconds) for solving the MIO problem</span>
+<span class="sd">    _lambda : float, default = 0</span>
+<span class="sd">        The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
+<span class="sd">    obj_mode: str, default=&quot;acc&quot;</span>
+<span class="sd">        The objective should be used to learn an optimal decision tree.</span>
+<span class="sd">        The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
+<span class="sd">        The accuracy objective attempts to maximize prediction accuracy while the</span>
+<span class="sd">        balance objective aims to learn a balanced optimal decision</span>
+<span class="sd">        tree to better generalize to our of sample data.</span>
+<span class="sd">    fairness_bound: float (0,1], default=1</span>
+<span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
+<span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
+<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If None, it will use all avaiable threads</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver</span><span class="p">,</span>
@@ -824,36 +940,7 @@
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        An optimal classification tree fit on a given binary-valued data set</span>
-<span class="sd">        with a fairness side-constraint requiring equality of opportunity (EOpp) between protected groups.</span>
 
-<span class="sd">                Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        solver: str</span>
-<span class="sd">            A string specifying the name of the solver to use</span>
-<span class="sd">            to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">        positive_class : int</span>
-<span class="sd">            The value of the class label which is corresponding to the desired outcome</span>
-<span class="sd">        depth : int, default = 1</span>
-<span class="sd">            A parameter specifying the depth of the tree</span>
-<span class="sd">        time_limit : int, default= 60</span>
-<span class="sd">            The given time limit (in seconds) for solving the MIO problem</span>
-<span class="sd">        _lambda : float, default = 0</span>
-<span class="sd">            The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
-<span class="sd">        obj_mode: str, default=&quot;acc&quot;</span>
-<span class="sd">            The objective should be used to learn an optimal decision tree.</span>
-<span class="sd">            The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
-<span class="sd">            The accuracy objective attempts to maximize prediction accuracy while the</span>
-<span class="sd">            balance objective aims to learn a balanced optimal decision</span>
-<span class="sd">            tree to better generalize to our of sample data.</span>
-<span class="sd">        fairness_bound: float (0,1], default=1</span>
-<span class="sd">            The bound of the fairness constraint. The smaller the value the stricter</span>
-<span class="sd">            the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
-<span class="sd">        num_threads: int, default=None</span>
-<span class="sd">            The number of threads the solver should use. If None, it will use all avaiable threads</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
@@ -880,6 +967,37 @@
 
 
 <div class="viewcode-block" id="FairEOddsOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairEOddsOCT">[docs]</a><span class="k">class</span> <span class="nc">FairEOddsOCT</span><span class="p">(</span><span class="n">FairConstrainedOCT</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An optimal classification tree fit on a given binary-valued data set</span>
+<span class="sd">    with a fairness side-constraint requiring equal oddts (EOdds) between protected groups.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver: str</span>
+<span class="sd">        A string specifying the name of the solver to use</span>
+<span class="sd">        to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
+<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">    positive_class : int</span>
+<span class="sd">        The value of the class label which is corresponding to the desired outcome</span>
+<span class="sd">    depth : int, default = 1</span>
+<span class="sd">        A parameter specifying the depth of the tree</span>
+<span class="sd">    time_limit : int, default= 60</span>
+<span class="sd">        The given time limit (in seconds) for solving the MIO problem</span>
+<span class="sd">    _lambda : float, default = 0</span>
+<span class="sd">        The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
+<span class="sd">    obj_mode: str, default=&quot;acc&quot;</span>
+<span class="sd">        The objective should be used to learn an optimal decision tree.</span>
+<span class="sd">        The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
+<span class="sd">        The accuracy objective attempts to maximize prediction accuracy while the</span>
+<span class="sd">        balance objective aims to learn a balanced optimal decision</span>
+<span class="sd">        tree to better generalize to our of sample data.</span>
+<span class="sd">    fairness_bound: float (0,1], default=1</span>
+<span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
+<span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
+<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If None, it will use all avaiable threads</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver</span><span class="p">,</span>
@@ -892,36 +1010,7 @@
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        An optimal classification tree fit on a given binary-valued data set</span>
-<span class="sd">        with a fairness side-constraint requiring equal oddts (EOdds) between protected groups.</span>
 
-<span class="sd">                Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        solver: str</span>
-<span class="sd">            A string specifying the name of the solver to use</span>
-<span class="sd">            to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">        positive_class : int</span>
-<span class="sd">            The value of the class label which is corresponding to the desired outcome</span>
-<span class="sd">        depth : int, default = 1</span>
-<span class="sd">            A parameter specifying the depth of the tree</span>
-<span class="sd">        time_limit : int, default= 60</span>
-<span class="sd">            The given time limit (in seconds) for solving the MIO problem</span>
-<span class="sd">        _lambda : float, default = 0</span>
-<span class="sd">            The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
-<span class="sd">        obj_mode: str, default=&quot;acc&quot;</span>
-<span class="sd">            The objective should be used to learn an optimal decision tree.</span>
-<span class="sd">            The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
-<span class="sd">            The accuracy objective attempts to maximize prediction accuracy while the</span>
-<span class="sd">            balance objective aims to learn a balanced optimal decision</span>
-<span class="sd">            tree to better generalize to our of sample data.</span>
-<span class="sd">        fairness_bound: float (0,1], default=1</span>
-<span class="sd">            The bound of the fairness constraint. The smaller the value the stricter</span>
-<span class="sd">            the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
-<span class="sd">        num_threads: int, default=None</span>
-<span class="sd">            The number of threads the solver should use. If None, it will use all avaiable threads</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
@@ -963,6 +1052,35 @@
 
 
 <div class="viewcode-block" id="FairOCT"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT">[docs]</a><span class="k">class</span> <span class="nc">FairOCT</span><span class="p">(</span><span class="n">FlowOCTMultipleSink</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An optimal and fair classification tree fitted on a given binary-valued</span>
+<span class="sd">    data set. The fairness criteria enforced in the training step is one of statistical parity (SP),</span>
+<span class="sd">    conditional statistical parity (CSP), predictive equality (PE),</span>
+<span class="sd">    equal opportunity (EOpp) or equalized odds (EOdds).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver: str</span>
+<span class="sd">        A string specifying the name of the solver to use</span>
+<span class="sd">        to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
+<span class="sd">        If the CBC binaries are not found, Gurobi will be used by default.</span>
+<span class="sd">    positive_class : int</span>
+<span class="sd">        The value of the class label which is corresponding to the desired outcome</span>
+<span class="sd">    depth : int, default= 1</span>
+<span class="sd">        A parameter specifying the depth of the tree</span>
+<span class="sd">    time_limit : int, default= 60</span>
+<span class="sd">        The given time limit (in seconds) for solving the MIO problem</span>
+<span class="sd">    _lambda : float, default= 0</span>
+<span class="sd">        The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
+<span class="sd">    num_threads: int, default=None</span>
+<span class="sd">        The number of threads the solver should use. If None, it will use all avaiable threads</span>
+<span class="sd">    fairness_type: [None, &#39;SP&#39;, &#39;CSP&#39;, &#39;PE&#39;, &#39;EOpp&#39;, &#39;EOdds&#39;], default=None</span>
+<span class="sd">        The type of fairness criteria that we want to enforce</span>
+<span class="sd">    fairness_bound: float (0,1], default=1</span>
+<span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
+<span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">solver</span><span class="p">,</span>
@@ -976,34 +1094,7 @@
         <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        An optimal and fair classification tree fitted on a given binary-valued</span>
-<span class="sd">        data set. The fairness criteria enforced in the training step is one of statistical parity (SP),</span>
-<span class="sd">        conditional statistical parity (CSP), predictive equality (PE),</span>
-<span class="sd">        equal opportunity (EOpp) or equalized odds (EOdds).</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        solver: str</span>
-<span class="sd">            A string specifying the name of the solver to use</span>
-<span class="sd">            to solve the MIP. Options are &quot;Gurobi&quot; and &quot;CBC&quot;.</span>
-<span class="sd">            If the CBC binaries are not found, Gurobi will be used by default.</span>
-<span class="sd">        positive_class : int</span>
-<span class="sd">            The value of the class label which is corresponding to the desired outcome</span>
-<span class="sd">        depth : int, default= 1</span>
-<span class="sd">            A parameter specifying the depth of the tree</span>
-<span class="sd">        time_limit : int, default= 60</span>
-<span class="sd">            The given time limit (in seconds) for solving the MIO problem</span>
-<span class="sd">        _lambda : float, default= 0</span>
-<span class="sd">            The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
-<span class="sd">        num_threads: int, default=None</span>
-<span class="sd">            The number of threads the solver should use. If None, it will use all avaiable threads</span>
-<span class="sd">        fairness_type: [None, &#39;SP&#39;, &#39;CSP&#39;, &#39;PE&#39;, &#39;EOpp&#39;, &#39;EOdds&#39;], default=None</span>
-<span class="sd">            The type of fairness criteria that we want to enforce</span>
-<span class="sd">        fairness_bound: float (0,1], default=1</span>
-<span class="sd">            The bound of the fairness constraint. The smaller the value the stricter</span>
-<span class="sd">            the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="p">(</span>
                 <span class="s2">&quot;The class FairOCT will be depreciated in v1.2 of ODTlearn,&quot;</span>
@@ -1026,6 +1117,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
 
     <span class="k">def</span> <span class="nf">_extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract metadata from the input data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The input samples.</span>
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The target values.</span>
+<span class="sd">        protect_feat : array-like of shape (n_samples, n_protect_feat)</span>
+<span class="sd">            The protected features.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FlowOCTMultipleSink</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span> <span class="o">=</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">columns</span>
@@ -1511,6 +1614,52 @@
         <span class="k">return</span> <span class="n">ceq_dict</span></div>
 
 <div class="viewcode-block" id="FairOCT.fairness_metric_summary"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT.fairness_metric_summary">[docs]</a>    <span class="k">def</span> <span class="nf">fairness_metric_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metric</span><span class="p">,</span> <span class="n">new_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Summarize the specified fairness metric for the fitted model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        metric : str</span>
+<span class="sd">            The name of the fairness metric to summarize. Must be one of &#39;SP&#39;, &#39;CSP&#39;, &#39;PE&#39;, or &#39;CPE&#39;.</span>
+<span class="sd">        new_data : array-like of shape (n_samples,), optional</span>
+<span class="sd">            The new predicted data to use for calculating the fairness metric. If None, the predict method</span>
+<span class="sd">            is called on the training data to obtain the predicted values. Default is None.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the specified metric is not one of the supported options.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            The method prints the fairness metric summary as a pandas DataFrame.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method summarizes the specified fairness metric for the fitted model. The supported fairness metrics are:</span>
+<span class="sd">        - &#39;SP&#39;: Statistical Parity</span>
+<span class="sd">        - &#39;CSP&#39;: Conditional Statistical Parity</span>
+<span class="sd">        - &#39;PE&#39;: Predictive Equality</span>
+<span class="sd">        - &#39;CPE&#39;: Conditional Predictive Equality</span>
+
+<span class="sd">        The method checks if the model has been fitted and raises an error if not. If `new_data` is not provided,</span>
+<span class="sd">        the predict method is called on the training data to obtain the predicted values.</span>
+
+<span class="sd">        The fairness metric summary is printed as a pandas DataFrame, showing the metric values for each</span>
+<span class="sd">        combination of protected attribute, legitimate factor (if applicable), true label, and predicted label</span>
+<span class="sd">        (if applicable), depending on the selected metric.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; model.fit(X_train, y_train, protect_feat_train, legit_factor_train)</span>
+<span class="sd">        &gt;&gt;&gt; model.fairness_metric_summary(&#39;SP&#39;)</span>
+<span class="sd">                    (p,y)  P(Y=y|P=p)</span>
+<span class="sd">        0     (Male, False)    0.752475</span>
+<span class="sd">        1      (Male, True)    0.247525</span>
+<span class="sd">        2   (Female, False)    0.742574</span>
+<span class="sd">        3    (Female, True)    0.257426</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;b_value&quot;</span><span class="p">,</span> <span class="s2">&quot;w_value&quot;</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span>
         <span class="n">metric_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SP&quot;</span><span class="p">,</span> <span class="s2">&quot;CSP&quot;</span><span class="p">,</span> <span class="s2">&quot;PE&quot;</span><span class="p">,</span> <span class="s2">&quot;CPE&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">new_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

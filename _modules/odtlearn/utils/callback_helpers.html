@@ -253,6 +253,25 @@
 
 
 <div class="viewcode-block" id="get_left_exp_integer"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callback_helpers/index.html#odtlearn.utils.callback_helpers.get_left_exp_integer">[docs]</a><span class="k">def</span> <span class="nf">get_left_exp_integer</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">main_grb_obj</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the expression for the left branch constraint in the Benders&#39; subproblem.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver : Solver</span>
+<span class="sd">        The solver object used for solving the optimization problem.</span>
+<span class="sd">    main_grb_obj : object</span>
+<span class="sd">        The main Gurobi model object.</span>
+<span class="sd">    n : int</span>
+<span class="sd">        The index of the current node.</span>
+<span class="sd">    i : int</span>
+<span class="sd">        The index of the current datapoint.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    lhs : LinExpr</span>
+<span class="sd">        The left-hand side expression of the left branch constraint.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">lhs</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">quicksum</span><span class="p">(</span>
         <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_X_col_labels</span>
@@ -263,6 +282,25 @@
 
 
 <div class="viewcode-block" id="get_right_exp_integer"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callback_helpers/index.html#odtlearn.utils.callback_helpers.get_right_exp_integer">[docs]</a><span class="k">def</span> <span class="nf">get_right_exp_integer</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">main_grb_obj</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the expression for the right branch constraint in the Benders&#39; subproblem.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver : Solver</span>
+<span class="sd">        The solver object used for solving the optimization problem.</span>
+<span class="sd">    main_grb_obj : object</span>
+<span class="sd">        The main Gurobi model object.</span>
+<span class="sd">    n : int</span>
+<span class="sd">        The index of the current node.</span>
+<span class="sd">    i : int</span>
+<span class="sd">        The index of the current datapoint.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    lhs : LinExpr</span>
+<span class="sd">        The left-hand side expression of the right branch constraint.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">lhs</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">quicksum</span><span class="p">(</span>
         <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_X_col_labels</span>
@@ -273,27 +311,64 @@
 
 
 <div class="viewcode-block" id="get_target_exp_integer"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callback_helpers/index.html#odtlearn.utils.callback_helpers.get_target_exp_integer">[docs]</a><span class="k">def</span> <span class="nf">get_target_exp_integer</span><span class="p">(</span><span class="n">main_grb_obj</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the expression for the target constraint in the Benders&#39; subproblem.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    main_grb_obj : object</span>
+<span class="sd">        The main Gurobi model object.</span>
+<span class="sd">    n : int</span>
+<span class="sd">        The index of the current node.</span>
+<span class="sd">    i : int</span>
+<span class="sd">        The index of the current datapoint.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    lhs : LinExpr</span>
+<span class="sd">        The left-hand side expression of the target constraint.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">label_i</span> <span class="o">=</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="n">lhs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_w</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">label_i</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">lhs</span></div>
 
 
 <div class="viewcode-block" id="get_cut_integer"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callback_helpers/index.html#odtlearn.utils.callback_helpers.get_cut_integer">[docs]</a><span class="k">def</span> <span class="nf">get_cut_integer</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">main_grb_obj</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the Benders&#39; cut expression for the current subproblem.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solver : Solver</span>
+<span class="sd">        The solver object used for solving the optimization problem.</span>
+<span class="sd">    main_grb_obj : object</span>
+<span class="sd">        The main Gurobi model object.</span>
+<span class="sd">    left : list</span>
+<span class="sd">        The list of nodes in the left branch of the current subproblem.</span>
+<span class="sd">    right : list</span>
+<span class="sd">        The list of nodes in the right branch of the current subproblem.</span>
+<span class="sd">    target : list</span>
+<span class="sd">        The list of target nodes in the current subproblem.</span>
+<span class="sd">    i : int</span>
+<span class="sd">        The index of the current datapoint.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    lhs : LinExpr</span>
+<span class="sd">        The left-hand side expression of the Benders&#39; cut.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">lhs</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">lin_expr</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
     <span class="n">lhs</span> <span class="o">+=</span> <span class="n">main_grb_obj</span><span class="o">.</span><span class="n">_g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">left</span><span class="p">:</span>
         <span class="n">tmp_lhs</span> <span class="o">=</span> <span class="n">get_left_exp_integer</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">main_grb_obj</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="c1"># lhs = lhs + tmp_lhs</span>
         <span class="n">lhs</span> <span class="o">+=</span> <span class="n">tmp_lhs</span>
 
     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">right</span><span class="p">:</span>
         <span class="n">tmp_lhs</span> <span class="o">=</span> <span class="n">get_right_exp_integer</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">main_grb_obj</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="c1"># lhs = lhs + tmp_lhs</span>
         <span class="n">lhs</span> <span class="o">+=</span> <span class="n">tmp_lhs</span>
 
     <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
         <span class="n">tmp_lhs</span> <span class="o">=</span> <span class="n">get_target_exp_integer</span><span class="p">(</span><span class="n">main_grb_obj</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-        <span class="c1"># lhs = lhs + tmp_lhs</span>
         <span class="n">lhs</span> <span class="o">+=</span> <span class="n">tmp_lhs</span>
 
     <span class="k">return</span> <span class="n">lhs</span></div>
@@ -303,6 +378,37 @@
 
 
 <div class="viewcode-block" id="get_cut_expression"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callback_helpers/index.html#odtlearn.utils.callback_helpers.get_cut_expression">[docs]</a><span class="k">def</span> <span class="nf">get_cut_expression</span><span class="p">(</span><span class="n">master</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">f_theta_indices</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the cut expression for the RobustOCT subproblem.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    master : object</span>
+<span class="sd">        The master problem object.</span>
+<span class="sd">    solver : Solver</span>
+<span class="sd">        The solver object used for solving the optimization problem.</span>
+<span class="sd">    X : DataFrame</span>
+<span class="sd">        The input data.</span>
+<span class="sd">    b : dict</span>
+<span class="sd">        The dictionary of binary decision variables representing the branching decisions.</span>
+<span class="sd">    w : dict</span>
+<span class="sd">        The dictionary of binary decision variables representing the prediction decisions.</span>
+<span class="sd">    path : list</span>
+<span class="sd">        The current path in the tree.</span>
+<span class="sd">    xi : dict</span>
+<span class="sd">        The dictionary of feature perturbations.</span>
+<span class="sd">    v : bool</span>
+<span class="sd">        The label perturbation flag.</span>
+<span class="sd">    i : int</span>
+<span class="sd">        The index of the current datapoint.</span>
+<span class="sd">    f_theta_indices : list</span>
+<span class="sd">        The list of feature-threshold index pairs.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    expr : LinExpr</span>
+<span class="sd">        The cut expression for the current subproblem.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">expr</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">lin_expr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">node_leaf_cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span>
         <span class="mi">2</span><span class="p">,</span> <span class="n">master</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">depth</span>
@@ -356,7 +462,42 @@
     <span class="n">curr_feature_path</span><span class="o">=</span><span class="p">[],</span>
     <span class="n">curr_cutoff_path</span><span class="o">=</span><span class="p">[],</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;find all terminal paths&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find all terminal paths in the decision tree.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    master : object</span>
+<span class="sd">        The master problem object.</span>
+<span class="sd">    b : dict</span>
+<span class="sd">        The dictionary of binary decision variables representing the branching decisions.</span>
+<span class="sd">    w : dict</span>
+<span class="sd">        The dictionary of binary decision variables representing the prediction decisions.</span>
+<span class="sd">    terminal_nodes : list, optional</span>
+<span class="sd">        The list of terminal nodes.</span>
+<span class="sd">    path_dict : dict, optional</span>
+<span class="sd">        The dictionary storing the paths to each terminal node.</span>
+<span class="sd">    feature_path_dict : dict, optional</span>
+<span class="sd">        The dictionary storing the feature paths to each terminal node.</span>
+<span class="sd">    assignment_dict : dict, optional</span>
+<span class="sd">        The dictionary storing the class assignments at each terminal node.</span>
+<span class="sd">    cutoff_dict : dict, optional</span>
+<span class="sd">        The dictionary storing the cutoff values along each path.</span>
+<span class="sd">    curr_node : int, optional</span>
+<span class="sd">        The current node being processed.</span>
+<span class="sd">    curr_path : list, optional</span>
+<span class="sd">        The current path being traversed.</span>
+<span class="sd">    curr_feature_path : list, optional</span>
+<span class="sd">        The current feature path being traversed.</span>
+<span class="sd">    curr_cutoff_path : list, optional</span>
+<span class="sd">        The current cutoff path being traversed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        A tuple containing the updated terminal_nodes, path_dict, feature_path_dict,</span>
+<span class="sd">        assignment_dict, and cutoff_dict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">new_path_dict</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">path_dict</span><span class="p">)</span>
     <span class="n">new_terminal_nodes</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">terminal_nodes</span><span class="p">)</span>
     <span class="n">new_feature_path_dict</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">feature_path_dict</span><span class="p">)</span>
@@ -382,7 +523,7 @@
     <span class="c1"># b[n,f,theta]== 1</span>
     <span class="n">curr_feature</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">curr_theta</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="ow">in</span> <span class="n">master</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">&quot;f_theta_indices&quot;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span> <span class="ow">in</span> <span class="n">master</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">&quot;f_theta_indices&quot;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="n">curr_node</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
             <span class="n">curr_feature</span> <span class="o">=</span> <span class="n">f</span>
             <span class="n">curr_theta</span> <span class="o">=</span> <span class="n">theta</span>
@@ -457,7 +598,25 @@
 
 
 <div class="viewcode-block" id="get_nominal_path"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/callback_helpers/index.html#odtlearn.utils.callback_helpers.get_nominal_path">[docs]</a><span class="k">def</span> <span class="nf">get_nominal_path</span><span class="p">(</span><span class="n">master</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the nominal path for a correctly classified point&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the nominal path for a correctly classified datapoint.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    master : object</span>
+<span class="sd">        The master problem object.</span>
+<span class="sd">    b : dict</span>
+<span class="sd">        The dictionary of binary decision variables representing the branching decisions.</span>
+<span class="sd">    w : dict</span>
+<span class="sd">        The dictionary of binary decision variables representing the prediction decisions.</span>
+<span class="sd">    i : int</span>
+<span class="sd">        The index of the current datapoint.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        A tuple containing the nominal path and the predicted class label.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">curr_node</span> <span class="o">=</span> <span class="mi">1</span>
 
@@ -469,7 +628,7 @@
                 <span class="k">return</span> <span class="n">path</span><span class="p">,</span> <span class="n">k</span>
 
         <span class="c1"># braching node - find which feature to branch on</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="ow">in</span> <span class="n">master</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">&quot;f_theta_indices&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span> <span class="ow">in</span> <span class="n">master</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">&quot;f_theta_indices&quot;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="n">curr_node</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">theta</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">master</span><span class="o">.</span><span class="n">_X</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">theta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="n">curr_node</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">curr_node</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># go right</span>
@@ -491,6 +650,40 @@
     <span class="n">initial_mins</span><span class="p">,</span>
     <span class="n">initial_maxes</span><span class="p">,</span>
 <span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Solve the shortest path problem for a given datapoint.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    master : object</span>
+<span class="sd">        The master problem object.</span>
+<span class="sd">    i : int</span>
+<span class="sd">        The index of the current datapoint.</span>
+<span class="sd">    label : int</span>
+<span class="sd">        The true class label of the datapoint.</span>
+<span class="sd">    terminal_nodes : list</span>
+<span class="sd">        The list of terminal nodes.</span>
+<span class="sd">    terminal_path_dict : dict</span>
+<span class="sd">        The dictionary storing the paths to each terminal node.</span>
+<span class="sd">    terminal_features_dict : dict</span>
+<span class="sd">        The dictionary storing the feature paths to each terminal node.</span>
+<span class="sd">    terminal_assignments_dict : dict</span>
+<span class="sd">        The dictionary storing the class assignments at each terminal node.</span>
+<span class="sd">    terminal_cutoffs_dict : dict</span>
+<span class="sd">        The dictionary storing the cutoff values along each path.</span>
+<span class="sd">    initial_xi : dict</span>
+<span class="sd">        The initial dictionary of feature perturbations.</span>
+<span class="sd">    initial_mins : dict</span>
+<span class="sd">        The initial dictionary of minimum feature values.</span>
+<span class="sd">    initial_maxes : dict</span>
+<span class="sd">        The initial dictionary of maximum feature values.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        A tuple containing the best path, best cost, feature perturbations (xi),</span>
+<span class="sd">        and label perturbation flag (v).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">best_cost</span> <span class="o">=</span> <span class="p">(</span><span class="n">master</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="s2">&quot;epsilon&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">master</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">depth</span>
     <span class="n">best_path</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">xi</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">initial_xi</span><span class="p">)</span>

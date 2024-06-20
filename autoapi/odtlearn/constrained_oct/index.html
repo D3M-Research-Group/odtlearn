@@ -256,7 +256,7 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.constrained_oct.ConstrainedOCT" title="odtlearn.constrained_oct.ConstrainedOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConstrainedOCT</span></code></a></p></td>
-<td><p>Helper class that provides a standard way to create an ABC using</p></td>
+<td><p>A parent class for classification trees that incorporate</p></td>
 </tr>
 </tbody>
 </table>
@@ -265,8 +265,26 @@
 <dt class="sig sig-object py" id="odtlearn.constrained_oct.ConstrainedOCT">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.constrained_oct.</span></span><span class="sig-name descname"><span class="pre">ConstrainedOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/constrained_oct.html#ConstrainedOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.constrained_oct.ConstrainedOCT" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../flow_oct_ms/index.html#odtlearn.flow_oct_ms.FlowOCTMultipleSink" title="odtlearn.flow_oct_ms.FlowOCTMultipleSink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.flow_oct_ms.FlowOCTMultipleSink</span></code></a></p>
-<p>Helper class that provides a standard way to create an ABC using
-inheritance.</p>
+<p>A parent class for classification trees that incorporate
+side-constraints when fitting a tree (e.g., fairness constraints, etc.)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>solver: str</strong></dt><dd><p>A string specifying the name of the solver to use
+to solve the MIP. Options are “Gurobi” and “CBC”.
+If the CBC binaries are not found, Gurobi will be used by default.</p>
+</dd>
+<dt><strong>positive_class</strong><span class="classifier">int</span></dt><dd><p>The value of the class label which is corresponding to the desired outcome</p>
+</dd>
+<dt><strong>depth</strong><span class="classifier">int, default= 1</span></dt><dd><p>A parameter specifying the depth of the tree</p>
+</dd>
+<dt><strong>time_limit</strong><span class="classifier">int, default= 60</span></dt><dd><p>The given time limit (in seconds) for solving the MIO problem</p>
+</dd>
+<dt><strong>num_threads: int, default=None</strong></dt><dd><p>The number of threads the solver should use. If None, it will use all avaiable threads</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

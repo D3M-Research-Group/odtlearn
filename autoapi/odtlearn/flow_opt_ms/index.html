@@ -256,7 +256,7 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.flow_opt_ms.FlowOPTMultipleSink" title="odtlearn.flow_opt_ms.FlowOPTMultipleSink"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FlowOPTMultipleSink</span></code></a></p></td>
-<td><p>Helper class that provides a standard way to create an ABC using</p></td>
+<td><p>A base class for learning optimal prescriptive trees with multiple sink nodes using flow optimization.</p></td>
 </tr>
 </tbody>
 </table>
@@ -265,8 +265,100 @@
 <dt class="sig sig-object py" id="odtlearn.flow_opt_ms.FlowOPTMultipleSink">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.flow_opt_ms.</span></span><span class="sig-name descname"><span class="pre">FlowOPTMultipleSink</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_opt_ms.html#FlowOPTMultipleSink"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_opt_ms.FlowOPTMultipleSink" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../opt_pt/index.html#odtlearn.opt_pt.OptimalPrescriptiveTree" title="odtlearn.opt_pt.OptimalPrescriptiveTree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.opt_pt.OptimalPrescriptiveTree</span></code></a></p>
-<p>Helper class that provides a standard way to create an ABC using
-inheritance.</p>
+<p>A base class for learning optimal prescriptive trees with multiple sink nodes using flow optimization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>solver</strong><span class="classifier">str</span></dt><dd><p>The solver to use for the optimization problem. Can be either “gurobi” or “cbc”.</p>
+</dd>
+<dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>The maximum depth of the tree to be learned.</p>
+</dd>
+<dt><strong>time_limit</strong><span class="classifier">int, default=60</span></dt><dd><p>The time limit (in seconds) for solving the optimization problem.</p>
+</dd>
+<dt><strong>num_threads</strong><span class="classifier">int, default=None</span></dt><dd><p>The number of threads the solver should use. If not specified,
+the solver uses all available threads.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool, default=False</span></dt><dd><p>Whether to print verbose output during the tree learning process.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This is a base class for learning optimal prescriptive trees with multiple sink nodes using
+flow optimization. It extends the <cite>OptimalPrescriptiveTree</cite> class and provides the basic
+structure and common functionality for flow-based prescriptive tree learning. It should not
+be instantiated directly. Instead, use one of the
+derived classes that implement a specific prescriptive tree method, such as <cite>FlowOPT_DM</cite> or
+<cite>FlowOPT_DR</cite>.</p>
+<p>The key idea is to model the flow of each datapoint through the tree, allowing it to reach
+multiple sink nodes (i.e., leaves) with different treatment recommendations. The objective
+is to optimize the treatment recommendations based on the characteristics of each datapoint.</p>
+<p>The class defines decision variables and constraints specific to the flow optimization
+formulation with multiple sink nodes. The <cite>_define_variables</cite> method defines the decision
+variables, including the tree structure variables (<cite>_b</cite>, <cite>_p</cite>, <cite>_w</cite>) and the flow variables
+(<cite>_zeta</cite>, <cite>_z</cite>).</p>
+<p>The <cite>_define_constraints</cite> method defines the constraints, including the tree structure
+constraints, flow constraints, and arc constraints. These constraints ensure the validity
+of the tree structure and the proper flow of datapoints through the tree to multiple sink nodes.</p>
+<p>Subclasses of <cite>FlowOPTMultipleSink</cite> should implement the <cite>_define_objective</cite> method to specify
+the objective function for the optimization problem, and the <cite>fit</cite> method to handle the model
+fitting process.</p>
+<p>The class inherits the <cite>predict</cite> method from the <cite>OptimalPrescriptiveTree</cite> class to make
+treatment recommendations based on the learned tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>_b</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of binary decision variables representing the branching decisions at each node.</p>
+</dd>
+<dt><strong>_p</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of binary decision variables representing the prediction decisions at each node.</p>
+</dd>
+<dt><strong>_w</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of continuous decision variables representing the treatment weights at each node.</p>
+</dd>
+<dt><strong>_zeta</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of continuous decision variables representing the flow of each datapoint
+to each treatment at each node.</p>
+</dd>
+<dt><strong>_z</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of continuous decision variables representing the flow of each datapoint to each node.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>_tree_struc_variables()</strong></p></td>
+<td><p>Defines the decision variables related to the tree structure.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>_flow_variables()</strong></p></td>
+<td><p>Defines the decision variables related to the flow of datapoints.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>_define_variables()</strong></p></td>
+<td><p>Defines all the decision variables used in the optimization problem.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>_tree_structure_constraints()</strong></p></td>
+<td><p>Defines the constraints related to the tree structure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>_flow_constraints()</strong></p></td>
+<td><p>Defines the constraints related to the flow of datapoints.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>_arc_constraints()</strong></p></td>
+<td><p>Defines the constraints related to the arcs between nodes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>_define_constraints()</strong></p></td>
+<td><p>Defines all the constraints used in the optimization problem.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>_define_objective()</strong></p></td>
+<td><p>Abstract method to be implemented by subclasses to define the objective function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>fit(X, t, y, **kwargs)</strong></p></td>
+<td><p>Abstract method to be implemented by subclasses to fit the optimal prescriptive tree.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>predict(X)</strong></p></td>
+<td><p>Make treatment recommendations for the given input samples.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </dd></dl>
 
 </section>

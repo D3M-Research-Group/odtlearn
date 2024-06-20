@@ -256,7 +256,7 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.TreePlotter.MPLPlotter" title="odtlearn.utils.TreePlotter.MPLPlotter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MPLPlotter</span></code></a></p></td>
-<td><p></p></td>
+<td><p>A class for plotting optimal decision trees using Matplotlib.</p></td>
 </tr>
 </tbody>
 </table>
@@ -265,6 +265,99 @@
 <dt class="sig sig-object py" id="odtlearn.utils.TreePlotter.MPLPlotter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.utils.TreePlotter.</span></span><span class="sig-name descname"><span class="pre">MPLPlotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rounded</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'node':</span> <span class="pre">None,</span> <span class="pre">'leaves':</span> <span class="pre">[]}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrow_annotation_font_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/TreePlotter.html#MPLPlotter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.TreePlotter.MPLPlotter" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.tree._export._MPLTreeExporter</span></code></p>
+<p>A class for plotting optimal decision trees using Matplotlib.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>tree</strong><span class="classifier">object</span></dt><dd><p>The decision tree object to be plotted.</p>
+</dd>
+<dt><strong>node_dict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary containing information about each node in the tree.</p>
+</dd>
+<dt><strong>column_names</strong><span class="classifier">list</span></dt><dd><p>A list of feature names used in the decision tree.</p>
+</dd>
+<dt><strong>max_depth</strong><span class="classifier">int</span></dt><dd><p>The maximum depth of the tree to plot.</p>
+</dd>
+<dt><strong>classes</strong><span class="classifier">list</span></dt><dd><p>A list of class names for the target variable.</p>
+</dd>
+<dt><strong>model_name</strong><span class="classifier">str</span></dt><dd><p>The name of the model used to generate the decision tree.</p>
+</dd>
+<dt><strong>label</strong><span class="classifier">str, optional (default=”all”)</span></dt><dd><p>The type of labels to display on the nodes. Can be “all”, “root”, or None.</p>
+</dd>
+<dt><strong>filled</strong><span class="classifier">bool, optional (default=False)</span></dt><dd><p>Whether to fill the nodes with color.</p>
+</dd>
+<dt><strong>rounded</strong><span class="classifier">bool, optional (default=False)</span></dt><dd><p>Whether to use rounded corners for the node boxes.</p>
+</dd>
+<dt><strong>precision</strong><span class="classifier">int, optional (default=3)</span></dt><dd><p>The number of decimal places to display for the cutoff values.</p>
+</dd>
+<dt><strong>fontsize</strong><span class="classifier">int or None, optional (default=None)</span></dt><dd><p>The font size for the node labels. If None, the fontsize is automatically adjusted.</p>
+</dd>
+<dt><strong>color_dict</strong><span class="classifier">dict, optional</span></dt><dd><p>A dictionary specifying the colors for nodes and leaves.
+Default: {“node”: None, “leaves”: []}</p>
+</dd>
+<dt><strong>edge_annotation</strong><span class="classifier">bool, optional (default=True)</span></dt><dd><p>Whether to display annotations on the edges.</p>
+</dd>
+<dt><strong>arrow_annotation_font_scale</strong><span class="classifier">float, optional (default=0.5)</span></dt><dd><p>The font scale for the arrow annotations.</p>
+</dd>
+<dt><strong>debug</strong><span class="classifier">bool, optional (default=False)</span></dt><dd><p>Whether to print debug information.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>classes</strong><span class="classifier">list</span></dt><dd><p>A list of class names for the target variable.</p>
+</dd>
+<dt><strong>max_depth</strong><span class="classifier">int</span></dt><dd><p>The maximum depth of the tree to plot.</p>
+</dd>
+<dt><strong>tree</strong><span class="classifier">object</span></dt><dd><p>The decision tree object to be plotted.</p>
+</dd>
+<dt><strong>node_dict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary containing information about each node in the tree.</p>
+</dd>
+<dt><strong>column_names</strong><span class="classifier">list</span></dt><dd><p>A list of feature names used in the decision tree.</p>
+</dd>
+<dt><strong>feature_names</strong><span class="classifier">list</span></dt><dd><p>A list of feature names used in the decision tree.</p>
+</dd>
+<dt><strong>class_names</strong><span class="classifier">list</span></dt><dd><p>A list of class names for the target variable.</p>
+</dd>
+<dt><strong>color_options</strong><span class="classifier">list</span></dt><dd><p>A list of color options for the nodes and leaves.</p>
+</dd>
+<dt><strong>color_dict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary specifying the colors for nodes and leaves.</p>
+</dd>
+<dt><strong>edge_annotation</strong><span class="classifier">bool</span></dt><dd><p>Whether to display annotations on the edges.</p>
+</dd>
+<dt><strong>arrow_annotation_font_scale</strong><span class="classifier">float</span></dt><dd><p>The font scale for the arrow annotations.</p>
+</dd>
+<dt><strong>debug</strong><span class="classifier">bool</span></dt><dd><p>Whether to print debug information.</p>
+</dd>
+<dt><strong>model_name</strong><span class="classifier">str</span></dt><dd><p>The name of the model used to generate the decision tree.</p>
+</dd>
+<dt><strong>characters</strong><span class="classifier">list</span></dt><dd><p>A list of special characters used for formatting the node labels.</p>
+</dd>
+<dt><strong>bbox_args</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of arguments for the bounding box of the nodes.</p>
+</dd>
+<dt><strong>arrow_args</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of arguments for the arrow style.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><strong>get_fill_color(node_id)</strong></p></td>
+<td><p>Returns the fill color for a given node.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>node_to_str(node_id, leaf, selected_feature, cutoff, value)</strong></p></td>
+<td><p>Converts a node to a string representation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>export(ax=None, distance=1.0)</strong></p></td>
+<td><p>Exports the decision tree plot to a Matplotlib axis.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>recurse(node, ax, max_x, max_y, depth=0)</strong></p></td>
+<td><p>Recursively plots the nodes and edges of the decision tree.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.utils.TreePlotter.MPLPlotter.get_fill_color">
 <span class="sig-name descname"><span class="pre">get_fill_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/TreePlotter.html#MPLPlotter.get_fill_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.TreePlotter.MPLPlotter.get_fill_color" title="Permalink to this definition">#</a></dt>

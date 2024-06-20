@@ -553,35 +553,7 @@
             <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;_data&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
-
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Solver.optim_gap"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.optim_gap">[docs]</a>    <span class="k">def</span> <span class="nf">optim_gap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">gap</span></div>
-
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Solver.num_decision_vars"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.num_decision_vars">[docs]</a>    <span class="k">def</span> <span class="nf">num_decision_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">num_cols</span></div>
-
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Solver.num_integer_vars"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.num_integer_vars">[docs]</a>    <span class="k">def</span> <span class="nf">num_integer_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">num_int</span></div>
-
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Solver.num_non_zero"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.num_non_zero">[docs]</a>    <span class="k">def</span> <span class="nf">num_non_zero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">num_nz</span></div>
-
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Solver.num_solutions"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.num_solutions">[docs]</a>    <span class="k">def</span> <span class="nf">num_solutions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">num_solutions</span></div>
-
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Solver.num_constraints"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.num_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">num_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">num_rows</span></div>
-
-    <span class="nd">@property</span>
-<div class="viewcode-block" id="Solver.search_progress_log"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/solver/index.html#odtlearn.utils.solver.Solver.search_progress_log">[docs]</a>    <span class="k">def</span> <span class="nf">search_progress_log</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">search_progress_log</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div></div>
 </pre></div>
         </article>
       </div>

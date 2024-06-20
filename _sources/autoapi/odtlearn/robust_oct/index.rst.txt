@@ -23,7 +23,7 @@ Classes
    Bases: :py:obj:`odtlearn.opt_ct.OptimalClassificationTree`
 
    
-   An optimal robust decision tree classifier, fitted on a given integer-valued
+   An optimal robust decision tree classifier, fit on a given integer-valued
    data set and a given cost-and-budget uncertainty set to produce a tree robust
    against distribution shifts.
 
@@ -162,7 +162,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
-   .. py:method:: plot_tree(label='all', filled=True, rounded=False, precision=3, ax=None, fontsize=None, color_dict={'node': None, 'leaves': []}, edge_annotation=True, arrow_annotation_font_scale=0.8, debug=False)
+   .. py:method:: plot_tree(label='all', filled=True, rounded=False, precision=3, ax=None, fontsize=None, color_dict={'node': None, 'leaves': []}, edge_annotation=True, arrow_annotation_font_scale=0.8, debug=False, feature_names=None)
 
       
       Plot the fitted tree with the branching features, the threshold values for
@@ -212,6 +212,11 @@ Classes
           **color_dict: dict, default={"node": None, "leaves": []}**
               A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
               If None, the colors are chosen using the sklearn `plot_tree` color palette
+
+          **feature_names** : list of str, default=None
+              A list of feature names to use for the plot. If None, the feature names from the
+              fitted tree will be used. The feature names should be in the same order as the
+              columns of the data used to fit the tree.
 
 
 

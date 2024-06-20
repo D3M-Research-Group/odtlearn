@@ -253,6 +253,90 @@
 
 
 <div class="viewcode-block" id="MPLPlotter"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/TreePlotter/index.html#odtlearn.utils.TreePlotter.MPLPlotter">[docs]</a><span class="k">class</span> <span class="nc">MPLPlotter</span><span class="p">(</span><span class="n">_MPLTreeExporter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class for plotting optimal decision trees using Matplotlib.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tree : object</span>
+<span class="sd">        The decision tree object to be plotted.</span>
+<span class="sd">    node_dict : dict</span>
+<span class="sd">        A dictionary containing information about each node in the tree.</span>
+<span class="sd">    column_names : list</span>
+<span class="sd">        A list of feature names used in the decision tree.</span>
+<span class="sd">    max_depth : int</span>
+<span class="sd">        The maximum depth of the tree to plot.</span>
+<span class="sd">    classes : list</span>
+<span class="sd">        A list of class names for the target variable.</span>
+<span class="sd">    model_name : str</span>
+<span class="sd">        The name of the model used to generate the decision tree.</span>
+<span class="sd">    label : str, optional (default=&quot;all&quot;)</span>
+<span class="sd">        The type of labels to display on the nodes. Can be &quot;all&quot;, &quot;root&quot;, or None.</span>
+<span class="sd">    filled : bool, optional (default=False)</span>
+<span class="sd">        Whether to fill the nodes with color.</span>
+<span class="sd">    rounded : bool, optional (default=False)</span>
+<span class="sd">        Whether to use rounded corners for the node boxes.</span>
+<span class="sd">    precision : int, optional (default=3)</span>
+<span class="sd">        The number of decimal places to display for the cutoff values.</span>
+<span class="sd">    fontsize : int or None, optional (default=None)</span>
+<span class="sd">        The font size for the node labels. If None, the fontsize is automatically adjusted.</span>
+<span class="sd">    color_dict : dict, optional</span>
+<span class="sd">        A dictionary specifying the colors for nodes and leaves.</span>
+<span class="sd">        Default: {&quot;node&quot;: None, &quot;leaves&quot;: []}</span>
+<span class="sd">    edge_annotation : bool, optional (default=True)</span>
+<span class="sd">        Whether to display annotations on the edges.</span>
+<span class="sd">    arrow_annotation_font_scale : float, optional (default=0.5)</span>
+<span class="sd">        The font scale for the arrow annotations.</span>
+<span class="sd">    debug : bool, optional (default=False)</span>
+<span class="sd">        Whether to print debug information.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    classes : list</span>
+<span class="sd">        A list of class names for the target variable.</span>
+<span class="sd">    max_depth : int</span>
+<span class="sd">        The maximum depth of the tree to plot.</span>
+<span class="sd">    tree : object</span>
+<span class="sd">        The decision tree object to be plotted.</span>
+<span class="sd">    node_dict : dict</span>
+<span class="sd">        A dictionary containing information about each node in the tree.</span>
+<span class="sd">    column_names : list</span>
+<span class="sd">        A list of feature names used in the decision tree.</span>
+<span class="sd">    feature_names : list</span>
+<span class="sd">        A list of feature names used in the decision tree.</span>
+<span class="sd">    class_names : list</span>
+<span class="sd">        A list of class names for the target variable.</span>
+<span class="sd">    color_options : list</span>
+<span class="sd">        A list of color options for the nodes and leaves.</span>
+<span class="sd">    color_dict : dict</span>
+<span class="sd">        A dictionary specifying the colors for nodes and leaves.</span>
+<span class="sd">    edge_annotation : bool</span>
+<span class="sd">        Whether to display annotations on the edges.</span>
+<span class="sd">    arrow_annotation_font_scale : float</span>
+<span class="sd">        The font scale for the arrow annotations.</span>
+<span class="sd">    debug : bool</span>
+<span class="sd">        Whether to print debug information.</span>
+<span class="sd">    model_name : str</span>
+<span class="sd">        The name of the model used to generate the decision tree.</span>
+<span class="sd">    characters : list</span>
+<span class="sd">        A list of special characters used for formatting the node labels.</span>
+<span class="sd">    bbox_args : dict</span>
+<span class="sd">        A dictionary of arguments for the bounding box of the nodes.</span>
+<span class="sd">    arrow_args : dict</span>
+<span class="sd">        A dictionary of arguments for the arrow style.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    get_fill_color(node_id)</span>
+<span class="sd">        Returns the fill color for a given node.</span>
+<span class="sd">    node_to_str(node_id, leaf, selected_feature, cutoff, value)</span>
+<span class="sd">        Converts a node to a string representation.</span>
+<span class="sd">    export(ax=None, distance=1.0)</span>
+<span class="sd">        Exports the decision tree plot to a Matplotlib axis.</span>
+<span class="sd">    recurse(node, ax, max_x, max_y, depth=0)</span>
+<span class="sd">        Recursively plots the nodes and edges of the decision tree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tree</span><span class="p">,</span>
