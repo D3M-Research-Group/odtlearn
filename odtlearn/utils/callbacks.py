@@ -13,6 +13,27 @@ from odtlearn.utils.callback_helpers import (
 
 
 def benders_subproblem(main_model_obj, b, p, w, i):
+    """
+    Solve the Benders' subproblem for a given datapoint.
+
+    Parameters
+    ----------
+    main_model_obj : object
+        The main model object.
+    b : dict
+        The dictionary of binary decision variables representing the branching decisions.
+    p : dict
+        The dictionary of binary decision variables representing the prediction decisions.
+    w : dict
+        The dictionary of binary decision variables representing the class assignments.
+    i : int
+        The index of the current datapoint.
+
+    Returns
+    -------
+    tuple
+        A tuple containing the subproblem value, left nodes, right nodes, and target nodes.
+    """
     label_i = main_model_obj._y[i]
     current = 1
     right = []
@@ -78,6 +99,18 @@ class BendersCallback(ConstrsGenerator):
         self.w = kwargs.get("w")
 
     def generate_constrs(self, model: Model, depth: int = 0, npass: int = 0):
+        """
+        Generate Benders' cuts at the current node in the branch-and-bound tree.
+
+        Parameters
+        ----------
+        model : Model
+            The optimization model.
+        depth : int, optional
+            The depth of the current node in the branch-and-bound tree.
+        npass : int, optional
+            The pass number in the branch-and-bound process.
+        """
         g_trans, p_trans, b_trans, w_trans = (
             {k: model.translate(v).x for k, v in self.g.items()},
             {k: model.translate(v).x for k, v in self.p.items()},
@@ -118,6 +151,50 @@ def robust_tree_subproblem(
     initial_mins={},
     initial_maxes={},
 ):
+    """
+    Solve the robust tree subproblem for a given datapoint.
+
+    The robust tree subproblem aims to find the shortest path from the root node to a terminal node
+    that minimizes the cost while satisfying the robustness constraints. It takes into account the
+    feature perturbations and label perturbations to ensure the robustness of the solution.
+
+    Parameters
+    ----------
+    master : object
+        The master problem object containing the problem data and variables.
+    i : int
+        The index of the current datapoint.
+    terminal_nodes : list
+        The list of terminal nodes in the decision tree.
+    terminal_path_dict : dict
+        A dictionary mapping each terminal node to its corresponding path from the root node.
+    terminal_features_dict : dict
+        A dictionary mapping each terminal node to the list of features encountered along its path.
+    terminal_assignments_dict : dict
+        A dictionary mapping each terminal node to its class assignment.
+    terminal_cutoffs_dict : dict
+        A dictionary mapping each terminal node to the list of cutoff values encountered along its path.
+    initial_xi : dict, optional
+        The initial dictionary of feature perturbations. Default is an empty dictionary.
+    initial_mins : dict, optional
+        The initial dictionary of minimum feature values. Default is an empty dictionary.
+    initial_maxes : dict, optional
+        The initial dictionary of maximum feature values. Default is an empty dictionary.
+
+    Returns
+    -------
+    tuple
+        A tuple containing the following elements:
+        - target : list
+            The list of nodes whose edges to the sink node are part of the minimum cut.
+        - xi : dict
+            The dictionary of feature perturbations that achieve the minimum cost.
+        - cost : float
+            The minimum cost of the robust tree subproblem.
+        - v : bool
+            A boolean indicating whether the label of the datapoint is perturbed in the optimal solution.
+
+    """
     label_i = master._y[i]
     target = []  # list of nodes whose edge to the sink is part of the min cut
 
@@ -141,13 +218,32 @@ def robust_tree_subproblem(
 
 class RobustBendersCallback(ConstrsGenerator):
     """
-    This class contains the function called by the solver at every node through
-    the branch-&-bound tree while we solve the model.
-    We are specifically interested at nodes where we get an integer solution for the master problem.
-    When we get an integer solution for b and p, for every datapoint we solve the subproblem
-    which is a minimum cut and check if g[i] <= value of subproblem[i].
-    If this is violated we add the corresponding benders constraint as lazy constraint to the master
-    problem and proceed. Whenever we have no violated constraint, it means that we have found the optimal solution.
+    A callback class for generating Benders' cuts in the Robust Tree optimization.
+
+    This class contains a function that is called by the solver at every node in the
+    branch-and-bound tree while solving the model. It checks for integer solutions to
+    the master problem and generates Benders' cuts based on the subproblem solutions
+    in the Robust Tree optimization.
+
+    Parameters
+    ----------
+    X : DataFrame
+        The input data.
+    obj : object
+        The main model object.
+    solver : Solver
+        The solver object used for solving the optimization problem.
+    b : dict
+        The dictionary of decision variables representing the branching decisions.
+    w : dict
+        The dictionary of decision variables representing the class assignments.
+    t : dict
+        The dictionary of decision variables representing the subproblem objective values.
+
+    Methods
+    -------
+    generate_constrs(model, depth=0, npass=0)
+        Generate Benders' cuts at the current node in the branch-and-bound tree.
     """
 
     def __init__(self, X, obj, solver, **kwargs):
@@ -159,6 +255,18 @@ class RobustBendersCallback(ConstrsGenerator):
         self.t = kwargs.get("t")
 
     def generate_constrs(self, model: Model, depth: int = 0, npass: int = 0):
+        """
+        Generate Benders' cuts at the current node in the branch-and-bound tree.
+
+        Parameters
+        ----------
+        model : Model
+            The optimization model.
+        depth : int, optional
+            The depth of the current node in the branch-and-bound tree.
+        npass : int, optional
+            The pass number in the branch-and-bound process.
+        """
         b_trans, w_trans, t_trans = (
             {k: model.translate(v).x for k, v in self.b.items()},
             {k: model.translate(v).x for k, v in self.w.items()},

@@ -378,6 +378,7 @@ class RobustOCT(OptimalClassificationTree):
         edge_annotation=True,
         arrow_annotation_font_scale=0.8,
         debug=False,
+        feature_names=None,
     ):
         """Plot the fitted tree with the branching features, the threshold values for
         each branching node's test, and the predictions asserted for each assignment node
@@ -415,6 +416,11 @@ class RobustOCT(OptimalClassificationTree):
         color_dict: dict, default={"node": None, "leaves": []}
             A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
             If None, the colors are chosen using the sklearn `plot_tree` color palette
+
+        feature_names : list of str, default=None
+            A list of feature names to use for the plot. If None, the feature names from the
+            fitted tree will be used. The feature names should be in the same order as the
+            columns of the data used to fit the tree.
         """
         check_is_fitted(self, ["b_value", "w_value"])
 
@@ -422,10 +428,19 @@ class RobustOCT(OptimalClassificationTree):
         for node in np.arange(1, self._tree.total_nodes + 1):
             node_dict[node] = self._get_node_status(self.b_value, self.w_value, node)
 
+        # Use the provided feature names if available, otherwise use the original feature names
+        if feature_names is not None:
+            assert len(feature_names) == len(
+                self._X_col_labels
+            ), "The number of provided feature names does not match the number of columns in the data"
+            column_names = feature_names
+        else:
+            column_names = self._X_col_labels
+
         exporter = MPLPlotter(
             self._tree,
             node_dict,
-            self._X_col_labels,
+            column_names,
             self._tree.depth,
             self._classes,
             type(self).__name__,
