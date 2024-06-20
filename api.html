@@ -248,9 +248,21 @@
         <article role="main">
           <section id="odtlearn-api">
 <span id="api"></span><h1>ODTlearn API<a class="headerlink" href="#odtlearn-api" title="Permalink to this heading">#</a></h1>
-<p>This is the class and function reference of the odtlearn package. We provide a diagram of the relationship between the classes in odtlearn below.
-Please refer to the <a class="reference internal" href="notebooks/index.html"><span class="std std-doc">example notebooks</span></a> and <a class="reference internal" href="user_guide/index.html"><span class="std std-doc">user guide</span></a> for usage examples and additional information about the MIO formulations.</p>
+<p>The software architecture of <code class="docutils literal notranslate"><span class="pre">ODTlearn</span></code> is motivated by the optimal decision tree literature
+in which researchers have recently proposed numerous new problem classes, reformulation
+strategies, and solution approaches. With this in mind, we have created a class structure for
+our package that emphasizes structuring classes such that they are easy to
+maintain and extend. The following Figure shows the inheritance diagram in <code class="docutils literal notranslate"><span class="pre">ODTlearn</span></code>.</p>
 <img src="_static/img/odtlearn_class_structure.png" alt="Class diagram for ODTlearn" style="width:600px;display:block;margin-left:auto;margin-right:auto;"/>
+<p>The classes in <code class="docutils literal notranslate"><span class="pre">ODTlearn</span></code> are derived from our abstract base class <code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree</span></code>. This class provides a standardized interface for the two types of trees currently supported (classification
+and prescription) while keeping their implementation details separate from one another.
+<code class="docutils literal notranslate"><span class="pre">OptimalClassificationTree</span></code> and <code class="docutils literal notranslate"><span class="pre">OptimalPrescriptiveTree</span></code> extend <code class="docutils literal notranslate"><span class="pre">OptimalDecisionTree</span></code> by specifying problem-specific methods for traversing and visualizing the decision tree.
+The structure prevents unnecessary code duplication within each child class. Next, the children of <code class="docutils literal notranslate"><span class="pre">OptimalClassificationTree</span></code> and <code class="docutils literal notranslate"><span class="pre">OptimalPrescriptiveTree</span></code> implement methods
+for creating the decision variables, the constraints, and the objective function necessary
+for constructing the optimization problem of interest. The separate classes for each of the
+variations of the MIO formulations ensure that any changes to the structure of one problem formulation do not affect any of the other problem formulations. Finally, the leaf-node classes in the class diagram implement user-facing methods such as <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p>
+<p>This class structure is meant to encourage other researchers and practitioners to build upon <code class="docutils literal notranslate"><span class="pre">ODTlearn</span></code> by augmenting it with more features (e.g., different
+objectives or additional constraints) or even build new types of trees altogether. We provide an example of how to extend the <code class="docutils literal notranslate"><span class="pre">ODTlearn</span></code> API in our <a class="reference internal" href="user_guide/index.html"><span class="std std-doc">user guide</span></a>. The <a class="reference internal" href="notebooks/index.html"><span class="std std-doc">example notebooks</span></a> and <a class="reference internal" href="user_guide/index.html"><span class="std std-doc">user guide</span></a> for usage examples and additional information about the MIO formulations.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="autoapi/odtlearn/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn</span></code></a><ul>
