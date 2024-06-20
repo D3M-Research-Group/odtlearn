@@ -57,9 +57,9 @@ class FairConstrainedOCT(ConstrainedOCT):
         Extract metadata from the input data.
     _define_objective()
         Define the objective function for the MIP problem.
-    :meth:`fit <odtlearn.fair_oct.FairConstrainedOCT.fit>`(X, y, protect_feat, legit_factor)
+    fit(X, y, protect_feat, legit_factor)
         Fit the fair constrained optimal classification tree on the given data.
-    :meth:`predict <odtlearn.fair_oct.FairConstrainedOCT.predict>`(X)
+    predict(X)
         Predict the class labels for the given input data using the fitted model.
 
     Notes
