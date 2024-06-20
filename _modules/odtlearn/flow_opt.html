@@ -290,24 +290,28 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This class inherits from the `FlowOPTSingleSink` class and provides a user-friendly interface</span>
+<span class="sd">    This class inherits from the :mod:`odtlearn.flow_opt_ss.FlowOPTSingleSink` class</span>
+<span class="sd">    and provides a user-friendly interface</span>
 <span class="sd">    for learning optimal prescriptive trees with inverse probability weighting (IPW) objective.</span>
 
 <span class="sd">    The IPW objective is used to account for potential confounding factors in observational data</span>
 <span class="sd">    and to estimate the causal effect of treatments on outcomes. The inverse probability weights</span>
 <span class="sd">    are computed based on the propensity scores of receiving each treatment given the observed covariates.</span>
 
-<span class="sd">    The class extends the functionality of `FlowOPTSingleSink` by adding the `_ipw` attribute to store</span>
+<span class="sd">    The class extends the functionality of :mod:`odtlearn.flow_opt_ss.FlowOPTSingleSink` by adding</span>
+<span class="sd">    the `_ipw` attribute to store</span>
 <span class="sd">    the inverse probability weights and overriding the `fit` method to accept the IPW as an additional argument.</span>
 
 <span class="sd">    The `_define_objective` method is implemented to define the IPW objective function for the optimization problem.</span>
 <span class="sd">    The objective maximizes the weighted sum of outcomes, where the weights are the product of the IPW and the</span>
 <span class="sd">    treatment assignments.</span>
 
-<span class="sd">    The class inherits the `predict`, `print_tree`, and `plot_tree` methods from the `OptimalPrescriptiveTree`</span>
+<span class="sd">    The class inherits the `predict`, `print_tree`, and `plot_tree` methods from the</span>
+<span class="sd">    :mod:`odtlearn.opt_pt.OptimalPrescriptiveTree`</span>
 <span class="sd">    class to make predictions and visualize the learned tree.</span>
 
 <span class="sd">    Example usage:</span>
+
 <span class="sd">    ```python</span>
 <span class="sd">    # Create an instance of FlowOPT_IPW</span>
 <span class="sd">    opt_tree = FlowOPT_IPW(depth=3, time_limit=600, verbose=True)</span>
