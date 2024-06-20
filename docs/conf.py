@@ -97,6 +97,9 @@ def skip_submodules(app, what, name, obj, skip, options):
         "odtlearn.tests.conftest",
         "odtlearn.utils._reingold_tilford",
         "odtlearn.utils.mip_cbc",
+        "odtlearn.utils.tree",
+        # "odtlearn.utils.callbacks",
+        # "odtlearn.utils.callback_helpers",
     ]:
         skip = True
     return skip
