@@ -61,11 +61,12 @@ class OptimalDecisionTree(ABC):
     -----
     This is an abstract base class and cannot be instantiated directly.
     Subclasses must implement the following abstract methods:
-    - `_define_variables()`
-    - `_define_constraints()`
-    - `_define_objective()`
-    - `fit()`
-    - `predict()`
+
+    * `_define_variables()`
+    * `_define_constraints()`
+    * `_define_objective()`
+    * `fit()`
+    * `predict()`
     """
 
     def __init__(
