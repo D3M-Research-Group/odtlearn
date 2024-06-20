@@ -284,7 +284,8 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.fair_oct.</span></span><span class="sig-name descname"><span class="pre">FairConstrainedOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairConstrainedOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairConstrainedOCT" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../constrained_oct/index.html#odtlearn.constrained_oct.ConstrainedOCT" title="odtlearn.constrained_oct.ConstrainedOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.constrained_oct.ConstrainedOCT</span></code></a></p>
 <p>Base class for fair constrained optimal classification trees.</p>
-<p>This class extends the <cite>ConstrainedOCT</cite> class and provides a framework for implementing
+<p>This class extends the <a class="reference internal" href="../constrained_oct/index.html#odtlearn.constrained_oct.ConstrainedOCT" title="odtlearn.constrained_oct.ConstrainedOCT"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ConstrainedOCT</span></code></a> class
+and provides a framework for implementing
 fair constrained optimal classification trees. It includes methods for adding fairness
 constraints, extracting metadata from the input data, and defining the objective function.</p>
 <dl class="field-list simple">
@@ -307,13 +308,19 @@ constraints, extracting metadata from the input data, and defining the objective
 </dl>
 <p class="rubric">Notes</p>
 <p>This is a base class and should not be instantiated directly. Instead, use one of the
-derived classes that implement a specific fairness constraint, such as <cite>FairSPOCT</cite>,
-<cite>FairCSPOCT</cite>, <cite>FairPEOCT</cite>, <cite>FairEOppOCT</cite>, or <cite>FairEOddsOCT</cite>.</p>
-<p>The <cite>fit</cite> method expects the input data <cite>X</cite>, target labels <cite>y</cite>, protected features
+derived classes that implement a specific fairness constraint, such as
+<a class="reference internal" href="#odtlearn.fair_oct.FairSPOCT" title="odtlearn.fair_oct.FairSPOCT"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FairSPOCT</span></code></a>,
+<a class="reference internal" href="#odtlearn.fair_oct.FairCSPOCT" title="odtlearn.fair_oct.FairCSPOCT"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FairCSPOCT</span></code></a>,
+<a class="reference internal" href="#odtlearn.fair_oct.FairPEOCT" title="odtlearn.fair_oct.FairPEOCT"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FairPEOCT</span></code></a>,
+<a class="reference internal" href="#odtlearn.fair_oct.FairEOppOCT" title="odtlearn.fair_oct.FairEOppOCT"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FairEOppOCT</span></code></a>,
+or <a class="reference internal" href="#odtlearn.fair_oct.FairEOddsOCT" title="odtlearn.fair_oct.FairEOddsOCT"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FairEOddsOCT</span></code></a>.</p>
+<p>The <a class="reference internal" href="#odtlearn.fair_oct.FairConstrainedOCT.fit" title="odtlearn.fair_oct.FairConstrainedOCT.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a> method expects the input data <cite>X</cite>,
+target labels <cite>y</cite>, protected features
 <cite>protect_feat</cite>, and legitimate factors <cite>legit_factor</cite> (if applicable) to be provided.
 The protected features should be binary-valued, and the legitimate factors should be
 numeric.</p>
-<p>The <cite>predict</cite> method expects the input data <cite>X</cite> to have the same columns as the data
+<p>The <a class="reference internal" href="#odtlearn.fair_oct.FairConstrainedOCT.predict" title="odtlearn.fair_oct.FairConstrainedOCT.predict"><code class="xref py py-meth docutils literal notranslate"><span class="pre">predict</span></code></a> method expects the input data
+<cite>X</cite> to have the same columns as the data
 used for fitting the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes<span class="colon">:</span></dt>
@@ -344,10 +351,10 @@ used for fitting the model.</p>
 <tr class="row-odd"><td><p><strong>_define_objective()</strong></p></td>
 <td><p>Define the objective function for the MIP problem.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>fit(X, y, protect_feat, legit_factor)</strong></p></td>
+<tr class="row-even"><td><p><strong>:meth:`fit &lt;odtlearn.fair_oct.FairConstrainedOCT.fit&gt;`(X, y, protect_feat, legit_factor)</strong></p></td>
 <td><p>Fit the fair constrained optimal classification tree on the given data.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>predict(X)</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`predict &lt;odtlearn.fair_oct.FairConstrainedOCT.predict&gt;`(X)</strong></p></td>
 <td><p>Predict the class labels for the given input data using the fitted model.</p></td>
 </tr>
 </tbody>

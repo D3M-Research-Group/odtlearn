@@ -54,9 +54,11 @@ Classes
    .. rubric:: Notes
 
    This is a base class and should not be instantiated directly. Instead, use one of the
-   derived classes that implement a specific prescriptive tree method, such as `FlowOPT_IPW`.
+   derived classes that implement a specific prescriptive tree method, such as
+   :mod:`FlowOPT_IPW <odtlearn.flow_opt_ipw.FlowOPT_IPW>`.
 
-   This class extends the `OptimalPrescriptiveTree` class to learn optimal prescriptive trees
+   This class extends the :mod:`OptimalPrescriptiveTree <odtlearn.opt_pt.OptimalPrescriptiveTree>` class
+   to learn optimal prescriptive trees
    with a single sink node using flow optimization. It formulates the problem as a mixed-integer
    program (MIP) and solves it using either the Gurobi or CBC solver.
 
@@ -65,15 +67,21 @@ Classes
    is to optimize the treatment recommendation based on the characteristics of each datapoint.
 
    The class defines decision variables and constraints specific to the flow optimization
-   formulation with a single sink node. The `_define_variables` method defines the decision
-   variables, including the tree structure variables (`_b`, `_p`, `_w`) and the flow variable (`_z`).
+   formulation with a single sink node.
+   The :meth:`_define_variables <odtlearn.flow_opt_ss.FlowOPTSingleSink._define_variables>` method defines
+   the decision variables, including the tree structure variables (`_b`, `_p`, `_w`) and the flow variable (`_z`).
 
-   The `_define_constraints` method defines the constraints, including the tree structure
+   The :meth:`_define_constraints <odtlearn.flow_opt_ss.FlowOPTSingleSink._define_constraints>` method
+   defines the constraints, including the tree structure
    constraints and flow constraints. These constraints ensure the validity of the tree structure
    and the proper flow of datapoints through the tree to a single sink node.
 
-   The class inherits the `fit`, `predict`, `print_tree`, and `plot_tree` methods from the
-   `OptimalPrescriptiveTree` class to learn the optimal prescriptive tree, make predictions,
+   The class inherits the :meth:`fit <odtlearn.opt_pt.OptimalPrescriptiveTree.fit>`,
+   :meth:`predict <odtlearn.opt_pt.OptimalPrescriptiveTree.predict>`,
+   :meth:`print_tree <odtlearn.opt_pt.OptimalPrescriptiveTree.print_tree>`,
+   and :meth:`plot_tree <odtlearn.opt_pt.OptimalPrescriptiveTree.plot_tree>` methods from the
+   :mod:`OptimalPrescriptiveTree <odtlearn.opt_pt.OptimalPrescriptiveTree>` class to learn the optimal prescriptive
+   tree, make predictions,
    and visualize the learned tree.
 
 
@@ -96,14 +104,14 @@ Classes
 
 
 
-   =================================  ==========
-         **_tree_struc_variables()**  Defines the decision variables related to the tree structure.  
-               **_flow_variables()**  Defines the decision variables related to the flow of datapoints.  
-             **_define_variables()**  Defines all the decision variables used in the optimization problem.  
-   **_tree_structure_constraints()**  Defines the constraints related to the tree structure.  
-             **_flow_constraints()**  Defines the constraints related to the flow of datapoints.  
-           **_define_constraints()**  Defines all the constraints used in the optimization problem.  
-   =================================  ==========
+   ==============================================================================================================  ==========
+               **:meth:`_tree_struc_variables <odtlearn.flow_opt_ss.FlowOPTSingleSink._tree_struc_variables>`()**  Defines the decision variables related to the tree structure.  
+                           **:meth:`_flow_variables <odtlearn.flow_opt_ss.FlowOPTSingleSink._flow_variables>`()**  Defines the decision variables related to the flow of datapoints.  
+                       **:meth:`_define_variables <odtlearn.flow_opt_ss.FlowOPTSingleSink._define_variables>`()**  Defines all the decision variables used in the optimization problem.  
+   **:meth:`_tree_structure_constraints <odtlearn.flow_opt_ss.FlowOPTSingleSink._tree_structure_constraints>`()**  Defines the constraints related to the tree structure.  
+                       **:meth:`_flow_constraints <odtlearn.flow_opt_ss.FlowOPTSingleSink._flow_constraints>`()**  Defines the constraints related to the flow of datapoints.  
+                   **:meth:`_define_constraints <odtlearn.flow_opt_ss.FlowOPTSingleSink._define_constraints>`()**  Defines all the constraints used in the optimization problem.  
+   ==============================================================================================================  ==========
 
    ..
        !! processed by numpydoc !!

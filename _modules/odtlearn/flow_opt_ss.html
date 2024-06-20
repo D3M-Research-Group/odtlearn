@@ -279,25 +279,27 @@
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
-<span class="sd">    _tree_struc_variables()</span>
+<span class="sd">    :meth:`_tree_struc_variables &lt;odtlearn.flow_opt_ss.FlowOPTSingleSink._tree_struc_variables&gt;`()</span>
 <span class="sd">        Defines the decision variables related to the tree structure.</span>
-<span class="sd">    _flow_variables()</span>
+<span class="sd">    :meth:`_flow_variables &lt;odtlearn.flow_opt_ss.FlowOPTSingleSink._flow_variables&gt;`()</span>
 <span class="sd">        Defines the decision variables related to the flow of datapoints.</span>
-<span class="sd">    _define_variables()</span>
+<span class="sd">    :meth:`_define_variables &lt;odtlearn.flow_opt_ss.FlowOPTSingleSink._define_variables&gt;`()</span>
 <span class="sd">        Defines all the decision variables used in the optimization problem.</span>
-<span class="sd">    _tree_structure_constraints()</span>
+<span class="sd">    :meth:`_tree_structure_constraints &lt;odtlearn.flow_opt_ss.FlowOPTSingleSink._tree_structure_constraints&gt;`()</span>
 <span class="sd">        Defines the constraints related to the tree structure.</span>
-<span class="sd">    _flow_constraints()</span>
+<span class="sd">    :meth:`_flow_constraints &lt;odtlearn.flow_opt_ss.FlowOPTSingleSink._flow_constraints&gt;`()</span>
 <span class="sd">        Defines the constraints related to the flow of datapoints.</span>
-<span class="sd">    _define_constraints()</span>
+<span class="sd">    :meth:`_define_constraints &lt;odtlearn.flow_opt_ss.FlowOPTSingleSink._define_constraints&gt;`()</span>
 <span class="sd">        Defines all the constraints used in the optimization problem.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    This is a base class and should not be instantiated directly. Instead, use one of the</span>
-<span class="sd">    derived classes that implement a specific prescriptive tree method, such as `FlowOPT_IPW`.</span>
+<span class="sd">    derived classes that implement a specific prescriptive tree method, such as</span>
+<span class="sd">    :mod:`FlowOPT_IPW &lt;odtlearn.flow_opt_ipw.FlowOPT_IPW&gt;`.</span>
 
-<span class="sd">    This class extends the `OptimalPrescriptiveTree` class to learn optimal prescriptive trees</span>
+<span class="sd">    This class extends the :mod:`OptimalPrescriptiveTree &lt;odtlearn.opt_pt.OptimalPrescriptiveTree&gt;` class</span>
+<span class="sd">    to learn optimal prescriptive trees</span>
 <span class="sd">    with a single sink node using flow optimization. It formulates the problem as a mixed-integer</span>
 <span class="sd">    program (MIP) and solves it using either the Gurobi or CBC solver.</span>
 
@@ -306,15 +308,21 @@
 <span class="sd">    is to optimize the treatment recommendation based on the characteristics of each datapoint.</span>
 
 <span class="sd">    The class defines decision variables and constraints specific to the flow optimization</span>
-<span class="sd">    formulation with a single sink node. The `_define_variables` method defines the decision</span>
-<span class="sd">    variables, including the tree structure variables (`_b`, `_p`, `_w`) and the flow variable (`_z`).</span>
+<span class="sd">    formulation with a single sink node.</span>
+<span class="sd">    The :meth:`_define_variables &lt;odtlearn.flow_opt_ss.FlowOPTSingleSink._define_variables&gt;` method defines</span>
+<span class="sd">    the decision variables, including the tree structure variables (`_b`, `_p`, `_w`) and the flow variable (`_z`).</span>
 
-<span class="sd">    The `_define_constraints` method defines the constraints, including the tree structure</span>
+<span class="sd">    The :meth:`_define_constraints &lt;odtlearn.flow_opt_ss.FlowOPTSingleSink._define_constraints&gt;` method</span>
+<span class="sd">    defines the constraints, including the tree structure</span>
 <span class="sd">    constraints and flow constraints. These constraints ensure the validity of the tree structure</span>
 <span class="sd">    and the proper flow of datapoints through the tree to a single sink node.</span>
 
-<span class="sd">    The class inherits the `fit`, `predict`, `print_tree`, and `plot_tree` methods from the</span>
-<span class="sd">    `OptimalPrescriptiveTree` class to learn the optimal prescriptive tree, make predictions,</span>
+<span class="sd">    The class inherits the :meth:`fit &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.fit&gt;`,</span>
+<span class="sd">    :meth:`predict &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.predict&gt;`,</span>
+<span class="sd">    :meth:`print_tree &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.print_tree&gt;`,</span>
+<span class="sd">    and :meth:`plot_tree &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.plot_tree&gt;` methods from the</span>
+<span class="sd">    :mod:`OptimalPrescriptiveTree &lt;odtlearn.opt_pt.OptimalPrescriptiveTree&gt;` class to learn the optimal prescriptive</span>
+<span class="sd">    tree, make predictions,</span>
 <span class="sd">    and visualize the learned tree.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

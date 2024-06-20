@@ -289,20 +289,24 @@
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>This class inherits from the <a class="reference internal" href="../flow_opt_ss/index.html#odtlearn.flow_opt_ss.FlowOPTSingleSink" title="odtlearn.flow_opt_ss.FlowOPTSingleSink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_opt_ss.FlowOPTSingleSink</span></code></a> class
+<p>This class inherits from the <a class="reference internal" href="../flow_opt_ss/index.html#odtlearn.flow_opt_ss.FlowOPTSingleSink" title="odtlearn.flow_opt_ss.FlowOPTSingleSink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FlowOPTSingleSink</span></code></a> class
 and provides a user-friendly interface
 for learning optimal prescriptive trees with inverse probability weighting (IPW) objective.</p>
 <p>The IPW objective is used to account for potential confounding factors in observational data
 and to estimate the causal effect of treatments on outcomes. The inverse probability weights
 are computed based on the propensity scores of receiving each treatment given the observed covariates.</p>
-<p>The class extends the functionality of <a class="reference internal" href="../flow_opt_ss/index.html#odtlearn.flow_opt_ss.FlowOPTSingleSink" title="odtlearn.flow_opt_ss.FlowOPTSingleSink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.flow_opt_ss.FlowOPTSingleSink</span></code></a> by adding
+<p>The class extends the functionality of <a class="reference internal" href="../flow_opt_ss/index.html#odtlearn.flow_opt_ss.FlowOPTSingleSink" title="odtlearn.flow_opt_ss.FlowOPTSingleSink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FlowOPTSingleSink</span></code></a> by adding
 the <cite>_ipw</cite> attribute to store
-the inverse probability weights and overriding the <cite>fit</cite> method to accept the IPW as an additional argument.</p>
-<p>The <cite>_define_objective</cite> method is implemented to define the IPW objective function for the optimization problem.
+the inverse probability weights and overriding the <a class="reference internal" href="#odtlearn.flow_opt.FlowOPT_IPW.fit" title="odtlearn.flow_opt.FlowOPT_IPW.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a> method to
+accept the IPW as an additional argument.</p>
+<p>The <code class="xref py py-meth docutils literal notranslate"><span class="pre">_define_objective</span></code> method is implemented to define
+the IPW objective function for the optimization problem.
 The objective maximizes the weighted sum of outcomes, where the weights are the product of the IPW and the
 treatment assignments.</p>
-<p>The class inherits the <cite>predict</cite>, <cite>print_tree</cite>, and <cite>plot_tree</cite> methods from the
-<a class="reference internal" href="../opt_pt/index.html#odtlearn.opt_pt.OptimalPrescriptiveTree" title="odtlearn.opt_pt.OptimalPrescriptiveTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.opt_pt.OptimalPrescriptiveTree</span></code></a>
+<p>The class inherits the <code class="xref py py-meth docutils literal notranslate"><span class="pre">predict</span></code>,
+<a class="reference internal" href="../opt_pt/index.html#odtlearn.opt_pt.OptimalPrescriptiveTree.print_tree" title="odtlearn.opt_pt.OptimalPrescriptiveTree.print_tree"><code class="xref py py-meth docutils literal notranslate"><span class="pre">print_tree</span></code></a>,
+and <a class="reference internal" href="../opt_pt/index.html#odtlearn.opt_pt.OptimalPrescriptiveTree.plot_tree" title="odtlearn.opt_pt.OptimalPrescriptiveTree.plot_tree"><code class="xref py py-meth docutils literal notranslate"><span class="pre">plot_tree</span></code></a> methods from the
+<a class="reference internal" href="../opt_pt/index.html#odtlearn.opt_pt.OptimalPrescriptiveTree" title="odtlearn.opt_pt.OptimalPrescriptiveTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">OptimalPrescriptiveTree</span></code></a>
 class to make predictions and visualize the learned tree.</p>
 <p>Example usage:</p>
 <p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
@@ -315,10 +319,10 @@ predictions = opt_tree.predict(X_new)</p>
 <p># Plot the learned tree
 opt_tree.plot_tree()
 <a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Attributes<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>_ipw</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>The inverse probability weights for each datapoint.</p>
+<dd class="field-odd"><dl>
+<dt><strong>_ipw</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The inverse probability weights for each datapoint.</p>
 </dd>
 </dl>
 </dd>
@@ -327,10 +331,10 @@ opt_tree.plot_tree()
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><strong>fit(X, y, t, ipw)</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`fit &lt;odtlearn.flow_opt.FlowOPT_IPW.fit&gt;`(X, y, t, ipw)</strong></p></td>
 <td><p>Fit the optimal prescriptive tree using the provided data and inverse probability weights.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>_define_objective()</strong></p></td>
+<tr class="row-even"><td><p><strong>:meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_IPW._define_objective&gt;`()</strong></p></td>
 <td><p>Define the objective function for the optimization problem.</p></td>
 </tr>
 </tbody>
@@ -408,14 +412,18 @@ the solver uses all available threads.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>This class inherits from the <cite>FlowOPTMultipleSink</cite> class and provides a user-friendly interface
+<p>This class inherits from the <a class="reference internal" href="../flow_opt_ms/index.html#odtlearn.flow_opt_ms.FlowOPTMultipleSink" title="odtlearn.flow_opt_ms.FlowOPTMultipleSink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FlowOPTMultipleSink</span></code></a> class
+and provides a user-friendly interface
 for learning optimal prescriptive trees with the direct method (DM) objective.</p>
 <p>The DM objective aims to maximize the expected outcome by directly using the counterfactual
 predictions (y_hat) for each treatment option. The counterfactual predictions represent the
 estimated outcomes for each individual under different treatment scenarios.</p>
-<p>The class extends the functionality of <cite>FlowOPTMultipleSink</cite> by overriding the <cite>fit</cite> method to
+<p>The class extends the functionality of
+<a class="reference internal" href="../flow_opt_ms/index.html#odtlearn.flow_opt_ms.FlowOPTMultipleSink" title="odtlearn.flow_opt_ms.FlowOPTMultipleSink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FlowOPTMultipleSink</span></code></a> by overriding
+the <a class="reference internal" href="#odtlearn.flow_opt.FlowOPT_DM.fit" title="odtlearn.flow_opt.FlowOPT_DM.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a> method to
 accept the counterfactual predictions (y_hat) as an additional argument.</p>
-<p>The <cite>_define_objective</cite> method is implemented to define the DM objective function for the
+<p>The <code class="xref py py-meth docutils literal notranslate"><span class="pre">_define_objective</span></code> method is implemented to
+define the DM objective function for the
 optimization problem. The objective maximizes the sum of the counterfactual predictions weighted
 by the treatment assignments.</p>
 <p>Example usage:
@@ -431,13 +439,13 @@ recommendations = opt_tree.predict(X_new)
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><strong>fit(X, t, y, y_hat)</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`fit &lt;odtlearn.flow_opt.FlowOPT_DM.fit&gt;`(X, t, y, y_hat)</strong></p></td>
 <td><p>Fit the optimal prescriptive tree using the provided data and counterfactual predictions.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>predict(X)</strong></p></td>
+<tr class="row-even"><td><p><strong>:meth:`predict &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.predict&gt;`(X)</strong></p></td>
 <td><p>Make treatment recommendations for the given input samples.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>_define_objective()</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_DM._define_objective&gt;`()</strong></p></td>
 <td><p>Define the objective function for the optimization problem.</p></td>
 </tr>
 </tbody>
@@ -516,15 +524,18 @@ the solver uses all available threads.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>This class inherits from the <cite>FlowOPTMultipleSink</cite> class and provides a user-friendly interface
+<p>This class inherits from the <a class="reference internal" href="../flow_opt_ms/index.html#odtlearn.flow_opt_ms.FlowOPTMultipleSink" title="odtlearn.flow_opt_ms.FlowOPTMultipleSink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FlowOPTMultipleSink</span></code></a> class
+and provides a user-friendly interface
 for learning optimal prescriptive trees with the doubly robust (DR) objective.</p>
 <p>The DR objective combines the inverse probability weighting (IPW) and the direct method (DM)
 to obtain a more robust estimate of the treatment effect. It utilizes both the observed outcomes
 and the counterfactual predictions, along with the inverse propensity weights.</p>
-<p>The class extends the functionality of <cite>FlowOPTMultipleSink</cite> by overriding the <cite>fit</cite> method to
+<p>The class extends the functionality of <a class="reference internal" href="../flow_opt_ms/index.html#odtlearn.flow_opt_ms.FlowOPTMultipleSink" title="odtlearn.flow_opt_ms.FlowOPTMultipleSink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FlowOPTMultipleSink</span></code></a>
+by overriding the <a class="reference internal" href="#odtlearn.flow_opt.FlowOPT_DR.fit" title="odtlearn.flow_opt.FlowOPT_DR.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a> method to
 accept the inverse propensity weights (ipw) and counterfactual predictions (y_hat) as additional
 arguments.</p>
-<p>The <cite>_define_objective</cite> method is implemented to define the DR objective function for the
+<p>The <code class="xref py py-meth docutils literal notranslate"><span class="pre">_define_objective</span></code> method is implemented to define
+the DR objective function for the
 optimization problem. The objective maximizes the sum of the counterfactual predictions weighted
 by the treatment assignments, plus an additional term that adjusts for the difference between the
 observed outcomes and the counterfactual predictions, weighted by the inverse propensity weights.</p>
@@ -541,13 +552,13 @@ recommendations = opt_tree.predict(X_new)
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><strong>fit(X, t, y, ipw, y_hat)</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`fit &lt;odtlearn.flow_opt.FlowOPT_DR.fit&gt;`(X, t, y, ipw, y_hat)</strong></p></td>
 <td><p>Fit the optimal prescriptive tree using the provided data, inverse propensity weights, and counterfactual predictions.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>predict(X)</strong></p></td>
+<tr class="row-even"><td><p><strong>:meth:`predict &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.predict&gt;`(X)</strong></p></td>
 <td><p>Make treatment recommendations for the given input samples.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>_define_objective()</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_DR._define_objective&gt;`()</strong></p></td>
 <td><p>Define the objective function for the optimization problem.</p></td>
 </tr>
 </tbody>

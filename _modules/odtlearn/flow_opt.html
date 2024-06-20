@@ -278,19 +278,19 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    _ipw : numpy.ndarray</span>
+<span class="sd">    _ipw : :class:`numpy.ndarray`</span>
 <span class="sd">        The inverse probability weights for each datapoint.</span>
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
-<span class="sd">    fit(X, y, t, ipw)</span>
+<span class="sd">    :meth:`fit &lt;odtlearn.flow_opt.FlowOPT_IPW.fit&gt;`(X, y, t, ipw)</span>
 <span class="sd">        Fit the optimal prescriptive tree using the provided data and inverse probability weights.</span>
-<span class="sd">    _define_objective()</span>
+<span class="sd">    :meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_IPW._define_objective&gt;`()</span>
 <span class="sd">        Define the objective function for the optimization problem.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This class inherits from the :mod:`odtlearn.flow_opt_ss.FlowOPTSingleSink` class</span>
+<span class="sd">    This class inherits from the :mod:`FlowOPTSingleSink &lt;odtlearn.flow_opt_ss.FlowOPTSingleSink&gt;` class</span>
 <span class="sd">    and provides a user-friendly interface</span>
 <span class="sd">    for learning optimal prescriptive trees with inverse probability weighting (IPW) objective.</span>
 
@@ -298,16 +298,20 @@
 <span class="sd">    and to estimate the causal effect of treatments on outcomes. The inverse probability weights</span>
 <span class="sd">    are computed based on the propensity scores of receiving each treatment given the observed covariates.</span>
 
-<span class="sd">    The class extends the functionality of :mod:`odtlearn.flow_opt_ss.FlowOPTSingleSink` by adding</span>
+<span class="sd">    The class extends the functionality of :mod:`FlowOPTSingleSink &lt;odtlearn.flow_opt_ss.FlowOPTSingleSink&gt;` by adding</span>
 <span class="sd">    the `_ipw` attribute to store</span>
-<span class="sd">    the inverse probability weights and overriding the `fit` method to accept the IPW as an additional argument.</span>
+<span class="sd">    the inverse probability weights and overriding the :meth:`fit &lt;odtlearn.flow_opt.FlowOPT_IPW.fit&gt;` method to</span>
+<span class="sd">    accept the IPW as an additional argument.</span>
 
-<span class="sd">    The `_define_objective` method is implemented to define the IPW objective function for the optimization problem.</span>
+<span class="sd">    The :meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_IPW._define_objective&gt;` method is implemented to define</span>
+<span class="sd">    the IPW objective function for the optimization problem.</span>
 <span class="sd">    The objective maximizes the weighted sum of outcomes, where the weights are the product of the IPW and the</span>
 <span class="sd">    treatment assignments.</span>
 
-<span class="sd">    The class inherits the `predict`, `print_tree`, and `plot_tree` methods from the</span>
-<span class="sd">    :mod:`odtlearn.opt_pt.OptimalPrescriptiveTree`</span>
+<span class="sd">    The class inherits the :meth:`predict &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.predict&gt;`,</span>
+<span class="sd">    :meth:`print_tree &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.print_tree&gt;`,</span>
+<span class="sd">    and :meth:`plot_tree &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.plot_tree&gt;` methods from the</span>
+<span class="sd">    :mod:`OptimalPrescriptiveTree &lt;odtlearn.opt_pt.OptimalPrescriptiveTree&gt;`</span>
 <span class="sd">    class to make predictions and visualize the learned tree.</span>
 
 <span class="sd">    Example usage:</span>
@@ -442,26 +446,30 @@
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
-<span class="sd">    fit(X, t, y, y_hat)</span>
+<span class="sd">    :meth:`fit &lt;odtlearn.flow_opt.FlowOPT_DM.fit&gt;`(X, t, y, y_hat)</span>
 <span class="sd">        Fit the optimal prescriptive tree using the provided data and counterfactual predictions.</span>
-<span class="sd">    predict(X)</span>
+<span class="sd">    :meth:`predict &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.predict&gt;`(X)</span>
 <span class="sd">        Make treatment recommendations for the given input samples.</span>
-<span class="sd">    _define_objective()</span>
+<span class="sd">    :meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_DM._define_objective&gt;`()</span>
 <span class="sd">        Define the objective function for the optimization problem.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This class inherits from the `FlowOPTMultipleSink` class and provides a user-friendly interface</span>
+<span class="sd">    This class inherits from the :mod:`FlowOPTMultipleSink &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink&gt;` class</span>
+<span class="sd">    and provides a user-friendly interface</span>
 <span class="sd">    for learning optimal prescriptive trees with the direct method (DM) objective.</span>
 
 <span class="sd">    The DM objective aims to maximize the expected outcome by directly using the counterfactual</span>
 <span class="sd">    predictions (y_hat) for each treatment option. The counterfactual predictions represent the</span>
 <span class="sd">    estimated outcomes for each individual under different treatment scenarios.</span>
 
-<span class="sd">    The class extends the functionality of `FlowOPTMultipleSink` by overriding the `fit` method to</span>
+<span class="sd">    The class extends the functionality of</span>
+<span class="sd">    :mod:`FlowOPTMultipleSink &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink&gt;` by overriding</span>
+<span class="sd">    the :meth:`fit &lt;odtlearn.flow_opt.FlowOPT_DM.fit&gt;` method to</span>
 <span class="sd">    accept the counterfactual predictions (y_hat) as an additional argument.</span>
 
-<span class="sd">    The `_define_objective` method is implemented to define the DM objective function for the</span>
+<span class="sd">    The :meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_DM._define_objective&gt;` method is implemented to</span>
+<span class="sd">    define the DM objective function for the</span>
 <span class="sd">    optimization problem. The objective maximizes the sum of the counterfactual predictions weighted</span>
 <span class="sd">    by the treatment assignments.</span>
 
@@ -607,28 +615,31 @@
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
-<span class="sd">    fit(X, t, y, ipw, y_hat)</span>
+<span class="sd">    :meth:`fit &lt;odtlearn.flow_opt.FlowOPT_DR.fit&gt;`(X, t, y, ipw, y_hat)</span>
 <span class="sd">        Fit the optimal prescriptive tree using the provided data, inverse propensity weights,</span>
 <span class="sd">        and counterfactual predictions.</span>
-<span class="sd">    predict(X)</span>
+<span class="sd">    :meth:`predict &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.predict&gt;`(X)</span>
 <span class="sd">        Make treatment recommendations for the given input samples.</span>
-<span class="sd">    _define_objective()</span>
+<span class="sd">    :meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_DR._define_objective&gt;`()</span>
 <span class="sd">        Define the objective function for the optimization problem.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This class inherits from the `FlowOPTMultipleSink` class and provides a user-friendly interface</span>
+<span class="sd">    This class inherits from the :mod:`FlowOPTMultipleSink &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink&gt;` class</span>
+<span class="sd">    and provides a user-friendly interface</span>
 <span class="sd">    for learning optimal prescriptive trees with the doubly robust (DR) objective.</span>
 
 <span class="sd">    The DR objective combines the inverse probability weighting (IPW) and the direct method (DM)</span>
 <span class="sd">    to obtain a more robust estimate of the treatment effect. It utilizes both the observed outcomes</span>
 <span class="sd">    and the counterfactual predictions, along with the inverse propensity weights.</span>
 
-<span class="sd">    The class extends the functionality of `FlowOPTMultipleSink` by overriding the `fit` method to</span>
+<span class="sd">    The class extends the functionality of :mod:`FlowOPTMultipleSink &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink&gt;`</span>
+<span class="sd">    by overriding the :meth:`fit &lt;odtlearn.flow_opt.FlowOPT_DR.fit&gt;` method to</span>
 <span class="sd">    accept the inverse propensity weights (ipw) and counterfactual predictions (y_hat) as additional</span>
 <span class="sd">    arguments.</span>
 
-<span class="sd">    The `_define_objective` method is implemented to define the DR objective function for the</span>
+<span class="sd">    The :meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_DR._define_objective&gt;` method is implemented to define</span>
+<span class="sd">    the DR objective function for the</span>
 <span class="sd">    optimization problem. The objective maximizes the sum of the counterfactual predictions weighted</span>
 <span class="sd">    by the treatment assignments, plus an additional term that adjusts for the difference between the</span>
 <span class="sd">    observed outcomes and the counterfactual predictions, weighted by the inverse propensity weights.</span>

@@ -289,31 +289,39 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This class extends the `FlowOCTSingleSink` class and provides the implementation for learning</span>
+<span class="sd">    This class extends the :mod:`FlowOCTSingleSink &lt;odtlearn.flow_oct_ss.FlowOCTSingleSink&gt;` class</span>
+<span class="sd">    and provides the implementation for learning</span>
 <span class="sd">    optimal classification trees using the flow-based formulation with a single sink node.</span>
 
-<span class="sd">    The `FlowOCT` class is a user-facing class that can be instantiated directly to learn optimal</span>
-<span class="sd">    classification trees. It inherits the basic structure and functionality from the `FlowOCTSingleSink`</span>
+<span class="sd">    The :mod:`FlowOCT &lt;odtlearn.flow_oct.FlowOCT&gt;` class is a user-facing class that can be instantiated</span>
+<span class="sd">    directly to learn optimal</span>
+<span class="sd">    classification trees. It inherits the basic structure and functionality from the</span>
+<span class="sd">    :mod:`FlowOCTSingleSink &lt;odtlearn.flow_oct_ss.FlowOCTSingleSink&gt;`</span>
 <span class="sd">    class and adds the specific objective function and model fitting process.</span>
 
 <span class="sd">    The class supports two objective modes: &quot;acc&quot; (accuracy) and &quot;balance&quot;. The accuracy objective</span>
 <span class="sd">    aims to maximize the prediction accuracy of the learned tree, while the balance objective aims</span>
 <span class="sd">    to learn a balanced optimal decision tree to better generalize to out-of-sample data.</span>
 
-<span class="sd">    The `fit` method is used to fit the optimal classification tree to the given training data. It</span>
+<span class="sd">    The The :meth:`fit &lt;odtlearn.flow_oct.FlowOCT.fit&gt;` method method is used to fit the optimal</span>
+<span class="sd">    classification tree to the given training data. It</span>
 <span class="sd">    preprocesses the input data, creates the main optimization problem, and solves it using the</span>
 <span class="sd">    specified solver and parameters.</span>
 
-<span class="sd">    The `predict` method is used to make predictions using the fitted optimal classification tree.</span>
+<span class="sd">    The :meth:`predict &lt;odtlearn.flow_oct.FlowOCT.predict&gt;` method is used to make predictions using</span>
+<span class="sd">    the fitted optimal classification tree.</span>
 <span class="sd">    It takes the input data and traverses the tree based on the learned branching and prediction</span>
 <span class="sd">    decisions to generate the predictions.</span>
 
-<span class="sd">    The `_define_objective` method defines the objective function for the optimization problem based</span>
+<span class="sd">    The :meth:`_define_objective &lt;odtlearn.flow_oct.FlowOCT._define_objective&gt;` method defines the</span>
+<span class="sd">    objective function for the optimization problem based</span>
 <span class="sd">    on the selected objective mode. It incorporates the regularization term and the accuracy or</span>
 <span class="sd">    balance objective term.</span>
 
-<span class="sd">    Users can instantiate the `FlowOCT` class directly and use it to learn optimal classification</span>
-<span class="sd">    trees by calling the `fit` method with the training data and then using the `predict` method</span>
+<span class="sd">    Users can instantiate the :mod:`FlowOCT &lt;odtlearn.flow_oct.FlowOCT&gt;` class directly and use it to</span>
+<span class="sd">    learn optimal classification</span>
+<span class="sd">    trees by calling the :meth:`fit &lt;odtlearn.flow_oct.FlowOCT.fit&gt;` method with the training data and</span>
+<span class="sd">    then using the :meth:`predict &lt;odtlearn.flow_oct.FlowOCT.predict&gt;` method</span>
 <span class="sd">    to make predictions on new data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -453,12 +461,15 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This class extends the `FlowOCTSingleSink` class and provides the implementation for learning</span>
+<span class="sd">    This class extends the :mod:`FlowOCTSingleSink &lt;odtlearn.flow_oct_ss.FlowOCTSingleSink&gt;` class</span>
+<span class="sd">    and provides the implementation for learning</span>
 <span class="sd">    optimal classification trees using Benders&#39; decomposition with a single sink node.</span>
 
-<span class="sd">    The `BendersOCT` class is a user-facing class that can be instantiated directly to learn optimal</span>
+<span class="sd">    The :mod:`BendersOCT &lt;odtlearn.flow_oct.BendersOCT&gt;` class is a user-facing class that</span>
+<span class="sd">    can be instantiated directly to learn optimal</span>
 <span class="sd">    classification trees using Benders&#39; decomposition. It inherits the basic structure and functionality</span>
-<span class="sd">    from the `FlowOCTSingleSink` class and adds the specific Benders&#39; decomposition formulation.</span>
+<span class="sd">    from the :mod:`FlowOCTSingleSink &lt;odtlearn.flow_oct_ss.FlowOCTSingleSink&gt;` class and</span>
+<span class="sd">    adds the specific Benders&#39; decomposition formulation.</span>
 
 <span class="sd">    Benders&#39; decomposition is a technique used to solve large-scale optimization problems by decomposing</span>
 <span class="sd">    them into smaller subproblems. In the context of optimal classification trees, Benders&#39; decomposition</span>
@@ -468,26 +479,33 @@
 <span class="sd">    optimize the class predictions for each datapoint based on the fixed tree structure. The master</span>
 <span class="sd">    problem and subproblems are solved iteratively until convergence is reached.</span>
 
-<span class="sd">    The `_define_variables` method defines the decision variables specific to the Benders&#39; decomposition</span>
+<span class="sd">    The :meth:`_define_variables &lt;odtlearn.flow_oct.BendersOCT._define_variables&gt;` method defines</span>
+<span class="sd">    the decision variables specific to the Benders&#39; decomposition</span>
 <span class="sd">    formulation, including the variables for the subproblem objective values.</span>
 
-<span class="sd">    The `_define_constraints` method defines the constraints specific to the Benders&#39; decomposition</span>
+<span class="sd">    The :meth:`_define_constraints &lt;odtlearn.flow_oct.BendersOCT._define_constraints&gt;` method defines</span>
+<span class="sd">    the constraints specific to the Benders&#39; decomposition</span>
 <span class="sd">    formulation, which ensure the proper linking of the master problem and subproblems.</span>
 
-<span class="sd">    The `_define_objective` method defines the objective function for the Benders&#39; decomposition</span>
+<span class="sd">    The :meth:`_define_objective &lt;odtlearn.flow_oct.BendersOCT._define_objective&gt;` method defines the</span>
+<span class="sd">    objective function for the Benders&#39; decomposition</span>
 <span class="sd">    formulation, which includes the regularization term and the objective values from the subproblems.</span>
 
-<span class="sd">    The `fit` method is used to fit the optimal classification tree using Benders&#39; decomposition to</span>
+<span class="sd">    The :meth:`fit &lt;odtlearn.flow_oct.BendersOCT.fit&gt;` method is used to fit the optimal classification</span>
+<span class="sd">    tree using Benders&#39; decomposition to</span>
 <span class="sd">    the given training data. It preprocesses the input data, creates the main optimization problem,</span>
 <span class="sd">    and solves it using the specified solver and parameters.</span>
 
-<span class="sd">    The `predict` method is used to make predictions using the fitted optimal classification tree.</span>
+<span class="sd">    The :meth:`predict &lt;odtlearn.flow_oct.BendersOCT.predict&gt;` method is used to make predictions using</span>
+<span class="sd">    the fitted optimal classification tree.</span>
 <span class="sd">    It takes the input data and traverses the tree based on the learned branching and prediction</span>
 <span class="sd">    decisions to generate the predictions.</span>
 
-<span class="sd">    Users can instantiate the `BendersOCT` class directly and use it to learn optimal classification</span>
-<span class="sd">    trees using Benders&#39; decomposition by calling the `fit` method with the training data and then</span>
-<span class="sd">    using the `predict` method to make predictions on new data.</span>
+<span class="sd">    Users can instantiate the :mod:`BendersOCT &lt;odtlearn.flow_oct.BendersOCT&gt;` class directly and</span>
+<span class="sd">    use it to learn optimal classification</span>
+<span class="sd">    trees using Benders&#39; decomposition by calling the :meth:`fit &lt;odtlearn.flow_oct.BendersOCT.fit&gt;`</span>
+<span class="sd">    method with the training data and then</span>
+<span class="sd">    using the :meth:`predict &lt;odtlearn.flow_oct.BendersOCT.predict&gt;` method to make predictions on new data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>

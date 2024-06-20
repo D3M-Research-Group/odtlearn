@@ -285,25 +285,35 @@ the solver uses all available threads.</p>
 </dl>
 <p class="rubric">Notes</p>
 <p>This is a base class for learning optimal prescriptive trees with multiple sink nodes using
-flow optimization. It extends the <cite>OptimalPrescriptiveTree</cite> class and provides the basic
+flow optimization. It extends the <a class="reference internal" href="../opt_pt/index.html#odtlearn.opt_pt.OptimalPrescriptiveTree" title="odtlearn.opt_pt.OptimalPrescriptiveTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">OptimalPrescriptiveTree</span></code></a> class
+and provides the basic
 structure and common functionality for flow-based prescriptive tree learning. It should not
 be instantiated directly. Instead, use one of the
-derived classes that implement a specific prescriptive tree method, such as <cite>FlowOPT_DM</cite> or
-<cite>FlowOPT_DR</cite>.</p>
+derived classes that implement a specific prescriptive tree method, such as
+<a class="reference internal" href="../flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DM" title="odtlearn.flow_opt.FlowOPT_DM"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FlowOPT_DM</span></code></a> or
+<a class="reference internal" href="../flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DR" title="odtlearn.flow_opt.FlowOPT_DR"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FlowOPT_DR</span></code></a>.</p>
 <p>The key idea is to model the flow of each datapoint through the tree, allowing it to reach
 multiple sink nodes (i.e., leaves) with different treatment recommendations. The objective
 is to optimize the treatment recommendations based on the characteristics of each datapoint.</p>
 <p>The class defines decision variables and constraints specific to the flow optimization
-formulation with multiple sink nodes. The <cite>_define_variables</cite> method defines the decision
+formulation with multiple sink nodes.
+The <code class="xref py py-meth docutils literal notranslate"><span class="pre">_define_variables</span></code> method defines
+the decision
 variables, including the tree structure variables (<cite>_b</cite>, <cite>_p</cite>, <cite>_w</cite>) and the flow variables
 (<cite>_zeta</cite>, <cite>_z</cite>).</p>
-<p>The <cite>_define_constraints</cite> method defines the constraints, including the tree structure
+<p>The <code class="xref py py-meth docutils literal notranslate"><span class="pre">_define_constraints</span></code> method defines
+the constraints,
+including the tree structure
 constraints, flow constraints, and arc constraints. These constraints ensure the validity
 of the tree structure and the proper flow of datapoints through the tree to multiple sink nodes.</p>
-<p>Subclasses of <cite>FlowOPTMultipleSink</cite> should implement the <cite>_define_objective</cite> method to specify
-the objective function for the optimization problem, and the <cite>fit</cite> method to handle the model
+<p>Subclasses of <cite>FlowOPTMultipleSink</cite> should implement the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">_define_objective</span></code> method to specify
+the objective function for the optimization problem,
+and the <code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code> method
+to handle the model
 fitting process.</p>
-<p>The class inherits the <cite>predict</cite> method from the <cite>OptimalPrescriptiveTree</cite> class to make
+<p>The class inherits the <code class="xref py py-meth docutils literal notranslate"><span class="pre">predict</span></code> method from the
+<a class="reference internal" href="../opt_pt/index.html#odtlearn.opt_pt.OptimalPrescriptiveTree" title="odtlearn.opt_pt.OptimalPrescriptiveTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">OptimalPrescriptiveTree</span></code></a> class to make
 treatment recommendations based on the learned tree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes<span class="colon">:</span></dt>
@@ -326,34 +336,34 @@ to each treatment at each node.</p>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><strong>_tree_struc_variables()</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`_tree_struc_variables &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink._tree_struc_variables&gt;`()</strong></p></td>
 <td><p>Defines the decision variables related to the tree structure.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>_flow_variables()</strong></p></td>
+<tr class="row-even"><td><p><strong>:meth:`_flow_variables &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink._flow_variables&gt;`()</strong></p></td>
 <td><p>Defines the decision variables related to the flow of datapoints.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>_define_variables()</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`_define_variables &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_variables&gt;`()</strong></p></td>
 <td><p>Defines all the decision variables used in the optimization problem.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>_tree_structure_constraints()</strong></p></td>
+<tr class="row-even"><td><p><strong>:meth:`_tree_structure_constraints &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink._tree_structure_constraints&gt;`()</strong></p></td>
 <td><p>Defines the constraints related to the tree structure.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>_flow_constraints()</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`_flow_constraints &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink._flow_constraints&gt;`()</strong></p></td>
 <td><p>Defines the constraints related to the flow of datapoints.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>_arc_constraints()</strong></p></td>
+<tr class="row-even"><td><p><strong>:meth:`_arc_constraints &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink._arc_constraints&gt;`()</strong></p></td>
 <td><p>Defines the constraints related to the arcs between nodes.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>_define_constraints()</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`_define_constraints &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_constraints&gt;`()</strong></p></td>
 <td><p>Defines all the constraints used in the optimization problem.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>_define_objective()</strong></p></td>
+<tr class="row-even"><td><p><strong>:meth:`_define_objective &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_objective&gt;`()</strong></p></td>
 <td><p>Abstract method to be implemented by subclasses to define the objective function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>fit(X, t, y, **kwargs)</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`fit &lt;odtlearn.flow_opt_ms.FlowOPTMultipleSink.fit&gt;`(X, t, y, **kwargs)</strong></p></td>
 <td><p>Abstract method to be implemented by subclasses to fit the optimal prescriptive tree.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>predict(X)</strong></p></td>
+<tr class="row-even"><td><p><strong>:meth:`predict &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.predict&gt;`(X)</strong></p></td>
 <td><p>Make treatment recommendations for the given input samples.</p></td>
 </tr>
 </tbody>

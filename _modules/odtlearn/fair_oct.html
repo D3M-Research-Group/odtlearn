@@ -263,7 +263,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for fair constrained optimal classification trees.</span>
 
-<span class="sd">    This class extends the `ConstrainedOCT` class and provides a framework for implementing</span>
+<span class="sd">    This class extends the :mod:`ConstrainedOCT &lt;odtlearn.constrained_oct.ConstrainedOCT&gt;` class</span>
+<span class="sd">    and provides a framework for implementing</span>
 <span class="sd">    fair constrained optimal classification trees. It includes methods for adding fairness</span>
 <span class="sd">    constraints, extracting metadata from the input data, and defining the objective function.</span>
 
@@ -303,23 +304,29 @@
 <span class="sd">        Extract metadata from the input data.</span>
 <span class="sd">    _define_objective()</span>
 <span class="sd">        Define the objective function for the MIP problem.</span>
-<span class="sd">    fit(X, y, protect_feat, legit_factor)</span>
+<span class="sd">    :meth:`fit &lt;odtlearn.fair_oct.FairConstrainedOCT.fit&gt;`(X, y, protect_feat, legit_factor)</span>
 <span class="sd">        Fit the fair constrained optimal classification tree on the given data.</span>
-<span class="sd">    predict(X)</span>
+<span class="sd">    :meth:`predict &lt;odtlearn.fair_oct.FairConstrainedOCT.predict&gt;`(X)</span>
 <span class="sd">        Predict the class labels for the given input data using the fitted model.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    This is a base class and should not be instantiated directly. Instead, use one of the</span>
-<span class="sd">    derived classes that implement a specific fairness constraint, such as `FairSPOCT`,</span>
-<span class="sd">    `FairCSPOCT`, `FairPEOCT`, `FairEOppOCT`, or `FairEOddsOCT`.</span>
+<span class="sd">    derived classes that implement a specific fairness constraint, such as</span>
+<span class="sd">    :mod:`FairSPOCT &lt;odtlearn.fair_oct.FairSPOCT&gt;`,</span>
+<span class="sd">    :mod:`FairCSPOCT &lt;odtlearn.fair_oct.FairCSPOCT&gt;`,</span>
+<span class="sd">    :mod:`FairPEOCT &lt;odtlearn.fair_oct.FairPEOCT&gt;`,</span>
+<span class="sd">    :mod:`FairEOppOCT &lt;odtlearn.fair_oct.FairEOppOCT&gt;`,</span>
+<span class="sd">    or :mod:`FairEOddsOCT &lt;odtlearn.fair_oct.FairEOddsOCT&gt;`.</span>
 
-<span class="sd">    The `fit` method expects the input data `X`, target labels `y`, protected features</span>
+<span class="sd">    The :meth:`fit &lt;odtlearn.fair_oct.FairConstrainedOCT.fit&gt;` method expects the input data `X`,</span>
+<span class="sd">    target labels `y`, protected features</span>
 <span class="sd">    `protect_feat`, and legitimate factors `legit_factor` (if applicable) to be provided.</span>
 <span class="sd">    The protected features should be binary-valued, and the legitimate factors should be</span>
 <span class="sd">    numeric.</span>
 
-<span class="sd">    The `predict` method expects the input data `X` to have the same columns as the data</span>
+<span class="sd">    The :meth:`predict &lt;odtlearn.fair_oct.FairConstrainedOCT.predict&gt;` method expects the input data</span>
+<span class="sd">    `X` to have the same columns as the data</span>
 <span class="sd">    used for fitting the model.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>

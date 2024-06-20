@@ -267,7 +267,7 @@
 <span class="sd">        The time limit (in seconds) for solving the MIP formulation.</span>
 <span class="sd">    num_threads : int, optional</span>
 <span class="sd">        The number of threads the solver should use. If not specified,</span>
-<span class="sd">        solver uses all available threads</span>
+<span class="sd">        solver uses all available threads.</span>
 <span class="sd">    verbose : bool, default=False</span>
 <span class="sd">        Whether to print verbose output during the tree learning process.</span>
 
@@ -282,19 +282,19 @@
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
-<span class="sd">    fit(X, y)</span>
+<span class="sd">    :meth:`fit &lt;odtlearn.opt_ct.OptimalClassificationTree.fit&gt;`(X, y)</span>
 <span class="sd">        Fit the optimal classification tree to the given training data.</span>
-<span class="sd">    predict(X)</span>
+<span class="sd">    :meth:`predict &lt;odtlearn.opt_ct.OptimalClassificationTree.predict&gt;`(X)</span>
 <span class="sd">        Make predictions using the fitted optimal classification tree.</span>
-<span class="sd">    print_tree()</span>
+<span class="sd">    :meth:`print_tree &lt;odtlearn.opt_ct.OptimalClassificationTree.print_tree&gt;`()</span>
 <span class="sd">        Print the structure of the fitted optimal classification tree.</span>
-<span class="sd">    plot_tree(**kwargs)</span>
+<span class="sd">    :meth:`plot_tree &lt;odtlearn.opt_ct.OptimalClassificationTree.plot_tree&gt;`(**kwargs)</span>
 <span class="sd">        Plot the fitted optimal classification tree using matplotlib.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This class extends the `OptimalDecisionTree` base class to learn optimal classification</span>
-<span class="sd">    trees. It formulates the problem as a mixed-integer</span>
+<span class="sd">    This class extends the :mod:`OptimalDecisionTree &lt;odtlearn.opt_dt.OptimalDecisionTree&gt;` base</span>
+<span class="sd">    class to learn optimal classification trees. It formulates the problem as a mixed-integer</span>
 <span class="sd">    program and solves it using either the Gurobi or CBC solver.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

@@ -276,7 +276,7 @@
 <dt><strong>time_limit</strong><span class="classifier">int</span></dt><dd><p>The time limit (in seconds) for solving the MIP formulation.</p>
 </dd>
 <dt><strong>num_threads</strong><span class="classifier">int, optional</span></dt><dd><p>The number of threads the solver should use. If not specified,
-solver uses all available threads</p>
+solver uses all available threads.</p>
 </dd>
 <dt><strong>verbose</strong><span class="classifier">bool, default=False</span></dt><dd><p>Whether to print verbose output during the tree learning process.</p>
 </dd>
@@ -284,8 +284,8 @@ solver uses all available threads</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>This class extends the <cite>OptimalDecisionTree</cite> base class to learn optimal classification
-trees. It formulates the problem as a mixed-integer
+<p>This class extends the <a class="reference internal" href="../opt_dt/index.html#odtlearn.opt_dt.OptimalDecisionTree" title="odtlearn.opt_dt.OptimalDecisionTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">OptimalDecisionTree</span></code></a> base
+class to learn optimal classification trees. It formulates the problem as a mixed-integer
 program and solves it using either the Gurobi or CBC solver.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes<span class="colon">:</span></dt>
@@ -303,16 +303,16 @@ program and solves it using either the Gurobi or CBC solver.</p>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><strong>fit(X, y)</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`fit &lt;odtlearn.opt_ct.OptimalClassificationTree.fit&gt;`(X, y)</strong></p></td>
 <td><p>Fit the optimal classification tree to the given training data.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>predict(X)</strong></p></td>
+<tr class="row-even"><td><p><strong>:meth:`predict &lt;odtlearn.opt_ct.OptimalClassificationTree.predict&gt;`(X)</strong></p></td>
 <td><p>Make predictions using the fitted optimal classification tree.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>print_tree()</strong></p></td>
+<tr class="row-odd"><td><p><strong>:meth:`print_tree &lt;odtlearn.opt_ct.OptimalClassificationTree.print_tree&gt;`()</strong></p></td>
 <td><p>Print the structure of the fitted optimal classification tree.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>plot_tree(**kwargs)</strong></p></td>
+<tr class="row-even"><td><p><strong>:meth:`plot_tree &lt;odtlearn.opt_ct.OptimalClassificationTree.plot_tree&gt;`(**kwargs)</strong></p></td>
 <td><p>Plot the fitted optimal classification tree using matplotlib.</p></td>
 </tr>
 </tbody>

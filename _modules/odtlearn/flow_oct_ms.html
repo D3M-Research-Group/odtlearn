@@ -284,24 +284,26 @@
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
-<span class="sd">    _tree_struc_variables()</span>
+<span class="sd">    :meth:`_tree_struc_variables &lt;odtlearn.flow_oct_ms.FlowOCTMultipleSink._tree_struc_variables&gt;`()</span>
 <span class="sd">        Defines the decision variables related to the tree structure.</span>
-<span class="sd">    _flow_variables()</span>
+<span class="sd">    :meth:`_flow_variables &lt;odtlearn.flow_oct_ms.FlowOCTMultipleSink._flow_variables&gt;`()</span>
 <span class="sd">        Defines the decision variables related to the flow of datapoints.</span>
-<span class="sd">    _define_variables()</span>
+<span class="sd">    :meth:`_define_variables &lt;odtlearn.flow_oct_ms.FlowOCTMultipleSink._define_variables&gt;`()</span>
 <span class="sd">        Defines all the decision variables used in the optimization problem.</span>
-<span class="sd">    _tree_structure_constraints()</span>
+<span class="sd">    :meth:`_tree_structure_constraints</span>
+<span class="sd">    &lt;odtlearn.flow_oct_ms.FlowOCTMultipleSink._tree_structure_constraints&gt;`()</span>
 <span class="sd">        Defines the constraints related to the tree structure.</span>
-<span class="sd">    _flow_constraints()</span>
+<span class="sd">    :meth:`_flow_constraints &lt;odtlearn.flow_oct_ms.FlowOCTMultipleSink._flow_constraints&gt;`()</span>
 <span class="sd">        Defines the constraints related to the flow of datapoints.</span>
-<span class="sd">    _arc_constraints()</span>
+<span class="sd">    :meth:`_arc_constraints &lt;odtlearn.flow_oct_ms.FlowOCTMultipleSink._arc_constraints&gt;`()</span>
 <span class="sd">        Defines the constraints related to the arcs between nodes.</span>
-<span class="sd">    _define_constraints()</span>
+<span class="sd">    :meth:`_define_constraints &lt;odtlearn.flow_oct_ms.FlowOCTMultipleSink._define_constraints&gt;`()</span>
 <span class="sd">        Defines all the constraints used in the optimization problem.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    This class extends the `OptimalClassificationTree` class and provides the basic structure and</span>
+<span class="sd">    This class extends the :mod:`OptimalClassificationTree &lt;odtlearn.opt_dt.OptimalClassificationTree&gt;` class</span>
+<span class="sd">    and provides the basic structure and</span>
 <span class="sd">    common functionality for flow-based optimal classification tree learning with multiple sink nodes.</span>
 
 <span class="sd">    The key idea behind the flow-based formulation with multiple sink nodes is to model the flow of</span>
@@ -310,15 +312,18 @@
 <span class="sd">    characteristics of each datapoint.</span>
 
 <span class="sd">    The class defines decision variables and constraints specific to the flow-based formulation</span>
-<span class="sd">    with multiple sink nodes. The `_define_variables` method defines the decision variables,</span>
+<span class="sd">    with multiple sink nodes. The</span>
+<span class="sd">    :meth:`_define_variables &lt;odtlearn.flow_oct_ms.FlowOCTMultipleSink._define_variables&gt;` method</span>
+<span class="sd">    defines the decision variables,</span>
 <span class="sd">    including the tree structure variables (`_b`, `_p`, `_w`) and the flow variables (`_zeta`, `_z`).</span>
 
-<span class="sd">    The `_define_constraints` method defines the constraints, including the tree structure</span>
+<span class="sd">    The :meth:`_define_constraints &lt;odtlearn.flow_oct_ms.FlowOCTMultipleSink._define_constraints&gt;`</span>
+<span class="sd">    method defines the constraints, including the tree structure</span>
 <span class="sd">    constraints, flow constraints, and arc constraints. These constraints ensure the validity</span>
 <span class="sd">    of the tree structure and the proper flow of datapoints through the tree to multiple sink nodes.</span>
 
 <span class="sd">    Users should not instantiate this class directly, but instead use one of its derived classes</span>
-<span class="sd">    such as `FlowOCT` for learning optimal classification trees.</span>
+<span class="sd">    such as :mod:`FlowOCT &lt;odtlearn.flow_oct.FlowOCT&gt;` for learning optimal classification trees.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
