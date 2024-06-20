@@ -7,6 +7,66 @@ from odtlearn.utils.TreePlotter import MPLPlotter
 
 
 class OptimalPrescriptiveTree(OptimalDecisionTree):
+    """
+    A class for learning optimal prescriptive trees using mixed-integer programming.
+
+    Parameters
+    ----------
+    solver : str
+        The solver to use for the MIP formulation. Can be either
+        "gurobi" or "cbc".
+    depth : int
+        The maximum depth of the tree to be learned.
+    time_limit : int, default=300
+        The time limit (in seconds) for solving the MIP formulation.
+    num_threads : int, default=1
+        The number of threads the solver should use.
+    verbose : bool, default=False
+        Whether to print verbose output during the tree learning process.
+
+    Attributes
+    ----------
+    _X : pandas.DataFrame
+        The input features used to fit the prescriptive tree.
+    _X_col_labels : numpy.ndarray
+        The labels of the columns in the input data X.
+    _X_col_dtypes : pandas.Series
+        The data types of the columns in the input data X.
+    _y : numpy.ndarray
+        The target values used to fit the prescriptive tree.
+    _t : numpy.ndarray
+        The treatment values used to fit the prescriptive tree.
+    _labels : numpy.ndarray
+        The unique target values in y.
+    _treatments : numpy.ndarray
+        The unique treatment values in t.
+    _datapoints : numpy.ndarray
+        The indices of the datapoints used to fit the tree.
+    b_value : numpy.ndarray
+        The values of the branching decision variables in the learned tree.
+    w_value : numpy.ndarray
+        The values of the prediction decision variables in the learned tree.
+    p_value : numpy.ndarray
+        The values of the pruning decision variables in the learned tree.
+
+    Methods
+    -------
+    fit(X, y, t)
+        Fit the optimal prescriptive tree to the given training data.
+    predict(X)
+        Make treatment recommendations using the fitted optimal prescriptive tree.
+    print_tree()
+        Print the structure of the fitted optimal prescriptive tree.
+    plot_tree(**kwargs)
+        Plot the fitted optimal prescriptive tree using matplotlib.
+
+    Notes
+    -----
+    This class extends the `OptimalDecisionTree` base class to learn optimal prescriptive
+    trees for making treatment recommendations. It formulates the problem as a mixed-integer
+    program and solves it using either the Gurobi or CBC solver.
+    """
+
     def __init__(
         self,
         solver,
@@ -178,6 +238,7 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
         arrow_annotation_font_scale=0.8,
         debug=False,
         distance=1.0,
+        feature_names=None,
     ):
         """
         Plot the fitted tree with the branching features, the threshold values for
@@ -216,6 +277,11 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
         color_dict: dict, default={"node": None, "leaves": []}
             A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
             If None, the colors are chosen using the sklearn `plot_tree` color palette
+
+        feature_names : list of str, default=None
+            A list of feature names to use for the plot. If None, the feature names from the
+            fitted tree will be used. The feature names should be in the same order as the
+            columns of the data used to fit the tree.
         """
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
 
@@ -225,10 +291,19 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
                 self.b_value, self.w_value, self.p_value, node
             )
 
+        # Use the provided feature names if available, otherwise use the original feature names
+        if feature_names is not None:
+            assert len(feature_names) == len(
+                self._X_col_labels
+            ), "The number of provided feature names does not match the number of columns in the data"
+            column_names = feature_names
+        else:
+            column_names = self._X_col_labels
+
         exporter = MPLPlotter(
             self._tree,
             node_dict,
-            self._X_col_labels,
+            column_names,
             self._tree.depth,
             self._treatments,
             type(self).__name__,

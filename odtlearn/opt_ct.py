@@ -7,6 +7,50 @@ from odtlearn.utils.TreePlotter import MPLPlotter
 
 
 class OptimalClassificationTree(OptimalDecisionTree):
+    """
+    A class for learning optimal classification trees using mixed-integer programming.
+
+    Parameters
+    ----------
+    solver : str
+        The solver to use for the MIP formulation. Currently, only "gurobi" and "CBC" are supported.
+    depth : int
+        The maximum depth of the tree to be learned.
+    time_limit : int
+        The time limit (in seconds) for solving the MIP formulation.
+    num_threads : int, optional
+        The number of threads the solver should use. If not specified,
+        solver uses all available threads
+    verbose : bool, default=False
+        Whether to print verbose output during the tree learning process.
+
+    Attributes
+    ----------
+    b_value : numpy.ndarray
+        The values of the branching decision variables in the learned tree.
+    w_value : numpy.ndarray
+        The values of the prediction decision variables in the learned tree.
+    p_value : numpy.ndarray
+        The values of the pruning decision variables in the learned tree.
+
+    Methods
+    -------
+    fit(X, y)
+        Fit the optimal classification tree to the given training data.
+    predict(X)
+        Make predictions using the fitted optimal classification tree.
+    print_tree()
+        Print the structure of the fitted optimal classification tree.
+    plot_tree(**kwargs)
+        Plot the fitted optimal classification tree using matplotlib.
+
+    Notes
+    -----
+    This class extends the `OptimalDecisionTree` base class to learn optimal classification
+    trees. It formulates the problem as a mixed-integer
+    program and solves it using either the Gurobi or CBC solver.
+    """
+
     def __init__(
         self,
         solver,
@@ -175,8 +219,10 @@ class OptimalClassificationTree(OptimalDecisionTree):
         edge_annotation=True,
         arrow_annotation_font_scale=0.8,
         debug=False,
+        feature_names=None,
     ):
-        """Plot the fitted tree with the branching features, the threshold values for
+        """
+        Plot the fitted tree with the branching features, the threshold values for
         each branching node's test, and the predictions asserted for each assignment node
         using matplotlib. The method uses the Gurobi model's name for determining how
         to generate the tree. It does some preprocessing before passing the tree to the
@@ -212,6 +258,11 @@ class OptimalClassificationTree(OptimalDecisionTree):
         color_dict: dict, default={"node": None, "leaves": []}
             A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
             If None, the colors are chosen using the sklearn `plot_tree` color palette
+
+        feature_names : list of str, default=None
+            A list of feature names to use for the plot. If None, the feature names from the
+            fitted tree will be used. The feature names should be in the same order as the
+            columns of the data used to fit the tree.
         """
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
 
@@ -221,10 +272,19 @@ class OptimalClassificationTree(OptimalDecisionTree):
                 self.b_value, self.w_value, self.p_value, node
             )
 
+        # Use the provided feature names if available, otherwise use the original feature names
+        if feature_names is not None:
+            assert len(feature_names) == len(
+                self._X_col_labels
+            ), "The number of provided feature names does not match the number of columns in the data"
+            column_names = feature_names
+        else:
+            column_names = self._X_col_labels
+
         exporter = MPLPlotter(
             self._tree,
             node_dict,
-            self._X_col_labels,
+            column_names,
             self._tree.depth,
             self._classes,
             type(self).__name__,

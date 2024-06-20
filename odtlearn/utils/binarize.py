@@ -7,7 +7,7 @@ def binarize(
     df, categorical_cols, integer_cols, real_cols, n_bins=4, bin_strategy="uniform"
 ):
     """
-    parameters
+    Parameters
     ----------
     df: pandas dataframe
         A dataframe with only categorical/integer columns. There should not be any NA values.
@@ -24,7 +24,7 @@ def binarize(
         'uniform': All bins in each feature have identical widths.
         'quantile': All bins in each feature have the same number of points.
 
-    return
+    Return
     ----------
     the binarized version of the input dataframe.
 

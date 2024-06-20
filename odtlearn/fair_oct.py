@@ -13,6 +13,70 @@ from odtlearn.utils.validation import check_binary, check_columns_match
 
 
 class FairConstrainedOCT(ConstrainedOCT):
+    """
+    Base class for fair constrained optimal classification trees.
+
+    This class extends the `ConstrainedOCT` class and provides a framework for implementing
+    fair constrained optimal classification trees. It includes methods for adding fairness
+    constraints, extracting metadata from the input data, and defining the objective function.
+
+    Parameters
+    ----------
+    solver : str
+        The name of the solver to use for solving the MIP problem.
+    _lambda : float
+        The regularization parameter in the objective. Must be in the interval [0, 1).
+    depth : int
+        The maximum depth of the tree.
+    time_limit : int
+        The time limit (in seconds) for solving the MIP problem.
+    num_threads : int, optional
+        The number of threads to use for solving the MIP problem. If None, all available threads are used.
+    verbose : bool, optional
+        Whether to display verbose output during the solving process.
+
+    Attributes
+    ----------
+    _obj_mode : str
+        The objective mode used for learning the optimal tree. Must be either 'acc' or 'balance'.
+    _positive_class : int
+        The value of the positive class label.
+    _fairness_bound : float
+        The bound of the fairness constraint. Must be in the interval (0, 1].
+    _protect_feat_col_labels : list of str
+        The column labels of the protected features.
+    _protect_feat_col_dtypes : list of dtype
+        The data types of the protected feature columns.
+
+    Methods
+    -------
+    _add_fairness_constraint(p_df, p_prime_df)
+        Add the fairness constraint to the MIP problem for the given protected groups.
+    _extract_metadata(X, y, protect_feat)
+        Extract metadata from the input data.
+    _define_objective()
+        Define the objective function for the MIP problem.
+    fit(X, y, protect_feat, legit_factor)
+        Fit the fair constrained optimal classification tree on the given data.
+    predict(X)
+        Predict the class labels for the given input data using the fitted model.
+
+    Notes
+    -----
+    This is a base class and should not be instantiated directly. Instead, use one of the
+    derived classes that implement a specific fairness constraint, such as `FairSPOCT`,
+    `FairCSPOCT`, `FairPEOCT`, `FairEOppOCT`, or `FairEOddsOCT`.
+
+    The `fit` method expects the input data `X`, target labels `y`, protected features
+    `protect_feat`, and legitimate factors `legit_factor` (if applicable) to be provided.
+    The protected features should be binary-valued, and the legitimate factors should be
+    numeric.
+
+    The `predict` method expects the input data `X` to have the same columns as the data
+    used for fitting the model.
+
+    """
+
     def __init__(
         self, solver, _lambda, depth, time_limit, num_threads, verbose
     ) -> None:
@@ -29,6 +93,21 @@ class FairConstrainedOCT(ConstrainedOCT):
             )
 
     def _add_fairness_constraint(self, p_df, p_prime_df):
+        """
+        Add the fairness constraint to the MIP problem.
+
+        Parameters
+        ----------
+        p_df : pandas.DataFrame
+            The subset of the data corresponding to the protected group p.
+        p_prime_df : pandas.DataFrame
+            The subset of the data corresponding to the protected group p'.
+
+        Returns
+        -------
+        constraint_added : bool
+            Whether the fairness constraint was successfully added.
+        """
         count_p = p_df.shape[0]
         count_p_prime = p_prime_df.shape[0]
         constraint_added = False
@@ -201,6 +280,38 @@ class FairConstrainedOCT(ConstrainedOCT):
 
 
 class FairSPOCT(FairConstrainedOCT):
+    """
+    An optimal classification tree fit on a given binary-valued data set
+    with a fairness side-constraint requiring statistical parity (SP) between protected groups.
+
+    Parameters
+    ----------
+    solver: str
+        A string specifying the name of the solver to use
+        to solve the MIP. Options are "Gurobi" and "CBC".
+        If the CBC binaries are not found, Gurobi will be used by default.
+    positive_class : int
+        The value of the class label which is corresponding to the desired outcome
+    depth : int, default = 1
+        A parameter specifying the depth of the tree
+    time_limit : int, default= 60
+        The given time limit (in seconds) for solving the MIO problem
+    _lambda : float, default = 0
+        The regularization parameter in the objective. _lambda is in the interval [0,1)
+    obj_mode: str, default="acc"
+        The objective should be used to learn an optimal decision tree.
+        The two options are "acc" and "balance".
+        The accuracy objective attempts to maximize prediction accuracy while the
+        balance objective aims to learn a balanced optimal decision
+        tree to better generalize to our of sample data.
+    fairness_bound: float (0,1], default=1
+        The bound of the fairness constraint. The smaller the value the stricter
+        the fairness constraint and 1 corresponds to no fairness constraint enforced
+    num_threads: int, default=None
+        The number of threads the solver should use. If None, it will use all avaiable threads
+
+    """
+
     def __init__(
         self,
         solver,
@@ -213,37 +324,7 @@ class FairSPOCT(FairConstrainedOCT):
         num_threads=None,
         verbose=False,
     ) -> None:
-        """
-        An optimal classification tree fit on a given binary-valued data set
-        with a fairness side-constraint requiring statistical parity (SP) between protected groups.
 
-                Parameters
-        ----------
-        solver: str
-            A string specifying the name of the solver to use
-            to solve the MIP. Options are "Gurobi" and "CBC".
-            If the CBC binaries are not found, Gurobi will be used by default.
-        positive_class : int
-            The value of the class label which is corresponding to the desired outcome
-        depth : int, default = 1
-            A parameter specifying the depth of the tree
-        time_limit : int, default= 60
-            The given time limit (in seconds) for solving the MIO problem
-        _lambda : float, default = 0
-            The regularization parameter in the objective. _lambda is in the interval [0,1)
-        obj_mode: str, default="acc"
-            The objective should be used to learn an optimal decision tree.
-            The two options are "acc" and "balance".
-            The accuracy objective attempts to maximize prediction accuracy while the
-            balance objective aims to learn a balanced optimal decision
-            tree to better generalize to our of sample data.
-        fairness_bound: float (0,1], default=1
-            The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness constraint enforced
-        num_threads: int, default=None
-            The number of threads the solver should use. If None, it will use all avaiable threads
-
-        """
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
 
         self._obj_mode = obj_mode
@@ -309,6 +390,37 @@ class FairSPOCT(FairConstrainedOCT):
 
 
 class FairCSPOCT(FairConstrainedOCT):
+    """
+    An optimal classification tree fit on a given binary-valued data set
+    with a fairness side-constraint requiring conditional statistical parity (CSP) between protected groups.
+
+            Parameters
+    ----------
+    solver: str
+        A string specifying the name of the solver to use
+        to solve the MIP. Options are "Gurobi" and "CBC".
+        If the CBC binaries are not found, Gurobi will be used by default.
+    positive_class : int
+        The value of the class label which is corresponding to the desired outcome
+    depth : int, default = 1
+        A parameter specifying the depth of the tree
+    time_limit : int, default= 60
+        The given time limit (in seconds) for solving the MIO problem
+    _lambda : float, default = 0
+        The regularization parameter in the objective. _lambda is in the interval [0,1)
+    obj_mode: str, default="acc"
+        The objective should be used to learn an optimal decision tree.
+        The two options are "acc" and "balance".
+        The accuracy objective attempts to maximize prediction accuracy while the
+        balance objective aims to learn a balanced optimal decision
+        tree to better generalize to our of sample data.
+    fairness_bound: float (0,1], default=1
+        The bound of the fairness constraint. The smaller the value the stricter
+        the fairness constraint and 1 corresponds to no fairness constraint enforced
+    num_threads: int, default=None
+        The number of threads the solver should use. If None, it will use all avaiable threads
+    """
+
     def __init__(
         self,
         solver,
@@ -321,36 +433,7 @@ class FairCSPOCT(FairConstrainedOCT):
         num_threads=None,
         verbose=False,
     ) -> None:
-        """
-        An optimal classification tree fit on a given binary-valued data set
-        with a fairness side-constraint requiring conditional statistical parity (CSP) between protected groups.
 
-                Parameters
-        ----------
-        solver: str
-            A string specifying the name of the solver to use
-            to solve the MIP. Options are "Gurobi" and "CBC".
-            If the CBC binaries are not found, Gurobi will be used by default.
-        positive_class : int
-            The value of the class label which is corresponding to the desired outcome
-        depth : int, default = 1
-            A parameter specifying the depth of the tree
-        time_limit : int, default= 60
-            The given time limit (in seconds) for solving the MIO problem
-        _lambda : float, default = 0
-            The regularization parameter in the objective. _lambda is in the interval [0,1)
-        obj_mode: str, default="acc"
-            The objective should be used to learn an optimal decision tree.
-            The two options are "acc" and "balance".
-            The accuracy objective attempts to maximize prediction accuracy while the
-            balance objective aims to learn a balanced optimal decision
-            tree to better generalize to our of sample data.
-        fairness_bound: float (0,1], default=1
-            The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness constraint enforced
-        num_threads: int, default=None
-            The number of threads the solver should use. If None, it will use all avaiable threads
-        """
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
 
         self._obj_mode = obj_mode
@@ -438,6 +521,37 @@ class FairCSPOCT(FairConstrainedOCT):
 
 
 class FairPEOCT(FairConstrainedOCT):
+    """
+    An optimal classification tree fit on a given binary-valued data set
+    with a fairness side-constraint requiring predictive equity (PE) between protected groups.
+
+            Parameters
+    ----------
+    solver: str
+        A string specifying the name of the solver to use
+        to solve the MIP. Options are "Gurobi" and "CBC".
+        If the CBC binaries are not found, Gurobi will be used by default.
+    positive_class : int
+        The value of the class label which is corresponding to the desired outcome
+    depth : int, default = 1
+        A parameter specifying the depth of the tree
+    time_limit : int, default= 60
+        The given time limit (in seconds) for solving the MIO problem
+    _lambda : float, default = 0
+        The regularization parameter in the objective. _lambda is in the interval [0,1)
+    obj_mode: str, default="acc"
+        The objective should be used to learn an optimal decision tree.
+        The two options are "acc" and "balance".
+        The accuracy objective attempts to maximize prediction accuracy while the
+        balance objective aims to learn a balanced optimal decision
+        tree to better generalize to our of sample data.
+    fairness_bound: float (0,1], default=1
+        The bound of the fairness constraint. The smaller the value the stricter
+        the fairness constraint and 1 corresponds to no fairness constraint enforced
+    num_threads: int, default=None
+        The number of threads the solver should use. If None, it will use all avaiable threads
+    """
+
     def __init__(
         self,
         solver,
@@ -450,36 +564,7 @@ class FairPEOCT(FairConstrainedOCT):
         num_threads=None,
         verbose=False,
     ) -> None:
-        """
-        An optimal classification tree fit on a given binary-valued data set
-        with a fairness side-constraint requiring predictive equity (PE) between protected groups.
 
-                Parameters
-        ----------
-        solver: str
-            A string specifying the name of the solver to use
-            to solve the MIP. Options are "Gurobi" and "CBC".
-            If the CBC binaries are not found, Gurobi will be used by default.
-        positive_class : int
-            The value of the class label which is corresponding to the desired outcome
-        depth : int, default = 1
-            A parameter specifying the depth of the tree
-        time_limit : int, default= 60
-            The given time limit (in seconds) for solving the MIO problem
-        _lambda : float, default = 0
-            The regularization parameter in the objective. _lambda is in the interval [0,1)
-        obj_mode: str, default="acc"
-            The objective should be used to learn an optimal decision tree.
-            The two options are "acc" and "balance".
-            The accuracy objective attempts to maximize prediction accuracy while the
-            balance objective aims to learn a balanced optimal decision
-            tree to better generalize to our of sample data.
-        fairness_bound: float (0,1], default=1
-            The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness constraint enforced
-        num_threads: int, default=None
-            The number of threads the solver should use. If None, it will use all avaiable threads
-        """
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
         self._obj_mode = obj_mode
         self._positive_class = positive_class
@@ -565,6 +650,37 @@ class FairPEOCT(FairConstrainedOCT):
 
 
 class FairEOppOCT(FairConstrainedOCT):
+    """
+    An optimal classification tree fit on a given binary-valued data set
+    with a fairness side-constraint requiring equality of opportunity (EOpp) between protected groups.
+
+    Parameters
+    ----------
+    solver: str
+        A string specifying the name of the solver to use
+        to solve the MIP. Options are "Gurobi" and "CBC".
+        If the CBC binaries are not found, Gurobi will be used by default.
+    positive_class : int
+        The value of the class label which is corresponding to the desired outcome
+    depth : int, default = 1
+        A parameter specifying the depth of the tree
+    time_limit : int, default= 60
+        The given time limit (in seconds) for solving the MIO problem
+    _lambda : float, default = 0
+        The regularization parameter in the objective. _lambda is in the interval [0,1)
+    obj_mode: str, default="acc"
+        The objective should be used to learn an optimal decision tree.
+        The two options are "acc" and "balance".
+        The accuracy objective attempts to maximize prediction accuracy while the
+        balance objective aims to learn a balanced optimal decision
+        tree to better generalize to our of sample data.
+    fairness_bound: float (0,1], default=1
+        The bound of the fairness constraint. The smaller the value the stricter
+        the fairness constraint and 1 corresponds to no fairness constraint enforced
+    num_threads: int, default=None
+        The number of threads the solver should use. If None, it will use all avaiable threads
+    """
+
     def __init__(
         self,
         solver,
@@ -577,36 +693,7 @@ class FairEOppOCT(FairConstrainedOCT):
         num_threads=None,
         verbose=False,
     ) -> None:
-        """
-        An optimal classification tree fit on a given binary-valued data set
-        with a fairness side-constraint requiring equality of opportunity (EOpp) between protected groups.
 
-                Parameters
-        ----------
-        solver: str
-            A string specifying the name of the solver to use
-            to solve the MIP. Options are "Gurobi" and "CBC".
-            If the CBC binaries are not found, Gurobi will be used by default.
-        positive_class : int
-            The value of the class label which is corresponding to the desired outcome
-        depth : int, default = 1
-            A parameter specifying the depth of the tree
-        time_limit : int, default= 60
-            The given time limit (in seconds) for solving the MIO problem
-        _lambda : float, default = 0
-            The regularization parameter in the objective. _lambda is in the interval [0,1)
-        obj_mode: str, default="acc"
-            The objective should be used to learn an optimal decision tree.
-            The two options are "acc" and "balance".
-            The accuracy objective attempts to maximize prediction accuracy while the
-            balance objective aims to learn a balanced optimal decision
-            tree to better generalize to our of sample data.
-        fairness_bound: float (0,1], default=1
-            The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness constraint enforced
-        num_threads: int, default=None
-            The number of threads the solver should use. If None, it will use all avaiable threads
-        """
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
         self._obj_mode = obj_mode
         self._positive_class = positive_class
@@ -633,6 +720,37 @@ class FairEOppOCT(FairConstrainedOCT):
 
 
 class FairEOddsOCT(FairConstrainedOCT):
+    """
+    An optimal classification tree fit on a given binary-valued data set
+    with a fairness side-constraint requiring equal oddts (EOdds) between protected groups.
+
+            Parameters
+    ----------
+    solver: str
+        A string specifying the name of the solver to use
+        to solve the MIP. Options are "Gurobi" and "CBC".
+        If the CBC binaries are not found, Gurobi will be used by default.
+    positive_class : int
+        The value of the class label which is corresponding to the desired outcome
+    depth : int, default = 1
+        A parameter specifying the depth of the tree
+    time_limit : int, default= 60
+        The given time limit (in seconds) for solving the MIO problem
+    _lambda : float, default = 0
+        The regularization parameter in the objective. _lambda is in the interval [0,1)
+    obj_mode: str, default="acc"
+        The objective should be used to learn an optimal decision tree.
+        The two options are "acc" and "balance".
+        The accuracy objective attempts to maximize prediction accuracy while the
+        balance objective aims to learn a balanced optimal decision
+        tree to better generalize to our of sample data.
+    fairness_bound: float (0,1], default=1
+        The bound of the fairness constraint. The smaller the value the stricter
+        the fairness constraint and 1 corresponds to no fairness constraint enforced
+    num_threads: int, default=None
+        The number of threads the solver should use. If None, it will use all avaiable threads
+    """
+
     def __init__(
         self,
         solver,
@@ -645,36 +763,7 @@ class FairEOddsOCT(FairConstrainedOCT):
         num_threads=None,
         verbose=False,
     ) -> None:
-        """
-        An optimal classification tree fit on a given binary-valued data set
-        with a fairness side-constraint requiring equal oddts (EOdds) between protected groups.
 
-                Parameters
-        ----------
-        solver: str
-            A string specifying the name of the solver to use
-            to solve the MIP. Options are "Gurobi" and "CBC".
-            If the CBC binaries are not found, Gurobi will be used by default.
-        positive_class : int
-            The value of the class label which is corresponding to the desired outcome
-        depth : int, default = 1
-            A parameter specifying the depth of the tree
-        time_limit : int, default= 60
-            The given time limit (in seconds) for solving the MIO problem
-        _lambda : float, default = 0
-            The regularization parameter in the objective. _lambda is in the interval [0,1)
-        obj_mode: str, default="acc"
-            The objective should be used to learn an optimal decision tree.
-            The two options are "acc" and "balance".
-            The accuracy objective attempts to maximize prediction accuracy while the
-            balance objective aims to learn a balanced optimal decision
-            tree to better generalize to our of sample data.
-        fairness_bound: float (0,1], default=1
-            The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness constraint enforced
-        num_threads: int, default=None
-            The number of threads the solver should use. If None, it will use all avaiable threads
-        """
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
         self._obj_mode = obj_mode
         self._positive_class = positive_class
@@ -716,6 +805,35 @@ class FairEOddsOCT(FairConstrainedOCT):
 
 
 class FairOCT(FlowOCTMultipleSink):
+    """
+    An optimal and fair classification tree fitted on a given binary-valued
+    data set. The fairness criteria enforced in the training step is one of statistical parity (SP),
+    conditional statistical parity (CSP), predictive equality (PE),
+    equal opportunity (EOpp) or equalized odds (EOdds).
+
+    Parameters
+    ----------
+    solver: str
+        A string specifying the name of the solver to use
+        to solve the MIP. Options are "Gurobi" and "CBC".
+        If the CBC binaries are not found, Gurobi will be used by default.
+    positive_class : int
+        The value of the class label which is corresponding to the desired outcome
+    depth : int, default= 1
+        A parameter specifying the depth of the tree
+    time_limit : int, default= 60
+        The given time limit (in seconds) for solving the MIO problem
+    _lambda : float, default= 0
+        The regularization parameter in the objective. _lambda is in the interval [0,1)
+    num_threads: int, default=None
+        The number of threads the solver should use. If None, it will use all avaiable threads
+    fairness_type: [None, 'SP', 'CSP', 'PE', 'EOpp', 'EOdds'], default=None
+        The type of fairness criteria that we want to enforce
+    fairness_bound: float (0,1], default=1
+        The bound of the fairness constraint. The smaller the value the stricter
+        the fairness constraint and 1 corresponds to no fairness constraint enforced
+    """
+
     def __init__(
         self,
         solver,
@@ -729,34 +847,7 @@ class FairOCT(FlowOCTMultipleSink):
         num_threads=None,
         verbose=False,
     ) -> None:
-        """
-        An optimal and fair classification tree fitted on a given binary-valued
-        data set. The fairness criteria enforced in the training step is one of statistical parity (SP),
-        conditional statistical parity (CSP), predictive equality (PE),
-        equal opportunity (EOpp) or equalized odds (EOdds).
 
-        Parameters
-        ----------
-        solver: str
-            A string specifying the name of the solver to use
-            to solve the MIP. Options are "Gurobi" and "CBC".
-            If the CBC binaries are not found, Gurobi will be used by default.
-        positive_class : int
-            The value of the class label which is corresponding to the desired outcome
-        depth : int, default= 1
-            A parameter specifying the depth of the tree
-        time_limit : int, default= 60
-            The given time limit (in seconds) for solving the MIO problem
-        _lambda : float, default= 0
-            The regularization parameter in the objective. _lambda is in the interval [0,1)
-        num_threads: int, default=None
-            The number of threads the solver should use. If None, it will use all avaiable threads
-        fairness_type: [None, 'SP', 'CSP', 'PE', 'EOpp', 'EOdds'], default=None
-            The type of fairness criteria that we want to enforce
-        fairness_bound: float (0,1], default=1
-            The bound of the fairness constraint. The smaller the value the stricter
-            the fairness constraint and 1 corresponds to no fairness constraint enforced
-        """
         warnings.warn(
             (
                 "The class FairOCT will be depreciated in v1.2 of ODTlearn,"
@@ -779,6 +870,18 @@ class FairOCT(FlowOCTMultipleSink):
         self._positive_class = positive_class
 
     def _extract_metadata(self, X, y, protect_feat):
+        """
+        Extract metadata from the input data.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input samples.
+        y : array-like of shape (n_samples,)
+            The target values.
+        protect_feat : array-like of shape (n_samples, n_protect_feat)
+            The protected features.
+        """
         super(FlowOCTMultipleSink, self)._extract_metadata(X, y)
         if isinstance(protect_feat, pd.DataFrame):
             self._protect_feat_col_labels = protect_feat.columns
@@ -1264,6 +1367,52 @@ class FairOCT(FlowOCTMultipleSink):
         return ceq_dict
 
     def fairness_metric_summary(self, metric, new_data=None):
+        """
+        Summarize the specified fairness metric for the fitted model.
+
+        Parameters
+        ----------
+        metric : str
+            The name of the fairness metric to summarize. Must be one of 'SP', 'CSP', 'PE', or 'CPE'.
+        new_data : array-like of shape (n_samples,), optional
+            The new predicted data to use for calculating the fairness metric. If None, the predict method
+            is called on the training data to obtain the predicted values. Default is None.
+
+        Raises
+        ------
+        ValueError
+            If the specified metric is not one of the supported options.
+
+        Returns
+        -------
+        None
+            The method prints the fairness metric summary as a pandas DataFrame.
+
+        Notes
+        -----
+        This method summarizes the specified fairness metric for the fitted model. The supported fairness metrics are:
+        - 'SP': Statistical Parity
+        - 'CSP': Conditional Statistical Parity
+        - 'PE': Predictive Equality
+        - 'CPE': Conditional Predictive Equality
+
+        The method checks if the model has been fitted and raises an error if not. If `new_data` is not provided,
+        the predict method is called on the training data to obtain the predicted values.
+
+        The fairness metric summary is printed as a pandas DataFrame, showing the metric values for each
+        combination of protected attribute, legitimate factor (if applicable), true label, and predicted label
+        (if applicable), depending on the selected metric.
+
+        Examples
+        --------
+        >>> model.fit(X_train, y_train, protect_feat_train, legit_factor_train)
+        >>> model.fairness_metric_summary('SP')
+                    (p,y)  P(Y=y|P=p)
+        0     (Male, False)    0.752475
+        1      (Male, True)    0.247525
+        2   (Female, False)    0.742574
+        3    (Female, True)    0.257426
+        """
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
         metric_names = ["SP", "CSP", "PE", "CPE"]
         if new_data is None:

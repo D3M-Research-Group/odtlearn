@@ -13,7 +13,7 @@ from odtlearn.utils.validation import check_integer, check_same_as_X
 
 
 class RobustOCT(OptimalClassificationTree):
-    """An optimal robust decision tree classifier, fitted on a given integer-valued
+    """An optimal robust decision tree classifier, fit on a given integer-valued
     data set and a given cost-and-budget uncertainty set to produce a tree robust
     against distribution shifts.
 

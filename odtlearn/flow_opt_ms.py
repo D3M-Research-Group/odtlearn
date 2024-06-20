@@ -3,6 +3,90 @@ from odtlearn.opt_pt import OptimalPrescriptiveTree
 
 
 class FlowOPTMultipleSink(OptimalPrescriptiveTree):
+    """
+    A base class for learning optimal prescriptive trees with multiple sink nodes using flow optimization.
+
+    Parameters
+    ----------
+    solver : str
+        The solver to use for the optimization problem. Can be either "gurobi" or "cbc".
+    depth : int, default=1
+        The maximum depth of the tree to be learned.
+    time_limit : int, default=60
+        The time limit (in seconds) for solving the optimization problem.
+    num_threads : int, default=None
+        The number of threads the solver should use. If not specified,
+        the solver uses all available threads.
+    verbose : bool, default=False
+        Whether to print verbose output during the tree learning process.
+
+    Attributes
+    ----------
+    _b : dict
+        A dictionary of binary decision variables representing the branching decisions at each node.
+    _p : dict
+        A dictionary of binary decision variables representing the prediction decisions at each node.
+    _w : dict
+        A dictionary of continuous decision variables representing the treatment weights at each node.
+    _zeta : dict
+        A dictionary of continuous decision variables representing the flow of each datapoint
+        to each treatment at each node.
+    _z : dict
+        A dictionary of continuous decision variables representing the flow of each datapoint to each node.
+
+    Methods
+    -------
+    _tree_struc_variables()
+        Defines the decision variables related to the tree structure.
+    _flow_variables()
+        Defines the decision variables related to the flow of datapoints.
+    _define_variables()
+        Defines all the decision variables used in the optimization problem.
+    _tree_structure_constraints()
+        Defines the constraints related to the tree structure.
+    _flow_constraints()
+        Defines the constraints related to the flow of datapoints.
+    _arc_constraints()
+        Defines the constraints related to the arcs between nodes.
+    _define_constraints()
+        Defines all the constraints used in the optimization problem.
+    _define_objective()
+        Abstract method to be implemented by subclasses to define the objective function.
+    fit(X, t, y, **kwargs)
+        Abstract method to be implemented by subclasses to fit the optimal prescriptive tree.
+    predict(X)
+        Make treatment recommendations for the given input samples.
+
+    Notes
+    -----
+    This is a base class for learning optimal prescriptive trees with multiple sink nodes using
+    flow optimization. It extends the `OptimalPrescriptiveTree` class and provides the basic
+    structure and common functionality for flow-based prescriptive tree learning. It should not
+    be instantiated directly. Instead, use one of the
+    derived classes that implement a specific prescriptive tree method, such as `FlowOPT_DM` or
+    `FlowOPT_DR`.
+
+    The key idea is to model the flow of each datapoint through the tree, allowing it to reach
+    multiple sink nodes (i.e., leaves) with different treatment recommendations. The objective
+    is to optimize the treatment recommendations based on the characteristics of each datapoint.
+
+    The class defines decision variables and constraints specific to the flow optimization
+    formulation with multiple sink nodes. The `_define_variables` method defines the decision
+    variables, including the tree structure variables (`_b`, `_p`, `_w`) and the flow variables
+    (`_zeta`, `_z`).
+
+    The `_define_constraints` method defines the constraints, including the tree structure
+    constraints, flow constraints, and arc constraints. These constraints ensure the validity
+    of the tree structure and the proper flow of datapoints through the tree to multiple sink nodes.
+
+    Subclasses of `FlowOPTMultipleSink` should implement the `_define_objective` method to specify
+    the objective function for the optimization problem, and the `fit` method to handle the model
+    fitting process.
+
+    The class inherits the `predict` method from the `OptimalPrescriptiveTree` class to make
+    treatment recommendations based on the learned tree.
+    """
+
     def __init__(
         self,
         solver,

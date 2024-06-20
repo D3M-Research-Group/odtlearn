@@ -8,35 +8,66 @@ from odtlearn.utils.validation import check_binary, check_columns_match
 
 
 class FlowOCT(FlowOCTSingleSink):
-    """An optimal decision tree classifier, fitted on a given
-    integer-valued data set to produce a provably optimal
-    decision tree.
+    """
+    An optimal decision tree classifier, fitted on a given integer-valued data set
+    to produce a provably optimal decision tree.
 
     Parameters
     ----------
-    solver: str
-        A string specifying the name of the solver to use
-        to solve the MIP. Options are "Gurobi" and "CBC".
-        If the CBC binaries are not found, Gurobi will be used by default.
-    _lambda: float, default = 0
-            The regularization parameter in the objective, taking values
-            between 0 and 1, that controls
-            the complexity of a the learned tree.
-    obj_mode: str, default="acc"
-        The objective should be used to learn an optimal decision tree.
-        The two options are "acc" and "balance".
-        The accuracy objective attempts to maximize prediction accuracy while the
-        balance objective aims to learn a balanced optimal decision
-        tree to better generalize to our of sample data.
+    solver : str
+        The solver to use for the MIP formulation. Currently, only "gurobi" and "CBC" are supported.
+    _lambda : float, default=0
+        The regularization parameter for controlling the complexity of the learned tree.
+    obj_mode : str, default="acc"
+        The objective mode to be used for learning the optimal decision tree.
+        Options are "acc" (accuracy) and "balance".
     depth : int, default=1
-        A parameter specifying the depth of the tree to learn.
+        The maximum depth of the tree to be learned.
     time_limit : int, default=60
-        The given time limit for solving the MIP in seconds.
-    num_threads: int, default=None
+        The time limit (in seconds) for solving the MIP formulation.
+    num_threads : int, default=None
         The number of threads the solver should use. If not specified,
         solver uses all available threads
-    verbose : bool, default = False
-        Flag for logging solver outputs.
+    verbose : bool, default=False
+        Whether to print verbose output during the tree learning process.
+
+    Methods
+    -------
+    fit(X, y)
+        Fit the optimal classification tree to the given training data.
+    predict(X)
+        Make predictions using the fitted optimal classification tree.
+    _define_objective()
+        Define the objective function for the optimization problem.
+
+    Notes
+    -----
+    This class extends the `FlowOCTSingleSink` class and provides the implementation for learning
+    optimal classification trees using the flow-based formulation with a single sink node.
+
+    The `FlowOCT` class is a user-facing class that can be instantiated directly to learn optimal
+    classification trees. It inherits the basic structure and functionality from the `FlowOCTSingleSink`
+    class and adds the specific objective function and model fitting process.
+
+    The class supports two objective modes: "acc" (accuracy) and "balance". The accuracy objective
+    aims to maximize the prediction accuracy of the learned tree, while the balance objective aims
+    to learn a balanced optimal decision tree to better generalize to out-of-sample data.
+
+    The `fit` method is used to fit the optimal classification tree to the given training data. It
+    preprocesses the input data, creates the main optimization problem, and solves it using the
+    specified solver and parameters.
+
+    The `predict` method is used to make predictions using the fitted optimal classification tree.
+    It takes the input data and traverses the tree based on the learned branching and prediction
+    decisions to generate the predictions.
+
+    The `_define_objective` method defines the objective function for the optimization problem based
+    on the selected objective mode. It incorporates the regularization term and the accuracy or
+    balance objective term.
+
+    Users can instantiate the `FlowOCT` class directly and use it to learn optimal classification
+    trees by calling the `fit` method with the training data and then using the `predict` method
+    to make predictions on new data.
     """
 
     def __init__(
@@ -137,6 +168,81 @@ class FlowOCT(FlowOCTSingleSink):
 
 
 class BendersOCT(FlowOCTSingleSink):
+    """
+    An optimal decision tree classifier using Benders' decomposition, fitted on a given integer-valued
+    data set to produce a provably optimal decision tree.
+
+    Parameters
+    ----------
+    solver : str
+        The solver to use for the MIP formulation. Currently, only "gurobi" and "CBC" are supported.
+    _lambda : float, default=0
+        The regularization parameter for controlling the complexity of the learned tree.
+    obj_mode : str, default="acc"
+        The objective mode to be used for learning the optimal decision tree.
+        Options are "acc" (accuracy) and "balance".
+    depth : int, default=1
+        The maximum depth of the tree to be learned.
+    time_limit : int, default=60
+        The time limit (in seconds) for solving the MIP formulation.
+    num_threads : int, default=None
+        The number of threads the solver should use. If not specified,
+        solver uses all available threads
+    verbose : bool, default=False
+        Whether to print verbose output during the tree learning process.
+
+    Methods
+    -------
+    fit(X, y)
+        Fit the optimal classification tree using Benders' decomposition to the given training data.
+    predict(X)
+        Make predictions using the fitted optimal classification tree.
+    _define_variables()
+        Define the decision variables used in the Benders' decomposition formulation.
+    _define_constraints()
+        Define the constraints used in the Benders' decomposition formulation.
+    _define_objective()
+        Define the objective function for the Benders' decomposition formulation.
+
+    Notes
+    -----
+    This class extends the `FlowOCTSingleSink` class and provides the implementation for learning
+    optimal classification trees using Benders' decomposition with a single sink node.
+
+    The `BendersOCT` class is a user-facing class that can be instantiated directly to learn optimal
+    classification trees using Benders' decomposition. It inherits the basic structure and functionality
+    from the `FlowOCTSingleSink` class and adds the specific Benders' decomposition formulation.
+
+    Benders' decomposition is a technique used to solve large-scale optimization problems by decomposing
+    them into smaller subproblems. In the context of optimal classification trees, Benders' decomposition
+    is used to decompose the problem into a master problem and multiple subproblems, one for each datapoint.
+
+    The master problem focuses on the tree structure and branching decisions, while the subproblems
+    optimize the class predictions for each datapoint based on the fixed tree structure. The master
+    problem and subproblems are solved iteratively until convergence is reached.
+
+    The `_define_variables` method defines the decision variables specific to the Benders' decomposition
+    formulation, including the variables for the subproblem objective values.
+
+    The `_define_constraints` method defines the constraints specific to the Benders' decomposition
+    formulation, which ensure the proper linking of the master problem and subproblems.
+
+    The `_define_objective` method defines the objective function for the Benders' decomposition
+    formulation, which includes the regularization term and the objective values from the subproblems.
+
+    The `fit` method is used to fit the optimal classification tree using Benders' decomposition to
+    the given training data. It preprocesses the input data, creates the main optimization problem,
+    and solves it using the specified solver and parameters.
+
+    The `predict` method is used to make predictions using the fitted optimal classification tree.
+    It takes the input data and traverses the tree based on the learned branching and prediction
+    decisions to generate the predictions.
+
+    Users can instantiate the `BendersOCT` class directly and use it to learn optimal classification
+    trees using Benders' decomposition by calling the `fit` method with the training data and then
+    using the `predict` method to make predictions on new data.
+    """
+
     def __init__(
         self,
         solver,
@@ -147,33 +253,6 @@ class BendersOCT(FlowOCTSingleSink):
         num_threads=None,
         verbose=False,
     ) -> None:
-        """
-        Parameters
-        ----------
-        solver: str
-            A string specifying the name of the solver to use
-            to solve the MIP. Options are "Gurobi" and "CBC".
-            If the CBC binaries are not found, Gurobi will be used by default.
-        _lambda: float, default = 0
-            The regularization parameter in the objective,
-            taking values between 0 and 1, that controls
-            the complexity of a the learned tree.
-        obj_mode: str, default="acc"
-            The objective should be used to learn an optimal decision tree.
-            The two options are "acc" and "balance".
-            The accuracy objective attempts to maximize prediction accuracy while the
-            balance objective aims to learn a balanced optimal decision
-            tree to better generalize to our of sample data.
-        depth : int, default=1
-            A parameter specifying the depth of the tree to learn.
-        time_limit : int, default=60
-            The given time limit for solving the MIP in seconds.
-        num_threads: int, default=None
-            The number of threads the solver should use. If not specified,
-            solver uses all available threads
-        verbose : bool, default = False
-            Flag for logging solver outputs.
-        """
 
         super().__init__(
             solver,
