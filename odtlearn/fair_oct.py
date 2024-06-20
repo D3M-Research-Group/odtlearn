@@ -16,7 +16,8 @@ class FairConstrainedOCT(ConstrainedOCT):
     """
     Base class for fair constrained optimal classification trees.
 
-    This class extends the `ConstrainedOCT` class and provides a framework for implementing
+    This class extends the :mod:`ConstrainedOCT <odtlearn.constrained_oct.ConstrainedOCT>` class
+    and provides a framework for implementing
     fair constrained optimal classification trees. It includes methods for adding fairness
     constraints, extracting metadata from the input data, and defining the objective function.
 
@@ -56,23 +57,29 @@ class FairConstrainedOCT(ConstrainedOCT):
         Extract metadata from the input data.
     _define_objective()
         Define the objective function for the MIP problem.
-    fit(X, y, protect_feat, legit_factor)
+    :meth:`fit <odtlearn.fair_oct.FairConstrainedOCT.fit>`(X, y, protect_feat, legit_factor)
         Fit the fair constrained optimal classification tree on the given data.
-    predict(X)
+    :meth:`predict <odtlearn.fair_oct.FairConstrainedOCT.predict>`(X)
         Predict the class labels for the given input data using the fitted model.
 
     Notes
     -----
     This is a base class and should not be instantiated directly. Instead, use one of the
-    derived classes that implement a specific fairness constraint, such as `FairSPOCT`,
-    `FairCSPOCT`, `FairPEOCT`, `FairEOppOCT`, or `FairEOddsOCT`.
+    derived classes that implement a specific fairness constraint, such as
+    :mod:`FairSPOCT <odtlearn.fair_oct.FairSPOCT>`,
+    :mod:`FairCSPOCT <odtlearn.fair_oct.FairCSPOCT>`,
+    :mod:`FairPEOCT <odtlearn.fair_oct.FairPEOCT>`,
+    :mod:`FairEOppOCT <odtlearn.fair_oct.FairEOppOCT>`,
+    or :mod:`FairEOddsOCT <odtlearn.fair_oct.FairEOddsOCT>`.
 
-    The `fit` method expects the input data `X`, target labels `y`, protected features
+    The :meth:`fit <odtlearn.fair_oct.FairConstrainedOCT.fit>` method expects the input data `X`,
+    target labels `y`, protected features
     `protect_feat`, and legitimate factors `legit_factor` (if applicable) to be provided.
     The protected features should be binary-valued, and the legitimate factors should be
     numeric.
 
-    The `predict` method expects the input data `X` to have the same columns as the data
+    The :meth:`predict <odtlearn.fair_oct.FairConstrainedOCT.predict>` method expects the input data
+    `X` to have the same columns as the data
     used for fitting the model.
 
     """

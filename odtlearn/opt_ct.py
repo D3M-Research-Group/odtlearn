@@ -20,7 +20,7 @@ class OptimalClassificationTree(OptimalDecisionTree):
         The time limit (in seconds) for solving the MIP formulation.
     num_threads : int, optional
         The number of threads the solver should use. If not specified,
-        solver uses all available threads
+        solver uses all available threads.
     verbose : bool, default=False
         Whether to print verbose output during the tree learning process.
 
@@ -35,19 +35,19 @@ class OptimalClassificationTree(OptimalDecisionTree):
 
     Methods
     -------
-    fit(X, y)
+    :meth:`fit <odtlearn.opt_ct.OptimalClassificationTree.fit>`(X, y)
         Fit the optimal classification tree to the given training data.
-    predict(X)
+    :meth:`predict <odtlearn.opt_ct.OptimalClassificationTree.predict>`(X)
         Make predictions using the fitted optimal classification tree.
-    print_tree()
+    :meth:`print_tree <odtlearn.opt_ct.OptimalClassificationTree.print_tree>`()
         Print the structure of the fitted optimal classification tree.
-    plot_tree(**kwargs)
+    :meth:`plot_tree <odtlearn.opt_ct.OptimalClassificationTree.plot_tree>`(**kwargs)
         Plot the fitted optimal classification tree using matplotlib.
 
     Notes
     -----
-    This class extends the `OptimalDecisionTree` base class to learn optimal classification
-    trees. It formulates the problem as a mixed-integer
+    This class extends the :mod:`OptimalDecisionTree <odtlearn.opt_dt.OptimalDecisionTree>` base
+    class to learn optimal classification trees. It formulates the problem as a mixed-integer
     program and solves it using either the Gurobi or CBC solver.
     """
 

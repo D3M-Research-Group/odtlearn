@@ -36,54 +36,64 @@ class FlowOPTMultipleSink(OptimalPrescriptiveTree):
 
     Methods
     -------
-    _tree_struc_variables()
+    :meth:`_tree_struc_variables <odtlearn.flow_opt_ms.FlowOPTMultipleSink._tree_struc_variables>`()
         Defines the decision variables related to the tree structure.
-    _flow_variables()
+    :meth:`_flow_variables <odtlearn.flow_opt_ms.FlowOPTMultipleSink._flow_variables>`()
         Defines the decision variables related to the flow of datapoints.
-    _define_variables()
+    :meth:`_define_variables <odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_variables>`()
         Defines all the decision variables used in the optimization problem.
-    _tree_structure_constraints()
+    :meth:`_tree_structure_constraints <odtlearn.flow_opt_ms.FlowOPTMultipleSink._tree_structure_constraints>`()
         Defines the constraints related to the tree structure.
-    _flow_constraints()
+    :meth:`_flow_constraints <odtlearn.flow_opt_ms.FlowOPTMultipleSink._flow_constraints>`()
         Defines the constraints related to the flow of datapoints.
-    _arc_constraints()
+    :meth:`_arc_constraints <odtlearn.flow_opt_ms.FlowOPTMultipleSink._arc_constraints>`()
         Defines the constraints related to the arcs between nodes.
-    _define_constraints()
+    :meth:`_define_constraints <odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_constraints>`()
         Defines all the constraints used in the optimization problem.
-    _define_objective()
+    :meth:`_define_objective <odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_objective>`()
         Abstract method to be implemented by subclasses to define the objective function.
-    fit(X, t, y, **kwargs)
+    :meth:`fit <odtlearn.flow_opt_ms.FlowOPTMultipleSink.fit>`(X, t, y, **kwargs)
         Abstract method to be implemented by subclasses to fit the optimal prescriptive tree.
-    predict(X)
+    :meth:`predict <odtlearn.opt_pt.OptimalPrescriptiveTree.predict>`(X)
         Make treatment recommendations for the given input samples.
 
     Notes
     -----
     This is a base class for learning optimal prescriptive trees with multiple sink nodes using
-    flow optimization. It extends the `OptimalPrescriptiveTree` class and provides the basic
+    flow optimization. It extends the :mod:`OptimalPrescriptiveTree <odtlearn.opt_pt.OptimalPrescriptiveTree>` class
+    and provides the basic
     structure and common functionality for flow-based prescriptive tree learning. It should not
     be instantiated directly. Instead, use one of the
-    derived classes that implement a specific prescriptive tree method, such as `FlowOPT_DM` or
-    `FlowOPT_DR`.
+    derived classes that implement a specific prescriptive tree method, such as
+    :mod:`FlowOPT_DM <odtlearn.flow_opt.FlowOPT_DM>` or
+    :mod:`FlowOPT_DR <odtlearn.flow_opt.FlowOPT_DR>`.
 
     The key idea is to model the flow of each datapoint through the tree, allowing it to reach
     multiple sink nodes (i.e., leaves) with different treatment recommendations. The objective
     is to optimize the treatment recommendations based on the characteristics of each datapoint.
 
     The class defines decision variables and constraints specific to the flow optimization
-    formulation with multiple sink nodes. The `_define_variables` method defines the decision
+    formulation with multiple sink nodes.
+    The :meth:`_define_variables <odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_variables>` method defines
+    the decision
     variables, including the tree structure variables (`_b`, `_p`, `_w`) and the flow variables
     (`_zeta`, `_z`).
 
-    The `_define_constraints` method defines the constraints, including the tree structure
+    The :meth:`_define_constraints <odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_constraints>` method defines
+    the constraints,
+    including the tree structure
     constraints, flow constraints, and arc constraints. These constraints ensure the validity
     of the tree structure and the proper flow of datapoints through the tree to multiple sink nodes.
 
-    Subclasses of `FlowOPTMultipleSink` should implement the `_define_objective` method to specify
-    the objective function for the optimization problem, and the `fit` method to handle the model
+    Subclasses of `FlowOPTMultipleSink` should implement the
+    :meth:`_define_objective <odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_objective>` method to specify
+    the objective function for the optimization problem,
+    and the :meth:`fit <odtlearn.flow_opt_ms.FlowOPTMultipleSink.fit>` method
+    to handle the model
     fitting process.
 
-    The class inherits the `predict` method from the `OptimalPrescriptiveTree` class to make
+    The class inherits the :meth:`predict <odtlearn.opt_pt.OptimalPrescriptiveTree.predict>` method from the
+    :mod:`OptimalPrescriptiveTree <odtlearn.opt_pt.OptimalPrescriptiveTree>` class to make
     treatment recommendations based on the learned tree.
     """
 
