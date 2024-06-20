@@ -309,16 +309,16 @@ and <a class="reference internal" href="../opt_pt/index.html#odtlearn.opt_pt.Opt
 <a class="reference internal" href="../opt_pt/index.html#odtlearn.opt_pt.OptimalPrescriptiveTree" title="odtlearn.opt_pt.OptimalPrescriptiveTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">OptimalPrescriptiveTree</span></code></a>
 class to make predictions and visualize the learned tree.</p>
 <p>Example usage:</p>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
-# Create an instance of FlowOPT_IPW
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a></p>
+<p># Create an instance of FlowOPT_IPW
 opt_tree = FlowOPT_IPW(depth=3, time_limit=600, verbose=True)</p>
 <p># Fit the optimal prescriptive tree using data and IPW
 opt_tree.fit(X, y, t, ipw)</p>
 <p># Make predictions
 predictions = opt_tree.predict(X_new)</p>
 <p># Plot the learned tree
-opt_tree.plot_tree()
-<a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+opt_tree.plot_tree()</p>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
 <dl class="field-list">
 <dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -331,10 +331,10 @@ opt_tree.plot_tree()
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><strong>:meth:`fit &lt;odtlearn.flow_opt.FlowOPT_IPW.fit&gt;`(X, y, t, ipw)</strong></p></td>
+<tr class="row-odd"><td><p><strong>fit(X, y, t, ipw)</strong></p></td>
 <td><p>Fit the optimal prescriptive tree using the provided data and inverse probability weights.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>:meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_IPW._define_objective&gt;`()</strong></p></td>
+<tr class="row-even"><td><p><strong>_define_objective()</strong></p></td>
 <td><p>Define the objective function for the optimization problem.</p></td>
 </tr>
 </tbody>
@@ -439,13 +439,13 @@ recommendations = opt_tree.predict(X_new)
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><strong>:meth:`fit &lt;odtlearn.flow_opt.FlowOPT_DM.fit&gt;`(X, t, y, y_hat)</strong></p></td>
+<tr class="row-odd"><td><p><strong>fit(X, t, y, y_hat)</strong></p></td>
 <td><p>Fit the optimal prescriptive tree using the provided data and counterfactual predictions.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>:meth:`predict &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.predict&gt;`(X)</strong></p></td>
+<tr class="row-even"><td><p><strong>predict(X)</strong></p></td>
 <td><p>Make treatment recommendations for the given input samples.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>:meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_DM._define_objective&gt;`()</strong></p></td>
+<tr class="row-odd"><td><p><strong>_define_objective()</strong></p></td>
 <td><p>Define the objective function for the optimization problem.</p></td>
 </tr>
 </tbody>
@@ -552,13 +552,13 @@ recommendations = opt_tree.predict(X_new)
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><strong>:meth:`fit &lt;odtlearn.flow_opt.FlowOPT_DR.fit&gt;`(X, t, y, ipw, y_hat)</strong></p></td>
+<tr class="row-odd"><td><p><strong>fit(X, t, y, ipw, y_hat)</strong></p></td>
 <td><p>Fit the optimal prescriptive tree using the provided data, inverse propensity weights, and counterfactual predictions.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>:meth:`predict &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.predict&gt;`(X)</strong></p></td>
+<tr class="row-even"><td><p><strong>predict(X)</strong></p></td>
 <td><p>Make treatment recommendations for the given input samples.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>:meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_DR._define_objective&gt;`()</strong></p></td>
+<tr class="row-odd"><td><p><strong>_define_objective()</strong></p></td>
 <td><p>Define the objective function for the optimization problem.</p></td>
 </tr>
 </tbody>

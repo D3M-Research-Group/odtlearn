@@ -7,6 +7,7 @@ Please refer to the [example notebooks](./notebooks/index.md) and [user guide](.
 
 <img src="_static/img/odtlearn_class_structure.png" alt="Class diagram for ODTlearn" style="width:600px;display:block;margin-left:auto;margin-right:auto;"/>
 
+
 ```{toctree}
 :maxdepth: 4
 autoapi/odtlearn/index

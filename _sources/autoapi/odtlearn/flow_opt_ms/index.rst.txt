@@ -23,7 +23,7 @@ Classes
    Bases: :py:obj:`odtlearn.opt_pt.OptimalPrescriptiveTree`
 
    
-   A base class for learning optimal prescriptive trees with multiple sink nodes using flow optimization.
+    A base class for learning optimal prescriptive trees with multiple sink nodes using flow optimization.
 
 
    :Parameters:
@@ -115,18 +115,10 @@ Classes
 
 
 
-   ================================================================================================================  ==========
-               **:meth:`_tree_struc_variables <odtlearn.flow_opt_ms.FlowOPTMultipleSink._tree_struc_variables>`()**  Defines the decision variables related to the tree structure.  
-                           **:meth:`_flow_variables <odtlearn.flow_opt_ms.FlowOPTMultipleSink._flow_variables>`()**  Defines the decision variables related to the flow of datapoints.  
-                       **:meth:`_define_variables <odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_variables>`()**  Defines all the decision variables used in the optimization problem.  
-   **:meth:`_tree_structure_constraints <odtlearn.flow_opt_ms.FlowOPTMultipleSink._tree_structure_constraints>`()**  Defines the constraints related to the tree structure.  
-                       **:meth:`_flow_constraints <odtlearn.flow_opt_ms.FlowOPTMultipleSink._flow_constraints>`()**  Defines the constraints related to the flow of datapoints.  
-                         **:meth:`_arc_constraints <odtlearn.flow_opt_ms.FlowOPTMultipleSink._arc_constraints>`()**  Defines the constraints related to the arcs between nodes.  
-                   **:meth:`_define_constraints <odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_constraints>`()**  Defines all the constraints used in the optimization problem.  
-                       **:meth:`_define_objective <odtlearn.flow_opt_ms.FlowOPTMultipleSink._define_objective>`()**  Abstract method to be implemented by subclasses to define the objective function.  
-                                  **:meth:`fit <odtlearn.flow_opt_ms.FlowOPTMultipleSink.fit>`(X, t, y, **kwargs)**  Abstract method to be implemented by subclasses to fit the optimal prescriptive tree.  
-                                           **:meth:`predict <odtlearn.opt_pt.OptimalPrescriptiveTree.predict>`(X)**  Make treatment recommendations for the given input samples.  
-   ================================================================================================================  ==========
+   ===========================  ==========
+   **_tree_struc_variables()**  Defines the decision variables related to the tree structure. _flow_variables() Defines the decision variables related to the flow of datapoints. _define_variables() Defines all the decision variables used in the optimization problem. _tree_structure_constraints() Defines the constraints related to the tree structure. _flow_constraints() Defines the constraints related to the flow of datapoints. _arc_constraints() Defines the constraints related to the arcs between nodes. _define_constraints() Defines all the constraints used in the optimization problem. _define_objective() Abstract method to be implemented by subclasses to define the objective function. fit(X, t, y, **kwargs) Abstract method to be implemented by subclasses to fit the optimal prescriptive tree.  
+                **predict(X)**  Make treatment recommendations for the given input samples.  
+   ===========================  ==========
 
    ..
        !! processed by numpydoc !!

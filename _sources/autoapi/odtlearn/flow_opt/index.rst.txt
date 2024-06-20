@@ -81,7 +81,8 @@ Classes
 
    Example usage:
 
-   ```python
+   ```
+
    # Create an instance of FlowOPT_IPW
    opt_tree = FlowOPT_IPW(depth=3, time_limit=600, verbose=True)
 
@@ -93,6 +94,7 @@ Classes
 
    # Plot the learned tree
    opt_tree.plot_tree()
+
    ```
 
 
@@ -106,10 +108,10 @@ Classes
 
 
 
-   =================================================================================  ==========
-                   **:meth:`fit <odtlearn.flow_opt.FlowOPT_IPW.fit>`(X, y, t, ipw)**  Fit the optimal prescriptive tree using the provided data and inverse probability weights.  
-   **:meth:`_define_objective <odtlearn.flow_opt.FlowOPT_IPW._define_objective>`()**  Define the objective function for the optimization problem.  
-   =================================================================================  ==========
+   =======================  ==========
+     **fit(X, y, t, ipw)**  Fit the optimal prescriptive tree using the provided data and inverse probability weights.  
+   **_define_objective()**  Define the objective function for the optimization problem.  
+   =======================  ==========
 
    ..
        !! processed by numpydoc !!
@@ -260,11 +262,11 @@ Classes
 
 
 
-   ================================================================================  ==========
-                 **:meth:`fit <odtlearn.flow_opt.FlowOPT_DM.fit>`(X, t, y, y_hat)**  Fit the optimal prescriptive tree using the provided data and counterfactual predictions.  
-           **:meth:`predict <odtlearn.opt_pt.OptimalPrescriptiveTree.predict>`(X)**  Make treatment recommendations for the given input samples.  
-   **:meth:`_define_objective <odtlearn.flow_opt.FlowOPT_DM._define_objective>`()**  Define the objective function for the optimization problem.  
-   ================================================================================  ==========
+   =======================  ==========
+   **fit(X, t, y, y_hat)**  Fit the optimal prescriptive tree using the provided data and counterfactual predictions.  
+            **predict(X)**  Make treatment recommendations for the given input samples.  
+   **_define_objective()**  Define the objective function for the optimization problem.  
+   =======================  ==========
 
    ..
        !! processed by numpydoc !!
@@ -417,11 +419,11 @@ Classes
 
 
 
-   ================================================================================  ==========
-            **:meth:`fit <odtlearn.flow_opt.FlowOPT_DR.fit>`(X, t, y, ipw, y_hat)**  Fit the optimal prescriptive tree using the provided data, inverse propensity weights, and counterfactual predictions.  
-           **:meth:`predict <odtlearn.opt_pt.OptimalPrescriptiveTree.predict>`(X)**  Make treatment recommendations for the given input samples.  
-   **:meth:`_define_objective <odtlearn.flow_opt.FlowOPT_DR._define_objective>`()**  Define the objective function for the optimization problem.  
-   ================================================================================  ==========
+   ============================  ==========
+   **fit(X, t, y, ipw, y_hat)**  Fit the optimal prescriptive tree using the provided data, inverse propensity weights, and counterfactual predictions.  
+                 **predict(X)**  Make treatment recommendations for the given input samples.  
+        **_define_objective()**  Define the objective function for the optimization problem.  
+   ============================  ==========
 
    ..
        !! processed by numpydoc !!

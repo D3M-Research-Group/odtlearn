@@ -283,9 +283,9 @@
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
-<span class="sd">    :meth:`fit &lt;odtlearn.flow_opt.FlowOPT_IPW.fit&gt;`(X, y, t, ipw)</span>
+<span class="sd">    fit(X, y, t, ipw)</span>
 <span class="sd">        Fit the optimal prescriptive tree using the provided data and inverse probability weights.</span>
-<span class="sd">    :meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_IPW._define_objective&gt;`()</span>
+<span class="sd">    _define_objective()</span>
 <span class="sd">        Define the objective function for the optimization problem.</span>
 
 <span class="sd">    Notes</span>
@@ -316,7 +316,8 @@
 
 <span class="sd">    Example usage:</span>
 
-<span class="sd">    ```python</span>
+<span class="sd">    ```</span>
+
 <span class="sd">    # Create an instance of FlowOPT_IPW</span>
 <span class="sd">    opt_tree = FlowOPT_IPW(depth=3, time_limit=600, verbose=True)</span>
 
@@ -328,6 +329,7 @@
 
 <span class="sd">    # Plot the learned tree</span>
 <span class="sd">    opt_tree.plot_tree()</span>
+
 <span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -446,11 +448,11 @@
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
-<span class="sd">    :meth:`fit &lt;odtlearn.flow_opt.FlowOPT_DM.fit&gt;`(X, t, y, y_hat)</span>
+<span class="sd">    fit(X, t, y, y_hat)</span>
 <span class="sd">        Fit the optimal prescriptive tree using the provided data and counterfactual predictions.</span>
-<span class="sd">    :meth:`predict &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.predict&gt;`(X)</span>
+<span class="sd">    predict(X)</span>
 <span class="sd">        Make treatment recommendations for the given input samples.</span>
-<span class="sd">    :meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_DM._define_objective&gt;`()</span>
+<span class="sd">    _define_objective()</span>
 <span class="sd">        Define the objective function for the optimization problem.</span>
 
 <span class="sd">    Notes</span>
@@ -615,12 +617,12 @@
 
 <span class="sd">    Methods</span>
 <span class="sd">    -------</span>
-<span class="sd">    :meth:`fit &lt;odtlearn.flow_opt.FlowOPT_DR.fit&gt;`(X, t, y, ipw, y_hat)</span>
+<span class="sd">    fit(X, t, y, ipw, y_hat)</span>
 <span class="sd">        Fit the optimal prescriptive tree using the provided data, inverse propensity weights,</span>
 <span class="sd">        and counterfactual predictions.</span>
-<span class="sd">    :meth:`predict &lt;odtlearn.opt_pt.OptimalPrescriptiveTree.predict&gt;`(X)</span>
+<span class="sd">    predict(X)</span>
 <span class="sd">        Make treatment recommendations for the given input samples.</span>
-<span class="sd">    :meth:`_define_objective &lt;odtlearn.flow_opt.FlowOPT_DR._define_objective&gt;`()</span>
+<span class="sd">    _define_objective()</span>
 <span class="sd">        Define the objective function for the optimization problem.</span>
 
 <span class="sd">    Notes</span>
