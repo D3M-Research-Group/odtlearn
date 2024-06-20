@@ -39,19 +39,19 @@ class FlowOCTSingleSink(OptimalClassificationTree):
 
     Methods
     -------
-    :meth:`_tree_struc_variables <odtlearn.flow_oct_ss.FlowOCTSingleSink._tree_struc_variables>`()
+    _tree_struc_variables()
         Defines the decision variables related to the tree structure.
-    :meth:`_flow_variables <odtlearn.flow_oct_ss.FlowOCTSingleSink._flow_variables>`()
+    _flow_variables()
         Defines the decision variables related to the flow of datapoints.
-    :meth:`_define_variables <odtlearn.flow_oct_ss.FlowOCTSingleSink._define_variables>`()
+    _define_variables()
         Defines all the decision variables used in the optimization problem.
-    :meth:`_tree_structure_constraints <odtlearn.flow_oct_ss.FlowOCTSingleSink._tree_structure_constraints>`()
+    _tree_structure_constraints()
         Defines the constraints related to the tree structure.
-    :meth:`_flow_constraints <odtlearn.flow_oct_ss.FlowOCTSingleSink._flow_constraints>`()
+    _flow_constraints()
         Defines the constraints related to the flow of datapoints.
-    :meth:`_arc_constraints <odtlearn.flow_oct_ss.FlowOCTSingleSink._arc_constraints>`()
+    _arc_constraints()
         Defines the constraints related to the arcs between nodes.
-    :meth:`_define_constraints <odtlearn.flow_oct_ss.FlowOCTSingleSink._define_constraints>`()
+    _define_constraints()
         Defines all the constraints used in the optimization problem.
 
     Notes

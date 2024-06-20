@@ -35,13 +35,13 @@ class OptimalClassificationTree(OptimalDecisionTree):
 
     Methods
     -------
-    :meth:`fit <odtlearn.opt_ct.OptimalClassificationTree.fit>`(X, y)
+    fit(X, y)
         Fit the optimal classification tree to the given training data.
-    :meth:`predict <odtlearn.opt_ct.OptimalClassificationTree.predict>`(X)
+    predict(X)
         Make predictions using the fitted optimal classification tree.
-    :meth:`print_tree <odtlearn.opt_ct.OptimalClassificationTree.print_tree>`()
+    print_tree()
         Print the structure of the fitted optimal classification tree.
-    :meth:`plot_tree <odtlearn.opt_ct.OptimalClassificationTree.plot_tree>`(**kwargs)
+    plot_tree(*kwargs)
         Plot the fitted optimal classification tree using matplotlib.
 
     Notes

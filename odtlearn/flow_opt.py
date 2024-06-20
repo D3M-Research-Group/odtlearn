@@ -36,9 +36,9 @@ class FlowOPT_IPW(FlowOPTSingleSink):
 
     Methods
     -------
-    :meth:`fit <odtlearn.flow_opt.FlowOPT_IPW.fit>`(X, y, t, ipw)
+    fit(X, y, t, ipw)
         Fit the optimal prescriptive tree using the provided data and inverse probability weights.
-    :meth:`_define_objective <odtlearn.flow_opt.FlowOPT_IPW._define_objective>`()
+    _define_objective()
         Define the objective function for the optimization problem.
 
     Notes
@@ -69,7 +69,8 @@ class FlowOPT_IPW(FlowOPTSingleSink):
 
     Example usage:
 
-    ```python
+    ```
+
     # Create an instance of FlowOPT_IPW
     opt_tree = FlowOPT_IPW(depth=3, time_limit=600, verbose=True)
 
@@ -81,6 +82,7 @@ class FlowOPT_IPW(FlowOPTSingleSink):
 
     # Plot the learned tree
     opt_tree.plot_tree()
+
     ```
     """
 
@@ -199,11 +201,11 @@ class FlowOPT_DM(FlowOPTMultipleSink):
 
     Methods
     -------
-    :meth:`fit <odtlearn.flow_opt.FlowOPT_DM.fit>`(X, t, y, y_hat)
+    fit(X, t, y, y_hat)
         Fit the optimal prescriptive tree using the provided data and counterfactual predictions.
-    :meth:`predict <odtlearn.opt_pt.OptimalPrescriptiveTree.predict>`(X)
+    predict(X)
         Make treatment recommendations for the given input samples.
-    :meth:`_define_objective <odtlearn.flow_opt.FlowOPT_DM._define_objective>`()
+    _define_objective()
         Define the objective function for the optimization problem.
 
     Notes
@@ -368,12 +370,12 @@ class FlowOPT_DR(FlowOPTMultipleSink):
 
     Methods
     -------
-    :meth:`fit <odtlearn.flow_opt.FlowOPT_DR.fit>`(X, t, y, ipw, y_hat)
+    fit(X, t, y, ipw, y_hat)
         Fit the optimal prescriptive tree using the provided data, inverse propensity weights,
         and counterfactual predictions.
-    :meth:`predict <odtlearn.opt_pt.OptimalPrescriptiveTree.predict>`(X)
+    predict(X)
         Make treatment recommendations for the given input samples.
-    :meth:`_define_objective <odtlearn.flow_opt.FlowOPT_DR._define_objective>`()
+    _define_objective()
         Define the objective function for the optimization problem.
 
     Notes
