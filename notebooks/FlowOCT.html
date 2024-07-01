@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="FairOCT Example" href="FairOCT.html" /><link rel="prev" title="Example Notebooks" href="index.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Fair Optimal Classification Trees" href="FairOCT.html" /><link rel="prev" title="Example Notebooks" href="index.html" />
 
     <!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>FlowOCT Examples - odtlearn 1.0.0 documentation</title>
@@ -205,7 +205,7 @@
 <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Example Notebooks</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -248,7 +248,7 @@
         </div>
         <article role="main">
           <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -256,7 +256,7 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="kn">from</span> <span class="nn">odtlearn.flow_oct</span> <span class="kn">import</span> <span class="n">FlowOCT</span><span class="p">,</span> <span class="n">BendersOCT</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.binarize</span> <span class="kn">import</span> <span class="n">binarize</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.binarize</span> <span class="kn">import</span> <span class="n">Binarizer</span>
 </pre></div>
 </div>
 </div>
@@ -264,9 +264,9 @@
 <h1><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples<a class="headerlink" href="#FlowOCT-Examples" title="Permalink to this heading">#</a></h1>
 <section id="Example-0:-Binarization">
 <h2>Example 0: Binarization<a class="headerlink" href="#Example-0:-Binarization" title="Permalink to this heading">#</a></h2>
-<p>The following example shows how to binarize a dataset with categorical and integer features using the built-in function <code class="docutils literal notranslate"><span class="pre">binarize</span></code>.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<p>The following example shows how to binarize a dataset with categorical, integer, and continuous features using the built-in <code class="docutils literal notranslate"><span class="pre">Binarizer</span></code> class. This class follows the scikit-learn fit-transform paradigm, making it easy to integrate into your preprocessing pipeline.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">number_of_child_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
@@ -284,223 +284,163 @@
     <span class="s2">&quot;White&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 <span class="n">sex_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">]</span>
+<span class="n">income_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">75000</span><span class="p">,</span> <span class="mi">100000</span><span class="p">,</span> <span class="mi">60000</span><span class="p">,</span> <span class="mi">80000</span><span class="p">,</span> <span class="mi">55000</span><span class="p">,</span> <span class="mi">90000</span><span class="p">,</span> <span class="mi">70000</span><span class="p">,</span> <span class="mi">85000</span><span class="p">,</span> <span class="mi">65000</span><span class="p">]</span>
+
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">sex_list</span><span class="p">,</span> <span class="n">race_list</span><span class="p">,</span> <span class="n">number_of_child_list</span><span class="p">,</span> <span class="n">age_list</span><span class="p">)),</span>
-    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="s2">&quot;num_child&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">],</span>
+    <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">sex_list</span><span class="p">,</span> <span class="n">race_list</span><span class="p">,</span> <span class="n">number_of_child_list</span><span class="p">,</span> <span class="n">age_list</span><span class="p">,</span> <span class="n">income_list</span><span class="p">)),</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="s2">&quot;num_child&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;income&quot;</span><span class="p">],</span>
 <span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_enc</span> <span class="o">=</span> <span class="n">binarize</span><span class="p">(</span>
-    <span class="n">df</span><span class="p">,</span> <span class="n">categorical_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">],</span> <span class="n">integer_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;num_child&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">],</span> <span class="n">real_cols</span><span class="o">=</span><span class="p">[]</span>
-<span class="p">)</span>
-<span class="n">df_enc</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+  sex      race  num_child  age  income
+0   M     Black          1   10   50000
+1   F     White          2   20   75000
+2   M  Hispanic          4   40  100000
+3   M     Black          3   30   60000
+4   F     White          1   10   80000
+5   M     Black          2   20   55000
+6   F     White          4   40   90000
+7   M  Hispanic          3   30   70000
+8   M     Black          2   20   85000
+9   F     White          1   10   65000
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">binarizer</span> <span class="o">=</span> <span class="n">Binarizer</span><span class="p">(</span>
+    <span class="n">categorical_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">],</span>
+    <span class="n">integer_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;num_child&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">],</span>
+    <span class="n">real_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;income&quot;</span><span class="p">],</span>
+    <span class="n">n_bins</span><span class="o">=</span><span class="mi">5</span>  <span class="c1"># Number of bins for continuous features</span>
+<span class="p">)</span>
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
+<span class="c1"># Fit and transform the data</span>
+<span class="n">df_enc</span> <span class="o">=</span> <span class="n">binarizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>sex_M</th>
-      <th>race_Black</th>
-      <th>race_Hispanic</th>
-      <th>race_White</th>
-      <th>num_child_1</th>
-      <th>num_child_2</th>
-      <th>num_child_3</th>
-      <th>num_child_4</th>
-      <th>age_10</th>
-      <th>age_20</th>
-      <th>age_30</th>
-      <th>age_40</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_enc</span><span class="p">)</span>
+</pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+   sex_M  race_Black  race_Hispanic  race_White  num_child_1  num_child_2  \
+0    1.0         1.0            0.0         0.0          1.0          1.0
+1    0.0         0.0            0.0         1.0          0.0          1.0
+2    1.0         0.0            1.0         0.0          0.0          0.0
+3    1.0         1.0            0.0         0.0          0.0          0.0
+4    0.0         0.0            0.0         1.0          1.0          1.0
+5    1.0         1.0            0.0         0.0          0.0          1.0
+6    0.0         0.0            0.0         1.0          0.0          0.0
+7    1.0         0.0            1.0         0.0          0.0          0.0
+8    1.0         1.0            0.0         0.0          0.0          1.0
+9    0.0         0.0            0.0         1.0          1.0          1.0
+
+   num_child_3  num_child_4  age_10  age_20  age_30  age_40  income_0.0  \
+0          1.0          1.0     1.0     1.0     1.0     1.0           1
+1          1.0          1.0     0.0     1.0     1.0     1.0           0
+2          0.0          1.0     0.0     0.0     0.0     1.0           0
+3          1.0          1.0     0.0     0.0     1.0     1.0           0
+4          1.0          1.0     1.0     1.0     1.0     1.0           0
+5          1.0          1.0     0.0     1.0     1.0     1.0           1
+6          0.0          1.0     0.0     0.0     0.0     1.0           0
+7          1.0          1.0     0.0     0.0     1.0     1.0           0
+8          1.0          1.0     0.0     1.0     1.0     1.0           0
+9          1.0          1.0     1.0     1.0     1.0     1.0           0
+
+   income_1.0  income_2.0  income_3.0  income_4.0
+0           1           1           1           1
+1           0           1           1           1
+2           0           0           0           1
+3           1           1           1           1
+4           0           0           1           1
+5           1           1           1           1
+6           0           0           0           1
+7           0           1           1           1
+8           0           0           1           1
+9           1           1           1           1
+</pre></div></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">Binarizer</span></code> class follows the scikit-learn fit-transform paradigm:</p>
+<p>We initialize the <code class="docutils literal notranslate"><span class="pre">Binarizer</span></code> with our desired parameters, specifying which columns are categorical, integer, and real-valued. We call the fit_transform method, which first fits the binarizer to our data (learning the necessary encoding schemes) and then transforms the data using those learned encodings.</p>
+<p>The resulting <code class="docutils literal notranslate"><span class="pre">df_enc</span></code> DataFrame contains the binarized version of our original data:</p>
+<p>Categorical columns (sex, race) are one-hot encoded. Integer columns (num_child, age) are binary encoded, where each column represents “greater than or equal to” a certain value. The continuous column (income) is first discretized into 5 bins, then binary encoded similar to the integer columns.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df_enc</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Index([&#39;sex_M&#39;, &#39;race_Black&#39;, &#39;race_Hispanic&#39;, &#39;race_White&#39;, &#39;num_child_1&#39;,
+       &#39;num_child_2&#39;, &#39;num_child_3&#39;, &#39;num_child_4&#39;, &#39;age_10&#39;, &#39;age_20&#39;,
+       &#39;age_30&#39;, &#39;age_40&#39;, &#39;income_0.0&#39;, &#39;income_1.0&#39;, &#39;income_2.0&#39;,
+       &#39;income_3.0&#39;, &#39;income_4.0&#39;],
+      dtype=&#39;object&#39;)
+</pre></div></div>
+</div>
+<p>This binarized data is now ready to be used with any of the models in ODTlearn, which require binary input features. If you need to transform new data using the same encoding scheme, you can use the transform method of the fitted binarizer:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;sex&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;race&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Hispanic&quot;</span><span class="p">,</span> <span class="s2">&quot;White&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;num_child&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+    <span class="s2">&quot;income&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">70000</span><span class="p">,</span> <span class="mi">80000</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">new_data_enc</span> <span class="o">=</span> <span class="n">binarizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">new_data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">new_data_enc</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+   sex_M  race_Black  race_Hispanic  race_White  num_child_1  num_child_2  \
+0    0.0         0.0            1.0         0.0          0.0          1.0
+1    1.0         0.0            0.0         1.0          0.0          0.0
+
+   num_child_3  num_child_4  age_10  age_20  age_30  age_40  income_2.0  \
+0          1.0          1.0     0.0     1.0     1.0     1.0           1
+1          1.0          1.0     0.0     0.0     1.0     1.0           0
+
+   income_3.0
+0           1
+1           1
+</pre></div></div>
+</div>
+<p>Note that for categorical features, if the new data contains categories not seen during fitting, the transform method will raise an error. In such cases, you might need to refit the binarizer on a dataset that includes all possible categories.</p>
 </section>
 <section id="Example-1:-Varying-depth-and-_lambda">
 <h2>Example 1: Varying <code class="docutils literal notranslate"><span class="pre">depth</span></code> and <code class="docutils literal notranslate"><span class="pre">_lambda</span></code><a class="headerlink" href="#Example-1:-Varying-depth-and-_lambda" title="Permalink to this heading">#</a></h2>
 <p>In this part, we study a simple example and investigate different parameter combinations to provide intuition on how they affect the structure of the tree.</p>
 <p>First we generate the data for our example. The diagram within the code block shows the training dataset. Our dataset has two binary features (X1 and X2) and two class labels (+1 and -1).</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">odtlearn.datasets</span> <span class="kn">import</span> <span class="n">flow_oct_example</span>
@@ -527,7 +467,7 @@
 <h3>Tree with <code class="docutils literal notranslate"><span class="pre">depth</span> <span class="pre">=</span> <span class="pre">1</span></code><a class="headerlink" href="#Tree-with-depth-=-1" title="Permalink to this heading">#</a></h3>
 <p>In the following, we fit a classification tree of depth 1, i.e., a tree with a single branching node and two leaf nodes.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
@@ -541,7 +481,7 @@
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
+Academic license - for non-commercial use only - expires 2025-06-28
 Set parameter TimeLimit to value 100
 Set parameter NodeLimit to value 1073741824
 Set parameter SolutionLimit to value 1073741824
@@ -583,7 +523,7 @@ Best objective 1.000000000000e+01, best bound 1.000000000000e+01, gap 0.0000%
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -592,7 +532,7 @@ FlowOCT(solver=gurobi,depth=1,time_limit=100,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span> <span class="o">=</span> <span class="n">stcl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -612,7 +552,7 @@ In-sample accuracy is 0.7692307692307693
 </div>
 <p>Users can access statistics from the optimization run such as optimality gap, number of nodes, number of constraints, etc. Directly as properties of the initialized class or through the <code class="docutils literal notranslate"><span class="pre">_solver</span></code> object. For example, one can access the optimality gap and the number of solutions after fitting the optimal decision tree through the <code class="docutils literal notranslate"><span class="pre">optim_gap</span></code> and <code class="docutils literal notranslate"><span class="pre">num_solutions</span></code> properties.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimality gap is </span><span class="si">{</span><span class="n">stcl</span><span class="o">.</span><span class="n">optim_gap</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -632,7 +572,7 @@ Number of solutions 2
 <p>As we can see above, we find the optimal tree and the in-sample accuracy is 76%.</p>
 <p>ODTlearn provides two different ways of visualizing the structure of the tree. The first method prints the structure of the tree in the console:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">stcl</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
@@ -654,7 +594,7 @@ leaf 1
 </div>
 <p>The second method plots the structure of the tree using <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -667,7 +607,7 @@ leaf 1
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_15_0.png" src="../_images/notebooks_FlowOCT_15_0.png" />
+<img alt="../_images/notebooks_FlowOCT_20_0.png" src="../_images/notebooks_FlowOCT_20_0.png" />
 </div>
 </div>
 </section>
@@ -689,7 +629,7 @@ leaf 1
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
+Academic license - for non-commercial use only - expires 2025-06-28
 Set parameter TimeLimit to value 60
 Set parameter NodeLimit to value 1073741824
 Set parameter SolutionLimit to value 1073741824
@@ -722,7 +662,7 @@ Root relaxation: objective 1.300000e+01, 14 iterations, 0.00 seconds (0.00 work 
 
 *    0     0               0      13.0000000   13.00000  0.00%     -    0s
 
-Explored 1 nodes (14 simplex iterations) in 0.00 seconds (0.00 work units)
+Explored 1 nodes (14 simplex iterations) in 0.02 seconds (0.00 work units)
 Thread count was 8 (of 8 available processors)
 
 Solution count 3: 13 8 -0
@@ -772,7 +712,7 @@ In-sample accuracy is 1.0
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_20_0.png" src="../_images/notebooks_FlowOCT_20_0.png" />
+<img alt="../_images/notebooks_FlowOCT_25_0.png" src="../_images/notebooks_FlowOCT_25_0.png" />
 </div>
 </div>
 </section>
@@ -794,7 +734,7 @@ In-sample accuracy is 1.0
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
+Academic license - for non-commercial use only - expires 2025-06-28
 Set parameter TimeLimit to value 60
 Set parameter NodeLimit to value 1073741824
 Set parameter SolutionLimit to value 1073741824
@@ -828,7 +768,7 @@ Root relaxation: objective 5.105000e+00, 14 iterations, 0.00 seconds (0.00 work 
      0     0    5.10500    0    2    3.92000    5.10500  30.2%     -    0s
 H    0     0                       4.8600000    5.10500  5.04%     -    0s
 
-Explored 1 nodes (14 simplex iterations) in 0.00 seconds (0.00 work units)
+Explored 1 nodes (14 simplex iterations) in 0.01 seconds (0.00 work units)
 Thread count was 8 (of 8 available processors)
 
 Solution count 3: 4.86 3.92 -0
@@ -877,7 +817,7 @@ In-sample accuracy is 0.9230769230769231
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_24_0.png" src="../_images/notebooks_FlowOCT_24_0.png" />
+<img alt="../_images/notebooks_FlowOCT_29_0.png" src="../_images/notebooks_FlowOCT_29_0.png" />
 </div>
 </div>
 </section>
@@ -929,7 +869,7 @@ In-sample accuracy is 0.9230769230769231
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
+Academic license - for non-commercial use only - expires 2025-06-28
 Set parameter TimeLimit to value 60
 Set parameter NodeLimit to value 1073741824
 Set parameter SolutionLimit to value 1073741824
@@ -1044,7 +984,7 @@ pruned
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_31_0.png" src="../_images/notebooks_FlowOCT_31_0.png" />
+<img alt="../_images/notebooks_FlowOCT_36_0.png" src="../_images/notebooks_FlowOCT_36_0.png" />
 </div>
 </div>
 </section>
@@ -1073,7 +1013,7 @@ pruned
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
+Academic license - for non-commercial use only - expires 2025-06-28
 Set parameter TimeLimit to value 60
 Set parameter NodeLimit to value 1073741824
 Set parameter SolutionLimit to value 1073741824
@@ -1138,7 +1078,7 @@ In-sample accuracy is 0.8
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_34_0.png" src="../_images/notebooks_FlowOCT_34_0.png" />
+<img alt="../_images/notebooks_FlowOCT_39_0.png" src="../_images/notebooks_FlowOCT_39_0.png" />
 </div>
 </div>
 <p>As we can see, when we maximize accuracy, i.e., when <code class="docutils literal notranslate"><span class="pre">obj_mode</span> <span class="pre">=</span> <span class="pre">'acc'</span></code>, the optimal tree is just a single node without branching, predicting the majority class for the whole dataset. But when we change the objective mode to balanced accuracy, we account for the minority class by sacrificing the overal accuracy.</p>
@@ -1216,7 +1156,7 @@ Index([&#39;V2.1&#39;, &#39;V2.2&#39;, &#39;V2.3&#39;, &#39;V2.4&#39;, &#39;V2.5
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
+Academic license - for non-commercial use only - expires 2025-06-28
 Set parameter TimeLimit to value 200
 Set parameter NodeLimit to value 1073741824
 Set parameter SolutionLimit to value 1073741824
@@ -1249,7 +1189,7 @@ Root barrier log...
 
 Ordering time: 0.00s
 
-Barrier performed 0 iterations in 0.19 seconds (0.00 work units)
+Barrier performed 0 iterations in 0.20 seconds (0.00 work units)
 Barrier solve interrupted - model solved by another algorithm
 
 
@@ -1267,33 +1207,34 @@ H    0     0                     269.0000000  418.00000  55.4%     -    0s
 H  308   294                     272.0000000  413.60000  52.1%  75.5    1s
 H  483   460                     274.0000000  413.60000  50.9%  75.6    1s
 *  533   475              54     290.0000000  413.60000  42.6%  73.6    1s
-H 1310   970                     291.0000000  412.40000  41.7%  75.5    4s
-  1528  1113  344.00000   11    4  291.00000  412.40000  41.7%  71.8    5s
-  1568  1140  353.62500   27   27  291.00000  408.55187  40.4%  70.0   10s
-  1641  1190  354.00000   43   21  291.00000  403.00436  38.5%  82.0   15s
-H 2163  1398                     293.0000000  400.54472  36.7%  92.9   19s
-  2268  1447  368.74304   47    6  293.00000  399.64465  36.4%  92.8   20s
-* 2375  1361             111     296.0000000  399.64465  35.0%  91.6   20s
-H 3419  1561                     299.0000000  398.14472  33.2%  86.5   22s
-H 4454  1024                     312.0000000  398.14472  27.6%  85.7   23s
-  5480  1432  322.16667   55   11  312.00000  371.70642  19.1%  85.6   25s
- 11187  3403  320.50000   62   14  312.00000  350.17385  12.2%  81.8   30s
-H17827  5595                     314.0000000  338.16497  7.70%  67.8   33s
- 20984  7312  316.00000   97    8  314.00000  333.50000  6.21%  63.7   35s
- 30728  9829  315.00000   45   12  314.00000  330.00000  5.10%  57.8   40s
-H31789  9084                     315.0000000  329.54167  4.62%  57.5   41s
-H35037  8771                     316.0000000  328.02174  3.80%  56.5   43s
-H36500  6760                     318.0000000  327.50000  2.99%  56.0   44s
- 38253  6870  326.77500   83   19  318.00000  327.00000  2.83%  55.5   45s
- 49506  5331  319.00000   86    8  318.00000  322.00000  1.26%  52.3   50s
- 62681  3064  318.36691  104   16  318.00000  320.00000  0.63%  48.4   55s
+  1109   844  302.00000   62   18  290.00000  413.60000  42.6%  76.2    5s
+H 1310   970                     291.0000000  412.40000  41.7%  75.5    5s
+  1556  1132  316.00000   35   26  291.00000  409.65561  40.8%  70.5   10s
+  1629  1180  371.73684   22   25  291.00000  403.03327  38.5%  67.3   15s
+  1835  1309  374.20287   37    8  291.00000  402.17829  38.2%  93.3   20s
+H 2163  1398                     293.0000000  400.54472  36.7%  92.9   21s
+* 2375  1361             111     296.0000000  399.64465  35.0%  91.6   21s
+H 3419  1561                     299.0000000  398.14472  33.2%  86.5   24s
+  3999  1769  327.17857   68    7  299.00000  398.14472  33.2%  87.1   25s
+H 4454  1024                     312.0000000  398.14472  27.6%  85.7   25s
+  8406  2589  318.66667   89    8  312.00000  359.80769  15.3%  83.3   30s
+ 15419  5646  325.12500   62   19  312.00000  340.10000  9.01%  72.2   35s
+H17827  5595                     314.0000000  338.16497  7.70%  67.8   36s
+ 25506  8599  329.85714   80   15  314.00000  331.00000  5.41%  59.9   40s
+H31789  9084                     315.0000000  329.54167  4.62%  57.5   44s
+ 32844  9456  324.87500   56    9  315.00000  329.05882  4.46%  57.1   45s
+H35037  8771                     316.0000000  328.02174  3.80%  56.5   46s
+H36500  6760                     318.0000000  327.50000  2.99%  56.0   47s
+ 41723  6893  322.16667   76    7  318.00000  325.50000  2.36%  54.4   50s
+ 52260  4795     cutoff   75       318.00000  321.27273  1.03%  51.0   55s
+ 61742  3152  319.92757   93   20  318.00000  320.00000  0.63%  48.5   60s
 
 Cutting planes:
   MIR: 120
   Flow cover: 193
   Lazy constraints: 236
 
-Explored 70775 nodes (3292092 simplex iterations) in 58.43 seconds (141.79 work units)
+Explored 70775 nodes (3292092 simplex iterations) in 64.41 seconds (141.79 work units)
 Thread count was 8 (of 8 available processors)
 
 Solution count 10: 318 316 315 ... 290
@@ -1301,7 +1242,7 @@ Solution count 10: 318 316 315 ... 290
 Optimal solution found (tolerance 1.00e-04)
 Best objective 3.180000000000e+02, best bound 3.180000000000e+02, gap 0.0000%
 
-User-callback calls 150219, time in user-callback 1.71 sec
+User-callback calls 150930, time in user-callback 1.82 sec
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1372,7 +1313,7 @@ leaf 3
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FlowOCT_42_0.png" src="../_images/notebooks_FlowOCT_42_0.png" />
+<img alt="../_images/notebooks_FlowOCT_47_0.png" src="../_images/notebooks_FlowOCT_47_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -1393,6 +1334,445 @@ The out-of-sample accuracy is 0.6859903381642513
 </pre></div></div>
 </div>
 </section>
+<section id="Example-4:-Custom-Weights">
+<h2>Example 4: Custom Weights<a class="headerlink" href="#Example-4:-Custom-Weights" title="Permalink to this heading">#</a></h2>
+<p>In this example, we’ll demonstrate how to use custom weights with FlowOCT and BendersOCT. We’ll use a small binary classification dataset and show how custom weights can affect the learned tree.</p>
+<p>First, let’s create our small binary classification dataset:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dataset shape:&quot;</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Class distribution:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Dataset shape: (20, 5)
+Class distribution: [ 6 14]
+</pre></div></div>
+</div>
+<p>Now, let’s create custom weights that heavily favor class 1:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">weights</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Weight distribution:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Class 0:&quot;</span><span class="p">,</span> <span class="n">weights</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Class 1:&quot;</span><span class="p">,</span> <span class="n">weights</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Weight distribution:
+Class 0: 1.0
+Class 1: 10.0
+</pre></div></div>
+</div>
+<section id="FlowOCT-with-Custom-Weights">
+<h3>FlowOCT with Custom Weights<a class="headerlink" href="#FlowOCT-with-Custom-Weights" title="Permalink to this heading">#</a></h3>
+<p>Let’s fit a FlowOCT model with custom weights and compare it to a model without custom weights:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FlowOCT without custom weights</span>
+<span class="n">flow_oct_default</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">flow_oct_default</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># FlowOCT with custom weights</span>
+<span class="n">flow_oct_custom</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">flow_oct_custom</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Default FlowOCT predictions:&quot;</span><span class="p">,</span> <span class="n">flow_oct_default</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Custom weights FlowOCT predictions:&quot;</span><span class="p">,</span> <span class="n">flow_oct_custom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Default FlowOCT accuracy:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">flow_oct_default</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Custom weights FlowOCT accuracy:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">flow_oct_custom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Custom weights FlowOCT weighted accuracy:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">flow_oct_custom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Set parameter Username
+Academic license - for non-commercial use only - expires 2025-06-28
+Set parameter TimeLimit to value 10
+Set parameter NodeLimit to value 1073741824
+Set parameter SolutionLimit to value 1073741824
+Set parameter IntFeasTol to value 1e-06
+Set parameter Method to value 3
+Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
+
+CPU model: Apple M1 Pro
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 414 rows, 316 columns and 1153 nonzeros
+Model fingerprint: 0x1ad65f5a
+Variable types: 294 continuous, 22 integer (22 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective -0.0000000
+Presolve removed 205 rows and 186 columns
+Presolve time: 0.00s
+Presolved: 209 rows, 130 columns, 660 nonzeros
+Found heuristic solution: objective 14.0000000
+Variable types: 112 continuous, 18 integer (18 binary)
+
+Root relaxation: objective 1.966667e+01, 166 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   19.66667    0    7   14.00000   19.66667  40.5%     -    0s
+H    0     0                      16.0000000   19.66667  22.9%     -    0s
+H    0     0                      17.0000000   19.00000  11.8%     -    0s
+     0     0   18.50000    0    9   17.00000   18.50000  8.82%     -    0s
+
+Cutting planes:
+  Gomory: 13
+  MIR: 6
+  RLT: 20
+
+Explored 1 nodes (198 simplex iterations) in 0.03 seconds (0.01 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 4: 17 16 14 -0
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.700000000000e+01, best bound 1.700000000000e+01, gap 0.0000%
+Set parameter Username
+Academic license - for non-commercial use only - expires 2025-06-28
+Set parameter TimeLimit to value 10
+Set parameter NodeLimit to value 1073741824
+Set parameter SolutionLimit to value 1073741824
+Set parameter IntFeasTol to value 1e-06
+Set parameter Method to value 3
+Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
+
+CPU model: Apple M1 Pro
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 414 rows, 316 columns and 1153 nonzeros
+Model fingerprint: 0xf6c20781
+Variable types: 294 continuous, 22 integer (22 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e+00, 1e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective -0.0000000
+Presolve removed 205 rows and 186 columns
+Presolve time: 0.00s
+Presolved: 209 rows, 130 columns, 660 nonzeros
+Found heuristic solution: objective 140.0000000
+Variable types: 112 continuous, 18 integer (18 binary)
+
+Root relaxation: objective 1.456667e+02, 173 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  145.66667    0    7  140.00000  145.66667  4.05%     -    0s
+H    0     0                     143.0000000  144.66667  1.17%     -    0s
+     0     0  144.00000    0   11  143.00000  144.00000  0.70%     -    0s
+     0     0  143.00000    0    6  143.00000  143.00000  0.00%     -    0s
+
+Cutting planes:
+  Gomory: 1
+  MIR: 1
+  RLT: 7
+
+Explored 1 nodes (233 simplex iterations) in 0.01 seconds (0.01 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 143 140 -0
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.430000000000e+02, best bound 1.430000000000e+02, gap 0.0000%
+Default FlowOCT predictions: [1 1 1 1 1 1 1 1 1 1 1 0 1 1 0 1 1 1 1 0]
+Custom weights FlowOCT predictions: [1 1 1 1 1 1 1 1 1 1 1 0 1 1 0 1 1 1 1 0]
+
+Default FlowOCT accuracy: 0.85
+Custom weights FlowOCT accuracy: 0.85
+Custom weights FlowOCT weighted accuracy: 0.9794520547945206
+</pre></div></div>
+</div>
+<p>Let’s visualize both trees:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">flow_oct_default</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Default FlowOCT&quot;</span><span class="p">)</span>
+
+<span class="n">flow_oct_custom</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Custom Weights FlowOCT&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_FlowOCT_56_0.png" src="../_images/notebooks_FlowOCT_56_0.png" />
+</div>
+</div>
+</section>
+<section id="BendersOCT-with-Custom-Weights">
+<h3>BendersOCT with Custom Weights<a class="headerlink" href="#BendersOCT-with-Custom-Weights" title="Permalink to this heading">#</a></h3>
+<p>Now let’s do the same with BendersOCT:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># BendersOCT without custom weights</span>
+<span class="n">benders_oct_default</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">benders_oct_default</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="c1"># BendersOCT with custom weights</span>
+<span class="n">benders_oct_custom</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">benders_oct_custom</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Default BendersOCT predictions:&quot;</span><span class="p">,</span> <span class="n">benders_oct_default</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Custom weights BendersOCT predictions:&quot;</span><span class="p">,</span> <span class="n">benders_oct_custom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Default BendersOCT accuracy:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">benders_oct_default</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Custom weights BendersOCT accuracy:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">benders_oct_custom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Custom weights BendersOCT weighted accuracy:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">benders_oct_custom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Set parameter Username
+Academic license - for non-commercial use only - expires 2025-06-28
+Set parameter TimeLimit to value 10
+Set parameter NodeLimit to value 1073741824
+Set parameter SolutionLimit to value 1073741824
+Set parameter LazyConstraints to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter Method to value 3
+Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
+
+CPU model: Apple M1 Pro
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 14 rows, 56 columns and 53 nonzeros
+Model fingerprint: 0x28902962
+Variable types: 34 continuous, 22 integer (22 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 4 rows and 4 columns
+Presolve time: 0.00s
+Presolved: 10 rows, 52 columns, 45 nonzeros
+Variable types: 34 continuous, 18 integer (18 binary)
+Root relaxation presolved: 22 rows, 50 columns, 140 nonzeros
+
+
+Root relaxation: objective 2.000000e+01, 2 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   20.00000    0    -          -   20.00000      -     -    0s
+     0     0   20.00000    0    -          -   20.00000      -     -    0s
+     0     0   20.00000    0    -          -   20.00000      -     -    0s
+     0     0   20.00000    0    7          -   20.00000      -     -    0s
+H    0     0                      14.0000000   20.00000  42.9%     -    0s
+H    0     0                      16.0000000   20.00000  25.0%     -    0s
+     0     0   19.50000    0    2   16.00000   19.50000  21.9%     -    0s
+     0     0   19.26563    0    9   16.00000   19.26563  20.4%     -    0s
+H    0     0                      17.0000000   19.26563  13.3%     -    0s
+     0     0   19.00000    0    8   17.00000   19.00000  11.8%     -    0s
+     0     0   18.96429    0    9   17.00000   18.96429  11.6%     -    0s
+     0     0   18.95833    0    9   17.00000   18.95833  11.5%     -    0s
+     0     0   18.85000    0    9   17.00000   18.85000  10.9%     -    0s
+     0     0   18.85000    0    9   17.00000   18.85000  10.9%     -    0s
+     0     0   18.76563    0   11   17.00000   18.76563  10.4%     -    0s
+     0     0   18.74194    0   10   17.00000   18.74194  10.2%     -    0s
+     0     0   18.73913    0    9   17.00000   18.73913  10.2%     -    0s
+     0     0   18.59091    0    9   17.00000   18.59091  9.36%     -    0s
+     0     0   18.50000    0    9   17.00000   18.50000  8.82%     -    0s
+     0     0   18.50000    0    9   17.00000   18.50000  8.82%     -    0s
+     0     0   18.37500    0    8   17.00000   18.37500  8.09%     -    0s
+     0     0   18.33333    0    8   17.00000   18.33333  7.84%     -    0s
+     0     0   18.33333    0    9   17.00000   18.33333  7.84%     -    0s
+     0     0   18.31250    0    7   17.00000   18.31250  7.72%     -    0s
+     0     0   18.30000    0    7   17.00000   18.30000  7.65%     -    0s
+     0     0   18.16667    0    7   17.00000   18.16667  6.86%     -    0s
+     0     0   18.14706    0    8   17.00000   18.14706  6.75%     -    0s
+     0     0   18.09524    0   10   17.00000   18.09524  6.44%     -    0s
+     0     0   18.07059    0   10   17.00000   18.07059  6.30%     -    0s
+     0     0   18.03478    0   10   17.00000   18.03478  6.09%     -    0s
+     0     0   18.01765    0   11   17.00000   18.01765  5.99%     -    0s
+     0     0   18.01333    0   11   17.00000   18.01333  5.96%     -    0s
+     0     0   18.00532    0   12   17.00000   18.00532  5.91%     -    0s
+     0     0   18.00463    0   12   17.00000   18.00463  5.91%     -    0s
+     0     0   17.95833    0    9   17.00000   17.95833  5.64%     -    0s
+     0     0   17.91304    0    8   17.00000   17.91304  5.37%     -    0s
+     0     0   17.91304    0    8   17.00000   17.91304  5.37%     -    0s
+     0     0   17.90909    0    8   17.00000   17.90909  5.35%     -    0s
+     0     0   17.90909    0   11   17.00000   17.90909  5.35%     -    0s
+     0     0   17.89873    0   11   17.00000   17.89873  5.29%     -    0s
+     0     0   17.89873    0   10   17.00000   17.89873  5.29%     -    0s
+     0     2   17.89873    0   10   17.00000   17.89873  5.29%     -    0s
+
+Cutting planes:
+  Gomory: 1
+  MIR: 11
+  Flow cover: 5
+  Lazy constraints: 46
+
+Explored 16 nodes (312 simplex iterations) in 0.06 seconds (0.02 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 17 16 14
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.700000000000e+01, best bound 1.700000000000e+01, gap 0.0000%
+
+User-callback calls 372, time in user-callback 0.03 sec
+Set parameter Username
+Academic license - for non-commercial use only - expires 2025-06-28
+Set parameter TimeLimit to value 10
+Set parameter NodeLimit to value 1073741824
+Set parameter SolutionLimit to value 1073741824
+Set parameter LazyConstraints to value 1
+Set parameter IntFeasTol to value 1e-06
+Set parameter Method to value 3
+Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
+
+CPU model: Apple M1 Pro
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 14 rows, 56 columns and 53 nonzeros
+Model fingerprint: 0x75b5cba0
+Variable types: 34 continuous, 22 integer (22 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e+00, 1e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Presolve removed 4 rows and 4 columns
+Presolve time: 0.00s
+Presolved: 10 rows, 52 columns, 45 nonzeros
+Variable types: 34 continuous, 18 integer (18 binary)
+Root relaxation presolved: 22 rows, 50 columns, 140 nonzeros
+
+
+Root relaxation: objective 1.460000e+02, 2 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  146.00000    0    -          -  146.00000      -     -    0s
+     0     0  146.00000    0    -          -  146.00000      -     -    0s
+     0     0  146.00000    0    -          -  146.00000      -     -    0s
+     0     0  146.00000    0    7          -  146.00000      -     -    0s
+H    0     0                     140.0000000  146.00000  4.29%     -    0s
+     0     0  145.50000    0    4  140.00000  145.50000  3.93%     -    0s
+     0     0  145.37500    0    7  140.00000  145.37500  3.84%     -    0s
+H    0     0                     143.0000000  145.37500  1.66%     -    0s
+     0     0  144.88542    0   10  143.00000  144.88542  1.32%     -    0s
+     0     0  144.88194    0   10  143.00000  144.88194  1.32%     -    0s
+     0     0  144.33333    0    7  143.00000  144.33333  0.93%     -    0s
+     0     0  144.30000    0    7  143.00000  144.30000  0.91%     -    0s
+     0     0  144.16667    0    7  143.00000  144.16667  0.82%     -    0s
+     0     0  144.12500    0    9  143.00000  144.12500  0.79%     -    0s
+     0     0  144.12500    0    9  143.00000  144.12500  0.79%     -    0s
+     0     0  144.08333    0   11  143.00000  144.08333  0.76%     -    0s
+     0     0  144.08036    0   11  143.00000  144.08036  0.76%     -    0s
+     0     0  144.08036    0   11  143.00000  144.08036  0.76%     -    0s
+     0     0  144.02737    0   10  143.00000  144.02737  0.72%     -    0s
+     0     0  144.02737    0   11  143.00000  144.02737  0.72%     -    0s
+     0     0  144.02632    0   11  143.00000  144.02632  0.72%     -    0s
+     0     0  144.02632    0   10  143.00000  144.02632  0.72%     -    0s
+     0     2  144.02632    0    9  143.00000  144.02632  0.72%     -    0s
+
+Cutting planes:
+  Gomory: 1
+  MIR: 3
+  Flow cover: 9
+  Lazy constraints: 47
+
+Explored 14 nodes (157 simplex iterations) in 0.07 seconds (0.01 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 143 140
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.430000000000e+02, best bound 1.430000000000e+02, gap 0.0000%
+
+User-callback calls 296, time in user-callback 0.03 sec
+Default BendersOCT predictions: [1 1 1 1 1 1 1 1 1 1 1 0 1 1 0 1 1 1 1 0]
+Custom weights BendersOCT predictions: [1 1 1 1 1 1 1 1 1 1 1 0 1 1 0 1 1 1 1 0]
+
+Default BendersOCT accuracy: 0.85
+Custom weights BendersOCT accuracy: 0.85
+Custom weights BendersOCT weighted accuracy: 0.9794520547945206
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">benders_oct_default</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Default BendersOCT&quot;</span><span class="p">)</span>
+
+<span class="n">benders_oct_custom</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Custom Weights BendersOCT&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_FlowOCT_59_0.png" src="../_images/notebooks_FlowOCT_59_0.png" />
+</div>
+</div>
+<p>In this example, we’ve demonstrated how to use custom weights with both FlowOCT and BendersOCT. By setting <code class="docutils literal notranslate"><span class="pre">obj_mode=&quot;custom&quot;</span></code> and providing weights during the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method call, we can influence the importance of different samples in the training process. The custom weights in this example heavily favor class 1, which may result in trees that are more likely to predict class 1, potentially at the cost of overall accuracy. However, this can be useful in scenarios where misclassifying one
+class is more costly than misclassifying the other, or when dealing with imbalanced datasets. Note that the actual results may vary due to the random nature of the dataset and the optimization process. You may want to run the code multiple times or with different random seeds to get a better understanding of the effects of custom weights.</p>
+</section>
+</section>
 <section id="References">
 <h2>References<a class="headerlink" href="#References" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
@@ -1412,7 +1792,7 @@ The out-of-sample accuracy is 0.6859903381642513
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</div>
+                <div class="title">Fair Optimal Classification Trees</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -1475,6 +1855,11 @@ The out-of-sample accuracy is 0.6859903381642513
 </ul>
 </li>
 <li><a class="reference internal" href="#Example-3:-UCI-Data-Example">Example 3: UCI Data Example</a></li>
+<li><a class="reference internal" href="#Example-4:-Custom-Weights">Example 4: Custom Weights</a><ul>
+<li><a class="reference internal" href="#FlowOCT-with-Custom-Weights">FlowOCT with Custom Weights</a></li>
+<li><a class="reference internal" href="#BendersOCT-with-Custom-Weights">BendersOCT with Custom Weights</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#References">References</a></li>
 </ul>
 </li>

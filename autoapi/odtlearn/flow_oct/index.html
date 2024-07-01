@@ -204,7 +204,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -277,8 +277,8 @@ to produce a provably optimal decision tree.</p>
 </dd>
 <dt><strong>_lambda</strong><span class="classifier">float, default=0</span></dt><dd><p>The regularization parameter for controlling the complexity of the learned tree.</p>
 </dd>
-<dt><strong>obj_mode</strong><span class="classifier">str, default=”acc”</span></dt><dd><p>The objective mode to be used for learning the optimal decision tree.
-Options are “acc” (accuracy) and “balance”.</p>
+<dt><strong>obj_mode</strong><span class="classifier">{‘acc’, ‘balance’, ‘custom’}, optional (default=’acc’)</span></dt><dd><p>The objective mode to use.
+‘acc’ for accuracy, ‘balance’ for balanced accuracy, ‘custom’ for user-defined weights.</p>
 </dd>
 <dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>The maximum depth of the tree to be learned.</p>
 </dd>
@@ -339,28 +339,93 @@ to make predictions on new data.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.flow_oct.FlowOCT.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#FlowOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.FlowOCT.fit" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="odtlearn.flow_oct.FlowOCT.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#FlowOCT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.FlowOCT.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>Classify test points using the StrongTree classifier</p>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#FlowOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.FlowOCT.fit" title="Permalink to this definition">#</a></dt>
+<dd><p>Fit the FlowOCT model to the given training data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input samples.</p>
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>The training input samples. Each feature should be binary (0 or 1).</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The target values (class labels) for the training samples.</p>
+</dd>
+<dt><strong>weights</strong><span class="classifier">array-like of shape (n_samples,), optional (default=None)</span></dt><dd><p>Sample weights. If None, then samples are equally weighted when obj_mode is ‘acc’,
+or weights are automatically calculated when obj_mode is ‘balance’.
+Must be provided when obj_mode is ‘custom’.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The label for each sample is the label of the closest sample
-seen during fit.</p>
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>Returns self.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>ValueError</dt><dd><p>If X contains non-binary values, or if X and y have inconsistent numbers of samples.
+Also raised if weights are not provided when obj_mode is ‘custom’, or if the number
+of weights doesn’t match the number of samples.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The behavior of this method depends on the <cite>obj_mode</cite> specified during initialization:
+- If obj_mode is ‘acc’, equal weights are used (weights parameter is ignored).
+- If obj_mode is ‘balance’, weights are automatically calculated to balance class importance.
+- If obj_mode is ‘custom’, the provided weights are used.</p>
+<p>When obj_mode is not ‘custom’ and weights are provided, a warning is issued and the weights are ignored.</p>
+<p>This method fits the FlowOCT model using mixed-integer optimization.
+It sets up the optimization problem, solves it, and stores the results.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.flow_oct.FlowOCT.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#FlowOCT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.FlowOCT.predict" title="Permalink to this definition">#</a></dt>
+<dd><p>Predict class labels for samples in X using the fitted FlowOCT model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>The input samples for which to make predictions. The features should
+match those used during the fit method.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_pred</strong><span class="classifier">ndarray of shape (n_samples,)</span></dt><dd><p>The predicted class labels for each sample in X.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>NotFittedError</dt><dd><p>If the model has not been fitted yet.</p>
+</dd>
+<dt>ValueError</dt><dd><p>If the input X has a different number of features than the training data.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method uses the decision tree learned during the fit process to classify
+new samples. It traverses the tree for each sample in X, following the branching
+decisions until reaching a leaf node, and returns the corresponding class prediction.</p>
+<p>The input X should have the same feature set as the training data used in fit().
+If categorical variables were one-hot encoded for training, the same encoding
+should be applied to X before calling predict().</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">odtlearn.flow_oct</span> <span class="kn">import</span> <span class="n">FlowOCT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">FlowOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+<span class="go">[1 0]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -378,8 +443,8 @@ data set to produce a provably optimal decision tree.</p>
 </dd>
 <dt><strong>_lambda</strong><span class="classifier">float, default=0</span></dt><dd><p>The regularization parameter for controlling the complexity of the learned tree.</p>
 </dd>
-<dt><strong>obj_mode</strong><span class="classifier">str, default=”acc”</span></dt><dd><p>The objective mode to be used for learning the optimal decision tree.
-Options are “acc” (accuracy) and “balance”.</p>
+<dt><strong>obj_mode</strong><span class="classifier">{‘acc’, ‘balance’, ‘custom’}, optional (default=’acc’)</span></dt><dd><p>The objective mode to use.
+‘acc’ for accuracy, ‘balance’ for balanced accuracy, ‘custom’ for user-defined weights.</p>
 </dd>
 <dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>The maximum depth of the tree to be learned.</p>
 </dd>
@@ -454,28 +519,105 @@ using the <a class="reference internal" href="#odtlearn.flow_oct.BendersOCT.pred
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.flow_oct.BendersOCT.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#BendersOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.BendersOCT.fit" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="odtlearn.flow_oct.BendersOCT.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#BendersOCT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.BendersOCT.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>Classify test points using the Benders’ Formulation Classifier</p>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#BendersOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.BendersOCT.fit" title="Permalink to this definition">#</a></dt>
+<dd><p>Fit the BendersOCT model to the given training data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input samples.</p>
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>The training input samples. Each feature should be binary (0 or 1).</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The target values (class labels) for the training samples.</p>
+</dd>
+<dt><strong>weights</strong><span class="classifier">array-like of shape (n_samples,), optional (default=None)</span></dt><dd><p>Sample weights. If None, then samples are equally weighted when obj_mode is ‘acc’,
+or weights are automatically calculated when obj_mode is ‘balance’.
+Must be provided when obj_mode is ‘custom’.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The label for each sample is the label of the closest sample
-seen during fit.</p>
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>Returns self.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>ValueError</dt><dd><p>If X contains non-binary values, or if X and y have inconsistent numbers of samples.
+Also raised if weights are not provided when obj_mode is ‘custom’, or if the number
+of weights doesn’t match the number of samples.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The behavior of this method depends on the <cite>obj_mode</cite> specified during initialization:
+- If obj_mode is ‘acc’, equal weights are used (weights parameter is ignored).
+- If obj_mode is ‘balance’, weights are automatically calculated to balance class importance.
+- If obj_mode is ‘custom’, the provided weights are used.</p>
+<p>When obj_mode is not ‘custom’ and weights are provided, a warning is issued and the weights are ignored.</p>
+<p>This method fits the BendersOCT model using Benders’ decomposition approach.
+It sets up the master problem and subproblems, iteratively solves them,
+and generates Benders’ cuts until convergence or the time limit is reached.</p>
+<p>The BendersOCT algorithm generally provides faster solution times compared to
+standard MIO formulations, especially for larger problem instances.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">odtlearn.flow_oct</span> <span class="kn">import</span> <span class="n">BendersOCT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.flow_oct.BendersOCT.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/flow_oct.html#BendersOCT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.flow_oct.BendersOCT.predict" title="Permalink to this definition">#</a></dt>
+<dd><p>Predict class labels for samples in X using the fitted BendersOCT model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>The input samples for which to make predictions. The features should
+match those used during the fit method.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_pred</strong><span class="classifier">ndarray of shape (n_samples,)</span></dt><dd><p>The predicted class labels for each sample in X.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>NotFittedError</dt><dd><p>If the model has not been fitted yet.</p>
+</dd>
+<dt>ValueError</dt><dd><p>If the input X has a different number of features than the training data.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method uses the decision tree learned during the fit process to classify
+new samples. It traverses the tree for each sample in X, following the branching
+decisions until reaching a leaf node, and returns the corresponding class prediction.</p>
+<p>The input X should have the same feature set as the training data used in fit().
+If categorical variables were one-hot encoded for training, the same encoding
+should be applied to X before calling predict().</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">odtlearn.flow_oct</span> <span class="kn">import</span> <span class="n">BendersOCT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">BendersOCT</span><span class="p">(</span><span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+<span class="go">[1 0]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>

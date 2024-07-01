@@ -203,7 +203,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -272,8 +272,16 @@
 <span class="sd">    ----------</span>
 <span class="sd">    solver : str</span>
 <span class="sd">        The name of the solver to use for solving the MIP problem.</span>
+<span class="sd">    positive_class : int</span>
+<span class="sd">        The value of the class label which is corresponding to the desired outcome</span>
 <span class="sd">    _lambda : float</span>
 <span class="sd">        The regularization parameter in the objective. Must be in the interval [0, 1).</span>
+<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;custom&#39;}, optional (default=&#39;acc&#39;)</span>
+<span class="sd">        The objective mode to use.</span>
+<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;custom&#39; for user-defined weights.</span>
+<span class="sd">    fairness_bound: float (0,1], default=1</span>
+<span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
+<span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
 <span class="sd">    depth : int</span>
 <span class="sd">        The maximum depth of the tree.</span>
 <span class="sd">    time_limit : int</span>
@@ -332,8 +340,24 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">,</span>
+        <span class="n">positive_class</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="p">,</span>
+        <span class="n">obj_mode</span><span class="p">,</span>
+        <span class="n">fairness_bound</span><span class="p">,</span>
+        <span class="n">depth</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_bound</span> <span class="o">=</span> <span class="n">fairness_bound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
+        <span class="k">if</span> <span class="n">obj_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="s2">&quot;balance&quot;</span><span class="p">,</span> <span class="s2">&quot;custom&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;objective must be one of &#39;acc&#39;, &#39;balance&#39;, or &#39;custom&#39;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">):</span>
@@ -423,46 +447,82 @@
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">:</span>
                 <span class="n">obj</span> <span class="o">+=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">&quot;acc&quot;</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>
-                    <span class="n">obj</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">&quot;balance&quot;</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>
-                    <span class="n">obj</span> <span class="o">+=</span> <span class="p">(</span>
-                        <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span>
-                        <span class="o">*</span> <span class="p">(</span>
-                            <span class="mi">1</span>
-                            <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                            <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                        <span class="p">)</span>
-                        <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
-                    <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Invalid objective mode. obj_mode should be one of acc or balance.&quot;</span>
-            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>
+                <span class="n">obj</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span>
+                    <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+                <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ODTL</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FairConstrainedOCT.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairConstrainedOCT.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">):</span>
+<div class="viewcode-block" id="FairConstrainedOCT.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairConstrainedOCT.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the Fair Constrained Optimal Classification Tree (FairConstrainedOCT) model to the given training data.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : {array-like, sparse matrix}, shape (n_samples, n_features)</span>
-<span class="sd">            The training input samples.</span>
-<span class="sd">        y : array-like, shape (n_samples,)</span>
-<span class="sd">            The target values (class labels in classification).</span>
-<span class="sd">        protect_feat : array-like, shape (n_samples,1) or (n_samples, n_p)</span>
-<span class="sd">            The protected feature columns (Race, gender, etc); Can have one or more columns</span>
-<span class="sd">        legit_factor : array-like, shape (n_samples,)</span>
-<span class="sd">            The legitimate factor column(e.g., prior number of criminal acts)</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The training input samples. Each feature should be binary (0 or 1).</span>
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The target values (class labels) for the training samples.</span>
+<span class="sd">        protect_feat : array-like of shape (n_samples, n_protected_features)</span>
+<span class="sd">            The protected feature columns (e.g., race, gender). Can have one or more columns.</span>
+<span class="sd">            Each protected feature should be binary (0 or 1).</span>
+<span class="sd">        legit_factor : array-like of shape (n_samples,)</span>
+<span class="sd">            The legitimate factor column (e.g., prior number of criminal acts).</span>
+<span class="sd">            This should be a numeric column.</span>
+<span class="sd">        weights : array-like of shape (n_samples,), optional (default=None)</span>
+<span class="sd">            Sample weights. If None, then samples are equally weighted when obj_mode is &#39;acc&#39;,</span>
+<span class="sd">            or weights are automatically calculated when obj_mode is &#39;balance&#39;.</span>
+<span class="sd">            Must be provided when obj_mode is &#39;custom&#39;.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        self : object</span>
 <span class="sd">            Returns self.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X or protect_feat contains non-binary values, or if inputs have inconsistent numbers of samples.</span>
+<span class="sd">            Also raised if weights are not provided when obj_mode is &#39;custom&#39;, or if the number</span>
+<span class="sd">            of weights doesn&#39;t match the number of samples.</span>
+<span class="sd">        AssertionError</span>
+<span class="sd">            If the fairness bound is not in the range (0, 1].</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method fits the FairConstrainedOCT model using mixed-integer optimization while</span>
+<span class="sd">        considering fairness constraints. It sets up the optimization problem, solves it, and stores the results.</span>
+
+<span class="sd">        The fairness constraints are applied based on the specific fairness metric defined in the subclass</span>
+<span class="sd">        (e.g., Statistical Parity, Conditional Statistical Parity, Predictive Equality, or Equal Opportunity).</span>
+
+<span class="sd">        The optimization problem aims to maximize accuracy (or balanced accuracy, depending on the obj_mode)</span>
+<span class="sd">        while satisfying the fairness constraints within the specified fairness_bound.</span>
+
+<span class="sd">        The resulting tree structure is stored in the model and can be used for prediction or visualization.</span>
+
+<span class="sd">        The behavior of this method depends on the `obj_mode` specified during initialization:</span>
+<span class="sd">        - If obj_mode is &#39;acc&#39;, equal weights are used (weights parameter is ignored).</span>
+<span class="sd">        - If obj_mode is &#39;balance&#39;, weights are automatically calculated to balance class importance.</span>
+<span class="sd">        - If obj_mode is &#39;custom&#39;, the provided weights are used.</span>
+
+<span class="sd">        When obj_mode is not &#39;custom&#39; and weights are provided, a warning is issued and the weights are ignored.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from odtlearn.fair_oct import FairConstrainedOCT</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; X = np.array([[0, 1], [1, 0], [1, 1], [0, 0]])</span>
+<span class="sd">        &gt;&gt;&gt; y = np.array([0, 1, 1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; protect_feat = np.array([[1], [0], [1], [0]])</span>
+<span class="sd">        &gt;&gt;&gt; legit_factor = np.array([0.1, 0.2, 0.3, 0.4])</span>
+<span class="sd">        &gt;&gt;&gt; model = FairConstrainedOCT(solver=&quot;cbc&quot;, positive_class=1, depth=2, fairness_bound=0.1)</span>
+<span class="sd">        &gt;&gt;&gt; model.fit(X, y, protect_feat, legit_factor)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">)</span>
 
@@ -496,6 +556,28 @@
         <span class="c1"># Store the classes seen during fit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_classes</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">!=</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Weights are ignored because obj_mode is not &#39;custom&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The number of weights must match the number of samples.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+        <span class="c1"># Generate weights based on obj_mode</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">&quot;acc&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">&quot;balance&quot;</span><span class="p">:</span>
+            <span class="n">class_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">class_counts</span><span class="p">[</span><span class="n">yi</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="p">))</span> <span class="k">for</span> <span class="n">yi</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Weights must be provided when obj_mode is &#39;custom&#39;.&quot;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_main_problem</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="p">)</span>
 
@@ -507,18 +589,51 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FairConstrainedOCT.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairConstrainedOCT.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Classify test points using the FairTree classifier</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict class labels for samples in X using the fitted Fair Constrained Optimal Classification Tree model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
-<span class="sd">            The input samples.</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The input samples for which to make predictions. Each feature should be binary (0 or 1).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        y : ndarray, shape (n_samples,)</span>
-<span class="sd">            The label for each sample is the label of the closest sample</span>
-<span class="sd">            seen during fit.</span>
+<span class="sd">        y_pred : ndarray of shape (n_samples,)</span>
+<span class="sd">            The predicted class labels for each sample in X.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotFittedError</span>
+<span class="sd">            If the model has not been fitted yet.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X contains non-binary values or has a different number of features than the training data.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method uses the fair decision tree learned during the fit process to classify new samples.</span>
+<span class="sd">        It traverses the tree for each sample in X, following the branching decisions until</span>
+<span class="sd">        reaching a leaf node, and returns the corresponding class prediction.</span>
+
+<span class="sd">        The predictions made by this method satisfy the fairness constraints that were imposed</span>
+<span class="sd">        during the training process. However, note that the fairness guarantees only hold for the</span>
+<span class="sd">        distribution of the training data. When applying the model to new data with a different</span>
+<span class="sd">        distribution, the fairness properties may not be preserved.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from odtlearn.fair_oct import FairSPOCT</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; X_train = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])</span>
+<span class="sd">        &gt;&gt;&gt; y_train = np.array([0, 1, 1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; protect_feat = np.array([0, 1, 1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; legit_factor = np.array([0, 1, 0, 1])</span>
+<span class="sd">        &gt;&gt;&gt; clf = FairSPOCT(solver=&quot;cbc&quot;, positive_class=1, depth=2, fairness_bound=0.1)</span>
+<span class="sd">        &gt;&gt;&gt; clf.fit(X_train, y_train, protect_feat, legit_factor)</span>
+<span class="sd">        &gt;&gt;&gt; X_test = np.array([[1, 1], [0, 0]])</span>
+<span class="sd">        &gt;&gt;&gt; y_pred = clf.predict(X_test)</span>
+<span class="sd">        &gt;&gt;&gt; print(y_pred)</span>
+<span class="sd">        [1 0]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Check is fit had been called</span>
@@ -552,12 +667,9 @@
 <span class="sd">        The given time limit (in seconds) for solving the MIO problem</span>
 <span class="sd">    _lambda : float, default = 0</span>
 <span class="sd">        The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
-<span class="sd">    obj_mode: str, default=&quot;acc&quot;</span>
-<span class="sd">        The objective should be used to learn an optimal decision tree.</span>
-<span class="sd">        The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
-<span class="sd">        The accuracy objective attempts to maximize prediction accuracy while the</span>
-<span class="sd">        balance objective aims to learn a balanced optimal decision</span>
-<span class="sd">        tree to better generalize to our of sample data.</span>
+<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;custom&#39;}, optional (default=&#39;acc&#39;)</span>
+<span class="sd">        The objective mode to use.</span>
+<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;custom&#39; for user-defined weights.</span>
 <span class="sd">    fairness_bound: float (0,1], default=1</span>
 <span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
 <span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
@@ -579,11 +691,17 @@
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_bound</span> <span class="o">=</span> <span class="n">fairness_bound</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">solver</span><span class="p">,</span>
+            <span class="n">positive_class</span><span class="p">,</span>
+            <span class="n">_lambda</span><span class="p">,</span>
+            <span class="n">obj_mode</span><span class="p">,</span>
+            <span class="n">fairness_bound</span><span class="p">,</span>
+            <span class="n">depth</span><span class="p">,</span>
+            <span class="n">time_limit</span><span class="p">,</span>
+            <span class="n">num_threads</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Loop through all possible combinations of the protected feature</span>
@@ -598,16 +716,24 @@
 
 <div class="viewcode-block" id="FairSPOCT.calc_metric"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairSPOCT.calc_metric">[docs]</a>    <span class="k">def</span> <span class="nf">calc_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This function returns the statistical parity value for any given protected level and outcome value</span>
+<span class="sd">        Calculate the statistical parity metric for the given data.</span>
 
-<span class="sd">        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)</span>
-<span class="sd">                The protected feature columns (Race, gender, etc); We could have one or more columns</span>
-<span class="sd">        :param y: array-like, shape (n_samples,)</span>
-<span class="sd">                The target values (class labels in classification).</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        protect_feat : array-like of shape (n_samples, n_protected_features)</span>
+<span class="sd">            The protected feature columns (e.g., race, gender). Can have one or more columns.</span>
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The target values or predicted values.</span>
 
-<span class="sd">        :return sp_dict: a dictionary with key =(p,t) and value = P(Y=t|P=p)</span>
-<span class="sd">        where p is a protected level and t is an outcome value</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        sp_dict : dict</span>
+<span class="sd">            A dictionary with key (p,t) and value P(Y=t|P=p), where p is a protected level and t is an outcome value.</span>
 
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method calculates the statistical parity metric, which measures the difference in prediction rates</span>
+<span class="sd">        across different protected groups.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
             <span class="n">protect_feat_test_col_names</span> <span class="o">=</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">columns</span>
@@ -648,7 +774,7 @@
 <span class="sd">    An optimal classification tree fit on a given binary-valued data set</span>
 <span class="sd">    with a fairness side-constraint requiring conditional statistical parity (CSP) between protected groups.</span>
 
-<span class="sd">            Parameters</span>
+<span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    solver: str</span>
 <span class="sd">        A string specifying the name of the solver to use</span>
@@ -662,12 +788,9 @@
 <span class="sd">        The given time limit (in seconds) for solving the MIO problem</span>
 <span class="sd">    _lambda : float, default = 0</span>
 <span class="sd">        The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
-<span class="sd">    obj_mode: str, default=&quot;acc&quot;</span>
-<span class="sd">        The objective should be used to learn an optimal decision tree.</span>
-<span class="sd">        The two options are &quot;acc&quot; and &quot;balance&quot;.</span>
-<span class="sd">        The accuracy objective attempts to maximize prediction accuracy while the</span>
-<span class="sd">        balance objective aims to learn a balanced optimal decision</span>
-<span class="sd">        tree to better generalize to our of sample data.</span>
+<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;custom&#39;}, optional (default=&#39;acc&#39;)</span>
+<span class="sd">        The objective mode to use.</span>
+<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;custom&#39; for user-defined weights.</span>
 <span class="sd">    fairness_bound: float (0,1], default=1</span>
 <span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
 <span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
@@ -688,11 +811,17 @@
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_bound</span> <span class="o">=</span> <span class="n">fairness_bound</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">solver</span><span class="p">,</span>
+            <span class="n">positive_class</span><span class="p">,</span>
+            <span class="n">_lambda</span><span class="p">,</span>
+            <span class="n">obj_mode</span><span class="p">,</span>
+            <span class="n">fairness_bound</span><span class="p">,</span>
+            <span class="n">depth</span><span class="p">,</span>
+            <span class="n">time_limit</span><span class="p">,</span>
+            <span class="n">num_threads</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Loop through all possible combinations of the protected feature</span>
@@ -713,20 +842,27 @@
 
 <div class="viewcode-block" id="FairCSPOCT.calc_metric"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairCSPOCT.calc_metric">[docs]</a>    <span class="k">def</span> <span class="nf">calc_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the conditional statistical parity value for any given</span>
-<span class="sd">        protected level, legitimate feature value and outcome value</span>
+<span class="sd">        Calculate the conditional statistical parity metric for the given data.</span>
 
-<span class="sd">        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)</span>
-<span class="sd">                The protected feature columns (Race, gender, etc); We could have one or more columns</span>
-<span class="sd">        :param legit_fact: array-like, shape (n_samples,)</span>
-<span class="sd">            The legitimate factor column(e.g., prior number of criminal acts)</span>
-<span class="sd">        :param y: array-like, shape (n_samples,)</span>
-<span class="sd">                The target values (class labels in classification).</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        protect_feat : array-like of shape (n_samples, n_protected_features)</span>
+<span class="sd">            The protected feature columns (e.g., race, gender). Can have one or more columns.</span>
+<span class="sd">        legit_factor : array-like of shape (n_samples,)</span>
+<span class="sd">            The legitimate factor column (e.g., prior number of criminal acts).</span>
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The target values or predicted values.</span>
 
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        csp_dict : dict</span>
+<span class="sd">            A dictionary with key (p, f, t) and value P(Y=t|P=p, L=f), where p is a protected level,</span>
+<span class="sd">            t is an outcome value, and f is the value of the legitimate feature.</span>
 
-<span class="sd">        :return csp_dict: a dictionary with key =(p, f, t) and value = P(Y=t|P=p, L=f) where p is a protected level</span>
-<span class="sd">                          and t is an outcome value and l is the value of the legitimate feature</span>
-
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method calculates the conditional statistical parity metric, which measures the difference in</span>
+<span class="sd">        prediction rates across different protected groups, conditioned on the legitimate factor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
@@ -819,10 +955,17 @@
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_bound</span> <span class="o">=</span> <span class="n">fairness_bound</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">solver</span><span class="p">,</span>
+            <span class="n">positive_class</span><span class="p">,</span>
+            <span class="n">_lambda</span><span class="p">,</span>
+            <span class="n">obj_mode</span><span class="p">,</span>
+            <span class="n">fairness_bound</span><span class="p">,</span>
+            <span class="n">depth</span><span class="p">,</span>
+            <span class="n">time_limit</span><span class="p">,</span>
+            <span class="n">num_threads</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Loop through all possible combinations of the protected feature</span>
@@ -842,19 +985,27 @@
 
 <div class="viewcode-block" id="FairPEOCT.calc_metric"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairPEOCT.calc_metric">[docs]</a>    <span class="k">def</span> <span class="nf">calc_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This function returns the false positive and true positive rate value</span>
-<span class="sd">        for any given protected level, outcome value and prediction value</span>
+<span class="sd">        Calculate the predictive equality metric for the given data.</span>
 
-<span class="sd">        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)</span>
-<span class="sd">                The protected feature columns (Race, gender, etc); We could have one or more columns</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        protect_feat : array-like of shape (n_samples, n_protected_features)</span>
+<span class="sd">            The protected feature columns (e.g., race, gender). Can have one or more columns.</span>
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The true target values.</span>
+<span class="sd">        y_pred : array-like of shape (n_samples,)</span>
+<span class="sd">            The predicted values.</span>
 
-<span class="sd">        :param y: array-like, shape (n_samples,)</span>
-<span class="sd">                The true target values (class labels in classification).</span>
-<span class="sd">        :param y_pred: array-like, shape (n_samples,)</span>
-<span class="sd">                The predicted values (class labels in classification).</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        eq_dict : dict</span>
+<span class="sd">            A dictionary with key (p, t, t_pred) and value P(Y_pred=t_pred|P=p, Y=t), where p is a protected level,</span>
+<span class="sd">            t is a true outcome value, and t_pred is a predicted outcome value.</span>
 
-<span class="sd">        :return eq_dict: a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t)</span>
-
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method calculates the predictive equality metric, which measures the difference in</span>
+<span class="sd">        false positive rates across different protected groups.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
@@ -948,10 +1099,17 @@
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_bound</span> <span class="o">=</span> <span class="n">fairness_bound</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">solver</span><span class="p">,</span>
+            <span class="n">positive_class</span><span class="p">,</span>
+            <span class="n">_lambda</span><span class="p">,</span>
+            <span class="n">obj_mode</span><span class="p">,</span>
+            <span class="n">fairness_bound</span><span class="p">,</span>
+            <span class="n">depth</span><span class="p">,</span>
+            <span class="n">time_limit</span><span class="p">,</span>
+            <span class="n">num_threads</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Loop through all possible combinations of the protected feature</span>
@@ -1018,10 +1176,17 @@
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_bound</span> <span class="o">=</span> <span class="n">fairness_bound</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">solver</span><span class="p">,</span>
+            <span class="n">positive_class</span><span class="p">,</span>
+            <span class="n">_lambda</span><span class="p">,</span>
+            <span class="n">obj_mode</span><span class="p">,</span>
+            <span class="n">fairness_bound</span><span class="p">,</span>
+            <span class="n">depth</span><span class="p">,</span>
+            <span class="n">time_limit</span><span class="p">,</span>
+            <span class="n">num_threads</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Loop through all possible combinations of the protected feature</span>
@@ -1304,20 +1469,34 @@
 
 <div class="viewcode-block" id="FairOCT.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the FairOCT model to the given training data.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : {array-like, sparse matrix}, shape (n_samples, n_features)</span>
-<span class="sd">            The training input samples.</span>
-<span class="sd">        y : array-like, shape (n_samples,)</span>
-<span class="sd">            The target values (class labels in classification).</span>
-<span class="sd">        protect_feat : array-like, shape (n_samples,1) or (n_samples, n_p)</span>
-<span class="sd">            The protected feature columns (Race, gender, etc); Can have one or more columns</span>
-<span class="sd">        legit_factor : array-like, shape (n_samples,)</span>
-<span class="sd">            The legitimate factor column(e.g., prior number of criminal acts)</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The training input samples. Each feature should be binary (0 or 1).</span>
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The target values (class labels) for the training samples.</span>
+<span class="sd">        protect_feat : array-like of shape (n_samples, n_protected_features)</span>
+<span class="sd">            The protected feature columns (e.g., race, gender). Can have one or more columns.</span>
+<span class="sd">        legit_factor : array-like of shape (n_samples,)</span>
+<span class="sd">            The legitimate factor column (e.g., prior number of criminal acts).</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        self : object</span>
 <span class="sd">            Returns self.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X contains non-binary values or if inputs have inconsistent numbers of samples.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method fits the FairOCT model using mixed-integer optimization while</span>
+<span class="sd">        considering fairness constraints. It sets up the optimization problem,</span>
+<span class="sd">        solves it, and stores the results.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat</span> <span class="o">=</span> <span class="n">protect_feat</span>
@@ -1353,16 +1532,31 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FairOCT.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairOCT.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Classify test points using the FairTree classifier</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict class labels for samples in X using the fitted FairOCT model.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
-<span class="sd">            The input samples.</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The input samples for which to make predictions. Each feature should be binary (0 or 1).</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        y : ndarray, shape (n_samples,)</span>
-<span class="sd">            The label for each sample is the label of the closest sample</span>
-<span class="sd">            seen during fit.</span>
+<span class="sd">        y_pred : ndarray of shape (n_samples,)</span>
+<span class="sd">            The predicted class labels for each sample in X.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotFittedError</span>
+<span class="sd">            If the model has not been fitted yet.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X contains non-binary values or has a different number of features than the training data.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method uses the fair decision tree learned during the fit process to classify new samples.</span>
+<span class="sd">        It traverses the tree for each sample in X, following the branching decisions until</span>
+<span class="sd">        reaching a leaf node, and returns the corresponding class prediction.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check is fit had been called</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;b_value&quot;</span><span class="p">,</span> <span class="s2">&quot;w_value&quot;</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span>

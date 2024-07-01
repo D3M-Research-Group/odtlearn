@@ -204,7 +204,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -290,18 +290,17 @@ solver uses all available threads.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.robust_oct.RobustOCT.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/robust_oct.html#RobustOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.robust_oct.RobustOCT.fit" title="Permalink to this definition">#</a></dt>
-<dd><p>Fit an optimal robust classification tree given data, labels,
-costs of uncertainty, and budget of uncertainty</p>
+<dd><p>Fit a robust optimal classification tree to the given training data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The training input samples.</p>
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>The training input samples. Features should be integer-valued.</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The target values. An array of int.</p>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The target values (class labels) for the training samples.</p>
 </dd>
-<dt><strong>costs</strong><span class="classifier">array-like, shape (n_samples, n_features), default = budget + 1</span></dt><dd><p>The costs of uncertainty</p>
+<dt><strong>costs</strong><span class="classifier">array-like of shape (n_samples, n_features), optional</span></dt><dd><p>The costs of uncertainty for each feature and sample. If None, defaults to budget + 1.</p>
 </dd>
-<dt><strong>budget</strong><span class="classifier">float, default = -1</span></dt><dd><p>The budget of uncertainty</p>
+<dt><strong>budget</strong><span class="classifier">float, optional</span></dt><dd><p>The budget of uncertainty. Default is -1.</p>
 </dd>
 </dl>
 </dd>
@@ -311,72 +310,104 @@ costs of uncertainty, and budget of uncertainty</p>
 </dd>
 </dl>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>ValueError</dt><dd><p>If X contains non-integer values or if inputs have inconsistent numbers of samples.</p>
+</dd>
 </dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method fits the RobustOCT model using mixed-integer optimization while
+considering potential adversarial perturbations within the given budget.
+It sets up the optimization problem, solves it, and stores the results.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.robust_oct.RobustOCT.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/robust_oct.html#RobustOCT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.robust_oct.RobustOCT.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>Given the input covariates, predict the class labels of each sample
-based on the fitted optimal robust classification tree</p>
+<dd><p>Predict class labels for samples in X using the fitted RobustOCT model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input samples.</p>
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>The input samples for which to make predictions. Features should be integer-valued.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The label for each sample is the label of the closest sample
-seen during fit.</p>
+<dt><strong>y_pred</strong><span class="classifier">ndarray of shape (n_samples,)</span></dt><dd><p>The predicted class labels for each sample in X.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>NotFittedError</dt><dd><p>If the model has not been fitted yet.</p>
+</dd>
+<dt>ValueError</dt><dd><p>If X contains non-integer values or has a different number of features than the training data.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>This method uses the robust decision tree learned during the fit process to classify new samples.
+It traverses the tree for each sample in X, following the branching decisions until
+reaching a leaf node, and returns the corresponding class prediction.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.robust_oct.RobustOCT.print_tree">
 <span class="sig-name descname"><span class="pre">print_tree</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/robust_oct.html#RobustOCT.print_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.robust_oct.RobustOCT.print_tree" title="Permalink to this definition">#</a></dt>
-<dd><p>Print the fitted tree with the branching features, the threshold values for
-each branching node’s test, and the predictions asserted for each assignment node</p>
-<p>The method uses the Gurobi model’s name for determining how to generate the tree</p>
+<dd><p>Print a text representation of the fitted tree.</p>
+<p>This method prints the structure of the fitted tree, including the branching features,
+the threshold values for each branching node’s test, and the predictions asserted for each leaf node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>NotFittedError</dt><dd><p>If the model has not been fitted yet.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The tree is printed in a depth-first manner, with each node represented by its index,
+branching feature and threshold (for internal nodes), or prediction (for leaf nodes).</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.robust_oct.RobustOCT.plot_tree">
 <span class="sig-name descname"><span class="pre">plot_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rounded</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fontsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'node':</span> <span class="pre">None,</span> <span class="pre">'leaves':</span> <span class="pre">[]}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_annotation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arrow_annotation_font_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/robust_oct.html#RobustOCT.plot_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.robust_oct.RobustOCT.plot_tree" title="Permalink to this definition">#</a></dt>
-<dd><p>Plot the fitted tree with the branching features, the threshold values for
-each branching node’s test, and the predictions asserted for each assignment node
-using matplotlib. The method uses the Gurobi model’s name for determining how
-to generate the tree. It does some preprocessing before passing the tree to the
-<cite>_MPLTreeExporter</cite> class from the sklearn package. The arguments for the
-<cite>plot_tree</cite> method are based on the arguments of the sklearn <cite>plot_tree</cite> function.</p>
+<dd><p>Plot the fitted robust classification tree using matplotlib.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>label</strong><span class="classifier">{‘all’, ‘root’, ‘none’}, default=’all’</span></dt><dd></dd>
-<dt><strong>Whether to show informative labels for impurity, etc.</strong></dt><dd></dd>
-<dt><strong>Options include ‘all’ to show at every node, ‘root’ to show only at</strong></dt><dd></dd>
-<dt><strong>the top root node, or ‘none’ to not show at any node.</strong></dt><dd></dd>
-<dt><strong>filled</strong><span class="classifier">bool, default=False</span></dt><dd><p>When set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, paint nodes to indicate majority class for
+<dt><strong>label</strong><span class="classifier">{‘all’, ‘root’, ‘none’}, default=’all’</span></dt><dd><p>Whether to show informative labels for impurity, etc.
+Options include ‘all’ to show at every node, ‘root’ to show only at
+the top root node, or ‘none’ to not show at any node.</p>
+</dd>
+<dt><strong>filled</strong><span class="classifier">bool, default=True</span></dt><dd><p>When set to True, paint nodes to indicate majority class for
 classification, extremity of values for regression, or purity of node
 for multi-output.</p>
 </dd>
-<dt><strong>rounded</strong><span class="classifier">bool, default=False</span></dt><dd><p>When set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, draw node boxes with rounded corners and use
+<dt><strong>rounded</strong><span class="classifier">bool, default=False</span></dt><dd><p>When set to True, draw node boxes with rounded corners and use
 Helvetica fonts instead of Times-Roman.</p>
 </dd>
-<dt><strong>precision: int, default=3</strong></dt><dd><p>Number of digits of precision for floating point in the values of
+<dt><strong>precision</strong><span class="classifier">int, default=3</span></dt><dd><p>Number of digits of precision for floating point in the values of
 impurity, threshold and value attributes of each node.</p>
 </dd>
-<dt><strong>ax</strong><span class="classifier">matplotlib axis, default=None</span></dt><dd><p>Axes to plot to. If None, use current axis. Any previous content</p>
+<dt><strong>ax</strong><span class="classifier">matplotlib axis, default=None</span></dt><dd><p>Axes to plot to. If None, use current axis. Any previous content
+is cleared.</p>
 </dd>
-<dt><strong>is cleared.</strong></dt><dd></dd>
 <dt><strong>fontsize</strong><span class="classifier">int, default=None</span></dt><dd><p>Size of text font. If None, determined automatically to fit figure.</p>
 </dd>
-<dt><strong>color_dict: dict, default={“node”: None, “leaves”: []}</strong></dt><dd><p>A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
-If None, the colors are chosen using the sklearn <cite>plot_tree</cite> color palette</p>
+<dt><strong>color_dict</strong><span class="classifier">dict, default={“node”: None, “leaves”: []}</span></dt><dd><p>A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
+If None, the colors are chosen using the sklearn <cite>plot_tree</cite> color palette.</p>
+</dd>
+<dt><strong>edge_annotation</strong><span class="classifier">bool, default=True</span></dt><dd><p>Whether to display annotations on the edges.</p>
+</dd>
+<dt><strong>arrow_annotation_font_scale</strong><span class="classifier">float, default=0.8</span></dt><dd><p>The font scale for the arrow annotations.</p>
+</dd>
+<dt><strong>debug</strong><span class="classifier">bool, default=False</span></dt><dd><p>Whether to print debug information.</p>
 </dd>
 <dt><strong>feature_names</strong><span class="classifier">list of str, default=None</span></dt><dd><p>A list of feature names to use for the plot. If None, the feature names from the
 fitted tree will be used. The feature names should be in the same order as the
@@ -384,7 +415,15 @@ columns of the data used to fit the tree.</p>
 </dd>
 </dl>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>matplotlib.axes.Axes</dt><dd><p>The matplotlib Axes containing the plotted tree.</p>
+</dd>
 </dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method uses the MPLPlotter class to visualize the robust classification tree.</p>
 </dd></dl>
 
 </dd></dl>

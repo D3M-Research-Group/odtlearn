@@ -203,7 +203,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -350,23 +350,48 @@
         <span class="p">)</span>
 
 <div class="viewcode-block" id="FlowOPT_IPW.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_IPW.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ipw</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to fit the FlowOPT_IPW class on the data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the FlowOPT_IPW model to the given training data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
-<span class="sd">            The training input samples.</span>
-<span class="sd">        t : array-like, shape (n_samples,)</span>
-<span class="sd">            The treatment values. An array of int.</span>
-<span class="sd">        y : array-like, shape (n_samples,)</span>
-<span class="sd">            The observed outcomes upon given treatment t. An array of int.</span>
-<span class="sd">        ipw : array-like, shape (n_samples,)</span>
-<span class="sd">            The inverse propensity weight estimates. An array of floats in [0, 1].</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The training input samples. Each feature should be binary (0 or 1).</span>
+<span class="sd">        t : array-like of shape (n_samples,)</span>
+<span class="sd">            The treatment values. An array of integers representing the treatment applied to each sample.</span>
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The observed outcomes upon given treatment t. An array of numbers representing the outcome for each sample.</span>
+<span class="sd">        ipw : array-like of shape (n_samples,)</span>
+<span class="sd">            The inverse propensity weights. An array of floats in the range (0, 1].</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        self : object</span>
 <span class="sd">            Returns self.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X contains non-binary values, or if X, t, y, and ipw have inconsistent numbers of samples.</span>
+<span class="sd">        AssertionError</span>
+<span class="sd">            If ipw contains values outside the range (0, 1].</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method fits the FlowOPT_IPW model using the inverse probability weighting (IPW) approach.</span>
+<span class="sd">        It sets up the optimization problem, solves it, and stores the results.</span>
+<span class="sd">        The IPW approach is used to account for confounding in observational data.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from odtlearn.flow_opt import FlowOPT_IPW</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; X = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])</span>
+<span class="sd">        &gt;&gt;&gt; t = np.array([0, 1, 1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y = np.array([0.5, 1.2, 0.8, 0.3])</span>
+<span class="sd">        &gt;&gt;&gt; ipw = np.array([0.8, 0.7, 0.9, 0.6])</span>
+<span class="sd">        &gt;&gt;&gt; opt = FlowOPT_IPW(depth=2, time_limit=60)</span>
+<span class="sd">        &gt;&gt;&gt; opt.fit(X, t, y, ipw)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># store column information and dtypes if any</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
@@ -402,17 +427,46 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FlowOPT_IPW.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_IPW.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method for making prescriptions using a FlowOPT_IPW classifier</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict optimal treatments for samples in X using the fitted FlowOPT_IPW model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
-<span class="sd">            The input samples.</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The input samples for which to make predictions. Each feature should be binary (0 or 1).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        t : ndarray, shape (n_samples,)</span>
-<span class="sd">            The prescribed treatments for the input samples.</span>
+<span class="sd">        t_pred : ndarray of shape (n_samples,)</span>
+<span class="sd">            The predicted optimal treatment for each sample in X.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotFittedError</span>
+<span class="sd">            If the model has not been fitted yet.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X contains non-binary values or has a different number of features than the training data.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method uses the prescriptive tree learned during the fit process to recommend treatments for new samples.</span>
+<span class="sd">        It traverses the tree for each sample in X, following the branching decisions until reaching a leaf node,</span>
+<span class="sd">        and returns the corresponding treatment recommendation.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from odtlearn.flow_opt import FlowOPT_IPW</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; X_train = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])</span>
+<span class="sd">        &gt;&gt;&gt; t_train = np.array([0, 1, 1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y_train = np.array([0.5, 1.2, 0.8, 0.3])</span>
+<span class="sd">        &gt;&gt;&gt; ipw_train = np.array([0.8, 0.7, 0.9, 0.6])</span>
+<span class="sd">        &gt;&gt;&gt; opt = FlowOPT_IPW(depth=2)</span>
+<span class="sd">        &gt;&gt;&gt; opt.fit(X_train, t_train, y_train, ipw_train)</span>
+<span class="sd">        &gt;&gt;&gt; X_test = np.array([[1, 1], [0, 0]])</span>
+<span class="sd">        &gt;&gt;&gt; t_pred = opt.predict(X_test)</span>
+<span class="sd">        &gt;&gt;&gt; print(t_pred)</span>
+<span class="sd">        [1 0]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Check if fit had been called</span>
@@ -517,24 +571,49 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ODTL</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlowOPT_DM.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DM.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to fit the FlowOPT_DM class on the data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the FlowOPT_DM model to the given training data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
-<span class="sd">            The training input samples.</span>
-<span class="sd">        t : array-like, shape (n_samples,)</span>
-<span class="sd">            The treatment values. An array of int.</span>
-<span class="sd">        y : array-like, shape (n_samples,)</span>
-<span class="sd">            The observed outcomes upon given treatment t. An array of int.</span>
-<span class="sd">        y_hat: array-like, shape (n_samples, n_treatments)</span>
-<span class="sd">            The counterfactual predictions.</span>
-
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The training input samples. Each feature should be binary (0 or 1).</span>
+<span class="sd">        t : array-like of shape (n_samples,)</span>
+<span class="sd">            The treatment values. An array of integers representing the treatment applied to each sample.</span>
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The observed outcomes upon given treatment t. An array of numbers representing the outcome for each sample.</span>
+<span class="sd">        y_hat : array-like of shape (n_samples, n_treatments)</span>
+<span class="sd">            The counterfactual predictions. A 2D array where each row represents a sample and each column</span>
+<span class="sd">            represents the predicted outcome for a specific treatment.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        self : object</span>
 <span class="sd">            Returns self.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X contains non-binary values, or if X, t, y, and y_hat have inconsistent numbers of samples.</span>
+<span class="sd">        AssertionError</span>
+<span class="sd">            If y_hat doesn&#39;t have the correct shape based on the number of treatments.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method fits the FlowOPT_DM model using the direct method (DM) approach.</span>
+<span class="sd">        It sets up the optimization problem, solves it, and stores the results.</span>
+<span class="sd">        The DM approach uses counterfactual predictions to estimate treatment effects.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from odtlearn.flow_opt import FlowOPT_DM</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; X = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])</span>
+<span class="sd">        &gt;&gt;&gt; t = np.array([0, 1, 1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y = np.array([0.5, 1.2, 0.8, 0.3])</span>
+<span class="sd">        &gt;&gt;&gt; y_hat = np.array([[0.4, 0.6], [1.1, 1.3], [0.7, 0.9], [0.2, 0.4]])</span>
+<span class="sd">        &gt;&gt;&gt; opt = FlowOPT_DM(depth=2, time_limit=60)</span>
+<span class="sd">        &gt;&gt;&gt; opt.fit(X, t, y, y_hat)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># store column information and dtypes if any</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
@@ -570,18 +649,46 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FlowOPT_DM.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DM.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Classify test points</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict optimal treatments for samples in X using the fitted FlowOPT_DM model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
-<span class="sd">            The input samples.</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The input samples for which to make predictions. Each feature should be binary (0 or 1).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        y : ndarray, shape (n_samples,)</span>
-<span class="sd">            The label for each sample is the label of the closest sample</span>
-<span class="sd">            seen during fit.</span>
+<span class="sd">        t_pred : ndarray of shape (n_samples,)</span>
+<span class="sd">            The predicted optimal treatment for each sample in X.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotFittedError</span>
+<span class="sd">            If the model has not been fitted yet.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X contains non-binary values or has a different number of features than the training data.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method uses the prescriptive tree learned during the fit process to recommend treatments for new samples.</span>
+<span class="sd">        It traverses the tree for each sample in X, following the branching decisions until reaching a leaf node,</span>
+<span class="sd">        and returns the corresponding treatment recommendation.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from odtlearn.flow_opt import FlowOPT_DM</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; X_train = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])</span>
+<span class="sd">        &gt;&gt;&gt; t_train = np.array([0, 1, 1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y_train = np.array([0.5, 1.2, 0.8, 0.3])</span>
+<span class="sd">        &gt;&gt;&gt; y_hat_train = np.array([[0.4, 0.6], [1.1, 1.3], [0.7, 0.9], [0.2, 0.4]])</span>
+<span class="sd">        &gt;&gt;&gt; opt = FlowOPT_DM(depth=2)</span>
+<span class="sd">        &gt;&gt;&gt; opt.fit(X_train, t_train, y_train, y_hat_train)</span>
+<span class="sd">        &gt;&gt;&gt; X_test = np.array([[1, 1], [0, 0]])</span>
+<span class="sd">        &gt;&gt;&gt; t_pred = opt.predict(X_test)</span>
+<span class="sd">        &gt;&gt;&gt; print(t_pred)</span>
+<span class="sd">        [1 0]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check is fit had been called</span>
         <span class="c1"># for now we are assuming the model has been fit successfully if the fitted values for b, w, and p exist</span>
@@ -665,26 +772,53 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FlowOPT_DR.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DR.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ipw</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to fit the FlowOPT_DR class on the data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the FlowOPT_DR model to the given training data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
-<span class="sd">            The training input samples.</span>
-<span class="sd">        t : array-like, shape (n_samples,)</span>
-<span class="sd">            The treatment values. An array of int.</span>
-<span class="sd">        y : array-like, shape (n_samples,)</span>
-<span class="sd">            The observed outcomes upon given treatment t. An array of int.</span>
-<span class="sd">        ipw : array-like, shape (n_samples,)</span>
-<span class="sd">            The inverse propensity weight estimates. An array of floats in [0, 1].</span>
-<span class="sd">        y_hat: array-like, shape (n_samples, n_treatments)</span>
-<span class="sd">            The counterfactual predictions.</span>
-
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The training input samples. Each feature should be binary (0 or 1).</span>
+<span class="sd">        t : array-like of shape (n_samples,)</span>
+<span class="sd">            The treatment values. An array of integers representing the treatment applied to each sample.</span>
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The observed outcomes upon given treatment t. An array of numbers representing the outcome for each sample.</span>
+<span class="sd">        ipw : array-like of shape (n_samples,)</span>
+<span class="sd">            The inverse propensity weights. An array of floats in the range (0, 1].</span>
+<span class="sd">        y_hat : array-like of shape (n_samples, n_treatments)</span>
+<span class="sd">            The counterfactual predictions. A 2D array where each row represents a sample and each column</span>
+<span class="sd">            represents the predicted outcome for a specific treatment.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        self : object</span>
 <span class="sd">            Returns self.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X contains non-binary values, or if X, t, y, ipw, and y_hat have inconsistent numbers of samples.</span>
+<span class="sd">        AssertionError</span>
+<span class="sd">            If ipw contains values outside the range (0, 1] or if y_hat doesn&#39;t have the correct shape.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method fits the FlowOPT_DR model using the doubly robust (DR) approach.</span>
+<span class="sd">        It sets up the optimization problem, solves it, and stores the results.</span>
+<span class="sd">        The DR approach combines the inverse probability weighting and direct method approaches</span>
+<span class="sd">        to provide more robust estimates of treatment effects.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from odtlearn.flow_opt import FlowOPT_DR</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; X = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])</span>
+<span class="sd">        &gt;&gt;&gt; t = np.array([0, 1, 1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y = np.array([0.5, 1.2, 0.8, 0.3])</span>
+<span class="sd">        &gt;&gt;&gt; ipw = np.array([0.8, 0.7, 0.9, 0.6])</span>
+<span class="sd">        &gt;&gt;&gt; y_hat = np.array([[0.4, 0.6], [1.1, 1.3], [0.7, 0.9], [0.2, 0.4]])</span>
+<span class="sd">        &gt;&gt;&gt; opt = FlowOPT_DR(depth=2, time_limit=60)</span>
+<span class="sd">        &gt;&gt;&gt; opt.fit(X, t, y, ipw, y_hat)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># store column information and dtypes if any</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
@@ -721,18 +855,47 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="FlowOPT_DR.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/flow_opt/index.html#odtlearn.flow_opt.FlowOPT_DR.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Classify test points using FlowOPT_DR</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict optimal treatments for samples in X using the fitted FlowOPT_DR model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
-<span class="sd">            The input samples.</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The input samples for which to make predictions. Each feature should be binary (0 or 1).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        y : ndarray, shape (n_samples,)</span>
-<span class="sd">            The label for each sample is the label of the closest sample</span>
-<span class="sd">            seen during fit.</span>
+<span class="sd">        t_pred : ndarray of shape (n_samples,)</span>
+<span class="sd">            The predicted optimal treatment for each sample in X.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotFittedError</span>
+<span class="sd">            If the model has not been fitted yet.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X contains non-binary values or has a different number of features than the training data.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method uses the prescriptive tree learned during the fit process to recommend treatments for new samples.</span>
+<span class="sd">        It traverses the tree for each sample in X, following the branching decisions until reaching a leaf node,</span>
+<span class="sd">        and returns the corresponding treatment recommendation.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; from odtlearn.flow_opt import FlowOPT_DR</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; X_train = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])</span>
+<span class="sd">        &gt;&gt;&gt; t_train = np.array([0, 1, 1, 0])</span>
+<span class="sd">        &gt;&gt;&gt; y_train = np.array([0.5, 1.2, 0.8, 0.3])</span>
+<span class="sd">        &gt;&gt;&gt; ipw_train = np.array([0.8, 0.7, 0.9, 0.6])</span>
+<span class="sd">        &gt;&gt;&gt; y_hat_train = np.array([[0.4, 0.6], [1.1, 1.3], [0.7, 0.9], [0.2, 0.4]])</span>
+<span class="sd">        &gt;&gt;&gt; opt = FlowOPT_DR(depth=2)</span>
+<span class="sd">        &gt;&gt;&gt; opt.fit(X_train, t_train, y_train, ipw_train, y_hat_train)</span>
+<span class="sd">        &gt;&gt;&gt; X_test = np.array([[1, 1], [0, 0]])</span>
+<span class="sd">        &gt;&gt;&gt; t_pred = opt.predict(X_test)</span>
+<span class="sd">        &gt;&gt;&gt; print(t_pred)</span>
+<span class="sd">        [1 0]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check is fit had been called</span>
         <span class="c1"># for now we are assuming the model has been fit successfully if the fitted values for b, w, and p exist</span>

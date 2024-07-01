@@ -118,22 +118,22 @@ Classes
    .. py:method:: fit(X, t, y, ipw)
 
       
-      Method to fit the FlowOPT_IPW class on the data
+      Fit the FlowOPT_IPW model to the given training data.
 
 
       :Parameters:
 
-          **X** : array-like, shape (n_samples, n_features)
-              The training input samples.
+          **X** : array-like of shape (n_samples, n_features)
+              The training input samples. Each feature should be binary (0 or 1).
 
-          **t** : array-like, shape (n_samples,)
-              The treatment values. An array of int.
+          **t** : array-like of shape (n_samples,)
+              The treatment values. An array of integers representing the treatment applied to each sample.
 
-          **y** : array-like, shape (n_samples,)
-              The observed outcomes upon given treatment t. An array of int.
+          **y** : array-like of shape (n_samples,)
+              The observed outcomes upon given treatment t. An array of numbers representing the outcome for each sample.
 
-          **ipw** : array-like, shape (n_samples,)
-              The inverse propensity weight estimates. An array of floats in [0, 1].
+          **ipw** : array-like of shape (n_samples,)
+              The inverse propensity weights. An array of floats in the range (0, 1].
 
       :Returns:
 
@@ -143,12 +143,34 @@ Classes
 
 
 
+      :Raises:
+
+          ValueError
+              If X contains non-binary values, or if X, t, y, and ipw have inconsistent numbers of samples.
+
+          AssertionError
+              If ipw contains values outside the range (0, 1].
 
 
 
 
+      .. rubric:: Notes
+
+      This method fits the FlowOPT_IPW model using the inverse probability weighting (IPW) approach.
+      It sets up the optimization problem, solves it, and stores the results.
+      The IPW approach is used to account for confounding in observational data.
 
 
+      .. rubric:: Examples
+
+      >>> from odtlearn.flow_opt import FlowOPT_IPW
+      >>> import numpy as np
+      >>> X = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])
+      >>> t = np.array([0, 1, 1, 0])
+      >>> y = np.array([0.5, 1.2, 0.8, 0.3])
+      >>> ipw = np.array([0.8, 0.7, 0.9, 0.6])
+      >>> opt = FlowOPT_IPW(depth=2, time_limit=60)
+      >>> opt.fit(X, t, y, ipw)
 
 
 
@@ -158,28 +180,54 @@ Classes
    .. py:method:: predict(X)
 
       
-      Method for making prescriptions using a FlowOPT_IPW classifier
+      Predict optimal treatments for samples in X using the fitted FlowOPT_IPW model.
 
 
       :Parameters:
 
-          **X** : array-like, shape (n_samples, n_features)
-              The input samples.
+          **X** : array-like of shape (n_samples, n_features)
+              The input samples for which to make predictions. Each feature should be binary (0 or 1).
 
       :Returns:
 
-          **t** : ndarray, shape (n_samples,)
-              The prescribed treatments for the input samples.
+          **t_pred** : ndarray of shape (n_samples,)
+              The predicted optimal treatment for each sample in X.
 
 
 
 
+      :Raises:
+
+          NotFittedError
+              If the model has not been fitted yet.
+
+          ValueError
+              If X contains non-binary values or has a different number of features than the training data.
 
 
 
 
+      .. rubric:: Notes
+
+      This method uses the prescriptive tree learned during the fit process to recommend treatments for new samples.
+      It traverses the tree for each sample in X, following the branching decisions until reaching a leaf node,
+      and returns the corresponding treatment recommendation.
 
 
+      .. rubric:: Examples
+
+      >>> from odtlearn.flow_opt import FlowOPT_IPW
+      >>> import numpy as np
+      >>> X_train = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])
+      >>> t_train = np.array([0, 1, 1, 0])
+      >>> y_train = np.array([0.5, 1.2, 0.8, 0.3])
+      >>> ipw_train = np.array([0.8, 0.7, 0.9, 0.6])
+      >>> opt = FlowOPT_IPW(depth=2)
+      >>> opt.fit(X_train, t_train, y_train, ipw_train)
+      >>> X_test = np.array([[1, 1], [0, 0]])
+      >>> t_pred = opt.predict(X_test)
+      >>> print(t_pred)
+      [1 0]
 
 
 
@@ -273,22 +321,23 @@ Classes
    .. py:method:: fit(X, t, y, y_hat)
 
       
-      Method to fit the FlowOPT_DM class on the data
+      Fit the FlowOPT_DM model to the given training data.
 
 
       :Parameters:
 
-          **X** : array-like, shape (n_samples, n_features)
-              The training input samples.
+          **X** : array-like of shape (n_samples, n_features)
+              The training input samples. Each feature should be binary (0 or 1).
 
-          **t** : array-like, shape (n_samples,)
-              The treatment values. An array of int.
+          **t** : array-like of shape (n_samples,)
+              The treatment values. An array of integers representing the treatment applied to each sample.
 
-          **y** : array-like, shape (n_samples,)
-              The observed outcomes upon given treatment t. An array of int.
+          **y** : array-like of shape (n_samples,)
+              The observed outcomes upon given treatment t. An array of numbers representing the outcome for each sample.
 
-          **y_hat: array-like, shape (n_samples, n_treatments)**
-              The counterfactual predictions.
+          **y_hat** : array-like of shape (n_samples, n_treatments)
+              The counterfactual predictions. A 2D array where each row represents a sample and each column
+              represents the predicted outcome for a specific treatment.
 
       :Returns:
 
@@ -298,12 +347,34 @@ Classes
 
 
 
+      :Raises:
+
+          ValueError
+              If X contains non-binary values, or if X, t, y, and y_hat have inconsistent numbers of samples.
+
+          AssertionError
+              If y_hat doesn't have the correct shape based on the number of treatments.
 
 
 
 
+      .. rubric:: Notes
+
+      This method fits the FlowOPT_DM model using the direct method (DM) approach.
+      It sets up the optimization problem, solves it, and stores the results.
+      The DM approach uses counterfactual predictions to estimate treatment effects.
 
 
+      .. rubric:: Examples
+
+      >>> from odtlearn.flow_opt import FlowOPT_DM
+      >>> import numpy as np
+      >>> X = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])
+      >>> t = np.array([0, 1, 1, 0])
+      >>> y = np.array([0.5, 1.2, 0.8, 0.3])
+      >>> y_hat = np.array([[0.4, 0.6], [1.1, 1.3], [0.7, 0.9], [0.2, 0.4]])
+      >>> opt = FlowOPT_DM(depth=2, time_limit=60)
+      >>> opt.fit(X, t, y, y_hat)
 
 
 
@@ -313,29 +384,54 @@ Classes
    .. py:method:: predict(X)
 
       
-      Classify test points
+      Predict optimal treatments for samples in X using the fitted FlowOPT_DM model.
 
 
       :Parameters:
 
-          **X** : array-like, shape (n_samples, n_features)
-              The input samples.
+          **X** : array-like of shape (n_samples, n_features)
+              The input samples for which to make predictions. Each feature should be binary (0 or 1).
 
       :Returns:
 
-          **y** : ndarray, shape (n_samples,)
-              The label for each sample is the label of the closest sample
-              seen during fit.
+          **t_pred** : ndarray of shape (n_samples,)
+              The predicted optimal treatment for each sample in X.
 
 
 
 
+      :Raises:
+
+          NotFittedError
+              If the model has not been fitted yet.
+
+          ValueError
+              If X contains non-binary values or has a different number of features than the training data.
 
 
 
 
+      .. rubric:: Notes
+
+      This method uses the prescriptive tree learned during the fit process to recommend treatments for new samples.
+      It traverses the tree for each sample in X, following the branching decisions until reaching a leaf node,
+      and returns the corresponding treatment recommendation.
 
 
+      .. rubric:: Examples
+
+      >>> from odtlearn.flow_opt import FlowOPT_DM
+      >>> import numpy as np
+      >>> X_train = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])
+      >>> t_train = np.array([0, 1, 1, 0])
+      >>> y_train = np.array([0.5, 1.2, 0.8, 0.3])
+      >>> y_hat_train = np.array([[0.4, 0.6], [1.1, 1.3], [0.7, 0.9], [0.2, 0.4]])
+      >>> opt = FlowOPT_DM(depth=2)
+      >>> opt.fit(X_train, t_train, y_train, y_hat_train)
+      >>> X_test = np.array([[1, 1], [0, 0]])
+      >>> t_pred = opt.predict(X_test)
+      >>> print(t_pred)
+      [1 0]
 
 
 
@@ -430,25 +526,26 @@ Classes
    .. py:method:: fit(X, t, y, ipw, y_hat)
 
       
-      Method to fit the FlowOPT_DR class on the data
+      Fit the FlowOPT_DR model to the given training data.
 
 
       :Parameters:
 
-          **X** : array-like, shape (n_samples, n_features)
-              The training input samples.
+          **X** : array-like of shape (n_samples, n_features)
+              The training input samples. Each feature should be binary (0 or 1).
 
-          **t** : array-like, shape (n_samples,)
-              The treatment values. An array of int.
+          **t** : array-like of shape (n_samples,)
+              The treatment values. An array of integers representing the treatment applied to each sample.
 
-          **y** : array-like, shape (n_samples,)
-              The observed outcomes upon given treatment t. An array of int.
+          **y** : array-like of shape (n_samples,)
+              The observed outcomes upon given treatment t. An array of numbers representing the outcome for each sample.
 
-          **ipw** : array-like, shape (n_samples,)
-              The inverse propensity weight estimates. An array of floats in [0, 1].
+          **ipw** : array-like of shape (n_samples,)
+              The inverse propensity weights. An array of floats in the range (0, 1].
 
-          **y_hat: array-like, shape (n_samples, n_treatments)**
-              The counterfactual predictions.
+          **y_hat** : array-like of shape (n_samples, n_treatments)
+              The counterfactual predictions. A 2D array where each row represents a sample and each column
+              represents the predicted outcome for a specific treatment.
 
       :Returns:
 
@@ -458,12 +555,36 @@ Classes
 
 
 
+      :Raises:
+
+          ValueError
+              If X contains non-binary values, or if X, t, y, ipw, and y_hat have inconsistent numbers of samples.
+
+          AssertionError
+              If ipw contains values outside the range (0, 1] or if y_hat doesn't have the correct shape.
 
 
 
 
+      .. rubric:: Notes
+
+      This method fits the FlowOPT_DR model using the doubly robust (DR) approach.
+      It sets up the optimization problem, solves it, and stores the results.
+      The DR approach combines the inverse probability weighting and direct method approaches
+      to provide more robust estimates of treatment effects.
 
 
+      .. rubric:: Examples
+
+      >>> from odtlearn.flow_opt import FlowOPT_DR
+      >>> import numpy as np
+      >>> X = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])
+      >>> t = np.array([0, 1, 1, 0])
+      >>> y = np.array([0.5, 1.2, 0.8, 0.3])
+      >>> ipw = np.array([0.8, 0.7, 0.9, 0.6])
+      >>> y_hat = np.array([[0.4, 0.6], [1.1, 1.3], [0.7, 0.9], [0.2, 0.4]])
+      >>> opt = FlowOPT_DR(depth=2, time_limit=60)
+      >>> opt.fit(X, t, y, ipw, y_hat)
 
 
 
@@ -473,29 +594,55 @@ Classes
    .. py:method:: predict(X)
 
       
-      Classify test points using FlowOPT_DR
+      Predict optimal treatments for samples in X using the fitted FlowOPT_DR model.
 
 
       :Parameters:
 
-          **X** : array-like, shape (n_samples, n_features)
-              The input samples.
+          **X** : array-like of shape (n_samples, n_features)
+              The input samples for which to make predictions. Each feature should be binary (0 or 1).
 
       :Returns:
 
-          **y** : ndarray, shape (n_samples,)
-              The label for each sample is the label of the closest sample
-              seen during fit.
+          **t_pred** : ndarray of shape (n_samples,)
+              The predicted optimal treatment for each sample in X.
 
 
 
 
+      :Raises:
+
+          NotFittedError
+              If the model has not been fitted yet.
+
+          ValueError
+              If X contains non-binary values or has a different number of features than the training data.
 
 
 
 
+      .. rubric:: Notes
+
+      This method uses the prescriptive tree learned during the fit process to recommend treatments for new samples.
+      It traverses the tree for each sample in X, following the branching decisions until reaching a leaf node,
+      and returns the corresponding treatment recommendation.
 
 
+      .. rubric:: Examples
+
+      >>> from odtlearn.flow_opt import FlowOPT_DR
+      >>> import numpy as np
+      >>> X_train = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])
+      >>> t_train = np.array([0, 1, 1, 0])
+      >>> y_train = np.array([0.5, 1.2, 0.8, 0.3])
+      >>> ipw_train = np.array([0.8, 0.7, 0.9, 0.6])
+      >>> y_hat_train = np.array([[0.4, 0.6], [1.1, 1.3], [0.7, 0.9], [0.2, 0.4]])
+      >>> opt = FlowOPT_DR(depth=2)
+      >>> opt.fit(X_train, t_train, y_train, ipw_train, y_hat_train)
+      >>> X_test = np.array([[1, 1], [0, 0]])
+      >>> t_pred = opt.predict(X_test)
+      >>> print(t_pred)
+      [1 0]
 
 
 

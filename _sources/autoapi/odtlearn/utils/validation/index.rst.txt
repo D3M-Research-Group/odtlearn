@@ -26,31 +26,47 @@ Functions
 .. py:function:: check_ipw(X, ipw)
 
    
-   This function checks the propensity weights and counterfactual predictions
+   Check and validate inverse probability weights (IPW).
 
 
    :Parameters:
 
-       **X: The input/training data**
-           ..
+       **X** : array-like of shape (n_samples, n_features)
+           The input samples.
 
-       **ipw: A vector or array-like object for inverse propensity weights. Only needed when running IPW/DR**
-           ..
+       **ipw** : array-like of shape (n_samples,)
+           The inverse probability weights to be checked.
 
    :Returns:
 
-       The converted version of ipw after passing the series of checks
-           ..
+       **ipw** : ndarray of shape (n_samples,)
+           The validated and potentially converted inverse probability weights.
+
+
+
+
+   :Raises:
+
+       ValueError
+           If ipw has inconsistent number of samples with X.
+
+       AssertionError
+           If any value in ipw is not in the range (0, 1].
 
 
 
 
 
 
+   .. rubric:: Examples
 
-
-
-
+   >>> import numpy as np
+   >>> from odtlearn.utils.validation import check_ipw
+   >>> X = np.array([[1, 2], [3, 4], [5, 6]])
+   >>> ipw = np.array([0.5, 0.7, 0.3])
+   >>> validated_ipw = check_ipw(X, ipw)
+   >>> print(validated_ipw)
+   [0.5 0.7 0.3]
 
 
 
@@ -60,34 +76,53 @@ Functions
 .. py:function:: check_y_hat(X, treatments, y_hat)
 
    
-   This function checks the propensity weights and counterfactual predictions
+   Check and validate counterfactual predictions (y_hat).
 
 
    :Parameters:
 
-       **X: The input/training data**
-           ..
+       **X** : array-like of shape (n_samples, n_features)
+           The input samples.
 
-       **treatments: A vector of the unique treatment values in the dataset.**
-           ..
+       **treatments** : array-like
+           The unique treatment values.
 
-       **y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR**
-           ..
+       **y_hat** : array-like of shape (n_samples, n_treatments)
+           The counterfactual predictions to be checked.
 
    :Returns:
 
-       The converted versions of ipw and y_hat after passing the series of checks
-           ..
+       **y_hat** : ndarray of shape (n_samples, n_treatments)
+           The validated and potentially converted counterfactual predictions.
+
+
+
+
+   :Raises:
+
+       ValueError
+           If y_hat has inconsistent dimensions with X or treatments.
+
+       AssertionError
+           If y_hat is None.
 
 
 
 
 
 
+   .. rubric:: Examples
 
-
-
-
+   >>> import numpy as np
+   >>> from odtlearn.utils.validation import check_y_hat
+   >>> X = np.array([[1, 2], [3, 4], [5, 6]])
+   >>> treatments = [0, 1]
+   >>> y_hat = np.array([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])
+   >>> validated_y_hat = check_y_hat(X, treatments, y_hat)
+   >>> print(validated_y_hat)
+   [[0.1 0.2]
+    [0.3 0.4]
+    [0.5 0.6]]
 
 
 
@@ -97,31 +132,44 @@ Functions
 .. py:function:: check_y(X, y)
 
    
-   This function checks the shape and contents of the observed outcomes
+   Check and validate target values (y).
 
 
    :Parameters:
 
-       **X: The input/training data**
-           ..
+       **X** : array-like of shape (n_samples, n_features)
+           The input samples.
 
-       **y: A vector or array-like object for the observed outcomes corresponding to treatment t**
-           ..
+       **y** : array-like of shape (n_samples,)
+           The target values to be checked.
 
    :Returns:
 
-       The converted version of y after passing the series of checks
-           ..
+       **y** : ndarray of shape (n_samples,)
+           The validated and potentially converted target values.
+
+
+
+
+   :Raises:
+
+       ValueError
+           If y has inconsistent number of samples with X.
 
 
 
 
 
 
+   .. rubric:: Examples
 
-
-
-
+   >>> import numpy as np
+   >>> from odtlearn.utils.validation import check_y
+   >>> X = np.array([[1, 2], [3, 4], [5, 6]])
+   >>> y = np.array([0, 1, 0])
+   >>> validated_y = check_y(X, y)
+   >>> print(validated_y)
+   [0. 1. 0.]
 
 
 
@@ -131,34 +179,52 @@ Functions
 .. py:function:: check_columns_match(original_columns, new_data)
 
    
-   Check that the column names of a new data frame match the column names used when used to fit the model
+   Check if the columns in new_data match the original_columns.
 
 
    :Parameters:
 
-       **original_columns: List of column names from the data set used to fit the model**
-           ..
+       **original_columns** : list
+           The list of column names from the original data.
 
-       **new_data: The numpy matrix or pd dataframe new data set for**
-           ..
-
-       **which we want to make predictions**
-           ..
+       **new_data** : array-like or pandas.DataFrame
+           The new data to be checked.
 
    :Returns:
 
-       ValueError if column names do not match, otherwise None
-           ..
+       bool
+           True if the columns match, False otherwise.
 
 
 
 
+   :Raises:
+
+       ValueError
+           If new_data is a DataFrame and contains columns not present in original_columns.
+
+       AssertionError
+           If new_data is not a DataFrame and has a different number of columns than original_columns.
 
 
 
 
+   .. rubric:: Notes
+
+   This function performs different checks based on whether new_data is a pandas DataFrame or not:
+   - For DataFrames: It checks if all columns in new_data are present in original_columns.
+   - For non-DataFrames: It checks if the number of columns matches the length of original_columns.
 
 
+   .. rubric:: Examples
+
+   >>> import pandas as pd
+   >>> from odtlearn.utils.validation import check_columns_match
+   >>> original_cols = ['A', 'B', 'C']
+   >>> new_data = pd.DataFrame({'A': [1, 2], 'B': [3, 4], 'C': [5, 6]})
+   >>> result = check_columns_match(original_cols, new_data)
+   >>> print(result)
+   True
 
 
 
@@ -167,27 +233,147 @@ Functions
 
 .. py:function:: check_binary(df)
 
+   
+   Check if all values in the DataFrame are binary (0 or 1).
+
+
+   :Parameters:
+
+       **df** : pandas.DataFrame or array-like
+           The data to be checked.
+
+
+
+
+
+   :Raises:
+
+       ValueError
+           If df is a DataFrame and contains columns with non-binary values.
+
+       AssertionError
+           If df is not a DataFrame and contains non-binary values.
+
+
+
+
+   .. rubric:: Notes
+
+   This function performs different checks based on whether df is a pandas DataFrame or not:
+   - For DataFrames: It identifies columns containing non-binary values.
+   - For non-DataFrames: It checks if all values are either 0 or 1.
+
+
+   .. rubric:: Examples
+
+   >>> import pandas as pd
+   >>> from odtlearn.utils.validation import check_binary
+   >>> df = pd.DataFrame({'A': [0, 1, 0], 'B': [1, 1, 0]})
+   >>> check_binary(df)  # This will not raise an error
+   >>> df['C'] = [0, 1, 2]
+   >>> check_binary(df)  # This will raise a ValueError
+   ValueError: Found columns (['C']) that contain values other than 0 or 1.
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:function:: check_integer(df)
 
+   
+   Check if all values in the DataFrame are integers.
+
+
+   :Parameters:
+
+       **df** : pandas.DataFrame or array-like
+           The data to be checked.
+
+
+
+
+
+   :Raises:
+
+       ValueError
+           If df contains non-integer values.
+
+
+
+
+
+
+   .. rubric:: Examples
+
+   >>> import pandas as pd
+   >>> from odtlearn.utils.validation import check_integer
+   >>> df = pd.DataFrame({'A': [1, 2, 3], 'B': [4, 5, 6]})
+   >>> check_integer(df)  # This will not raise an error
+   >>> df['C'] = [1.5, 2.0, 3.0]
+   >>> check_integer(df)  # This will raise a ValueError
+   ValueError: Found non-integer values.
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:function:: check_same_as_X(X, X_col_labels, G, G_label)
 
    
-   Check if a DataFrame G has the columns of X
+   Check if a DataFrame G has the same structure as X.
+
+
+   :Parameters:
+
+       **X** : pandas.DataFrame
+           The reference DataFrame.
+
+       **X_col_labels** : array-like
+           The column labels of X.
+
+       **G** : pandas.DataFrame or array-like
+           The DataFrame or array to be checked against X.
+
+       **G_label** : str
+           A label for G to be used in error messages.
+
+   :Returns:
+
+       pandas.DataFrame
+           G converted to a DataFrame if it wasn't already.
+
+
+
+
+   :Raises:
+
+       ValueError
+           If G has a different number of columns than X.
+
+       KeyError
+           If G is a DataFrame and its columns don't match X_col_labels.
+
+       TypeError
+           If G is not a DataFrame and X has non-default column labels.
 
 
 
 
 
 
+   .. rubric:: Examples
 
-
-
-
-
-
-
+   >>> import pandas as pd
+   >>> from odtlearn.utils.validation import check_same_as_X
+   >>> X = pd.DataFrame({'A': [1, 2], 'B': [3, 4]})
+   >>> G = pd.DataFrame({'A': [5, 6], 'B': [7, 8]})
+   >>> result = check_same_as_X(X, X.columns, G, 'Test DataFrame')
+   >>> print(result)
+      A  B
+   0  5  7
+   1  6  8
 
 
 

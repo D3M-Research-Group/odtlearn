@@ -23,7 +23,7 @@ Classes
 
 
 
-.. py:class:: FairConstrainedOCT(solver, _lambda, depth, time_limit, num_threads, verbose)
+.. py:class:: FairConstrainedOCT(solver, positive_class, _lambda, obj_mode, fairness_bound, depth, time_limit, num_threads, verbose)
 
 
    Bases: :py:obj:`odtlearn.constrained_oct.ConstrainedOCT`
@@ -41,8 +41,19 @@ Classes
        **solver** : str
            The name of the solver to use for solving the MIP problem.
 
+       **positive_class** : int
+           The value of the class label which is corresponding to the desired outcome
+
        **_lambda** : float
            The regularization parameter in the objective. Must be in the interval [0, 1).
+
+       **obj_mode** : {'acc', 'balance', 'custom'}, optional (default='acc')
+           The objective mode to use.
+           'acc' for accuracy, 'balance' for balanced accuracy, 'custom' for user-defined weights.
+
+       **fairness_bound: float (0,1], default=1**
+           The bound of the fairness constraint. The smaller the value the stricter
+           the fairness constraint and 1 corresponds to no fairness constraint enforced
 
        **depth** : int
            The maximum depth of the tree.
@@ -117,25 +128,32 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: fit(X, y, protect_feat, legit_factor)
+   .. py:method:: fit(X, y, protect_feat, legit_factor, weights=None)
 
       
-
+      Fit the Fair Constrained Optimal Classification Tree (FairConstrainedOCT) model to the given training data.
 
 
       :Parameters:
 
-          **X** : {array-like, sparse matrix}, shape (n_samples, n_features)
-              The training input samples.
+          **X** : array-like of shape (n_samples, n_features)
+              The training input samples. Each feature should be binary (0 or 1).
 
-          **y** : array-like, shape (n_samples,)
-              The target values (class labels in classification).
+          **y** : array-like of shape (n_samples,)
+              The target values (class labels) for the training samples.
 
-          **protect_feat** : array-like, shape (n_samples,1) or (n_samples, n_p)
-              The protected feature columns (Race, gender, etc); Can have one or more columns
+          **protect_feat** : array-like of shape (n_samples, n_protected_features)
+              The protected feature columns (e.g., race, gender). Can have one or more columns.
+              Each protected feature should be binary (0 or 1).
 
-          **legit_factor** : array-like, shape (n_samples,)
-              The legitimate factor column(e.g., prior number of criminal acts)
+          **legit_factor** : array-like of shape (n_samples,)
+              The legitimate factor column (e.g., prior number of criminal acts).
+              This should be a numeric column.
+
+          **weights** : array-like of shape (n_samples,), optional (default=None)
+              Sample weights. If None, then samples are equally weighted when obj_mode is 'acc',
+              or weights are automatically calculated when obj_mode is 'balance'.
+              Must be provided when obj_mode is 'custom'.
 
       :Returns:
 
@@ -145,12 +163,50 @@ Classes
 
 
 
+      :Raises:
+
+          ValueError
+              If X or protect_feat contains non-binary values, or if inputs have inconsistent numbers of samples.
+              Also raised if weights are not provided when obj_mode is 'custom', or if the number
+              of weights doesn't match the number of samples.
+
+          AssertionError
+              If the fairness bound is not in the range (0, 1].
 
 
 
 
+      .. rubric:: Notes
+
+      This method fits the FairConstrainedOCT model using mixed-integer optimization while
+      considering fairness constraints. It sets up the optimization problem, solves it, and stores the results.
+
+      The fairness constraints are applied based on the specific fairness metric defined in the subclass
+      (e.g., Statistical Parity, Conditional Statistical Parity, Predictive Equality, or Equal Opportunity).
+
+      The optimization problem aims to maximize accuracy (or balanced accuracy, depending on the obj_mode)
+      while satisfying the fairness constraints within the specified fairness_bound.
+
+      The resulting tree structure is stored in the model and can be used for prediction or visualization.
+
+      The behavior of this method depends on the `obj_mode` specified during initialization:
+      - If obj_mode is 'acc', equal weights are used (weights parameter is ignored).
+      - If obj_mode is 'balance', weights are automatically calculated to balance class importance.
+      - If obj_mode is 'custom', the provided weights are used.
+
+      When obj_mode is not 'custom' and weights are provided, a warning is issued and the weights are ignored.
 
 
+      .. rubric:: Examples
+
+      >>> from odtlearn.fair_oct import FairConstrainedOCT
+      >>> import numpy as np
+      >>> X = np.array([[0, 1], [1, 0], [1, 1], [0, 0]])
+      >>> y = np.array([0, 1, 1, 0])
+      >>> protect_feat = np.array([[1], [0], [1], [0]])
+      >>> legit_factor = np.array([0.1, 0.2, 0.3, 0.4])
+      >>> model = FairConstrainedOCT(solver="cbc", positive_class=1, depth=2, fairness_bound=0.1)
+      >>> model.fit(X, y, protect_feat, legit_factor)
 
 
 
@@ -160,29 +216,59 @@ Classes
    .. py:method:: predict(X)
 
       
-      Classify test points using the FairTree classifier
+      Predict class labels for samples in X using the fitted Fair Constrained Optimal Classification Tree model.
 
 
       :Parameters:
 
-          **X** : array-like, shape (n_samples, n_features)
-              The input samples.
+          **X** : array-like of shape (n_samples, n_features)
+              The input samples for which to make predictions. Each feature should be binary (0 or 1).
 
       :Returns:
 
-          **y** : ndarray, shape (n_samples,)
-              The label for each sample is the label of the closest sample
-              seen during fit.
+          **y_pred** : ndarray of shape (n_samples,)
+              The predicted class labels for each sample in X.
 
 
 
 
+      :Raises:
+
+          NotFittedError
+              If the model has not been fitted yet.
+
+          ValueError
+              If X contains non-binary values or has a different number of features than the training data.
 
 
 
 
+      .. rubric:: Notes
+
+      This method uses the fair decision tree learned during the fit process to classify new samples.
+      It traverses the tree for each sample in X, following the branching decisions until
+      reaching a leaf node, and returns the corresponding class prediction.
+
+      The predictions made by this method satisfy the fairness constraints that were imposed
+      during the training process. However, note that the fairness guarantees only hold for the
+      distribution of the training data. When applying the model to new data with a different
+      distribution, the fairness properties may not be preserved.
 
 
+      .. rubric:: Examples
+
+      >>> from odtlearn.fair_oct import FairSPOCT
+      >>> import numpy as np
+      >>> X_train = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])
+      >>> y_train = np.array([0, 1, 1, 0])
+      >>> protect_feat = np.array([0, 1, 1, 0])
+      >>> legit_factor = np.array([0, 1, 0, 1])
+      >>> clf = FairSPOCT(solver="cbc", positive_class=1, depth=2, fairness_bound=0.1)
+      >>> clf.fit(X_train, y_train, protect_feat, legit_factor)
+      >>> X_test = np.array([[1, 1], [0, 0]])
+      >>> y_pred = clf.predict(X_test)
+      >>> print(y_pred)
+      [1 0]
 
 
 
@@ -219,12 +305,9 @@ Classes
        **_lambda** : float, default = 0
            The regularization parameter in the objective. _lambda is in the interval [0,1)
 
-       **obj_mode: str, default="acc"**
-           The objective should be used to learn an optimal decision tree.
-           The two options are "acc" and "balance".
-           The accuracy objective attempts to maximize prediction accuracy while the
-           balance objective aims to learn a balanced optimal decision
-           tree to better generalize to our of sample data.
+       **obj_mode** : {'acc', 'balance', 'custom'}, optional (default='acc')
+           The objective mode to use.
+           'acc' for accuracy, 'balance' for balanced accuracy, 'custom' for user-defined weights.
 
        **fairness_bound: float (0,1], default=1**
            The bound of the fairness constraint. The smaller the value the stricter
@@ -251,17 +334,21 @@ Classes
    .. py:method:: calc_metric(protect_feat, y)
 
       
-      This function returns the statistical parity value for any given protected level and outcome value
-
-      :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
-              The protected feature columns (Race, gender, etc); We could have one or more columns
-      :param y: array-like, shape (n_samples,)
-              The target values (class labels in classification).
-
-      :return sp_dict: a dictionary with key =(p,t) and value = P(Y=t|P=p)
-      where p is a protected level and t is an outcome value
+      Calculate the statistical parity metric for the given data.
 
 
+      :Parameters:
+
+          **protect_feat** : array-like of shape (n_samples, n_protected_features)
+              The protected feature columns (e.g., race, gender). Can have one or more columns.
+
+          **y** : array-like of shape (n_samples,)
+              The target values or predicted values.
+
+      :Returns:
+
+          **sp_dict** : dict
+              A dictionary with key (p,t) and value P(Y=t|P=p), where p is a protected level and t is an outcome value.
 
 
 
@@ -270,6 +357,10 @@ Classes
 
 
 
+      .. rubric:: Notes
+
+      This method calculates the statistical parity metric, which measures the difference in prediction rates
+      across different protected groups.
 
 
 
@@ -308,12 +399,9 @@ Classes
        **_lambda** : float, default = 0
            The regularization parameter in the objective. _lambda is in the interval [0,1)
 
-       **obj_mode: str, default="acc"**
-           The objective should be used to learn an optimal decision tree.
-           The two options are "acc" and "balance".
-           The accuracy objective attempts to maximize prediction accuracy while the
-           balance objective aims to learn a balanced optimal decision
-           tree to better generalize to our of sample data.
+       **obj_mode** : {'acc', 'balance', 'custom'}, optional (default='acc')
+           The objective mode to use.
+           'acc' for accuracy, 'balance' for balanced accuracy, 'custom' for user-defined weights.
 
        **fairness_bound: float (0,1], default=1**
            The bound of the fairness constraint. The smaller the value the stricter
@@ -340,20 +428,25 @@ Classes
    .. py:method:: calc_metric(protect_feat, legit_factor, y)
 
       
-      Returns the conditional statistical parity value for any given
-      protected level, legitimate feature value and outcome value
-
-      :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
-              The protected feature columns (Race, gender, etc); We could have one or more columns
-      :param legit_fact: array-like, shape (n_samples,)
-          The legitimate factor column(e.g., prior number of criminal acts)
-      :param y: array-like, shape (n_samples,)
-              The target values (class labels in classification).
-
-      :return csp_dict: a dictionary with key =(p, f, t) and value = P(Y=t|P=p, L=f) where p is a protected level
-                        and t is an outcome value and l is the value of the legitimate feature
+      Calculate the conditional statistical parity metric for the given data.
 
 
+      :Parameters:
+
+          **protect_feat** : array-like of shape (n_samples, n_protected_features)
+              The protected feature columns (e.g., race, gender). Can have one or more columns.
+
+          **legit_factor** : array-like of shape (n_samples,)
+              The legitimate factor column (e.g., prior number of criminal acts).
+
+          **y** : array-like of shape (n_samples,)
+              The target values or predicted values.
+
+      :Returns:
+
+          **csp_dict** : dict
+              A dictionary with key (p, f, t) and value P(Y=t|P=p, L=f), where p is a protected level,
+              t is an outcome value, and f is the value of the legitimate feature.
 
 
 
@@ -362,6 +455,10 @@ Classes
 
 
 
+      .. rubric:: Notes
+
+      This method calculates the conditional statistical parity metric, which measures the difference in
+      prediction rates across different protected groups, conditioned on the legitimate factor.
 
 
 
@@ -432,20 +529,25 @@ Classes
    .. py:method:: calc_metric(protect_feat, y, y_pred)
 
       
-      This function returns the false positive and true positive rate value
-      for any given protected level, outcome value and prediction value
-
-      :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
-              The protected feature columns (Race, gender, etc); We could have one or more columns
-
-      :param y: array-like, shape (n_samples,)
-              The true target values (class labels in classification).
-      :param y_pred: array-like, shape (n_samples,)
-              The predicted values (class labels in classification).
-
-      :return eq_dict: a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t)
+      Calculate the predictive equality metric for the given data.
 
 
+      :Parameters:
+
+          **protect_feat** : array-like of shape (n_samples, n_protected_features)
+              The protected feature columns (e.g., race, gender). Can have one or more columns.
+
+          **y** : array-like of shape (n_samples,)
+              The true target values.
+
+          **y_pred** : array-like of shape (n_samples,)
+              The predicted values.
+
+      :Returns:
+
+          **eq_dict** : dict
+              A dictionary with key (p, t, t_pred) and value P(Y_pred=t_pred|P=p, Y=t), where p is a protected level,
+              t is a true outcome value, and t_pred is a predicted outcome value.
 
 
 
@@ -454,6 +556,10 @@ Classes
 
 
 
+      .. rubric:: Notes
+
+      This method calculates the predictive equality metric, which measures the difference in
+      false positive rates across different protected groups.
 
 
 
@@ -644,28 +750,24 @@ Classes
    .. py:method:: fit(X, y, protect_feat, legit_factor)
 
       
-
+      Fit the FairOCT model to the given training data.
 
 
       :Parameters:
 
-          **X** : {array-like, sparse matrix}, shape (n_samples, n_features)
-              The training input samples.
+          **X** : array-like of shape (n_samples, n_features)
+              The training input samples. Each feature should be binary (0 or 1).
 
-          **y** : array-like, shape (n_samples,)
-              The target values (class labels in classification).
+          **y** : array-like of shape (n_samples,)
+              The target values (class labels) for the training samples.
 
-          **protect_feat** : array-like, shape (n_samples,1) or (n_samples, n_p)
-              The protected feature columns (Race, gender, etc); Can have one or more columns
+          **protect_feat** : array-like of shape (n_samples, n_protected_features)
+              The protected feature columns (e.g., race, gender). Can have one or more columns.
 
-          **legit_factor** : array-like, shape (n_samples,)
-              The legitimate factor column(e.g., prior number of criminal acts)
+          **legit_factor** : array-like of shape (n_samples,)
+              The legitimate factor column (e.g., prior number of criminal acts).
 
-          **Returns**
-              ..
-
-          **-------**
-              ..
+      :Returns:
 
           **self** : object
               Returns self.
@@ -673,11 +775,19 @@ Classes
 
 
 
+      :Raises:
+
+          ValueError
+              If X contains non-binary values or if inputs have inconsistent numbers of samples.
 
 
 
 
+      .. rubric:: Notes
 
+      This method fits the FairOCT model using mixed-integer optimization while
+      considering fairness constraints. It sets up the optimization problem,
+      solves it, and stores the results.
 
 
 
@@ -689,27 +799,38 @@ Classes
    .. py:method:: predict(X)
 
       
-      Classify test points using the FairTree classifier
-      Parameters
-      ----------
-      X : array-like, shape (n_samples, n_features)
-          The input samples.
-      Returns
-      -------
-      y : ndarray, shape (n_samples,)
-          The label for each sample is the label of the closest sample
-          seen during fit.
+      Predict class labels for samples in X using the fitted FairOCT model.
+
+
+      :Parameters:
+
+          **X** : array-like of shape (n_samples, n_features)
+              The input samples for which to make predictions. Each feature should be binary (0 or 1).
+
+      :Returns:
+
+          **y_pred** : ndarray of shape (n_samples,)
+              The predicted class labels for each sample in X.
 
 
 
 
+      :Raises:
+
+          NotFittedError
+              If the model has not been fitted yet.
+
+          ValueError
+              If X contains non-binary values or has a different number of features than the training data.
 
 
 
 
+      .. rubric:: Notes
 
-
-
+      This method uses the fair decision tree learned during the fit process to classify new samples.
+      It traverses the tree for each sample in X, following the branching decisions until
+      reaching a leaf node, and returns the corresponding class prediction.
 
 
 

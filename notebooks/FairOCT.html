@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="RobustOCT Examples" href="RobustOCT.html" /><link rel="prev" title="FlowOCT Examples" href="FlowOCT.html" />
 
     <!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
-        <title>FairOCT Example - odtlearn 1.0.0 documentation</title>
+        <title>Fair Optimal Classification Trees - odtlearn 1.0.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -205,7 +205,7 @@
 <ul class="current">
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Example Notebooks</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -254,235 +254,124 @@
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_classification</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
-<span class="kn">from</span> <span class="nn">odtlearn.fair_oct</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">FairSPOCT</span><span class="p">,</span>
-    <span class="n">FairPEOCT</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
+<span class="kn">from</span> <span class="nn">odtlearn.fair_oct</span> <span class="kn">import</span> <span class="n">FairSPOCT</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.binarize</span> <span class="kn">import</span> <span class="n">Binarizer</span>
+<br/></pre></div>
 </div>
 </div>
-<section id="FairOCT-Example">
-<h1><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example<a class="headerlink" href="#FairOCT-Example" title="Permalink to this heading">#</a></h1>
-<p>First we generate the data for our example. The diagram within the code block visualizes the training data. We have two binary features (<code class="docutils literal notranslate"><span class="pre">X1</span></code>,<code class="docutils literal notranslate"><span class="pre">X2</span></code>) and two class labels (<code class="docutils literal notranslate"><span class="pre">+1</span></code> and <code class="docutils literal notranslate"><span class="pre">-1</span></code>). The protected feature is race, and it has two levels (<code class="docutils literal notranslate"><span class="pre">B</span></code> and <code class="docutils literal notranslate"><span class="pre">W</span></code>). In the visualization of the training data, we see that, for example, there are 7 instances with <code class="docutils literal notranslate"><span class="pre">(X1,X2)</span> <span class="pre">=</span> <span class="pre">(0,1)</span></code> and among these 7 instances, 5 of them are from race <code class="docutils literal notranslate"><span class="pre">W</span></code> and 2 of them from race <code class="docutils literal notranslate"><span class="pre">B</span></code>. We also show the breakdown
-of the instances based on their class label.</p>
+<section id="Fair-Optimal-Classification-Trees">
+<h1>Fair Optimal Classification Trees<a class="headerlink" href="#Fair-Optimal-Classification-Trees" title="Permalink to this heading">#</a></h1>
+<section id="Introduction">
+<h2>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this heading">#</a></h2>
+<p>The goal of this notebook is to demonstrate how users can utilize the FairOCT classes in the ODTlearn package to learn fair optimal classification trees. We will focus on the FairSPOCT class, which enforces statistical parity, and show how different parameter values affect the learned tree structure and fairness metrics. Additionally, we will introduce other fairness metrics available in the package.</p>
+</section>
+<section id="Loan-Approval-Dataset">
+<h2>Loan Approval Dataset<a class="headerlink" href="#Loan-Approval-Dataset" title="Permalink to this heading">#</a></h2>
+<p>In this example, we generate a synthetic dataset related to loan approval decisions. The dataset has 5 features: Age, Income, Credit_Score, Employment_Status, Education_Level, and Previous_Default. The target variable is Loan_Approval, which indicates whether a loan application is approved (1) or denied (0). We also include a protected attribute, Gender, to simulate a fairness-related scenario.</p>
+<p>When using the FairSPOCT class to learn fair optimal decision trees, there are several key parameters to consider:</p>
+<ol class="arabic simple">
+<li><p>depth: This parameter controls the maximum depth of the decision tree. A larger depth allows for more complex trees, but may lead to overfitting. It’s recommended to start with a small depth (e.g., 2 or 3) and gradually increase it while monitoring the performance on a validation set.</p></li>
+<li><p>_lambda: This is the regularization parameter that balances the trade-off between accuracy and tree complexity. A higher value of _lambda encourages simpler trees. It’s typically set to a small value (e.g., 0.01 or 0.1) to prevent overfitting. You can tune this parameter using cross-validation.</p></li>
+<li><p>fairness_bound: This parameter controls the strictness of the fairness constraint. A value of 1 means no fairness constraint is enforced, while smaller values enforce stricter fairness constraints. The choice of fairness_bound depends on the desired level of fairness and the trade-off with accuracy. It’s recommended to start with a value close to 1 and gradually decrease it while monitoring the fairness metrics and accuracy.</p></li>
+</ol>
+<p>The other parameters in the FairSPOCT class include:</p>
+<ul class="simple">
+<li><p>solver: The solver to use for the optimization problem. We use “gurobi” in this example, but you can also use “cbc” for the open-source COIN-OR Branch and Cut solver.</p></li>
+<li><p>positive_class: The value of the class label corresponding to the desired outcome. In this case, we set it to 1, representing loan approval.</p></li>
+<li><p>time_limit: The maximum time (in seconds) allowed for solving the optimization problem.</p></li>
+<li><p>num_threads: The number of threads the solver should use. If set to None, it will use all available threads.</p></li>
+<li><p>obj_mode: The objective to be used for learning the optimal decision tree. We set it to “acc” to optimize for accuracy, but you can also use “balance” for balanced accuracy or even “custom” to specify your own weights for each observation.</p></li>
+<li><p>verbose: If set to True, the solver will display verbose output during the optimization process.</p></li>
+</ul>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        X2                    |</span>
-<span class="sd">        |                     |</span>
-<span class="sd">        1    5W: 4(-) 1(+)    |     2W: 1(-) 1(+)</span>
-<span class="sd">        |    2B: 2(-)         |     5B: 3(-) 2(+)</span>
-<span class="sd">        |                     |</span>
-<span class="sd">        |                     |</span>
-<span class="sd">        |---------------------|------------------------</span>
-<span class="sd">        |                     |</span>
-<span class="sd">        0    4W: 3(-) 1(+)    |         3W: 1(-) 2(+)</span>
-<span class="sd">        |    1B:      1(+)    |         6B: 1(-) 5(+)</span>
-<span class="sd">        |                     |</span>
-<span class="sd">        |___________0_________|__________1_____________X1</span>
-<span class="sd">&#39;&#39;&#39;</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_informative</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                            <span class="n">n_redundant</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
+<span class="c1"># Create a DataFrame with feature names</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;Income&#39;</span><span class="p">,</span> <span class="s1">&#39;Credit_Score&#39;</span><span class="p">,</span> <span class="s1">&#39;Employment_Status&#39;</span><span class="p">,</span> <span class="s1">&#39;Education_Level&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Previous_Default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,],</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Loan_Approval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
 
-<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
-                <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
-                <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
-<span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span>
-                <span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">P</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Add a protected attribute (e.g., Gender)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;Gender&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;Male&#39;</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">])</span>
 
-<span class="n">l</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
-</pre></div>
+<span class="c1"># Split the data into training and testing sets</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">gender_train</span><span class="p">,</span> <span class="n">gender_test</span><span class="p">,</span> <span class="n">prev_default_train</span><span class="p">,</span> <span class="n">prev_default_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Loan_Approval&#39;</span><span class="p">,</span> <span class="s1">&#39;Previous_Default&#39;</span><span class="p">,</span> <span class="s1">&#39;Gender&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Loan_Approval&#39;</span><span class="p">],</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Gender&#39;</span><span class="p">],</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Previous_Default&#39;</span><span class="p">],</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
+<br/></pre></div>
 </div>
 </div>
-<p>Let’s investigate the following scenarios</p>
-<ul class="simple">
-<li><p>We evaluate statistical parity (SP) when we don’t enforce any fairness constraint</p></li>
-<li><p>We evaluate SP when we add SP constraint with fairbound 0.1</p></li>
-<li><p>We evaluate predictive equality (PE) when we don’t enforce any fairness constraint</p></li>
-<li><p>We evaluate PE when we add PE constraint with fairbound 0.04</p></li>
-</ul>
-<p>We add a helper function for displaying the results from each scenario</p>
-<section id="Evaluating-Statistical-Parity-without-Fairness-Constraint">
-<h2>Evaluating Statistical Parity without Fairness Constraint<a class="headerlink" href="#Evaluating-Statistical-Parity-without-Fairness-Constraint" title="Permalink to this heading">#</a></h2>
-<div class="nbinput docutils container">
+<p>Next we use the <code class="docutils literal notranslate"><span class="pre">Binarizer</span></code> class to transform the features to binary features. Note that many of these features would likely be encoded as categorical or binary features in real data, but for our toy example we will pretend they are all continuous features.</p>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_wo_SP</span> <span class="o">=</span> <span class="n">FairSPOCT</span><span class="p">(</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Binarize continuous features</span>
+<span class="n">feat_binarizer</span> <span class="o">=</span> <span class="n">Binarizer</span><span class="p">(</span>
+    <span class="n">real_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Age&#39;</span><span class="p">,</span> <span class="s1">&#39;Income&#39;</span><span class="p">,</span> <span class="s1">&#39;Credit_Score&#39;</span><span class="p">,</span> <span class="s1">&#39;Employment_Status&#39;</span><span class="p">,</span> <span class="s1">&#39;Education_Level&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">X_train_bin</span> <span class="o">=</span> <span class="n">feat_binarizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test_bin</span> <span class="o">=</span> <span class="n">feat_binarizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Learning-Fair-Optimal-Classification-Trees-with-Statistical-Parity">
+<h2>Learning Fair Optimal Classification Trees with Statistical Parity<a class="headerlink" href="#Learning-Fair-Optimal-Classification-Trees-with-Statistical-Parity" title="Permalink to this heading">#</a></h2>
+<p>Let’s investigate the effect of different fairness bound values on the learned tree structure and fairness metrics.</p>
+<section id="Initialize-FairSPOCT-classifier-with-a-less-strict-fairness-bound">
+<h3>Initialize FairSPOCT classifier with a less strict fairness bound<a class="headerlink" href="#Initialize-FairSPOCT-classifier-with-a-less-strict-fairness-bound" title="Permalink to this heading">#</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_less_strict</span> <span class="o">=</span> <span class="n">FairSPOCT</span><span class="p">(</span>
     <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
     <span class="n">positive_class</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">_lambda</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-    <span class="n">time_limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
     <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
     <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">fcl_wo_SP</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 <br/></pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
-Set parameter TimeLimit to value 100
-Set parameter NodeLimit to value 1073741824
-Set parameter SolutionLimit to value 1073741824
-Set parameter IntFeasTol to value 1e-06
-Set parameter Method to value 3
-Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
-
-CPU model: Apple M1 Pro
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
-
-Optimize a model with 1192 rows, 615 columns and 3124 nonzeros
-Model fingerprint: 0xe9eb7e11
-Variable types: 14 continuous, 601 integer (601 binary)
-Coefficient statistics:
-  Matrix range     [7e-02, 1e+00]
-  Objective range  [1e-02, 1e+00]
-  Bounds range     [1e+00, 1e+00]
-  RHS range        [1e+00, 1e+00]
-Found heuristic solution: objective 12.8700000
-Presolve removed 734 rows and 294 columns
-Presolve time: 0.01s
-Presolved: 458 rows, 321 columns, 1450 nonzeros
-Variable types: 14 continuous, 307 integer (305 binary)
-
-Root relaxation: objective 2.274000e+01, 309 iterations, 0.00 seconds (0.00 work units)
-
-    Nodes    |    Current Node    |     Objective Bounds      |     Work
- Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
-
-     0     0   22.74000    0   38   12.87000   22.74000  76.7%     -    0s
-H    0     0                      19.7700000   22.74000  15.0%     -    0s
-     0     0   21.76500    0   91   19.77000   21.76500  10.1%     -    0s
-H    0     0                      19.7800000   21.76500  10.0%     -    0s
-
-Cutting planes:
-  Gomory: 12
-  Clique: 186
-  MIR: 5
-  Flow cover: 1
-  Zero half: 4
-  RLT: 1
-
-Explored 1 nodes (491 simplex iterations) in 0.03 seconds (0.04 work units)
-Thread count was 8 (of 8 available processors)
-
-Solution count 3: 19.78 19.77 12.87
-
-Optimal solution found (tolerance 1.00e-04)
-Best objective 1.978000000000e+01, best bound 1.978000000000e+01, gap 0.0000%
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-FairSPOCT(solver=gurobi,depth=2,time_limit=100,num_threads=None,verbose=False)
-</pre></div></div>
-</div>
-<p>Next we calculate a summary for the fairness metric and the in-sample accuracy</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="n">fcl_wo_SP</span><span class="o">.</span><span class="n">calc_metric</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">fcl_wo_SP</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
-        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;(p,y)&quot;</span><span class="p">,</span> <span class="s2">&quot;P(Y=y|P=p)&quot;</span><span class="p">],</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-    (p,y)  P(Y=y|P=p)
-0  (0, 0)    0.785714
-1  (1, 0)    0.571429
-2  (0, 1)    0.214286
-3  (1, 1)    0.428571
+Academic license - for non-commercial use only - expires 2025-06-28
+Set parameter TimeLimit to value 60
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="s2">&quot;The in-sample accuracy is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fcl_wo_SP</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-The in-sample accuracy is 0.7142857142857143
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">fcl_wo_SP</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_FairOCT_9_0.png" src="../_images/notebooks_FairOCT_9_0.png" />
-</div>
-</div>
-</section>
-<section id="Evaluating-Statistical-Parity-with-Fairbound=0.1">
-<h2>Evaluating Statistical Parity with Fairbound=0.1<a class="headerlink" href="#Evaluating-Statistical-Parity-with-Fairbound=0.1" title="Permalink to this heading">#</a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_w_SP</span> <span class="o">=</span> <span class="n">FairSPOCT</span><span class="p">(</span>
-    <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
-    <span class="n">positive_class</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">_lambda</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-    <span class="n">time_limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-    <span class="n">fairness_bound</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-    <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
-    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">fcl_w_SP</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
-</pre></div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit the classifier</span>
+<span class="n">fcl_less_strict</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train_bin</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                    <span class="n">protect_feat</span><span class="o">=</span><span class="n">gender_train</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;Male&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="n">legit_factor</span><span class="o">=</span><span class="n">prev_default_train</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+<br/><br/></pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -490,9 +379,6 @@ The in-sample accuracy is 0.7142857142857143
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
-Set parameter TimeLimit to value 100
 Set parameter NodeLimit to value 1073741824
 Set parameter SolutionLimit to value 1073741824
 Set parameter IntFeasTol to value 1e-06
@@ -502,67 +388,155 @@ Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
 CPU model: Apple M1 Pro
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 
-Optimize a model with 1192 rows, 615 columns and 3124 nonzeros
-Model fingerprint: 0x0654e912
-Variable types: 14 continuous, 601 integer (601 binary)
+Optimize a model with 7232 rows, 3785 columns and 29354 nonzeros
+Model fingerprint: 0x74d1434c
+Variable types: 30 continuous, 3755 integer (3755 binary)
 Coefficient statistics:
-  Matrix range     [7e-02, 1e+00]
+  Matrix range     [2e-02, 1e+00]
   Objective range  [1e-02, 1e+00]
   Bounds range     [1e+00, 1e+00]
-  RHS range        [1e-01, 1e+00]
-Found heuristic solution: objective 12.8700000
-Presolve removed 734 rows and 294 columns
-Presolve time: 0.01s
-Presolved: 458 rows, 321 columns, 1450 nonzeros
-Variable types: 14 continuous, 307 integer (305 binary)
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 56.4300000
+Presolve removed 3367 rows and 968 columns
+Presolve time: 0.19s
+Presolved: 3865 rows, 2817 columns, 21981 nonzeros
+Variable types: 28 continuous, 2789 integer (2787 binary)
+Concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
 
-Root relaxation: objective 2.241667e+01, 401 iterations, 0.00 seconds (0.01 work units)
+Root barrier log...
+
+Ordering time: 0.06s
+
+Barrier statistics:
+ Dense cols : 31
+ AA&#39; NZ     : 9.482e+04
+ Factor NZ  : 3.109e+05 (roughly 5 MB of memory)
+ Factor Ops : 6.778e+07 (less than 1 second per iteration)
+ Threads    : 6
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   3.56909950e+03  3.58565472e+04  2.51e+02 2.35e-01  4.49e+01     0s
+   1   2.60802983e+03  3.16301390e+04  1.84e+02 1.38e+00  2.52e+01     0s
+   2   2.96532833e+02  1.88091169e+04  1.79e+01 1.30e-03  3.83e+00     0s
+
+Barrier performed 2 iterations in 0.28 seconds (0.36 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+
+Solved with primal simplex
+
+Root relaxation: objective 7.918167e+01, 2573 iterations, 0.09 seconds (0.21 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0   22.41667    0   77   12.87000   22.41667  74.2%     -    0s
-H    0     0                      14.8300000   22.41667  51.2%     -    0s
-H    0     0                      18.7800000   19.78500  5.35%     -    0s
-     0     0   19.78500    0   60   18.78000   19.78500  5.35%     -    0s
-     0     0   19.77500    0   62   18.78000   19.77500  5.30%     -    0s
-H    0     0                      18.7900000   19.77500  5.24%     -    0s
-H    0     1                      18.8000000   19.77500  5.19%     -    0s
+     0     0   79.18167    0  562   56.43000   79.18167  40.3%     -    0s
+     0     0   79.18070    0  623   56.43000   79.18070  40.3%     -    0s
+H    0     0                      62.3400000   79.18070  27.0%     -    0s
+     0     0   79.18036    0  627   62.34000   79.18036  27.0%     -    0s
+     0     0   79.17947    0  754   62.34000   79.17947  27.0%     -    0s
+     0     0   79.17947    0  762   62.34000   79.17947  27.0%     -    0s
+H    0     0                      69.2700000   79.17909  14.3%     -    0s
+H    0     0                      70.2600000   79.17909  12.7%     -    0s
+     0     0   79.17909    0  766   70.26000   79.17909  12.7%     -    0s
+     0     0   79.17909    0  751   70.26000   79.17909  12.7%     -    0s
+     0     0   79.17909    0  752   70.26000   79.17909  12.7%     -    0s
+     0     0   79.17909    0  752   70.26000   79.17909  12.7%     -    0s
+     0     0   79.17909    0  761   70.26000   79.17909  12.7%     -    0s
+     0     0   79.17909    0  734   70.26000   79.17909  12.7%     -    0s
+     0     0   79.17881    0  721   70.26000   79.17881  12.7%     -    0s
+     0     0   79.17870    0  728   70.26000   79.17870  12.7%     -    0s
+     0     0   79.17870    0  746   70.26000   79.17870  12.7%     -    0s
+     0     0   79.17870    0  717   70.26000   79.17870  12.7%     -    0s
+     0     2   79.17869    0  706   70.26000   79.17869  12.7%     -    0s
+H   31    34                      71.2500000   79.17795  11.1%   187    1s
+H   69    45                      72.2200000   79.17795  9.63%   149    1s
+H  141    85                      73.2000000   79.17795  8.17%   180    1s
+H  144    85                      74.1900000   79.17795  6.72%   180    1s
+H  240   136                      75.1800000   79.17795  5.32%   187    1s
+H  688   274                      75.1900000   79.16667  5.29%   151    2s
+  3597   576 infeasible   29        75.19000   77.66150  3.29%  98.7    5s
+* 3764   489              28      76.1600000   77.65583  1.96%  97.5    5s
 
 Cutting planes:
-  Gomory: 4
-  Clique: 120
-  RLT: 1
+  Gomory: 3
+  Cover: 26
+  MIR: 3
+  Inf proof: 3
+  Zero half: 20
 
-Explored 1 nodes (700 simplex iterations) in 0.04 seconds (0.04 work units)
+Explored 5582 nodes (514386 simplex iterations) in 5.97 seconds (10.05 work units)
 Thread count was 8 (of 8 available processors)
 
-Solution count 5: 18.8 18.79 18.78 ... 12.87
+Solution count 10: 76.16 75.19 75.18 ... 62.34
 
 Optimal solution found (tolerance 1.00e-04)
-Best objective 1.880000000000e+01, best bound 1.880000000000e+01, gap 0.0000%
+Best objective 7.616000000000e+01, best bound 7.616000000000e+01, gap 0.0000%
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-FairSPOCT(solver=gurobi,depth=2,time_limit=100,num_threads=None,verbose=False)
+FairSPOCT(solver=gurobi,depth=3,time_limit=60,num_threads=None,verbose=False)
 </pre></div></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">fit</span></code> function is used to train the fair optimal classification tree on the given dataset. It takes the following arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">X</span></code>: The feature matrix containing the predictive features for each instance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code>: The target vector indicating the class labels for each instance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">protect_feat</span></code>: The protected feature to be used for enforcing fairness constraints. In this example, we use the ‘Gender’ feature.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">legit_factor</span></code>: The legitimate factor that can justify differences in outcomes across protected groups. In this example, we use the ‘Number_of_Defaults’ feature as the legitimate factor.</p></li>
+</ul>
+<p>When choosing features for legitimate factors versus predictive features, consider the following:</p>
+<ul class="simple">
+<li><p>Legitimate factors should be variables that are deemed acceptable to influence the outcome, even if they may result in differences across protected groups. These factors should be based on domain knowledge and societal norms. For example, in a loan approval scenario, the number of previous loan defaults might be considered a legitimate factor.</p></li>
+<li><p>Predictive features, on the other hand, are variables that are used to make predictions but should not lead to unfair treatment of protected groups. These features should be carefully selected to avoid perpetuating biases or discrimination. For instance, while ‘Age’ and ‘Income’ might be predictive of loan approval, they should not be used in a way that unfairly disadvantages certain protected groups.</p></li>
+</ul>
+<p>It is essential to engage with domain experts, stakeholders, and affected communities to determine which features should be considered legitimate factors and which should be used solely for prediction purposes. This helps ensure that the fair optimal classification tree aligns with the specific fairness requirements and societal expectations of the problem at hand.</p>
+<p>In addition to looking at the progress log, we can check optimization statistics by looking at properties such as <code class="docutils literal notranslate"><span class="pre">optim_gap</span></code> and <code class="docutils literal notranslate"><span class="pre">num_solutions</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_less_strict</span><span class="o">.</span><span class="n">optim_gap</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.0
+</pre></div></div>
+</div>
+<p>Next we calculate the fairness metric and accuracy on the test data.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sp_metric</span> <span class="o">=</span> <span class="n">fcl_less_strict</span><span class="o">.</span><span class="n">calc_metric</span><span class="p">(</span>
+        <span class="n">protect_feat</span><span class="o">=</span><span class="n">gender_test</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;Male&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">y</span><span class="o">=</span> <span class="n">fcl_less_strict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_bin</span><span class="p">))</span>
+</pre></div>
+</div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="n">fcl_w_SP</span><span class="o">.</span><span class="n">calc_metric</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">fcl_w_SP</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
-        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;(p,y)&quot;</span><span class="p">,</span> <span class="s2">&quot;P(Y=y|P=p)&quot;</span><span class="p">],</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Statistical Parity on Testing Set (Less Strict Fairness Bound):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">sp_metric</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;(p,y)&quot;</span><span class="p">,</span> <span class="s2">&quot;P(Y=y|P=p)&quot;</span><span class="p">],</span>
+<span class="p">))</span>
+<br/></pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -570,20 +544,20 @@ FairSPOCT(solver=gurobi,depth=2,time_limit=100,num_threads=None,verbose=False)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
+Statistical Parity on Testing Set (Less Strict Fairness Bound):
     (p,y)  P(Y=y|P=p)
-0  (0, 1)         0.5
-1  (1, 1)         0.5
-2  (0, 0)         0.5
-3  (1, 0)         0.5
+0  (0, 0)    0.928571
+1  (1, 0)    0.500000
+2  (0, 1)    0.071429
+3  (1, 1)    0.500000
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="s2">&quot;The in-sample accuracy is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fcl_w_SP</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_acc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">fcl_less_strict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_bin</span><span class="p">)</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test Accuracy (Less Strict Fairness Bound): </span><span class="si">{</span><span class="n">test_acc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -592,182 +566,74 @@ FairSPOCT(solver=gurobi,depth=2,time_limit=100,num_threads=None,verbose=False)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-The in-sample accuracy is 0.6785714285714286
+Test Accuracy (Less Strict Fairness Bound): 0.850
 </pre></div></div>
 </div>
+<p>We can also plot the learned decision tree. Notice that we can pass shorter versions of the feature names to the <code class="docutils literal notranslate"><span class="pre">plot_tree</span></code> method to make the plot easier to read. We can also adjust the distance between levels of the tree using the <code class="docutils literal notranslate"><span class="pre">distance</span></code> argument.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">fcl_w_SP</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">fcl_less_strict</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                          <span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Age_0&#39;</span><span class="p">,</span> <span class="s1">&#39;Age_1&#39;</span><span class="p">,</span> <span class="s1">&#39;Age_2&#39;</span><span class="p">,</span> <span class="s1">&#39;Age_3&#39;</span><span class="p">,</span> <span class="s1">&#39;Income_0&#39;</span><span class="p">,</span> <span class="s1">&#39;Income_1&#39;</span><span class="p">,</span> <span class="s1">&#39;Income_2&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Income_3&#39;</span><span class="p">,</span> <span class="s1">&#39;C_0&#39;</span><span class="p">,</span> <span class="s1">&#39;C_1&#39;</span><span class="p">,</span> <span class="s1">&#39;C_2&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;C_3&#39;</span><span class="p">,</span> <span class="s1">&#39;Emp_0&#39;</span><span class="p">,</span> <span class="s1">&#39;Emp_1&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Emp_2&#39;</span><span class="p">,</span> <span class="s1">&#39;Emp_3&#39;</span><span class="p">,</span> <span class="s1">&#39;Edu_0&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Edu_1&#39;</span><span class="p">,</span> <span class="s1">&#39;Edu_2&#39;</span><span class="p">,</span> <span class="s1">&#39;Edu_3&#39;</span><span class="p">],</span>
+         <span class="n">distance</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
+<br/></pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FairOCT_14_0.png" src="../_images/notebooks_FairOCT_14_0.png" />
+<img alt="../_images/notebooks_FairOCT_18_0.png" src="../_images/notebooks_FairOCT_18_0.png" />
 </div>
 </div>
 </section>
-<section id="Evaluating-PE-Without-Fairness-Constraint">
-<h2>Evaluating PE Without Fairness Constraint<a class="headerlink" href="#Evaluating-PE-Without-Fairness-Constraint" title="Permalink to this heading">#</a></h2>
+<section id="Initialize-FairSPOCT-classifier-with-a-stricter-fairness-bound">
+<h3>Initialize FairSPOCT classifier with a stricter fairness bound<a class="headerlink" href="#Initialize-FairSPOCT-classifier-with-a-stricter-fairness-bound" title="Permalink to this heading">#</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_wo_PE</span> <span class="o">=</span> <span class="n">FairPEOCT</span><span class="p">(</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_strict</span> <span class="o">=</span> <span class="n">FairSPOCT</span><span class="p">(</span>
     <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
     <span class="n">positive_class</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">_lambda</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-    <span class="n">time_limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-    <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+    <span class="n">fairness_bound</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
     <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
     <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">fcl_wo_PE</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
 <br/></pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
-Set parameter TimeLimit to value 100
-Set parameter NodeLimit to value 1073741824
-Set parameter SolutionLimit to value 1073741824
-Set parameter IntFeasTol to value 1e-06
-Set parameter Method to value 3
-Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
-
-CPU model: Apple M1 Pro
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
-
-Optimize a model with 1192 rows, 615 columns and 2942 nonzeros
-Model fingerprint: 0x6c429b62
-Variable types: 14 continuous, 601 integer (601 binary)
-Coefficient statistics:
-  Matrix range     [1e-01, 1e+00]
-  Objective range  [1e-02, 1e+00]
-  Bounds range     [1e+00, 1e+00]
-  RHS range        [1e+00, 1e+00]
-Found heuristic solution: objective 12.8700000
-Presolve removed 1192 rows and 615 columns
-Presolve time: 0.01s
-Presolve: All rows and columns removed
-
-Explored 0 nodes (0 simplex iterations) in 0.01 seconds (0.01 work units)
-Thread count was 1 (of 8 available processors)
-
-Solution count 2: 19.78 12.87
-
-Optimal solution found (tolerance 1.00e-04)
-Best objective 1.978000000000e+01, best bound 1.978000000000e+01, gap 0.0000%
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-FairPEOCT(solver=gurobi,depth=2,time_limit=100,num_threads=None,verbose=False)
+Academic license - for non-commercial use only - expires 2025-06-28
+Set parameter TimeLimit to value 60
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="n">fcl_wo_PE</span><span class="o">.</span><span class="n">calc_metric</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fcl_wo_PE</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
-        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;(p, y, y_pred)&quot;</span><span class="p">,</span> <span class="s2">&quot;P(Y_pred=y_pred|P=p, Y=y)&quot;</span><span class="p">],</span>
-    <span class="p">)</span>
-<span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit the classifier</span>
+<span class="n">fcl_strict</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train_bin</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                    <span class="n">protect_feat</span><span class="o">=</span><span class="n">gender_train</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;Male&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="n">legit_factor</span><span class="o">=</span><span class="n">prev_default_train</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-  (p, y, y_pred)  P(Y_pred=y_pred|P=p, Y=y)
-0      (0, 0, 0)                   0.888889
-1      (1, 0, 0)                   0.833333
-2      (0, 0, 1)                   0.111111
-3      (1, 0, 1)                   0.166667
-4      (0, 1, 0)                   0.600000
-5      (1, 1, 0)                   0.375000
-6      (0, 1, 1)                   0.400000
-7      (1, 1, 1)                   0.625000
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="s2">&quot;The in-sample accuracy is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fcl_wo_PE</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-The in-sample accuracy is 0.7142857142857143
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">fcl_wo_PE</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_FairOCT_19_0.png" src="../_images/notebooks_FairOCT_19_0.png" />
-</div>
-</div>
-</section>
-<section id="Evaluating-PE-with-Fairbound=0.04">
-<h2>Evaluating PE with Fairbound=0.04<a class="headerlink" href="#Evaluating-PE-with-Fairbound=0.04" title="Permalink to this heading">#</a></h2>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_w_PE</span> <span class="o">=</span> <span class="n">FairPEOCT</span><span class="p">(</span>
-    <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
-    <span class="n">positive_class</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-    <span class="n">_lambda</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
-    <span class="n">time_limit</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-    <span class="n">fairness_bound</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span>
-    <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
-    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">fcl_w_PE</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
-<br/></pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -775,9 +641,6 @@ The in-sample accuracy is 0.7142857142857143
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
-Set parameter TimeLimit to value 100
 Set parameter NodeLimit to value 1073741824
 Set parameter SolutionLimit to value 1073741824
 Set parameter IntFeasTol to value 1e-06
@@ -787,64 +650,164 @@ Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
 CPU model: Apple M1 Pro
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 
-Optimize a model with 1192 rows, 615 columns and 2942 nonzeros
-Model fingerprint: 0x244097c5
-Variable types: 14 continuous, 601 integer (601 binary)
+Optimize a model with 7232 rows, 3785 columns and 29354 nonzeros
+Model fingerprint: 0x7a7d351e
+Variable types: 30 continuous, 3755 integer (3755 binary)
 Coefficient statistics:
-  Matrix range     [1e-01, 1e+00]
+  Matrix range     [2e-02, 1e+00]
   Objective range  [1e-02, 1e+00]
   Bounds range     [1e+00, 1e+00]
-  RHS range        [4e-02, 1e+00]
-Found heuristic solution: objective 12.8700000
-Presolve removed 1181 rows and 593 columns
-Presolve time: 0.01s
-Presolved: 11 rows, 22 columns, 61 nonzeros
-Found heuristic solution: objective 14.8500000
-Variable types: 0 continuous, 22 integer (22 binary)
+  RHS range        [5e-02, 1e+00]
+Found heuristic solution: objective 56.4300000
+Presolve removed 3367 rows and 968 columns
+Presolve time: 0.20s
+Presolved: 3865 rows, 2817 columns, 21981 nonzeros
+Variable types: 28 continuous, 2789 integer (2787 binary)
+Concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
 
-Root relaxation: objective 1.961667e+01, 12 iterations, 0.00 seconds (0.00 work units)
+Root barrier log...
+
+Ordering time: 0.06s
+
+Barrier statistics:
+ Dense cols : 31
+ AA&#39; NZ     : 9.482e+04
+ Factor NZ  : 3.109e+05 (roughly 5 MB of memory)
+ Factor Ops : 6.778e+07 (less than 1 second per iteration)
+ Threads    : 6
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   3.56897422e+03  3.58312641e+04  2.51e+02 2.35e-01  4.49e+01     0s
+   1   2.60794849e+03  3.16134346e+04  1.84e+02 1.38e+00  2.52e+01     0s
+   2   2.96551428e+02  1.88011056e+04  1.79e+01 8.11e-04  3.83e+00     0s
+   3   1.05663007e+02  5.30675595e+03  4.41e+00 1.26e-03  8.77e-01     0s
+   4   4.58629616e+01  8.29251644e+02  1.52e-01 4.53e-04  9.13e-02     0s
+   5   5.50336865e+01  1.43154251e+02  3.47e-03 5.50e-05  9.83e-03     0s
+   6   7.07618020e+01  1.01799613e+02  6.51e-04 1.57e-05  3.46e-03     0s
+   7   7.71322505e+01  8.18862169e+01  1.46e-04 2.40e-06  5.31e-04     0s
+   8   7.91254856e+01  7.92213777e+01  1.65e-06 1.45e-07  1.07e-05     0s
+   9   7.91623691e+01  7.92031912e+01  3.24e-07 7.70e-08  4.55e-06     0s
+  10   7.91746197e+01  7.91934019e+01  8.97e-08 3.95e-08  2.09e-06     0s
+  11   7.91797439e+01  7.91859055e+01  1.84e-08 1.34e-08  6.88e-07     0s
+  12   7.91812351e+01  7.91835130e+01  3.08e-09 5.84e-09  2.54e-07     0s
+  13   7.91814581e+01  7.91818461e+01  1.56e-09 5.12e-10  4.36e-08     0s
+  14   7.91816584e+01  7.91816746e+01  1.41e-10 2.60e-11  1.81e-09     0s
+  15   7.91816667e+01  7.91816667e+01  4.68e-12 3.14e-13  1.82e-12     0s
+
+Barrier solved model in 15 iterations and 0.33 seconds (0.42 work units)
+Optimal objective 7.91816667e+01
+
+
+Solved with barrier
+
+Root relaxation: objective 7.918167e+01, 322 iterations, 0.13 seconds (0.14 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0   19.61667    0    3   14.85000   19.61667  32.1%     -    0s
-     0     0   19.61500    0    1   14.85000   19.61500  32.1%     -    0s
-     0     0     cutoff    0        14.85000   14.85000  0.00%     -    0s
+     0     0   79.18167    0  708   56.43000   79.18167  40.3%     -    0s
+     0     0   79.18130    0  694   56.43000   79.18130  40.3%     -    0s
+     0     0   79.18130    0  664   56.43000   79.18130  40.3%     -    0s
+     0     0   79.18000    0  762   56.43000   79.18000  40.3%     -    0s
+     0     0   79.18000    0  755   56.43000   79.18000  40.3%     -    0s
+     0     0   79.18000    0  771   56.43000   79.18000  40.3%     -    0s
+     0     0   79.18000    0  771   56.43000   79.18000  40.3%     -    0s
+H    0     0                      60.3600000   79.18000  31.2%     -    0s
+     0     0   79.18000    0  767   60.36000   79.18000  31.2%     -    0s
+     0     0   79.17882    0  757   60.36000   79.17882  31.2%     -    0s
+H    0     2                      73.2000000   79.17838  8.17%     -    0s
+     0     2   79.17838    0  757   73.20000   79.17838  8.17%     -    0s
+H   79    47                      75.1800000   79.17838  5.32%   209    1s
+H  266    99                      75.1900000   79.17838  5.30%   164    2s
+  1831   427   77.84500   16  295   75.19000   78.19003  3.99%   124    5s
+* 4038   448              32      76.1600000   77.16000  1.31%   104    6s
 
 Cutting planes:
-  Gomory: 1
-  Cover: 1
-  GUB cover: 1
+  Gomory: 6
+  Cover: 21
+  Zero half: 19
 
-Explored 1 nodes (17 simplex iterations) in 0.01 seconds (0.01 work units)
+Explored 5421 nodes (516269 simplex iterations) in 6.90 seconds (11.48 work units)
 Thread count was 8 (of 8 available processors)
 
-Solution count 2: 14.85 12.87
+Solution count 6: 76.16 75.19 75.18 ... 56.43
 
 Optimal solution found (tolerance 1.00e-04)
-Best objective 1.485000000000e+01, best bound 1.485000000000e+01, gap 0.0000%
+Best objective 7.616000000000e+01, best bound 7.616000000000e+01, gap 0.0000%
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-FairPEOCT(solver=gurobi,depth=2,time_limit=100,num_threads=None,verbose=False)
+FairSPOCT(solver=gurobi,depth=3,time_limit=60,num_threads=None,verbose=False)
+</pre></div></div>
+</div>
+<p>Checking the <code class="docutils literal notranslate"><span class="pre">optim_gap</span></code> again:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_strict</span><span class="o">.</span><span class="n">optim_gap</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.0
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sp_metric</span> <span class="o">=</span> <span class="n">fcl_strict</span><span class="o">.</span><span class="n">calc_metric</span><span class="p">(</span>
+        <span class="n">protect_feat</span><span class="o">=</span><span class="n">gender_test</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;Male&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">y</span><span class="o">=</span> <span class="n">fcl_less_strict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_bin</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Evaluate fairness and accuracy on the testing set</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Statistical Parity on Testing Set (Stricter Fairness Bound):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="n">sp_metric</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;(p,y)&quot;</span><span class="p">,</span> <span class="s2">&quot;P(Y=y|P=p)&quot;</span><span class="p">],</span>
+<span class="p">))</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Statistical Parity on Testing Set (Stricter Fairness Bound):
+    (p,y)  P(Y=y|P=p)
+0  (0, 0)    0.928571
+1  (1, 0)    0.500000
+2  (0, 1)    0.071429
+3  (1, 1)    0.500000
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="n">fcl_w_PE</span><span class="o">.</span><span class="n">calc_metric</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fcl_w_PE</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span>
-        <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;(p, y, y_pred)&quot;</span><span class="p">,</span> <span class="s2">&quot;P(Y_pred=y_pred|P=p, Y=y)&quot;</span><span class="p">],</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test_acc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">fcl_strict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_bin</span><span class="p">)</span> <span class="o">==</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test Accuracy (Stricter Fairness Bound): </span><span class="si">{</span><span class="n">test_acc</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<br/></pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -852,52 +815,94 @@ FairPEOCT(solver=gurobi,depth=2,time_limit=100,num_threads=None,verbose=False)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-  (p, y, y_pred)  P(Y_pred=y_pred|P=p, Y=y)
-0      (0, 0, 0)                        1.0
-1      (1, 0, 0)                        1.0
-2      (0, 0, 1)                        0.0
-3      (1, 0, 1)                        0.0
-4      (0, 1, 0)                        1.0
-5      (1, 1, 0)                        1.0
-6      (0, 1, 1)                        0.0
-7      (1, 1, 1)                        0.0
+Test Accuracy (Stricter Fairness Bound): 0.850
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
-    <span class="s2">&quot;The in-sample accuracy is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fcl_w_PE</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-The in-sample accuracy is 0.5357142857142857
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">))</span>
-<span class="n">fcl_w_PE</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">fcl_strict</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+                          <span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Age_0&#39;</span><span class="p">,</span> <span class="s1">&#39;Age_1&#39;</span><span class="p">,</span> <span class="s1">&#39;Age_2&#39;</span><span class="p">,</span> <span class="s1">&#39;Age_3&#39;</span><span class="p">,</span> <span class="s1">&#39;Income_0&#39;</span><span class="p">,</span> <span class="s1">&#39;Income_1&#39;</span><span class="p">,</span> <span class="s1">&#39;Income_2&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Income_3&#39;</span><span class="p">,</span> <span class="s1">&#39;C_0&#39;</span><span class="p">,</span> <span class="s1">&#39;C_1&#39;</span><span class="p">,</span> <span class="s1">&#39;C_2&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;C_3&#39;</span><span class="p">,</span> <span class="s1">&#39;Emp_0&#39;</span><span class="p">,</span> <span class="s1">&#39;Emp_1&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Emp_2&#39;</span><span class="p">,</span> <span class="s1">&#39;Emp_3&#39;</span><span class="p">,</span> <span class="s1">&#39;Edu_0&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Edu_1&#39;</span><span class="p">,</span> <span class="s1">&#39;Edu_2&#39;</span><span class="p">,</span> <span class="s1">&#39;Edu_3&#39;</span><span class="p">],</span>
+         <span class="n">distance</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
+<br/></pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FairOCT_24_0.png" src="../_images/notebooks_FairOCT_24_0.png" />
+<img alt="../_images/notebooks_FairOCT_27_0.png" src="../_images/notebooks_FairOCT_27_0.png" />
 </div>
 </div>
+<p>Comparing the results of the two FairSPOCT classifiers with different fairness bound values, we can observe the following:</p>
+<ol class="arabic simple">
+<li><p>The classifier with a less strict fairness bound (0.2) allows for a larger difference in the probability of loan approval between males and females. The statistical parity metric shows that the probability of loan approval is higher for one gender group compared to the other.</p></li>
+<li><p>In contrast, the classifier with a stricter fairness bound (0.05) enforces a much smaller difference in the probability of loan approval between males and females. The statistical parity metric is closer to being equal for both gender groups.</p></li>
+<li><p>The decision trees learned by the two classifiers may differ in structure and the features used for splitting, as the stricter fairness bound constrains the tree learning process to ensure a more balanced outcome across the protected groups.</p></li>
+<li><p>The accuracy of the classifier with a stricter fairness bound may be slightly lower compared to the classifier with a less strict fairness bound. This is because enforcing a stricter fairness constraint can limit the classifier’s ability to optimize for accuracy.</p></li>
+</ol>
+<p>These observations demonstrate the trade-off between fairness and accuracy when using fairness constraints in decision tree learning. By adjusting the fairness bound value, users can control the level of fairness enforced in the learned tree, while considering the potential impact on accuracy.</p>
+</section>
+</section>
+<section id="Additional-Supported-Fairness-Metrics">
+<h2>Additional Supported Fairness Metrics<a class="headerlink" href="#Additional-Supported-Fairness-Metrics" title="Permalink to this heading">#</a></h2>
+<p>Now that we have seen how the FairSPOCT class can be used to learn fair optimal classification trees and the impact of the fairness bound on the learned trees and fairness metrics, let’s explore the other fairness metrics available in the ODTlearn package.</p>
+<p>In the previous sections, we focused on using the FairSPOCT class to learn fair optimal classification trees with statistical parity constraints. However, the ODTlearn package provides implementations for several other fairness metrics, each capturing different aspects of fairness. These include:</p>
+<ul class="simple">
+<li><p>FairCSPOCT: Enforces conditional statistical parity</p></li>
+<li><p>FairPEOCT: Enforces predictive equality</p></li>
+<li><p>FairEOppOCT: Enforces equal opportunity</p></li>
+<li><p>FairEOddsOCT: Enforces equalized odds</p></li>
+</ul>
+<p>Each of these classes follows a similar interface to FairSPOCT, with the main difference being the fairness metric they enforce.</p>
+<p>Here’s an overview of each fairness metric and how it is calculated:</p>
+<ol class="arabic simple">
+<li><p>Statistical Parity (FairSPOCT):</p>
+<ul class="simple">
+<li><p>Definition: A classifier satisfies statistical parity if the probability of receiving a positive outcome is equal across all protected groups.</p></li>
+<li><p>Equation: <img class="math" src="../_images/math/d3b5e3e49096b2021e324113f57a826917cb364b.png" alt="P(\hat{Y} = 1 | A = a) = P(\hat{Y} = 1 | A = b), \forall a, b"/></p></li>
+<li><p><img class="math" src="../_images/math/e17cbfdc13f71a51b1bcc3eaf01617769969441c.png" alt="\hat{Y}"/> is the predicted outcome, and <img class="math" src="../_images/math/211284f68205c3e66773eaf026f32a0acdd3dfb3.png" alt="A"/> is the protected attribute.</p></li>
+</ul>
+</li>
+<li><p>Conditional Statistical Parity (FairCSPOCT):</p>
+<ul class="simple">
+<li><p>Definition: A classifier satisfies conditional statistical parity if the probability of receiving a positive outcome is equal across all protected groups, conditioned on a set of legitimate factors.</p></li>
+<li><p>Equation: <img class="math" src="../_images/math/57944d0089c92dd52cd8a5e8a12a45944c2ec4b4.png" alt="P(\hat{Y} = 1 | A = a, L = l) = P(\hat{Y} = 1 | A = b, L = l), \forall a, b, l"/></p></li>
+<li><p><img class="math" src="../_images/math/e17cbfdc13f71a51b1bcc3eaf01617769969441c.png" alt="\hat{Y}"/> is the predicted outcome, <img class="math" src="../_images/math/211284f68205c3e66773eaf026f32a0acdd3dfb3.png" alt="A"/> is the protected attribute, and <img class="math" src="../_images/math/19eef1966f7c545af3ac8c0fa486974d873e3c65.png" alt="L"/> represents the legitimate factors.</p></li>
+</ul>
+</li>
+<li><p>Predictive Equality (FairPEOCT):</p>
+<ul class="simple">
+<li><p>Definition: A classifier satisfies predictive equality if the false positive rates are equal across all protected groups.</p></li>
+<li><p>Equation: <img class="math" src="../_images/math/c4831094d8fff9286bfefdad2000caa38e0474f0.png" alt="P(\hat{Y} = 1 | Y = 0, A = a) = P(\hat{Y} = 1 | Y = 0, A = b), \forall a, b"/></p></li>
+<li><p><img class="math" src="../_images/math/e17cbfdc13f71a51b1bcc3eaf01617769969441c.png" alt="\hat{Y}"/> is the predicted outcome, <img class="math" src="../_images/math/7daf0d4815e763eb90f0d5f1dc406f668c1e21db.png" alt="Y"/> is the true outcome, and <img class="math" src="../_images/math/211284f68205c3e66773eaf026f32a0acdd3dfb3.png" alt="A"/> is the protected attribute.</p></li>
+</ul>
+</li>
+<li><p>Equal Opportunity (FairEOppOCT):</p>
+<ul class="simple">
+<li><p>Definition: A classifier satisfies equal opportunity if the true positive rates are equal across all protected groups.</p></li>
+<li><p>Equation: <img class="math" src="../_images/math/7f93377d2c16556d74f2811d0fff626396197a76.png" alt="P(\hat{Y} = 1 | Y = 1, A = a) = P(\hat{Y} = 1 | Y = 1, A = b), \forall a, b"/></p></li>
+<li><p><img class="math" src="../_images/math/e17cbfdc13f71a51b1bcc3eaf01617769969441c.png" alt="\hat{Y}"/> is the predicted outcome, <img class="math" src="../_images/math/7daf0d4815e763eb90f0d5f1dc406f668c1e21db.png" alt="Y"/> is the true outcome, and <img class="math" src="../_images/math/211284f68205c3e66773eaf026f32a0acdd3dfb3.png" alt="A"/> is the protected attribute.</p></li>
+</ul>
+</li>
+<li><p>Equalized Odds (FairEOddsOCT):</p>
+<ul class="simple">
+<li><p>Definition: A classifier satisfies equalized odds if both the true positive rates and false positive rates are equal across all protected groups.</p></li>
+<li><p>Equation: <img class="math" src="../_images/math/5c7123a1960d95a3fa63ec337f8baacdb7276d89.png" alt="P(\hat{Y} = 1 | Y = y, A = a) = P(\hat{Y} = 1 | Y = y, A = b), \forall a, b, y \in \{0, 1\}"/></p></li>
+<li><p><img class="math" src="../_images/math/e17cbfdc13f71a51b1bcc3eaf01617769969441c.png" alt="\hat{Y}"/> is the predicted outcome, <img class="math" src="../_images/math/7daf0d4815e763eb90f0d5f1dc406f668c1e21db.png" alt="Y"/> is the true outcome, and <img class="math" src="../_images/math/211284f68205c3e66773eaf026f32a0acdd3dfb3.png" alt="A"/> is the protected attribute.</p></li>
+</ul>
+</li>
+</ol>
+<p>When applying fairness constraints to a decision tree, it is crucial to carefully choose a fairness metric that aligns with the specific use case and the societal or legal requirements of the problem at hand. Different fairness metrics capture different aspects of fairness and may lead to different trade-offs between fairness and accuracy.</p>
+<p>For example, if the goal is to ensure that the overall proportion of positive outcomes is similar across protected groups, statistical parity (FairSPOCT) would be an appropriate choice. However, if the focus is on ensuring that the classifier makes similar mistakes across protected groups, predictive equality (FairPEOCT) might be more suitable.</p>
+<p>It is important to note that achieving fairness in machine learning is a complex and ongoing process that requires careful consideration of the societal context, potential biases in the data, and the limitations of the chosen fairness metric. Engaging with domain experts, stakeholders, and affected communities is essential to understand the specific fairness requirements of the problem and select the most appropriate fairness metric or combination of metrics.</p>
 </section>
 </section>
 
@@ -960,11 +965,15 @@ The in-sample accuracy is 0.5357142857142857
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a><ul>
-<li><a class="reference internal" href="#Evaluating-Statistical-Parity-without-Fairness-Constraint">Evaluating Statistical Parity without Fairness Constraint</a></li>
-<li><a class="reference internal" href="#Evaluating-Statistical-Parity-with-Fairbound=0.1">Evaluating Statistical Parity with Fairbound=0.1</a></li>
-<li><a class="reference internal" href="#Evaluating-PE-Without-Fairness-Constraint">Evaluating PE Without Fairness Constraint</a></li>
-<li><a class="reference internal" href="#Evaluating-PE-with-Fairbound=0.04">Evaluating PE with Fairbound=0.04</a></li>
+<li><a class="reference internal" href="#">Fair Optimal Classification Trees</a><ul>
+<li><a class="reference internal" href="#Introduction">Introduction</a></li>
+<li><a class="reference internal" href="#Loan-Approval-Dataset">Loan Approval Dataset</a></li>
+<li><a class="reference internal" href="#Learning-Fair-Optimal-Classification-Trees-with-Statistical-Parity">Learning Fair Optimal Classification Trees with Statistical Parity</a><ul>
+<li><a class="reference internal" href="#Initialize-FairSPOCT-classifier-with-a-less-strict-fairness-bound">Initialize FairSPOCT classifier with a less strict fairness bound</a></li>
+<li><a class="reference internal" href="#Initialize-FairSPOCT-classifier-with-a-stricter-fairness-bound">Initialize FairSPOCT classifier with a stricter fairness bound</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Additional-Supported-Fairness-Metrics">Additional Supported Fairness Metrics</a></li>
 </ul>
 </li>
 </ul>

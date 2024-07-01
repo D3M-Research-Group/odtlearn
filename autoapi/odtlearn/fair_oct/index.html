@@ -204,7 +204,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -281,7 +281,7 @@
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="odtlearn.fair_oct.FairConstrainedOCT">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.fair_oct.</span></span><span class="sig-name descname"><span class="pre">FairConstrainedOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairConstrainedOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairConstrainedOCT" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.fair_oct.</span></span><span class="sig-name descname"><span class="pre">FairConstrainedOCT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positive_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_lambda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fairness_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairConstrainedOCT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairConstrainedOCT" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../constrained_oct/index.html#odtlearn.constrained_oct.ConstrainedOCT" title="odtlearn.constrained_oct.ConstrainedOCT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">odtlearn.constrained_oct.ConstrainedOCT</span></code></a></p>
 <p>Base class for fair constrained optimal classification trees.</p>
 <p>This class extends the <a class="reference internal" href="../constrained_oct/index.html#odtlearn.constrained_oct.ConstrainedOCT" title="odtlearn.constrained_oct.ConstrainedOCT"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ConstrainedOCT</span></code></a> class
@@ -293,7 +293,15 @@ constraints, extracting metadata from the input data, and defining the objective
 <dd class="field-odd"><dl class="simple">
 <dt><strong>solver</strong><span class="classifier">str</span></dt><dd><p>The name of the solver to use for solving the MIP problem.</p>
 </dd>
+<dt><strong>positive_class</strong><span class="classifier">int</span></dt><dd><p>The value of the class label which is corresponding to the desired outcome</p>
+</dd>
 <dt><strong>_lambda</strong><span class="classifier">float</span></dt><dd><p>The regularization parameter in the objective. Must be in the interval [0, 1).</p>
+</dd>
+<dt><strong>obj_mode</strong><span class="classifier">{‘acc’, ‘balance’, ‘custom’}, optional (default=’acc’)</span></dt><dd><p>The objective mode to use.
+‘acc’ for accuracy, ‘balance’ for balanced accuracy, ‘custom’ for user-defined weights.</p>
+</dd>
+<dt><strong>fairness_bound: float (0,1], default=1</strong></dt><dd><p>The bound of the fairness constraint. The smaller the value the stricter
+the fairness constraint and 1 corresponds to no fairness constraint enforced</p>
 </dd>
 <dt><strong>depth</strong><span class="classifier">int</span></dt><dd><p>The maximum depth of the tree.</p>
 </dd>
@@ -362,17 +370,24 @@ used for fitting the model.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.fair_oct.FairConstrainedOCT.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legit_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairConstrainedOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairConstrainedOCT.fit" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legit_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairConstrainedOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairConstrainedOCT.fit" title="Permalink to this definition">#</a></dt>
+<dd><p>Fit the Fair Constrained Optimal Classification Tree (FairConstrainedOCT) model to the given training data.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">{array-like, sparse matrix}, shape (n_samples, n_features)</span></dt><dd><p>The training input samples.</p>
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>The training input samples. Each feature should be binary (0 or 1).</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The target values (class labels in classification).</p>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The target values (class labels) for the training samples.</p>
 </dd>
-<dt><strong>protect_feat</strong><span class="classifier">array-like, shape (n_samples,1) or (n_samples, n_p)</span></dt><dd><p>The protected feature columns (Race, gender, etc); Can have one or more columns</p>
+<dt><strong>protect_feat</strong><span class="classifier">array-like of shape (n_samples, n_protected_features)</span></dt><dd><p>The protected feature columns (e.g., race, gender). Can have one or more columns.
+Each protected feature should be binary (0 or 1).</p>
 </dd>
-<dt><strong>legit_factor</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The legitimate factor column(e.g., prior number of criminal acts)</p>
+<dt><strong>legit_factor</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The legitimate factor column (e.g., prior number of criminal acts).
+This should be a numeric column.</p>
+</dd>
+<dt><strong>weights</strong><span class="classifier">array-like of shape (n_samples,), optional (default=None)</span></dt><dd><p>Sample weights. If None, then samples are equally weighted when obj_mode is ‘acc’,
+or weights are automatically calculated when obj_mode is ‘balance’.
+Must be provided when obj_mode is ‘custom’.</p>
 </dd>
 </dl>
 </dd>
@@ -382,28 +397,92 @@ used for fitting the model.</p>
 </dd>
 </dl>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>ValueError</dt><dd><p>If X or protect_feat contains non-binary values, or if inputs have inconsistent numbers of samples.
+Also raised if weights are not provided when obj_mode is ‘custom’, or if the number
+of weights doesn’t match the number of samples.</p>
+</dd>
+<dt>AssertionError</dt><dd><p>If the fairness bound is not in the range (0, 1].</p>
+</dd>
 </dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method fits the FairConstrainedOCT model using mixed-integer optimization while
+considering fairness constraints. It sets up the optimization problem, solves it, and stores the results.</p>
+<p>The fairness constraints are applied based on the specific fairness metric defined in the subclass
+(e.g., Statistical Parity, Conditional Statistical Parity, Predictive Equality, or Equal Opportunity).</p>
+<p>The optimization problem aims to maximize accuracy (or balanced accuracy, depending on the obj_mode)
+while satisfying the fairness constraints within the specified fairness_bound.</p>
+<p>The resulting tree structure is stored in the model and can be used for prediction or visualization.</p>
+<p>The behavior of this method depends on the <cite>obj_mode</cite> specified during initialization:
+- If obj_mode is ‘acc’, equal weights are used (weights parameter is ignored).
+- If obj_mode is ‘balance’, weights are automatically calculated to balance class importance.
+- If obj_mode is ‘custom’, the provided weights are used.</p>
+<p>When obj_mode is not ‘custom’ and weights are provided, a warning is issued and the weights are ignored.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">odtlearn.fair_oct</span> <span class="kn">import</span> <span class="n">FairConstrainedOCT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">protect_feat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">legit_factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">FairConstrainedOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;cbc&quot;</span><span class="p">,</span> <span class="n">positive_class</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fairness_bound</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.fair_oct.FairConstrainedOCT.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairConstrainedOCT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairConstrainedOCT.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>Classify test points using the FairTree classifier</p>
+<dd><p>Predict class labels for samples in X using the fitted Fair Constrained Optimal Classification Tree model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">array-like, shape (n_samples, n_features)</span></dt><dd><p>The input samples.</p>
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>The input samples for which to make predictions. Each feature should be binary (0 or 1).</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The label for each sample is the label of the closest sample
-seen during fit.</p>
+<dt><strong>y_pred</strong><span class="classifier">ndarray of shape (n_samples,)</span></dt><dd><p>The predicted class labels for each sample in X.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>NotFittedError</dt><dd><p>If the model has not been fitted yet.</p>
+</dd>
+<dt>ValueError</dt><dd><p>If X contains non-binary values or has a different number of features than the training data.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>This method uses the fair decision tree learned during the fit process to classify new samples.
+It traverses the tree for each sample in X, following the branching decisions until
+reaching a leaf node, and returns the corresponding class prediction.</p>
+<p>The predictions made by this method satisfy the fairness constraints that were imposed
+during the training process. However, note that the fairness guarantees only hold for the
+distribution of the training data. When applying the model to new data with a different
+distribution, the fairness properties may not be preserved.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">odtlearn.fair_oct</span> <span class="kn">import</span> <span class="n">FairSPOCT</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">protect_feat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">legit_factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span> <span class="o">=</span> <span class="n">FairSPOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;cbc&quot;</span><span class="p">,</span> <span class="n">positive_class</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fairness_bound</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+<span class="go">[1 0]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -429,11 +508,8 @@ If the CBC binaries are not found, Gurobi will be used by default.</p>
 </dd>
 <dt><strong>_lambda</strong><span class="classifier">float, default = 0</span></dt><dd><p>The regularization parameter in the objective. _lambda is in the interval [0,1)</p>
 </dd>
-<dt><strong>obj_mode: str, default=”acc”</strong></dt><dd><p>The objective should be used to learn an optimal decision tree.
-The two options are “acc” and “balance”.
-The accuracy objective attempts to maximize prediction accuracy while the
-balance objective aims to learn a balanced optimal decision
-tree to better generalize to our of sample data.</p>
+<dt><strong>obj_mode</strong><span class="classifier">{‘acc’, ‘balance’, ‘custom’}, optional (default=’acc’)</span></dt><dd><p>The objective mode to use.
+‘acc’ for accuracy, ‘balance’ for balanced accuracy, ‘custom’ for user-defined weights.</p>
 </dd>
 <dt><strong>fairness_bound: float (0,1], default=1</strong></dt><dd><p>The bound of the fairness constraint. The smaller the value the stricter
 the fairness constraint and 1 corresponds to no fairness constraint enforced</p>
@@ -446,21 +522,26 @@ the fairness constraint and 1 corresponds to no fairness constraint enforced</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.fair_oct.FairSPOCT.calc_metric">
 <span class="sig-name descname"><span class="pre">calc_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairSPOCT.calc_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairSPOCT.calc_metric" title="Permalink to this definition">#</a></dt>
-<dd><p>This function returns the statistical parity value for any given protected level and outcome value</p>
+<dd><p>Calculate the statistical parity metric for the given data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>protect_feat</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
-The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
-<li><p><strong>y</strong> – array-like, shape (n_samples,)
-The target values (class labels in classification).</p></li>
-</ul>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>protect_feat</strong><span class="classifier">array-like of shape (n_samples, n_protected_features)</span></dt><dd><p>The protected feature columns (e.g., race, gender). Can have one or more columns.</p>
 </dd>
-<dt class="field-even">Return sp_dict<span class="colon">:</span></dt>
-<dd class="field-even"><p>a dictionary with key =(p,t) and value = P(Y=t|P=p)</p>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The target values or predicted values.</p>
 </dd>
 </dl>
-<p>where p is a protected level and t is an outcome value</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>sp_dict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary with key (p,t) and value P(Y=t|P=p), where p is a protected level and t is an outcome value.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method calculates the statistical parity metric, which measures the difference in prediction rates
+across different protected groups.</p>
 </dd></dl>
 
 </dd></dl>
@@ -486,11 +567,8 @@ If the CBC binaries are not found, Gurobi will be used by default.</p>
 </dd>
 <dt><strong>_lambda</strong><span class="classifier">float, default = 0</span></dt><dd><p>The regularization parameter in the objective. _lambda is in the interval [0,1)</p>
 </dd>
-<dt><strong>obj_mode: str, default=”acc”</strong></dt><dd><p>The objective should be used to learn an optimal decision tree.
-The two options are “acc” and “balance”.
-The accuracy objective attempts to maximize prediction accuracy while the
-balance objective aims to learn a balanced optimal decision
-tree to better generalize to our of sample data.</p>
+<dt><strong>obj_mode</strong><span class="classifier">{‘acc’, ‘balance’, ‘custom’}, optional (default=’acc’)</span></dt><dd><p>The objective mode to use.
+‘acc’ for accuracy, ‘balance’ for balanced accuracy, ‘custom’ for user-defined weights.</p>
 </dd>
 <dt><strong>fairness_bound: float (0,1], default=1</strong></dt><dd><p>The bound of the fairness constraint. The smaller the value the stricter
 the fairness constraint and 1 corresponds to no fairness constraint enforced</p>
@@ -503,24 +581,29 @@ the fairness constraint and 1 corresponds to no fairness constraint enforced</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.fair_oct.FairCSPOCT.calc_metric">
 <span class="sig-name descname"><span class="pre">calc_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legit_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairCSPOCT.calc_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairCSPOCT.calc_metric" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns the conditional statistical parity value for any given
-protected level, legitimate feature value and outcome value</p>
+<dd><p>Calculate the conditional statistical parity metric for the given data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>protect_feat</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
-The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
-<li><p><strong>legit_fact</strong> – array-like, shape (n_samples,)
-The legitimate factor column(e.g., prior number of criminal acts)</p></li>
-<li><p><strong>y</strong> – array-like, shape (n_samples,)
-The target values (class labels in classification).</p></li>
-</ul>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>protect_feat</strong><span class="classifier">array-like of shape (n_samples, n_protected_features)</span></dt><dd><p>The protected feature columns (e.g., race, gender). Can have one or more columns.</p>
 </dd>
-<dt class="field-even">Return csp_dict<span class="colon">:</span></dt>
-<dd class="field-even"><p>a dictionary with key =(p, f, t) and value = P(Y=t|P=p, L=f) where p is a protected level
-and t is an outcome value and l is the value of the legitimate feature</p>
+<dt><strong>legit_factor</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The legitimate factor column (e.g., prior number of criminal acts).</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The target values or predicted values.</p>
 </dd>
 </dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>csp_dict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary with key (p, f, t) and value P(Y=t|P=p, L=f), where p is a protected level,
+t is an outcome value, and f is the value of the legitimate feature.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method calculates the conditional statistical parity metric, which measures the difference in
+prediction rates across different protected groups, conditioned on the legitimate factor.</p>
 </dd></dl>
 
 </dd></dl>
@@ -563,23 +646,29 @@ the fairness constraint and 1 corresponds to no fairness constraint enforced</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.fair_oct.FairPEOCT.calc_metric">
 <span class="sig-name descname"><span class="pre">calc_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairPEOCT.calc_metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairPEOCT.calc_metric" title="Permalink to this definition">#</a></dt>
-<dd><p>This function returns the false positive and true positive rate value
-for any given protected level, outcome value and prediction value</p>
+<dd><p>Calculate the predictive equality metric for the given data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>protect_feat</strong> – array-like, shape (n_samples,1) or (n_samples, n_p)
-The protected feature columns (Race, gender, etc); We could have one or more columns</p></li>
-<li><p><strong>y</strong> – array-like, shape (n_samples,)
-The true target values (class labels in classification).</p></li>
-<li><p><strong>y_pred</strong> – array-like, shape (n_samples,)
-The predicted values (class labels in classification).</p></li>
-</ul>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>protect_feat</strong><span class="classifier">array-like of shape (n_samples, n_protected_features)</span></dt><dd><p>The protected feature columns (e.g., race, gender). Can have one or more columns.</p>
 </dd>
-<dt class="field-even">Return eq_dict<span class="colon">:</span></dt>
-<dd class="field-even"><p>a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t)</p>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The true target values.</p>
+</dd>
+<dt><strong>y_pred</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The predicted values.</p>
 </dd>
 </dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>eq_dict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary with key (p, t, t_pred) and value P(Y_pred=t_pred|P=p, Y=t), where p is a protected level,
+t is a true outcome value, and t_pred is a predicted outcome value.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method calculates the predictive equality metric, which measures the difference in
+false positive rates across different protected groups.</p>
 </dd></dl>
 
 </dd></dl>
@@ -699,44 +788,69 @@ the fairness constraint and 1 corresponds to no fairness constraint enforced</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.fair_oct.FairOCT.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protect_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legit_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairOCT.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairOCT.fit" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Fit the FairOCT model to the given training data.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">{array-like, sparse matrix}, shape (n_samples, n_features)</span></dt><dd><p>The training input samples.</p>
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>The training input samples. Each feature should be binary (0 or 1).</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The target values (class labels in classification).</p>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The target values (class labels) for the training samples.</p>
 </dd>
-<dt><strong>protect_feat</strong><span class="classifier">array-like, shape (n_samples,1) or (n_samples, n_p)</span></dt><dd><p>The protected feature columns (Race, gender, etc); Can have one or more columns</p>
+<dt><strong>protect_feat</strong><span class="classifier">array-like of shape (n_samples, n_protected_features)</span></dt><dd><p>The protected feature columns (e.g., race, gender). Can have one or more columns.</p>
 </dd>
-<dt><strong>legit_factor</strong><span class="classifier">array-like, shape (n_samples,)</span></dt><dd><p>The legitimate factor column(e.g., prior number of criminal acts)</p>
+<dt><strong>legit_factor</strong><span class="classifier">array-like of shape (n_samples,)</span></dt><dd><p>The legitimate factor column (e.g., prior number of criminal acts).</p>
 </dd>
-<dt><strong>Returns</strong></dt><dd></dd>
-<dt><strong>——-</strong></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
 <dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>Returns self.</p>
 </dd>
 </dl>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>ValueError</dt><dd><p>If X contains non-binary values or if inputs have inconsistent numbers of samples.</p>
+</dd>
 </dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method fits the FairOCT model using mixed-integer optimization while
+considering fairness constraints. It sets up the optimization problem,
+solves it, and stores the results.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="odtlearn.fair_oct.FairOCT.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/odtlearn/fair_oct.html#FairOCT.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.fair_oct.FairOCT.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>Classify test points using the FairTree classifier
-Parameters
-———-
-X : array-like, shape (n_samples, n_features)</p>
-<blockquote>
-<div><p>The input samples.</p>
-</div></blockquote>
-<section id="returns">
-<h4>Returns<a class="headerlink" href="#returns" title="Permalink to this heading">#</a></h4>
-<dl class="simple">
-<dt>y<span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>The label for each sample is the label of the closest sample
-seen during fit.</p>
+<dd><p>Predict class labels for samples in X using the fitted FairOCT model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>The input samples for which to make predictions. Each feature should be binary (0 or 1).</p>
 </dd>
 </dl>
-</section>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>y_pred</strong><span class="classifier">ndarray of shape (n_samples,)</span></dt><dd><p>The predicted class labels for each sample in X.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>NotFittedError</dt><dd><p>If the model has not been fitted yet.</p>
+</dd>
+<dt>ValueError</dt><dd><p>If X contains non-binary values or has a different number of features than the training data.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This method uses the fair decision tree learned during the fit process to classify new samples.
+It traverses the tree for each sample in X, following the branching decisions until
+reaching a leaf node, and returns the corresponding class prediction.</p>
 </dd></dl>
 
 <dl class="py method">

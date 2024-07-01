@@ -203,7 +203,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -443,24 +443,35 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ODTL</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RobustOCT.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/robust_oct/index.html#odtlearn.robust_oct.RobustOCT.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">budget</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit an optimal robust classification tree given data, labels,</span>
-<span class="sd">        costs of uncertainty, and budget of uncertainty</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit a robust optimal classification tree to the given training data.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
-<span class="sd">            The training input samples.</span>
-<span class="sd">        y : array-like, shape (n_samples,)</span>
-<span class="sd">            The target values. An array of int.</span>
-<span class="sd">        costs : array-like, shape (n_samples, n_features), default = budget + 1</span>
-<span class="sd">            The costs of uncertainty</span>
-<span class="sd">        budget : float, default = -1</span>
-<span class="sd">            The budget of uncertainty</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The training input samples. Features should be integer-valued.</span>
+<span class="sd">        y : array-like of shape (n_samples,)</span>
+<span class="sd">            The target values (class labels) for the training samples.</span>
+<span class="sd">        costs : array-like of shape (n_samples, n_features), optional</span>
+<span class="sd">            The costs of uncertainty for each feature and sample. If None, defaults to budget + 1.</span>
+<span class="sd">        budget : float, optional</span>
+<span class="sd">            The budget of uncertainty. Default is -1.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        self : object</span>
 <span class="sd">            Returns self.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X contains non-integer values or if inputs have inconsistent numbers of samples.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method fits the RobustOCT model using mixed-integer optimization while</span>
+<span class="sd">        considering potential adversarial perturbations within the given budget.</span>
+<span class="sd">        It sets up the optimization problem, solves it, and stores the results.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_extract_metadata</span><span class="p">(</span>
             <span class="n">X</span><span class="p">,</span>
@@ -567,19 +578,31 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="RobustOCT.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/robust_oct/index.html#odtlearn.robust_oct.RobustOCT.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Given the input covariates, predict the class labels of each sample</span>
-<span class="sd">        based on the fitted optimal robust classification tree</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict class labels for samples in X using the fitted RobustOCT model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        X : array-like, shape (n_samples, n_features)</span>
-<span class="sd">            The input samples.</span>
+<span class="sd">        X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">            The input samples for which to make predictions. Features should be integer-valued.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        y : ndarray, shape (n_samples,)</span>
-<span class="sd">            The label for each sample is the label of the closest sample</span>
-<span class="sd">            seen during fit.</span>
+<span class="sd">        y_pred : ndarray of shape (n_samples,)</span>
+<span class="sd">            The predicted class labels for each sample in X.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotFittedError</span>
+<span class="sd">            If the model has not been fitted yet.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If X contains non-integer values or has a different number of features than the training data.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method uses the robust decision tree learned during the fit process to classify new samples.</span>
+<span class="sd">        It traverses the tree for each sample in X, following the branching decisions until</span>
+<span class="sd">        reaching a leaf node, and returns the corresponding class prediction.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;b_value&quot;</span><span class="p">,</span> <span class="s2">&quot;w_value&quot;</span><span class="p">])</span>
         <span class="c1"># Convert to dataframe</span>
@@ -627,47 +650,52 @@
         <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">feature_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plot the fitted tree with the branching features, the threshold values for</span>
-<span class="sd">        each branching node&#39;s test, and the predictions asserted for each assignment node</span>
-<span class="sd">        using matplotlib. The method uses the Gurobi model&#39;s name for determining how</span>
-<span class="sd">        to generate the tree. It does some preprocessing before passing the tree to the</span>
-<span class="sd">        `_MPLTreeExporter` class from the sklearn package. The arguments for the</span>
-<span class="sd">        `plot_tree` method are based on the arguments of the sklearn `plot_tree` function.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the fitted robust classification tree using matplotlib.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        label : {&#39;all&#39;, &#39;root&#39;, &#39;none&#39;}, default=&#39;all&#39;</span>
-<span class="sd">        Whether to show informative labels for impurity, etc.</span>
-<span class="sd">        Options include &#39;all&#39; to show at every node, &#39;root&#39; to show only at</span>
-<span class="sd">        the top root node, or &#39;none&#39; to not show at any node.</span>
-
-<span class="sd">        filled : bool, default=False</span>
-<span class="sd">            When set to ``True``, paint nodes to indicate majority class for</span>
+<span class="sd">            Whether to show informative labels for impurity, etc.</span>
+<span class="sd">            Options include &#39;all&#39; to show at every node, &#39;root&#39; to show only at</span>
+<span class="sd">            the top root node, or &#39;none&#39; to not show at any node.</span>
+<span class="sd">        filled : bool, default=True</span>
+<span class="sd">            When set to True, paint nodes to indicate majority class for</span>
 <span class="sd">            classification, extremity of values for regression, or purity of node</span>
 <span class="sd">            for multi-output.</span>
-
 <span class="sd">        rounded : bool, default=False</span>
-<span class="sd">            When set to ``True``, draw node boxes with rounded corners and use</span>
+<span class="sd">            When set to True, draw node boxes with rounded corners and use</span>
 <span class="sd">            Helvetica fonts instead of Times-Roman.</span>
-
-<span class="sd">        precision: int, default=3</span>
+<span class="sd">        precision : int, default=3</span>
 <span class="sd">            Number of digits of precision for floating point in the values of</span>
 <span class="sd">            impurity, threshold and value attributes of each node.</span>
 <span class="sd">        ax : matplotlib axis, default=None</span>
 <span class="sd">            Axes to plot to. If None, use current axis. Any previous content</span>
-<span class="sd">        is cleared.</span>
-
+<span class="sd">            is cleared.</span>
 <span class="sd">        fontsize : int, default=None</span>
 <span class="sd">            Size of text font. If None, determined automatically to fit figure.</span>
-
-<span class="sd">        color_dict: dict, default={&quot;node&quot;: None, &quot;leaves&quot;: []}</span>
+<span class="sd">        color_dict : dict, default={&quot;node&quot;: None, &quot;leaves&quot;: []}</span>
 <span class="sd">            A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.</span>
-<span class="sd">            If None, the colors are chosen using the sklearn `plot_tree` color palette</span>
-
+<span class="sd">            If None, the colors are chosen using the sklearn `plot_tree` color palette.</span>
+<span class="sd">        edge_annotation : bool, default=True</span>
+<span class="sd">            Whether to display annotations on the edges.</span>
+<span class="sd">        arrow_annotation_font_scale : float, default=0.8</span>
+<span class="sd">            The font scale for the arrow annotations.</span>
+<span class="sd">        debug : bool, default=False</span>
+<span class="sd">            Whether to print debug information.</span>
 <span class="sd">        feature_names : list of str, default=None</span>
 <span class="sd">            A list of feature names to use for the plot. If None, the feature names from the</span>
 <span class="sd">            fitted tree will be used. The feature names should be in the same order as the</span>
 <span class="sd">            columns of the data used to fit the tree.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        matplotlib.axes.Axes</span>
+<span class="sd">            The matplotlib Axes containing the plotted tree.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method uses the MPLPlotter class to visualize the robust classification tree.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;b_value&quot;</span><span class="p">,</span> <span class="s2">&quot;w_value&quot;</span><span class="p">])</span>
 

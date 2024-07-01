@@ -203,7 +203,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -302,8 +302,6 @@
 <span class="sd">        A dictionary containing information about each node in the tree.</span>
 <span class="sd">    column_names : list</span>
 <span class="sd">        A list of feature names used in the decision tree.</span>
-<span class="sd">    feature_names : list</span>
-<span class="sd">        A list of feature names used in the decision tree.</span>
 <span class="sd">    class_names : list</span>
 <span class="sd">        A list of class names for the target variable.</span>
 <span class="sd">    color_options : list</span>
@@ -363,7 +361,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">tree</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">node_dict</span> <span class="o">=</span> <span class="n">node_dict</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">column_names</span> <span class="o">=</span> <span class="n">column_names</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">feature_names</span> <span class="o">=</span> <span class="n">column_names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">class_names</span> <span class="o">=</span> <span class="n">classes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">color_options</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">color</span><span class="p">]</span>
@@ -382,7 +379,7 @@
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">max_depth</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">,</span>
-            <span class="n">feature_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_names</span><span class="p">,</span>
+            <span class="n">feature_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">column_names</span><span class="p">,</span>
             <span class="n">class_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">class_names</span><span class="p">,</span>
             <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
             <span class="n">filled</span><span class="o">=</span><span class="n">filled</span><span class="p">,</span>
@@ -449,10 +446,12 @@
                 <span class="c1"># = or &lt;=</span>
                 <span class="n">sign</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="s2">&quot;=&quot;</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;FairOCT&quot;</span><span class="p">,</span> <span class="s2">&quot;FlowOCT&quot;</span><span class="p">,</span> <span class="s2">&quot;BendersOCT&quot;</span><span class="p">]</span>
-                    <span class="k">else</span> <span class="n">characters</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                    <span class="c1"># if self.model_name in [&quot;FairOCT&quot;, &quot;FlowOCT&quot;, &quot;BendersOCT&quot;]</span>
+                    <span class="c1"># else characters[3]</span>
                 <span class="p">)</span>
-                <span class="n">node_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;feature </span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sign</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">cutoff</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">precision</span><span class="p">)</span><span class="si">}{</span><span class="n">characters</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">node_string</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sign</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">cutoff</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">precision</span><span class="p">)</span><span class="si">}{</span><span class="n">characters</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cutoff value: </span><span class="si">{</span><span class="n">cutoff</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rounded cutoff value: </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">cutoff</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">precision</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>

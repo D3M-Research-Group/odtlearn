@@ -7,6 +7,14 @@
 Module Contents
 ---------------
 
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   odtlearn.utils.binarize.Binarizer
+
+
 
 Functions
 ~~~~~~~~~
@@ -15,6 +23,141 @@ Functions
 
    odtlearn.utils.binarize.binarize
 
+
+
+.. py:class:: Binarizer(categorical_cols=None, integer_cols=None, real_cols=None, n_bins=4, bin_strategy='uniform')
+
+
+   Bases: :py:obj:`sklearn.base.BaseEstimator`, :py:obj:`sklearn.base.TransformerMixin`
+
+   
+   A transformer that binarizes categorical, integer, and real-valued columns.
+
+   This transformer follows the scikit-learn fit-transform paradigm and can be used
+   in scikit-learn pipelines.
+
+   :Parameters:
+
+       **categorical_cols** : list, optional
+           List of categorical column names to be one-hot encoded.
+
+       **integer_cols** : list, optional
+           List of integer column names to be binarized.
+
+       **real_cols** : list, optional
+           List of real-valued column names to be discretized and then binarized.
+
+       **n_bins** : int, default=4
+           The number of bins to use for discretizing real-valued columns.
+
+       **bin_strategy** : {'uniform', 'quantile'}, default='uniform'
+           The strategy to use for binning real-valued columns.
+           'uniform': All bins in each feature have identical widths.
+           'quantile': All bins in each feature have the same number of points.
+
+
+
+
+
+
+
+
+
+
+
+   .. rubric:: Examples
+
+   >>> import pandas as pd
+   >>> from odtlearn.utils.binarizer import Binarizer
+   >>> df = pd.DataFrame({
+   ...     'cat': ['A', 'B', 'C', 'A'],
+   ...     'int': [1, 2, 3, 2],
+   ...     'real': [0.1, 0.5, 0.7, 0.9]
+   ... })
+   >>> binarizer = Binarizer(
+   ...     categorical_cols=['cat'],
+   ...     integer_cols=['int'],
+   ...     real_cols=['real'],
+   ...     n_bins=2
+   ... )
+   >>> X_bin = binarizer.fit_transform(df)
+
+   :Attributes:
+
+       **encoders_** : dict
+           Dictionary of fitted encoders for each column type.
+
+       **column_names_** : list
+           List of column names in the transformed output.
+
+
+   ..
+       !! processed by numpydoc !!
+   .. py:method:: fit(X, y=None)
+
+      
+      Fit the Binarizer to the input data.
+
+      This method learns the encoding schemes for categorical, integer, and real-valued columns.
+
+      :Parameters:
+
+          **X** : array-like or pandas DataFrame of shape (n_samples, n_features)
+              The input samples to be binarized.
+
+          **y** : None
+              Ignored. This parameter exists only for compatibility with sklearn.
+
+      :Returns:
+
+          **self** : object
+              Returns self.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+   .. py:method:: transform(X)
+
+      
+      Transform the input data using the fitted Binarizer.
+
+
+      :Parameters:
+
+          **X** : array-like or pandas DataFrame of shape (n_samples, n_features)
+              The input samples to be binarized.
+
+      :Returns:
+
+          **X_bin** : pandas DataFrame
+              The binarized input data.
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
 
 
 .. py:function:: binarize(df, categorical_cols, integer_cols, real_cols, n_bins=4, bin_strategy='uniform')

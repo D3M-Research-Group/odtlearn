@@ -203,7 +203,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -247,7 +247,217 @@
           <h1>Source code for odtlearn.utils.binarize</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">KBinsDiscretizer</span><span class="p">,</span> <span class="n">OneHotEncoder</span>
+
+
+<div class="viewcode-block" id="Binarizer"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/binarize/index.html#odtlearn.utils.binarize.Binarizer">[docs]</a><span class="k">class</span> <span class="nc">Binarizer</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">TransformerMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A transformer that binarizes categorical, integer, and real-valued columns.</span>
+
+<span class="sd">    This transformer follows the scikit-learn fit-transform paradigm and can be used</span>
+<span class="sd">    in scikit-learn pipelines.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    categorical_cols : list, optional</span>
+<span class="sd">        List of categorical column names to be one-hot encoded.</span>
+<span class="sd">    integer_cols : list, optional</span>
+<span class="sd">        List of integer column names to be binarized.</span>
+<span class="sd">    real_cols : list, optional</span>
+<span class="sd">        List of real-valued column names to be discretized and then binarized.</span>
+<span class="sd">    n_bins : int, default=4</span>
+<span class="sd">        The number of bins to use for discretizing real-valued columns.</span>
+<span class="sd">    bin_strategy : {&#39;uniform&#39;, &#39;quantile&#39;}, default=&#39;uniform&#39;</span>
+<span class="sd">        The strategy to use for binning real-valued columns.</span>
+<span class="sd">        &#39;uniform&#39;: All bins in each feature have identical widths.</span>
+<span class="sd">        &#39;quantile&#39;: All bins in each feature have the same number of points.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    encoders_ : dict</span>
+<span class="sd">        Dictionary of fitted encoders for each column type.</span>
+<span class="sd">    column_names_ : list</span>
+<span class="sd">        List of column names in the transformed output.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from odtlearn.utils.binarizer import Binarizer</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="sd">    ...     &#39;cat&#39;: [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;, &#39;A&#39;],</span>
+<span class="sd">    ...     &#39;int&#39;: [1, 2, 3, 2],</span>
+<span class="sd">    ...     &#39;real&#39;: [0.1, 0.5, 0.7, 0.9]</span>
+<span class="sd">    ... })</span>
+<span class="sd">    &gt;&gt;&gt; binarizer = Binarizer(</span>
+<span class="sd">    ...     categorical_cols=[&#39;cat&#39;],</span>
+<span class="sd">    ...     integer_cols=[&#39;int&#39;],</span>
+<span class="sd">    ...     real_cols=[&#39;real&#39;],</span>
+<span class="sd">    ...     n_bins=2</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; X_bin = binarizer.fit_transform(df)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">categorical_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">integer_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">real_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_bins</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+        <span class="n">bin_strategy</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="n">categorical_cols</span><span class="p">,</span> <span class="n">integer_cols</span><span class="p">,</span> <span class="n">real_cols</span><span class="p">]]</span>
+        <span class="p">),</span> <span class="p">(</span>
+            <span class="s2">&quot;Must provide at least one of the three options of a list of categorical columns &quot;</span>
+            <span class="s2">&quot;or integer columns or real valued columns to binarize.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">real_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_bins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The number of bins must be provided for encoding real columns.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">real_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">bin_strategy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The bin strategy must be provided for encoding real columns.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">real_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="ow">and</span> <span class="n">bin_strategy</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">bin_strategy</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;quantile&quot;</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;The bin strategy must be one of the following: &#39;uniform&#39; or &#39;quantile&#39;.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">categorical_cols</span> <span class="o">=</span> <span class="n">categorical_cols</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">integer_cols</span> <span class="o">=</span> <span class="n">integer_cols</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_cols</span> <span class="o">=</span> <span class="n">real_cols</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="n">n_bins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bin_strategy</span> <span class="o">=</span> <span class="n">bin_strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoders_</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">column_names_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Binarizer.fit"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/binarize/index.html#odtlearn.utils.binarize.Binarizer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit the Binarizer to the input data.</span>
+
+<span class="sd">        This method learns the encoding schemes for categorical, integer, and real-valued columns.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like or pandas DataFrame of shape (n_samples, n_features)</span>
+<span class="sd">            The input samples to be binarized.</span>
+<span class="sd">        y : None</span>
+<span class="sd">            Ignored. This parameter exists only for compatibility with sklearn.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : object</span>
+<span class="sd">            Returns self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">categorical_cols</span><span class="p">:</span>
+            <span class="n">cat_encoder</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">sparse_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">cat_encoder</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">categorical_cols</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoders_</span><span class="p">[</span><span class="s2">&quot;categorical&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cat_encoder</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">integer_cols</span><span class="p">:</span>
+            <span class="n">int_encoder</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">sparse_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">int_encoder</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">integer_cols</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoders_</span><span class="p">[</span><span class="s2">&quot;integer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">int_encoder</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_cols</span><span class="p">:</span>
+            <span class="n">real_encoder</span> <span class="o">=</span> <span class="n">KBinsDiscretizer</span><span class="p">(</span>
+                <span class="n">n_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">encode</span><span class="o">=</span><span class="s2">&quot;onehot-dense&quot;</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_strategy</span>
+            <span class="p">)</span>
+            <span class="n">real_encoder</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">real_cols</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoders_</span><span class="p">[</span><span class="s2">&quot;real&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">real_encoder</span>
+
+        <span class="c1"># Generate and store column names for the transformed data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">column_names_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_feature_names_out</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Binarizer.transform"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/binarize/index.html#odtlearn.utils.binarize.Binarizer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transform the input data using the fitted Binarizer.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : array-like or pandas DataFrame of shape (n_samples, n_features)</span>
+<span class="sd">            The input samples to be binarized.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        X_bin : pandas DataFrame</span>
+<span class="sd">            The binarized input data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">col_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;categorical&quot;</span><span class="p">,</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span> <span class="s2">&quot;real&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">col_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoders_</span><span class="p">:</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col_type</span><span class="si">}</span><span class="s2">_cols&quot;</span><span class="p">)</span>
+                <span class="n">encoder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoders_</span><span class="p">[</span><span class="n">col_type</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">col_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;categorical&quot;</span><span class="p">,</span> <span class="s2">&quot;integer&quot;</span><span class="p">]:</span>
+                    <span class="n">bin_data</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">cols</span><span class="p">])</span>
+                    <span class="n">bin_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                        <span class="n">bin_data</span><span class="p">,</span>
+                        <span class="n">columns</span><span class="o">=</span><span class="n">encoder</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">(</span><span class="n">cols</span><span class="p">),</span>
+                        <span class="n">index</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">col_type</span> <span class="o">==</span> <span class="s2">&quot;integer&quot;</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+                            <span class="n">col_features</span> <span class="o">=</span> <span class="p">[</span>
+                                <span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">bin_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">_&quot;</span><span class="p">)</span>
+                            <span class="p">]</span>
+                            <span class="n">bin_df</span><span class="p">[</span><span class="n">col_features</span><span class="p">]</span> <span class="o">=</span> <span class="n">bin_df</span><span class="p">[</span><span class="n">col_features</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># real columns</span>
+                    <span class="n">bin_data</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">cols</span><span class="p">])</span>
+                    <span class="n">bin_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                        <span class="n">bin_data</span><span class="p">,</span>
+                        <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">)</span>
+                        <span class="p">],</span>
+                        <span class="n">index</span><span class="o">=</span><span class="n">X</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">result</span><span class="p">,</span> <span class="n">bin_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Ensure all columns from fit are present, fill with 0 if missing</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_names_</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">column_names_</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_feature_names_out</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feature names for the binarized columns.&quot;&quot;&quot;</span>
+        <span class="n">feature_names</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">categorical_cols</span><span class="p">:</span>
+            <span class="n">feature_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">encoders_</span><span class="p">[</span><span class="s2">&quot;categorical&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">categorical_cols</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">integer_cols</span><span class="p">:</span>
+            <span class="n">int_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoders_</span><span class="p">[</span><span class="s2">&quot;integer&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">integer_cols</span>
+            <span class="p">)</span>
+            <span class="n">feature_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">int_features</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_cols</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_cols</span><span class="p">:</span>
+                <span class="n">feature_names</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">)])</span>
+
+        <span class="k">return</span> <span class="n">feature_names</span></div>
 
 
 <div class="viewcode-block" id="binarize"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/binarize/index.html#odtlearn.utils.binarize.binarize">[docs]</a><span class="k">def</span> <span class="nf">binarize</span><span class="p">(</span>

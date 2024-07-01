@@ -203,7 +203,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notebooks/FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -257,16 +257,37 @@
 
 <div class="viewcode-block" id="check_ipw"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_ipw">[docs]</a><span class="k">def</span> <span class="nf">check_ipw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">ipw</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function checks the propensity weights and counterfactual predictions</span>
+<span class="sd">    Check and validate inverse probability weights (IPW).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    X: The input/training data</span>
-<span class="sd">    ipw: A vector or array-like object for inverse propensity weights. Only needed when running IPW/DR</span>
+<span class="sd">    X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">        The input samples.</span>
+<span class="sd">    ipw : array-like of shape (n_samples,)</span>
+<span class="sd">        The inverse probability weights to be checked.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    The converted version of ipw after passing the series of checks</span>
+<span class="sd">    ipw : ndarray of shape (n_samples,)</span>
+<span class="sd">        The validated and potentially converted inverse probability weights.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ipw has inconsistent number of samples with X.</span>
+<span class="sd">    AssertionError</span>
+<span class="sd">        If any value in ipw is not in the range (0, 1].</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from odtlearn.utils.validation import check_ipw</span>
+<span class="sd">    &gt;&gt;&gt; X = np.array([[1, 2], [3, 4], [5, 6]])</span>
+<span class="sd">    &gt;&gt;&gt; ipw = np.array([0.5, 0.7, 0.3])</span>
+<span class="sd">    &gt;&gt;&gt; validated_ipw = check_ipw(X, ipw)</span>
+<span class="sd">    &gt;&gt;&gt; print(validated_ipw)</span>
+<span class="sd">    [0.5 0.7 0.3]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ipw</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ipw</span> <span class="o">=</span> <span class="n">column_or_1d</span><span class="p">(</span><span class="n">ipw</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -284,17 +305,42 @@
 
 <div class="viewcode-block" id="check_y_hat"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_y_hat">[docs]</a><span class="k">def</span> <span class="nf">check_y_hat</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">treatments</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function checks the propensity weights and counterfactual predictions</span>
+<span class="sd">    Check and validate counterfactual predictions (y_hat).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    X: The input/training data</span>
-<span class="sd">    treatments: A vector of the unique treatment values in the dataset.</span>
-<span class="sd">    y_hat: A multi-dimensional array-like object for counterfactual predictions. Only needed when running DM/DR</span>
+<span class="sd">    X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">        The input samples.</span>
+<span class="sd">    treatments : array-like</span>
+<span class="sd">        The unique treatment values.</span>
+<span class="sd">    y_hat : array-like of shape (n_samples, n_treatments)</span>
+<span class="sd">        The counterfactual predictions to be checked.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    The converted versions of ipw and y_hat after passing the series of checks</span>
+<span class="sd">    y_hat : ndarray of shape (n_samples, n_treatments)</span>
+<span class="sd">        The validated and potentially converted counterfactual predictions.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If y_hat has inconsistent dimensions with X or treatments.</span>
+<span class="sd">    AssertionError</span>
+<span class="sd">        If y_hat is None.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from odtlearn.utils.validation import check_y_hat</span>
+<span class="sd">    &gt;&gt;&gt; X = np.array([[1, 2], [3, 4], [5, 6]])</span>
+<span class="sd">    &gt;&gt;&gt; treatments = [0, 1]</span>
+<span class="sd">    &gt;&gt;&gt; y_hat = np.array([[0.1, 0.2], [0.3, 0.4], [0.5, 0.6]])</span>
+<span class="sd">    &gt;&gt;&gt; validated_y_hat = check_y_hat(X, treatments, y_hat)</span>
+<span class="sd">    &gt;&gt;&gt; print(validated_y_hat)</span>
+<span class="sd">    [[0.1 0.2]</span>
+<span class="sd">     [0.3 0.4]</span>
+<span class="sd">     [0.5 0.6]]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">y_hat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">y_hat</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">y_hat</span><span class="p">)</span>
@@ -315,16 +361,34 @@
 
 <div class="viewcode-block" id="check_y"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_y">[docs]</a><span class="k">def</span> <span class="nf">check_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function checks the shape and contents of the observed outcomes</span>
+<span class="sd">    Check and validate target values (y).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    X: The input/training data</span>
-<span class="sd">    y: A vector or array-like object for the observed outcomes corresponding to treatment t</span>
+<span class="sd">    X : array-like of shape (n_samples, n_features)</span>
+<span class="sd">        The input samples.</span>
+<span class="sd">    y : array-like of shape (n_samples,)</span>
+<span class="sd">        The target values to be checked.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    The converted version of y after passing the series of checks</span>
+<span class="sd">    y : ndarray of shape (n_samples,)</span>
+<span class="sd">        The validated and potentially converted target values.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If y has inconsistent number of samples with X.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; from odtlearn.utils.validation import check_y</span>
+<span class="sd">    &gt;&gt;&gt; X = np.array([[1, 2], [3, 4], [5, 6]])</span>
+<span class="sd">    &gt;&gt;&gt; y = np.array([0, 1, 0])</span>
+<span class="sd">    &gt;&gt;&gt; validated_y = check_y(X, y)</span>
+<span class="sd">    &gt;&gt;&gt; print(validated_y)</span>
+<span class="sd">    [0. 1. 0.]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># check consistent length</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">column_or_1d</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -338,17 +402,42 @@
 
 <div class="viewcode-block" id="check_columns_match"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_columns_match">[docs]</a><span class="k">def</span> <span class="nf">check_columns_match</span><span class="p">(</span><span class="n">original_columns</span><span class="p">,</span> <span class="n">new_data</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Check that the column names of a new data frame match the column names used when used to fit the model</span>
+<span class="sd">    Check if the columns in new_data match the original_columns.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    original_columns: List of column names from the data set used to fit the model</span>
-<span class="sd">    new_data: The numpy matrix or pd dataframe new data set for</span>
-<span class="sd">    which we want to make predictions</span>
+<span class="sd">    original_columns : list</span>
+<span class="sd">        The list of column names from the original data.</span>
+<span class="sd">    new_data : array-like or pandas.DataFrame</span>
+<span class="sd">        The new data to be checked.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    ValueError if column names do not match, otherwise None</span>
+<span class="sd">    bool</span>
+<span class="sd">        True if the columns match, False otherwise.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If new_data is a DataFrame and contains columns not present in original_columns.</span>
+<span class="sd">    AssertionError</span>
+<span class="sd">        If new_data is not a DataFrame and has a different number of columns than original_columns.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function performs different checks based on whether new_data is a pandas DataFrame or not:</span>
+<span class="sd">    - For DataFrames: It checks if all columns in new_data are present in original_columns.</span>
+<span class="sd">    - For non-DataFrames: It checks if the number of columns matches the length of original_columns.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from odtlearn.utils.validation import check_columns_match</span>
+<span class="sd">    &gt;&gt;&gt; original_cols = [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; new_data = pd.DataFrame({&#39;A&#39;: [1, 2], &#39;B&#39;: [3, 4], &#39;C&#39;: [5, 6]})</span>
+<span class="sd">    &gt;&gt;&gt; result = check_columns_match(original_cols, new_data)</span>
+<span class="sd">    &gt;&gt;&gt; print(result)</span>
+<span class="sd">    True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
@@ -365,12 +454,42 @@
         <span class="c1"># we are assuming the order of columns matches and we will just check that shapes match</span>
         <span class="c1"># assuming here that new_data is a numpy matrix</span>
         <span class="k">assert</span> <span class="p">(</span>
-            <span class="nb">len</span><span class="p">(</span><span class="n">original_columns</span><span class="p">)</span> <span class="o">!=</span> <span class="n">new_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Fit data has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">original_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns but new data has </span><span class="si">{</span><span class="n">new_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns.&quot;</span></div>
+            <span class="nb">len</span><span class="p">(</span><span class="n">original_columns</span><span class="p">)</span> <span class="o">==</span> <span class="n">new_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Fit data has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">original_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns but new data has </span><span class="si">{</span><span class="n">new_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns.&quot;</span></div>
 
 
 <div class="viewcode-block" id="check_binary"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_binary">[docs]</a><span class="k">def</span> <span class="nf">check_binary</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="c1"># TO-DO: truncate output if lots of non_binary_columns</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if all values in the DataFrame are binary (0 or 1).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas.DataFrame or array-like</span>
+<span class="sd">        The data to be checked.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If df is a DataFrame and contains columns with non-binary values.</span>
+<span class="sd">    AssertionError</span>
+<span class="sd">        If df is not a DataFrame and contains non-binary values.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function performs different checks based on whether df is a pandas DataFrame or not:</span>
+<span class="sd">    - For DataFrames: It identifies columns containing non-binary values.</span>
+<span class="sd">    - For non-DataFrames: It checks if all values are either 0 or 1.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from odtlearn.utils.validation import check_binary</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame({&#39;A&#39;: [0, 1, 0], &#39;B&#39;: [1, 1, 0]})</span>
+<span class="sd">    &gt;&gt;&gt; check_binary(df)  # This will not raise an error</span>
+<span class="sd">    &gt;&gt;&gt; df[&#39;C&#39;] = [0, 1, 2]</span>
+<span class="sd">    &gt;&gt;&gt; check_binary(df)  # This will raise a ValueError</span>
+<span class="sd">    ValueError: Found columns ([&#39;C&#39;]) that contain values other than 0 or 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
         <span class="n">non_binary_columns</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
@@ -386,12 +505,75 @@
 
 
 <div class="viewcode-block" id="check_integer"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_integer">[docs]</a><span class="k">def</span> <span class="nf">check_integer</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if all values in the DataFrame are integers.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : pandas.DataFrame or array-like</span>
+<span class="sd">        The data to be checked.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If df contains non-integer values.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from odtlearn.utils.validation import check_integer</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame({&#39;A&#39;: [1, 2, 3], &#39;B&#39;: [4, 5, 6]})</span>
+<span class="sd">    &gt;&gt;&gt; check_integer(df)  # This will not raise an error</span>
+<span class="sd">    &gt;&gt;&gt; df[&#39;C&#39;] = [1.5, 2.0, 3.0]</span>
+<span class="sd">    &gt;&gt;&gt; check_integer(df)  # This will raise a ValueError</span>
+<span class="sd">    ValueError: Found non-integer values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Found non-integer values.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="check_same_as_X"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_same_as_X">[docs]</a><span class="k">def</span> <span class="nf">check_same_as_X</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X_col_labels</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">G_label</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if a DataFrame G has the columns of X&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if a DataFrame G has the same structure as X.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : pandas.DataFrame</span>
+<span class="sd">        The reference DataFrame.</span>
+<span class="sd">    X_col_labels : array-like</span>
+<span class="sd">        The column labels of X.</span>
+<span class="sd">    G : pandas.DataFrame or array-like</span>
+<span class="sd">        The DataFrame or array to be checked against X.</span>
+<span class="sd">    G_label : str</span>
+<span class="sd">        A label for G to be used in error messages.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">        G converted to a DataFrame if it wasn&#39;t already.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If G has a different number of columns than X.</span>
+<span class="sd">    KeyError</span>
+<span class="sd">        If G is a DataFrame and its columns don&#39;t match X_col_labels.</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If G is not a DataFrame and X has non-default column labels.</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import pandas as pd</span>
+<span class="sd">    &gt;&gt;&gt; from odtlearn.utils.validation import check_same_as_X</span>
+<span class="sd">    &gt;&gt;&gt; X = pd.DataFrame({&#39;A&#39;: [1, 2], &#39;B&#39;: [3, 4]})</span>
+<span class="sd">    &gt;&gt;&gt; G = pd.DataFrame({&#39;A&#39;: [5, 6], &#39;B&#39;: [7, 8]})</span>
+<span class="sd">    &gt;&gt;&gt; result = check_same_as_X(X, X.columns, G, &#39;Test DataFrame&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; print(result)</span>
+<span class="sd">       A  B</span>
+<span class="sd">    0  5  7</span>
+<span class="sd">    1  6  8</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Check if X has shape of G</span>
     <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">G</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>

@@ -102,9 +102,6 @@ Classes
        **column_names** : list
            A list of feature names used in the decision tree.
 
-       **feature_names** : list
-           A list of feature names used in the decision tree.
-
        **class_names** : list
            A list of class names for the target variable.
 

@@ -203,7 +203,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notebooks/FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -352,7 +352,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span> <span class="o">=</span> <span class="n">t</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_treatments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_node_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_node_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">feature_names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function give the status of a given node in a tree. By status we mean whether the node</span>
 <span class="sd">        1- is pruned? i.e., we have made a prediction at one of its ancestors</span>
@@ -382,6 +382,8 @@
 <span class="sd">            leaf = 1 iff node n is a leaf in the tree</span>
 <span class="sd">        value :  double</span>
 <span class="sd">            if node n is a leaf, value represent the prediction at this node</span>
+<span class="sd">        feature_names: List, default=None</span>
+<span class="sd">            Alternative list of feature names to use when getting node status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">pruned</span> <span class="o">=</span> <span class="kc">False</span>
@@ -406,9 +408,11 @@
 
         <span class="k">if</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">pruned</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">leaf</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">):</span>  <span class="c1"># branching</span>
-                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">feat_idx</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">):</span>
                     <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">f</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
-                        <span class="n">selected_feature</span> <span class="o">=</span> <span class="n">f</span>
+                        <span class="n">selected_feature</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">f</span> <span class="k">if</span> <span class="n">feature_names</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">feature_names</span><span class="p">[</span><span class="n">feat_idx</span><span class="p">]</span>
+                        <span class="p">)</span>
                         <span class="n">branching</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="n">pruned</span><span class="p">,</span> <span class="n">branching</span><span class="p">,</span> <span class="n">selected_feature</span><span class="p">,</span> <span class="n">cutoff</span><span class="p">,</span> <span class="n">leaf</span><span class="p">,</span> <span class="n">value</span>
 
@@ -449,10 +453,21 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
 
 <div class="viewcode-block" id="OptimalPrescriptiveTree.print_tree"><a class="viewcode-back" href="../../autoapi/odtlearn/opt_pt/index.html#odtlearn.opt_pt.OptimalPrescriptiveTree.print_tree">[docs]</a>    <span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print the fitted tree with the branching features, the threshold values for</span>
-<span class="sd">        each branching node&#39;s test, and the predictions asserted for each assignment node</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print a text representation of the fitted prescriptive tree.</span>
 
-<span class="sd">        The method uses the Gurobi model&#39;s name for determining how to generate the tree</span>
+<span class="sd">        This method prints the structure of the fitted tree, including the branching features,</span>
+<span class="sd">        the threshold values for each branching node&#39;s test, and the treatment recommendations for each leaf node.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotFittedError</span>
+<span class="sd">            If the model has not been fitted yet.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        The tree is printed in a depth-first manner, with each node represented by its index,</span>
+<span class="sd">        branching feature and threshold (for internal nodes), or treatment recommendation (for leaf nodes).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;b_value&quot;</span><span class="p">,</span> <span class="s2">&quot;w_value&quot;</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span>
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span><span class="p">:</span>
@@ -488,55 +503,61 @@
         <span class="n">feature_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Plot the fitted tree with the branching features, the threshold values for</span>
-<span class="sd">        each branching node&#39;s test, and the predictions asserted for each assignment node</span>
-<span class="sd">        using matplotlib. The method uses the Gurobi model&#39;s name for determining how</span>
-<span class="sd">        to generate the tree. It does some preprocessing before passing the tree to the</span>
-<span class="sd">        `_MPLTreeExporter` class from the sklearn package. The arguments for the</span>
-<span class="sd">        `plot_tree` method are based on the arguments of the sklearn `plot_tree` function.</span>
+<span class="sd">        Plot the fitted prescriptive tree using matplotlib.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        label : {&#39;all&#39;, &#39;root&#39;, &#39;none&#39;}, default=&#39;all&#39;</span>
-<span class="sd">        Whether to show informative labels for impurity, etc.</span>
-<span class="sd">        Options include &#39;all&#39; to show at every node, &#39;root&#39; to show only at</span>
-<span class="sd">        the top root node, or &#39;none&#39; to not show at any node.</span>
-
-<span class="sd">        filled : bool, default=False</span>
-<span class="sd">            When set to ``True``, paint nodes to indicate majority class for</span>
-<span class="sd">            classification, extremity of values for regression, or purity of node</span>
-<span class="sd">            for multi-output.</span>
-
+<span class="sd">            Whether to show informative labels for impurity, etc.</span>
+<span class="sd">            Options include &#39;all&#39; to show at every node, &#39;root&#39; to show only at</span>
+<span class="sd">            the top root node, or &#39;none&#39; to not show at any node.</span>
+<span class="sd">        filled : bool, default=True</span>
+<span class="sd">            When set to True, paint nodes to indicate majority treatment for</span>
+<span class="sd">            prescriptive trees.</span>
 <span class="sd">        rounded : bool, default=False</span>
-<span class="sd">            When set to ``True``, draw node boxes with rounded corners and use</span>
+<span class="sd">            When set to True, draw node boxes with rounded corners and use</span>
 <span class="sd">            Helvetica fonts instead of Times-Roman.</span>
-
-<span class="sd">        precision: int, default=3</span>
+<span class="sd">        precision : int, default=3</span>
 <span class="sd">            Number of digits of precision for floating point in the values of</span>
 <span class="sd">            impurity, threshold and value attributes of each node.</span>
 <span class="sd">        ax : matplotlib axis, default=None</span>
-<span class="sd">            Axes to plot to. If None, use current axis. Any previous content</span>
-<span class="sd">        is cleared.</span>
-
+<span class="sd">            Axes to plot to. If None, use current axis. Any previous content is cleared.</span>
 <span class="sd">        fontsize : int, default=None</span>
 <span class="sd">            Size of text font. If None, determined automatically to fit figure.</span>
-
-<span class="sd">        color_dict: dict, default={&quot;node&quot;: None, &quot;leaves&quot;: []}</span>
-<span class="sd">            A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.</span>
-<span class="sd">            If None, the colors are chosen using the sklearn `plot_tree` color palette</span>
-
+<span class="sd">        color_dict : dict, optional</span>
+<span class="sd">            A dictionary specifying the colors for nodes and leaves.</span>
+<span class="sd">            Default: {&quot;node&quot;: None, &quot;leaves&quot;: []}</span>
+<span class="sd">        edge_annotation : bool, optional (default=True)</span>
+<span class="sd">            Whether to display annotations on the edges.</span>
+<span class="sd">        arrow_annotation_font_scale : float, optional (default=0.5)</span>
+<span class="sd">            The font scale for the arrow annotations.</span>
+<span class="sd">        debug : bool, optional (default=False)</span>
+<span class="sd">            Whether to print debug information.</span>
+<span class="sd">        distance: float, default=1.0</span>
+<span class="sd">            Adjust distance between levels in the tree.</span>
 <span class="sd">        feature_names : list of str, default=None</span>
 <span class="sd">            A list of feature names to use for the plot. If None, the feature names from the</span>
 <span class="sd">            fitted tree will be used. The feature names should be in the same order as the</span>
 <span class="sd">            columns of the data used to fit the tree.</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ax : matplotlib.axes.Axes</span>
+<span class="sd">            The matplotlib Axes containing the plot.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotFittedError</span>
+<span class="sd">            If the model has not been fitted yet.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method visualizes the fitted prescriptive tree structure using matplotlib.</span>
+<span class="sd">        Each node in the tree is represented by a box, with arrows indicating the branching structure.</span>
+<span class="sd">        Leaf nodes show the recommended treatment.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;b_value&quot;</span><span class="p">,</span> <span class="s2">&quot;w_value&quot;</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span>
-
-        <span class="n">node_dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">total_nodes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">node_dict</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_node_status</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">,</span> <span class="n">node</span>
-            <span class="p">)</span>
 
         <span class="c1"># Use the provided feature names if available, otherwise use the original feature names</span>
         <span class="k">if</span> <span class="n">feature_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -546,6 +567,16 @@
             <span class="n">column_names</span> <span class="o">=</span> <span class="n">feature_names</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">column_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span>
+
+        <span class="n">node_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">total_nodes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">node_dict</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_node_status</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">b_value</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">w_value</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">,</span>
+                <span class="n">node</span><span class="p">,</span>
+                <span class="n">feature_names</span><span class="o">=</span><span class="n">column_names</span><span class="p">,</span>
+            <span class="p">)</span>
 
         <span class="n">exporter</span> <span class="o">=</span> <span class="n">MPLPlotter</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="p">,</span>

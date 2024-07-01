@@ -204,7 +204,7 @@
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../notebooks/index.html">Example Notebooks</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../notebooks/FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../notebooks/FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairOCT</span></code> Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../notebooks/FairOCT.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../notebooks/RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
 </ul>
 </li>
@@ -250,6 +250,18 @@
 <span id="odtlearn-utils-binarize"></span><h1><a class="reference internal" href="#module-odtlearn.utils.binarize" title="odtlearn.utils.binarize"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a><a class="headerlink" href="#module-odtlearn.utils.binarize" title="Permalink to this heading">#</a></h1>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">#</a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">#</a></h3>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#odtlearn.utils.binarize.Binarizer" title="odtlearn.utils.binarize.Binarizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Binarizer</span></code></a></p></td>
+<td><p>A transformer that binarizes categorical, integer, and real-valued columns.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 <section id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper autosummary longtable docutils container">
@@ -265,6 +277,103 @@
 </tbody>
 </table>
 </div>
+<dl class="py class">
+<dt class="sig sig-object py" id="odtlearn.utils.binarize.Binarizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">odtlearn.utils.binarize.</span></span><span class="sig-name descname"><span class="pre">Binarizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">categorical_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integer_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uniform'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/binarize.html#Binarizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.binarize.Binarizer" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html#sklearn.base.BaseEstimator" title="(in scikit-learn v1.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code></a>, <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html#sklearn.base.TransformerMixin" title="(in scikit-learn v1.5)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sklearn.base.TransformerMixin</span></code></a></p>
+<p>A transformer that binarizes categorical, integer, and real-valued columns.</p>
+<p>This transformer follows the scikit-learn fit-transform paradigm and can be used
+in scikit-learn pipelines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>categorical_cols</strong><span class="classifier">list, optional</span></dt><dd><p>List of categorical column names to be one-hot encoded.</p>
+</dd>
+<dt><strong>integer_cols</strong><span class="classifier">list, optional</span></dt><dd><p>List of integer column names to be binarized.</p>
+</dd>
+<dt><strong>real_cols</strong><span class="classifier">list, optional</span></dt><dd><p>List of real-valued column names to be discretized and then binarized.</p>
+</dd>
+<dt><strong>n_bins</strong><span class="classifier">int, default=4</span></dt><dd><p>The number of bins to use for discretizing real-valued columns.</p>
+</dd>
+<dt><strong>bin_strategy</strong><span class="classifier">{‘uniform’, ‘quantile’}, default=’uniform’</span></dt><dd><p>The strategy to use for binning real-valued columns.
+‘uniform’: All bins in each feature have identical widths.
+‘quantile’: All bins in each feature have the same number of points.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">odtlearn.utils.binarizer</span> <span class="kn">import</span> <span class="n">Binarizer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;cat&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;int&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;real&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">binarizer</span> <span class="o">=</span> <span class="n">Binarizer</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">categorical_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">integer_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;int&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">real_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;real&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">n_bins</span><span class="o">=</span><span class="mi">2</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X_bin</span> <span class="o">=</span> <span class="n">binarizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>encoders_</strong><span class="classifier">dict</span></dt><dd><p>Dictionary of fitted encoders for each column type.</p>
+</dd>
+<dt><strong>column_names_</strong><span class="classifier">list</span></dt><dd><p>List of column names in the transformed output.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.utils.binarize.Binarizer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/binarize.html#Binarizer.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.binarize.Binarizer.fit" title="Permalink to this definition">#</a></dt>
+<dd><p>Fit the Binarizer to the input data.</p>
+<p>This method learns the encoding schemes for categorical, integer, and real-valued columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like or pandas DataFrame of shape (n_samples, n_features)</span></dt><dd><p>The input samples to be binarized.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">None</span></dt><dd><p>Ignored. This parameter exists only for compatibility with sklearn.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>Returns self.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="odtlearn.utils.binarize.Binarizer.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/binarize.html#Binarizer.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.binarize.Binarizer.transform" title="Permalink to this definition">#</a></dt>
+<dd><p>Transform the input data using the fitted Binarizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like or pandas DataFrame of shape (n_samples, n_features)</span></dt><dd><p>The input samples to be binarized.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>X_bin</strong><span class="classifier">pandas DataFrame</span></dt><dd><p>The binarized input data.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="odtlearn.utils.binarize.binarize">
 <span class="sig-prename descclassname"><span class="pre">odtlearn.utils.binarize.</span></span><span class="sig-name descname"><span class="pre">binarize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categorical_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">integer_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uniform'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/odtlearn/utils/binarize.html#binarize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#odtlearn.utils.binarize.binarize" title="Permalink to this definition">#</a></dt>
@@ -355,7 +464,13 @@
             <ul>
 <li><a class="reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">odtlearn.utils.binarize</span></code></a><ul>
 <li><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#odtlearn.utils.binarize.Binarizer"><code class="docutils literal notranslate"><span class="pre">Binarizer</span></code></a><ul>
+<li><a class="reference internal" href="#odtlearn.utils.binarize.Binarizer.fit"><code class="docutils literal notranslate"><span class="pre">Binarizer.fit()</span></code></a></li>
+<li><a class="reference internal" href="#odtlearn.utils.binarize.Binarizer.transform"><code class="docutils literal notranslate"><span class="pre">Binarizer.transform()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#odtlearn.utils.binarize.binarize"><code class="docutils literal notranslate"><span class="pre">binarize()</span></code></a></li>
 </ul>
 </li>
