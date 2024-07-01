@@ -55,8 +55,6 @@ class MPLPlotter(_MPLTreeExporter):
         A dictionary containing information about each node in the tree.
     column_names : list
         A list of feature names used in the decision tree.
-    feature_names : list
-        A list of feature names used in the decision tree.
     class_names : list
         A list of class names for the target variable.
     color_options : list
@@ -116,7 +114,6 @@ class MPLPlotter(_MPLTreeExporter):
         self.tree = tree
         self.node_dict = node_dict
         self.column_names = column_names
-        self.feature_names = column_names
         self.class_names = classes
         self.color_options = [
             [int(value * 255) for value in color]
@@ -135,7 +132,7 @@ class MPLPlotter(_MPLTreeExporter):
 
         super().__init__(
             max_depth=self.max_depth,
-            feature_names=self.feature_names,
+            feature_names=self.column_names,
             class_names=self.class_names,
             label=label,
             filled=filled,
@@ -202,10 +199,12 @@ class MPLPlotter(_MPLTreeExporter):
                 # = or <=
                 sign = (
                     "="
-                    if self.model_name in ["FairOCT", "FlowOCT", "BendersOCT"]
-                    else characters[3]
+                    # if self.model_name in ["FairOCT", "FlowOCT", "BendersOCT"]
+                    # else characters[3]
                 )
-                node_string += f"feature {feature} {sign} {round(cutoff, self.precision)}{characters[4]}"
+                node_string += (
+                    f"{feature} {sign} {round(cutoff, self.precision)}{characters[4]}"
+                )
                 if self.debug:
                     print(f"cutoff value: {cutoff}")
                     print(f"rounded cutoff value: {round(cutoff, self.precision)}")

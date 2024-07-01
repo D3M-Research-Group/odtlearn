@@ -99,7 +99,7 @@ def synthetic_data_1():
 # fmt: on
 @pytest.mark.parametrize(
     "obj_mode, solver, fair_class",
-    obj_solver_class_combo()
+    obj_solver_class_combo(),
     # [("acc", "gurobi"), ("balance", "gurobi"), ("acc", "cbc"), ("balance", "cbc")],
 )
 def test_FairOCT_same_predictions(
@@ -396,7 +396,7 @@ def test_bad_obj_mode(synthetic_data_1, class_name):
     X, y, protect_feat, legit_factor = synthetic_data_1
     with pytest.raises(
         ValueError,
-        match="Invalid objective mode. obj_mode should be one of acc or balance.",
+        match="objective must be one of 'acc', 'balance', or 'custom'",
     ):
         fcl = class_name(
             solver="cbc",
@@ -453,3 +453,46 @@ def test_fairness_metric_summary(synthetic_data_1, f, b):
     fcl.fit(X, y, protect_feat, legit_factor)
 
     fcl.fairness_metric_summary(f, fcl.predict(X))
+
+
+@pytest.mark.parametrize(
+    "fair_class", [FairSPOCT, FairCSPOCT, FairPEOCT, FairEOppOCT, FairEOddsOCT]
+)
+def test_custom_weights_error(synthetic_data_1, fair_class):
+    X, y, protect_feat, legit_factor = synthetic_data_1
+    weights = np.array([0.1, 0.2, 0.3])  # Incorrect number of weights
+
+    model = fair_class(
+        solver="cbc",
+        positive_class=1,
+        depth=2,
+        _lambda=0,
+        obj_mode="custom",
+        fairness_bound=1,
+    )
+
+    with pytest.raises(
+        ValueError, match="The number of weights must match the number of samples."
+    ):
+        model.fit(X, y, protect_feat, legit_factor, weights=weights)
+
+
+@pytest.mark.parametrize(
+    "fair_class", [FairSPOCT, FairCSPOCT, FairPEOCT, FairEOppOCT, FairEOddsOCT]
+)
+def test_custom_weights_missing(synthetic_data_1, fair_class):
+    X, y, protect_feat, legit_factor = synthetic_data_1
+
+    model = fair_class(
+        solver="cbc",
+        positive_class=1,
+        depth=2,
+        _lambda=0,
+        obj_mode="custom",
+        fairness_bound=1,
+    )
+
+    with pytest.raises(
+        ValueError, match="Weights must be provided when obj_mode is 'custom'."
+    ):
+        model.fit(X, y, protect_feat, legit_factor)

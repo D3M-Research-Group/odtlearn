@@ -1,6 +1,216 @@
 import numpy as np
 import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import KBinsDiscretizer, OneHotEncoder
+
+
+class Binarizer(BaseEstimator, TransformerMixin):
+    """
+    A transformer that binarizes categorical, integer, and real-valued columns.
+
+    This transformer follows the scikit-learn fit-transform paradigm and can be used
+    in scikit-learn pipelines.
+
+    Parameters
+    ----------
+    categorical_cols : list, optional
+        List of categorical column names to be one-hot encoded.
+    integer_cols : list, optional
+        List of integer column names to be binarized.
+    real_cols : list, optional
+        List of real-valued column names to be discretized and then binarized.
+    n_bins : int, default=4
+        The number of bins to use for discretizing real-valued columns.
+    bin_strategy : {'uniform', 'quantile'}, default='uniform'
+        The strategy to use for binning real-valued columns.
+        'uniform': All bins in each feature have identical widths.
+        'quantile': All bins in each feature have the same number of points.
+
+    Attributes
+    ----------
+    encoders_ : dict
+        Dictionary of fitted encoders for each column type.
+    column_names_ : list
+        List of column names in the transformed output.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> from odtlearn.utils.binarizer import Binarizer
+    >>> df = pd.DataFrame({
+    ...     'cat': ['A', 'B', 'C', 'A'],
+    ...     'int': [1, 2, 3, 2],
+    ...     'real': [0.1, 0.5, 0.7, 0.9]
+    ... })
+    >>> binarizer = Binarizer(
+    ...     categorical_cols=['cat'],
+    ...     integer_cols=['int'],
+    ...     real_cols=['real'],
+    ...     n_bins=2
+    ... )
+    >>> X_bin = binarizer.fit_transform(df)
+    """
+
+    def __init__(
+        self,
+        categorical_cols=None,
+        integer_cols=None,
+        real_cols=None,
+        n_bins=4,
+        bin_strategy="uniform",
+    ):
+        assert any(
+            [x is not None for x in [categorical_cols, integer_cols, real_cols]]
+        ), (
+            "Must provide at least one of the three options of a list of categorical columns "
+            "or integer columns or real valued columns to binarize."
+        )
+
+        if len(real_cols) > 0 and n_bins is None:
+            raise ValueError(
+                "The number of bins must be provided for encoding real columns."
+            )
+        if len(real_cols) > 0 and bin_strategy is None:
+            raise ValueError(
+                "The bin strategy must be provided for encoding real columns."
+            )
+        if (
+            len(real_cols) > 0
+            and bin_strategy is None
+            or bin_strategy not in ["uniform", "quantile"]
+        ):
+            raise ValueError(
+                "The bin strategy must be one of the following: 'uniform' or 'quantile'."
+            )
+
+        self.categorical_cols = categorical_cols or []
+        self.integer_cols = integer_cols or []
+        self.real_cols = real_cols or []
+        self.n_bins = n_bins
+        self.bin_strategy = bin_strategy
+        self.encoders_ = {}
+        self.column_names_ = None
+
+    def fit(self, X, y=None):
+        """
+        Fit the Binarizer to the input data.
+
+        This method learns the encoding schemes for categorical, integer, and real-valued columns.
+
+        Parameters
+        ----------
+        X : array-like or pandas DataFrame of shape (n_samples, n_features)
+            The input samples to be binarized.
+        y : None
+            Ignored. This parameter exists only for compatibility with sklearn.
+
+        Returns
+        -------
+        self : object
+            Returns self.
+        """
+        X = pd.DataFrame(X)
+
+        if self.categorical_cols:
+            cat_encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+            cat_encoder.fit(X[self.categorical_cols])
+            self.encoders_["categorical"] = cat_encoder
+
+        if self.integer_cols:
+            int_encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+            int_encoder.fit(X[self.integer_cols])
+            self.encoders_["integer"] = int_encoder
+
+        if self.real_cols:
+            real_encoder = KBinsDiscretizer(
+                n_bins=self.n_bins, encode="onehot-dense", strategy=self.bin_strategy
+            )
+            real_encoder.fit(X[self.real_cols])
+            self.encoders_["real"] = real_encoder
+
+        # Generate and store column names for the transformed data
+        self.column_names_ = self._get_feature_names_out()
+
+        return self
+
+    def transform(self, X):
+        """
+        Transform the input data using the fitted Binarizer.
+
+        Parameters
+        ----------
+        X : array-like or pandas DataFrame of shape (n_samples, n_features)
+            The input samples to be binarized.
+
+        Returns
+        -------
+        X_bin : pandas DataFrame
+            The binarized input data.
+        """
+        X = pd.DataFrame(X)
+        result = pd.DataFrame(index=X.index)
+
+        for col_type in ["categorical", "integer", "real"]:
+            if col_type in self.encoders_:
+                cols = getattr(self, f"{col_type}_cols")
+                encoder = self.encoders_[col_type]
+
+                if col_type in ["categorical", "integer"]:
+                    bin_data = encoder.transform(X[cols])
+                    bin_df = pd.DataFrame(
+                        bin_data,
+                        columns=encoder.get_feature_names_out(cols),
+                        index=X.index,
+                    )
+
+                    if col_type == "integer":
+                        for col in cols:
+                            col_features = [
+                                f for f in bin_df.columns if f.startswith(f"{col}_")
+                            ]
+                            bin_df[col_features] = bin_df[col_features].cumsum(axis=1)
+
+                else:  # real columns
+                    bin_data = encoder.transform(X[cols])
+                    bin_df = pd.DataFrame(
+                        bin_data,
+                        columns=[
+                            f"{col}_{i}" for col in cols for i in range(self.n_bins)
+                        ],
+                        index=X.index,
+                    )
+
+                result = pd.concat([result, bin_df], axis=1)
+
+        # Ensure all columns from fit are present, fill with 0 if missing
+        for col in self.column_names_:
+            if col not in result.columns:
+                result[col] = 0
+
+        return result[self.column_names_]
+
+    def _get_feature_names_out(self):
+        """Get feature names for the binarized columns."""
+        feature_names = []
+
+        if self.categorical_cols:
+            feature_names.extend(
+                self.encoders_["categorical"].get_feature_names_out(
+                    self.categorical_cols
+                )
+            )
+
+        if self.integer_cols:
+            int_features = self.encoders_["integer"].get_feature_names_out(
+                self.integer_cols
+            )
+            feature_names.extend(int_features)
+
+        if self.real_cols:
+            for col in self.real_cols:
+                feature_names.extend([f"{col}_{i}" for i in range(self.n_bins)])
+
+        return feature_names
 
 
 def binarize(

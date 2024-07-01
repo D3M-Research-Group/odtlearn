@@ -81,6 +81,16 @@ def synthetic_data_2():
 
 
 # fmt: on
+
+
+@pytest.fixture
+def small_binary_dataset():
+    np.random.seed(42)
+    X = np.random.randint(0, 2, size=(20, 5))
+    y = np.random.randint(0, 2, size=20)
+    return X, y
+
+
 def test_FlowOCT_X_nonbinary_error():
     # Test that we raise a ValueError if X matrix has values other than zero or one
     clf = FlowOCT(solver="cbc", depth=1, time_limit=2, _lambda=1)
@@ -424,8 +434,8 @@ def test_FlowOCT_plot_print(synthetic_data_1):
 def test_wrong_objective_FlowOCT(synthetic_data_1):
     X, y = synthetic_data_1
     with pytest.raises(
-        AssertionError,
-        match="Wrong objective mode. obj_mode should be one of acc or balance.",
+        ValueError,
+        match="objective must be one of 'acc', 'balance', or 'custom'",
     ):
         stcl = FlowOCT(
             solver="cbc",
@@ -437,8 +447,8 @@ def test_wrong_objective_FlowOCT(synthetic_data_1):
         stcl.fit(X, y)
 
     with pytest.raises(
-        AssertionError,
-        match="Wrong objective mode. obj_mode should be one of acc or balance.",
+        ValueError,
+        match="objective must be one of 'acc', 'balance', or 'custom'",
     ):
         bstcl = BendersOCT(
             solver="cbc",
@@ -448,3 +458,71 @@ def test_wrong_objective_FlowOCT(synthetic_data_1):
             obj_mode="aaa",
         )
         bstcl.fit(X, y)
+
+
+@pytest.mark.parametrize("OCTClass", [FlowOCT, BendersOCT])
+def test_custom_weights(OCTClass, small_binary_dataset):
+    X, y = small_binary_dataset
+
+    # Create custom weights that heavily favor class 1
+    weights = np.ones_like(y)
+    weights[y == 1] = 10
+
+    # Fit the model with custom weights
+    oct = OCTClass(solver="cbc", obj_mode="custom", depth=2, time_limit=10)
+    oct.fit(X, y, weights=weights)
+    y_pred = oct.predict(X)
+
+    # The prediction should favor class 1 due to higher weights
+    assert np.mean(y_pred) > np.mean(y)
+
+
+@pytest.mark.parametrize("OCTClass", [FlowOCT, BendersOCT])
+def test_custom_weights_ignored_warning(OCTClass, small_binary_dataset):
+    X, y = small_binary_dataset
+    weights = np.ones_like(y)
+
+    oct = OCTClass(solver="cbc", obj_mode="acc", depth=2, time_limit=10)
+    with pytest.warns(
+        UserWarning, match="Weights are ignored because obj_mode is not 'custom'."
+    ):
+        oct.fit(X, y, weights=weights)
+
+
+@pytest.mark.parametrize("OCTClass", [FlowOCT, BendersOCT])
+def test_custom_weights_missing_error(OCTClass, small_binary_dataset):
+    X, y = small_binary_dataset
+
+    oct = OCTClass(solver="cbc", obj_mode="custom", depth=2, time_limit=10)
+    with pytest.raises(
+        ValueError, match="Weights must be provided when obj_mode is 'custom'."
+    ):
+        oct.fit(X, y)
+
+
+@pytest.mark.parametrize("OCTClass", [FlowOCT, BendersOCT])
+def test_custom_weights_wrong_length(OCTClass, small_binary_dataset):
+    X, y = small_binary_dataset
+    weights = np.ones(len(y) - 1)  # Wrong length
+
+    oct = OCTClass(solver="cbc", obj_mode="custom", depth=2, time_limit=10)
+    with pytest.raises(
+        ValueError, match="The number of weights must match the number of samples."
+    ):
+        oct.fit(X, y, weights=weights)
+
+
+@pytest.mark.parametrize("OCTClass", [FlowOCT, BendersOCT])
+def test_weight_consistency(OCTClass, small_binary_dataset):
+    X, y = small_binary_dataset
+
+    # Fit with 'acc' mode
+    oct_acc = OCTClass(solver="cbc", obj_mode="acc", depth=2, time_limit=10)
+    oct_acc.fit(X, y)
+
+    # Fit with 'custom' mode and uniform weights
+    oct_custom = OCTClass(solver="cbc", obj_mode="custom", depth=2, time_limit=10)
+    oct_custom.fit(X, y, weights=np.ones_like(y))
+
+    # Predictions should be the same
+    assert np.array_equal(oct_acc.predict(X), oct_custom.predict(X))

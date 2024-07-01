@@ -25,8 +25,16 @@ class FairConstrainedOCT(ConstrainedOCT):
     ----------
     solver : str
         The name of the solver to use for solving the MIP problem.
+    positive_class : int
+        The value of the class label which is corresponding to the desired outcome
     _lambda : float
         The regularization parameter in the objective. Must be in the interval [0, 1).
+    obj_mode : {'acc', 'balance', 'custom'}, optional (default='acc')
+        The objective mode to use.
+        'acc' for accuracy, 'balance' for balanced accuracy, 'custom' for user-defined weights.
+    fairness_bound: float (0,1], default=1
+        The bound of the fairness constraint. The smaller the value the stricter
+        the fairness constraint and 1 corresponds to no fairness constraint enforced
     depth : int
         The maximum depth of the tree.
     time_limit : int
@@ -85,8 +93,24 @@ class FairConstrainedOCT(ConstrainedOCT):
     """
 
     def __init__(
-        self, solver, _lambda, depth, time_limit, num_threads, verbose
+        self,
+        solver,
+        positive_class,
+        _lambda,
+        obj_mode,
+        fairness_bound,
+        depth,
+        time_limit,
+        num_threads,
+        verbose,
     ) -> None:
+        self._positive_class = positive_class
+        self._fairness_bound = fairness_bound
+        self.obj_mode = obj_mode
+        if obj_mode not in ["acc", "balance", "custom"]:
+            raise ValueError("objective must be one of 'acc', 'balance', or 'custom'")
+        self._obj_mode = obj_mode
+        self.weights = None
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
 
     def _extract_metadata(self, X, y, protect_feat):
@@ -176,46 +200,82 @@ class FairConstrainedOCT(ConstrainedOCT):
         for n in self._tree.Nodes:
             for f in self._X_col_labels:
                 obj += -1 * self._lambda * self._b[n, f]
-        if self._obj_mode == "acc":
-            for i in self._datapoints:
-                for n in self._tree.Nodes + self._tree.Leaves:
-                    obj += (1 - self._lambda) * (self._zeta[i, n, self._y[i]])
-        elif self._obj_mode == "balance":
-            for i in self._datapoints:
-                for n in self._tree.Nodes + self._tree.Leaves:
-                    obj += (
-                        (1 - self._lambda)
-                        * (
-                            1
-                            / self._y[self._y == self._y[i]].shape[0]
-                            / self._labels.shape[0]
-                        )
-                        * (self._zeta[i, n, self._y[i]])
-                    )
-        else:
-            raise ValueError(
-                "Invalid objective mode. obj_mode should be one of acc or balance."
-            )
+
+        for i in self._datapoints:
+            for n in self._tree.Nodes + self._tree.Leaves:
+                obj += (
+                    (1 - self._lambda)
+                    * self.weights[i]
+                    * (self._zeta[i, n, self._y[i]])
+                )
 
         self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
-    def fit(self, X, y, protect_feat, legit_factor):
+    def fit(self, X, y, protect_feat, legit_factor, weights=None):
         """
+        Fit the Fair Constrained Optimal Classification Tree (FairConstrainedOCT) model to the given training data.
+
         Parameters
         ----------
-        X : {array-like, sparse matrix}, shape (n_samples, n_features)
-            The training input samples.
-        y : array-like, shape (n_samples,)
-            The target values (class labels in classification).
-        protect_feat : array-like, shape (n_samples,1) or (n_samples, n_p)
-            The protected feature columns (Race, gender, etc); Can have one or more columns
-        legit_factor : array-like, shape (n_samples,)
-            The legitimate factor column(e.g., prior number of criminal acts)
+        X : array-like of shape (n_samples, n_features)
+            The training input samples. Each feature should be binary (0 or 1).
+        y : array-like of shape (n_samples,)
+            The target values (class labels) for the training samples.
+        protect_feat : array-like of shape (n_samples, n_protected_features)
+            The protected feature columns (e.g., race, gender). Can have one or more columns.
+            Each protected feature should be binary (0 or 1).
+        legit_factor : array-like of shape (n_samples,)
+            The legitimate factor column (e.g., prior number of criminal acts).
+            This should be a numeric column.
+        weights : array-like of shape (n_samples,), optional (default=None)
+            Sample weights. If None, then samples are equally weighted when obj_mode is 'acc',
+            or weights are automatically calculated when obj_mode is 'balance'.
+            Must be provided when obj_mode is 'custom'.
 
         Returns
         -------
         self : object
             Returns self.
+
+        Raises
+        ------
+        ValueError
+            If X or protect_feat contains non-binary values, or if inputs have inconsistent numbers of samples.
+            Also raised if weights are not provided when obj_mode is 'custom', or if the number
+            of weights doesn't match the number of samples.
+        AssertionError
+            If the fairness bound is not in the range (0, 1].
+
+        Notes
+        -----
+        This method fits the FairConstrainedOCT model using mixed-integer optimization while
+        considering fairness constraints. It sets up the optimization problem, solves it, and stores the results.
+
+        The fairness constraints are applied based on the specific fairness metric defined in the subclass
+        (e.g., Statistical Parity, Conditional Statistical Parity, Predictive Equality, or Equal Opportunity).
+
+        The optimization problem aims to maximize accuracy (or balanced accuracy, depending on the obj_mode)
+        while satisfying the fairness constraints within the specified fairness_bound.
+
+        The resulting tree structure is stored in the model and can be used for prediction or visualization.
+
+        The behavior of this method depends on the `obj_mode` specified during initialization:
+        - If obj_mode is 'acc', equal weights are used (weights parameter is ignored).
+        - If obj_mode is 'balance', weights are automatically calculated to balance class importance.
+        - If obj_mode is 'custom', the provided weights are used.
+
+        When obj_mode is not 'custom' and weights are provided, a warning is issued and the weights are ignored.
+
+        Examples
+        --------
+        >>> from odtlearn.fair_oct import FairConstrainedOCT
+        >>> import numpy as np
+        >>> X = np.array([[0, 1], [1, 0], [1, 1], [0, 0]])
+        >>> y = np.array([0, 1, 1, 0])
+        >>> protect_feat = np.array([[1], [0], [1], [0]])
+        >>> legit_factor = np.array([0.1, 0.2, 0.3, 0.4])
+        >>> model = FairConstrainedOCT(solver="cbc", positive_class=1, depth=2, fairness_bound=0.1)
+        >>> model.fit(X, y, protect_feat, legit_factor)
         """
         self._extract_metadata(X, y, protect_feat)
 
@@ -249,6 +309,28 @@ class FairConstrainedOCT(ConstrainedOCT):
         # Store the classes seen during fit
         self._classes = unique_labels(y)
 
+        if weights is not None:
+            if self._obj_mode != "custom":
+                warnings.warn("Weights are ignored because obj_mode is not 'custom'.")
+            elif len(weights) != len(y):
+                raise ValueError(
+                    "The number of weights must match the number of samples."
+                )
+            else:
+                self.weights = np.array(weights)
+
+        # Generate weights based on obj_mode
+        if self._obj_mode == "acc":
+            self.weights = np.ones(len(y))
+        elif self._obj_mode == "balance":
+            class_counts = np.bincount(y)
+            self.weights = np.array(
+                [1 / (class_counts[yi] * len(self._labels)) for yi in y]
+            )
+        elif self._obj_mode == "custom":
+            if self.weights is None:
+                raise ValueError("Weights must be provided when obj_mode is 'custom'.")
+
         self._create_main_problem()
         self._solver.optimize(self._X, self, self._solver)
 
@@ -260,18 +342,51 @@ class FairConstrainedOCT(ConstrainedOCT):
         return self
 
     def predict(self, X):
-        """Classify test points using the FairTree classifier
+        """
+        Predict class labels for samples in X using the fitted Fair Constrained Optimal Classification Tree model.
 
         Parameters
         ----------
-        X : array-like, shape (n_samples, n_features)
-            The input samples.
+        X : array-like of shape (n_samples, n_features)
+            The input samples for which to make predictions. Each feature should be binary (0 or 1).
 
         Returns
         -------
-        y : ndarray, shape (n_samples,)
-            The label for each sample is the label of the closest sample
-            seen during fit.
+        y_pred : ndarray of shape (n_samples,)
+            The predicted class labels for each sample in X.
+
+        Raises
+        ------
+        NotFittedError
+            If the model has not been fitted yet.
+        ValueError
+            If X contains non-binary values or has a different number of features than the training data.
+
+        Notes
+        -----
+        This method uses the fair decision tree learned during the fit process to classify new samples.
+        It traverses the tree for each sample in X, following the branching decisions until
+        reaching a leaf node, and returns the corresponding class prediction.
+
+        The predictions made by this method satisfy the fairness constraints that were imposed
+        during the training process. However, note that the fairness guarantees only hold for the
+        distribution of the training data. When applying the model to new data with a different
+        distribution, the fairness properties may not be preserved.
+
+        Examples
+        --------
+        >>> from odtlearn.fair_oct import FairSPOCT
+        >>> import numpy as np
+        >>> X_train = np.array([[0, 0], [1, 1], [1, 0], [0, 1]])
+        >>> y_train = np.array([0, 1, 1, 0])
+        >>> protect_feat = np.array([0, 1, 1, 0])
+        >>> legit_factor = np.array([0, 1, 0, 1])
+        >>> clf = FairSPOCT(solver="cbc", positive_class=1, depth=2, fairness_bound=0.1)
+        >>> clf.fit(X_train, y_train, protect_feat, legit_factor)
+        >>> X_test = np.array([[1, 1], [0, 0]])
+        >>> y_pred = clf.predict(X_test)
+        >>> print(y_pred)
+        [1 0]
         """
 
         # Check is fit had been called
@@ -305,12 +420,9 @@ class FairSPOCT(FairConstrainedOCT):
         The given time limit (in seconds) for solving the MIO problem
     _lambda : float, default = 0
         The regularization parameter in the objective. _lambda is in the interval [0,1)
-    obj_mode: str, default="acc"
-        The objective should be used to learn an optimal decision tree.
-        The two options are "acc" and "balance".
-        The accuracy objective attempts to maximize prediction accuracy while the
-        balance objective aims to learn a balanced optimal decision
-        tree to better generalize to our of sample data.
+    obj_mode : {'acc', 'balance', 'custom'}, optional (default='acc')
+        The objective mode to use.
+        'acc' for accuracy, 'balance' for balanced accuracy, 'custom' for user-defined weights.
     fairness_bound: float (0,1], default=1
         The bound of the fairness constraint. The smaller the value the stricter
         the fairness constraint and 1 corresponds to no fairness constraint enforced
@@ -332,11 +444,17 @@ class FairSPOCT(FairConstrainedOCT):
         verbose=False,
     ) -> None:
 
-        super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
-
-        self._obj_mode = obj_mode
-        self._positive_class = positive_class
-        self._fairness_bound = fairness_bound
+        super().__init__(
+            solver,
+            positive_class,
+            _lambda,
+            obj_mode,
+            fairness_bound,
+            depth,
+            time_limit,
+            num_threads,
+            verbose,
+        )
 
     def _define_side_constraints(self):
         # Loop through all possible combinations of the protected feature
@@ -351,16 +469,24 @@ class FairSPOCT(FairConstrainedOCT):
 
     def calc_metric(self, protect_feat, y):
         """
-        This function returns the statistical parity value for any given protected level and outcome value
+        Calculate the statistical parity metric for the given data.
 
-        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
-                The protected feature columns (Race, gender, etc); We could have one or more columns
-        :param y: array-like, shape (n_samples,)
-                The target values (class labels in classification).
+        Parameters
+        ----------
+        protect_feat : array-like of shape (n_samples, n_protected_features)
+            The protected feature columns (e.g., race, gender). Can have one or more columns.
+        y : array-like of shape (n_samples,)
+            The target values or predicted values.
 
-        :return sp_dict: a dictionary with key =(p,t) and value = P(Y=t|P=p)
-        where p is a protected level and t is an outcome value
+        Returns
+        -------
+        sp_dict : dict
+            A dictionary with key (p,t) and value P(Y=t|P=p), where p is a protected level and t is an outcome value.
 
+        Notes
+        -----
+        This method calculates the statistical parity metric, which measures the difference in prediction rates
+        across different protected groups.
         """
         if isinstance(protect_feat, pd.DataFrame):
             protect_feat_test_col_names = protect_feat.columns
@@ -401,7 +527,7 @@ class FairCSPOCT(FairConstrainedOCT):
     An optimal classification tree fit on a given binary-valued data set
     with a fairness side-constraint requiring conditional statistical parity (CSP) between protected groups.
 
-            Parameters
+    Parameters
     ----------
     solver: str
         A string specifying the name of the solver to use
@@ -415,12 +541,9 @@ class FairCSPOCT(FairConstrainedOCT):
         The given time limit (in seconds) for solving the MIO problem
     _lambda : float, default = 0
         The regularization parameter in the objective. _lambda is in the interval [0,1)
-    obj_mode: str, default="acc"
-        The objective should be used to learn an optimal decision tree.
-        The two options are "acc" and "balance".
-        The accuracy objective attempts to maximize prediction accuracy while the
-        balance objective aims to learn a balanced optimal decision
-        tree to better generalize to our of sample data.
+    obj_mode : {'acc', 'balance', 'custom'}, optional (default='acc')
+        The objective mode to use.
+        'acc' for accuracy, 'balance' for balanced accuracy, 'custom' for user-defined weights.
     fairness_bound: float (0,1], default=1
         The bound of the fairness constraint. The smaller the value the stricter
         the fairness constraint and 1 corresponds to no fairness constraint enforced
@@ -441,11 +564,17 @@ class FairCSPOCT(FairConstrainedOCT):
         verbose=False,
     ) -> None:
 
-        super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
-
-        self._obj_mode = obj_mode
-        self._positive_class = positive_class
-        self._fairness_bound = fairness_bound
+        super().__init__(
+            solver,
+            positive_class,
+            _lambda,
+            obj_mode,
+            fairness_bound,
+            depth,
+            time_limit,
+            num_threads,
+            verbose,
+        )
 
     def _define_side_constraints(self):
         # Loop through all possible combinations of the protected feature
@@ -466,20 +595,27 @@ class FairCSPOCT(FairConstrainedOCT):
 
     def calc_metric(self, protect_feat, legit_factor, y):
         """
-        Returns the conditional statistical parity value for any given
-        protected level, legitimate feature value and outcome value
+        Calculate the conditional statistical parity metric for the given data.
 
-        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
-                The protected feature columns (Race, gender, etc); We could have one or more columns
-        :param legit_fact: array-like, shape (n_samples,)
-            The legitimate factor column(e.g., prior number of criminal acts)
-        :param y: array-like, shape (n_samples,)
-                The target values (class labels in classification).
+        Parameters
+        ----------
+        protect_feat : array-like of shape (n_samples, n_protected_features)
+            The protected feature columns (e.g., race, gender). Can have one or more columns.
+        legit_factor : array-like of shape (n_samples,)
+            The legitimate factor column (e.g., prior number of criminal acts).
+        y : array-like of shape (n_samples,)
+            The target values or predicted values.
 
+        Returns
+        -------
+        csp_dict : dict
+            A dictionary with key (p, f, t) and value P(Y=t|P=p, L=f), where p is a protected level,
+            t is an outcome value, and f is the value of the legitimate feature.
 
-        :return csp_dict: a dictionary with key =(p, f, t) and value = P(Y=t|P=p, L=f) where p is a protected level
-                          and t is an outcome value and l is the value of the legitimate feature
-
+        Notes
+        -----
+        This method calculates the conditional statistical parity metric, which measures the difference in
+        prediction rates across different protected groups, conditioned on the legitimate factor.
         """
 
         if isinstance(protect_feat, pd.DataFrame):
@@ -572,10 +708,17 @@ class FairPEOCT(FairConstrainedOCT):
         verbose=False,
     ) -> None:
 
-        super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
-        self._obj_mode = obj_mode
-        self._positive_class = positive_class
-        self._fairness_bound = fairness_bound
+        super().__init__(
+            solver,
+            positive_class,
+            _lambda,
+            obj_mode,
+            fairness_bound,
+            depth,
+            time_limit,
+            num_threads,
+            verbose,
+        )
 
     def _define_side_constraints(self):
         # Loop through all possible combinations of the protected feature
@@ -595,19 +738,27 @@ class FairPEOCT(FairConstrainedOCT):
 
     def calc_metric(self, protect_feat, y, y_pred):
         """
-        This function returns the false positive and true positive rate value
-        for any given protected level, outcome value and prediction value
+        Calculate the predictive equality metric for the given data.
 
-        :param protect_feat: array-like, shape (n_samples,1) or (n_samples, n_p)
-                The protected feature columns (Race, gender, etc); We could have one or more columns
+        Parameters
+        ----------
+        protect_feat : array-like of shape (n_samples, n_protected_features)
+            The protected feature columns (e.g., race, gender). Can have one or more columns.
+        y : array-like of shape (n_samples,)
+            The true target values.
+        y_pred : array-like of shape (n_samples,)
+            The predicted values.
 
-        :param y: array-like, shape (n_samples,)
-                The true target values (class labels in classification).
-        :param y_pred: array-like, shape (n_samples,)
-                The predicted values (class labels in classification).
+        Returns
+        -------
+        eq_dict : dict
+            A dictionary with key (p, t, t_pred) and value P(Y_pred=t_pred|P=p, Y=t), where p is a protected level,
+            t is a true outcome value, and t_pred is a predicted outcome value.
 
-        :return eq_dict: a dictionary with key =(p, t, t_pred) and value = P(Y_pred=t_pred|P=p, Y=t)
-
+        Notes
+        -----
+        This method calculates the predictive equality metric, which measures the difference in
+        false positive rates across different protected groups.
         """
 
         if isinstance(protect_feat, pd.DataFrame):
@@ -701,10 +852,17 @@ class FairEOppOCT(FairConstrainedOCT):
         verbose=False,
     ) -> None:
 
-        super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
-        self._obj_mode = obj_mode
-        self._positive_class = positive_class
-        self._fairness_bound = fairness_bound
+        super().__init__(
+            solver,
+            positive_class,
+            _lambda,
+            obj_mode,
+            fairness_bound,
+            depth,
+            time_limit,
+            num_threads,
+            verbose,
+        )
 
     def _define_side_constraints(self):
         # Loop through all possible combinations of the protected feature
@@ -771,10 +929,17 @@ class FairEOddsOCT(FairConstrainedOCT):
         verbose=False,
     ) -> None:
 
-        super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
-        self._obj_mode = obj_mode
-        self._positive_class = positive_class
-        self._fairness_bound = fairness_bound
+        super().__init__(
+            solver,
+            positive_class,
+            _lambda,
+            obj_mode,
+            fairness_bound,
+            depth,
+            time_limit,
+            num_threads,
+            verbose,
+        )
 
     def _define_side_constraints(self):
         # Loop through all possible combinations of the protected feature
@@ -1057,20 +1222,34 @@ class FairOCT(FlowOCTMultipleSink):
 
     def fit(self, X, y, protect_feat, legit_factor):
         """
+        Fit the FairOCT model to the given training data.
+
         Parameters
         ----------
-        X : {array-like, sparse matrix}, shape (n_samples, n_features)
-            The training input samples.
-        y : array-like, shape (n_samples,)
-            The target values (class labels in classification).
-        protect_feat : array-like, shape (n_samples,1) or (n_samples, n_p)
-            The protected feature columns (Race, gender, etc); Can have one or more columns
-        legit_factor : array-like, shape (n_samples,)
-            The legitimate factor column(e.g., prior number of criminal acts)
+        X : array-like of shape (n_samples, n_features)
+            The training input samples. Each feature should be binary (0 or 1).
+        y : array-like of shape (n_samples,)
+            The target values (class labels) for the training samples.
+        protect_feat : array-like of shape (n_samples, n_protected_features)
+            The protected feature columns (e.g., race, gender). Can have one or more columns.
+        legit_factor : array-like of shape (n_samples,)
+            The legitimate factor column (e.g., prior number of criminal acts).
+
         Returns
         -------
         self : object
             Returns self.
+
+        Raises
+        ------
+        ValueError
+            If X contains non-binary values or if inputs have inconsistent numbers of samples.
+
+        Notes
+        -----
+        This method fits the FairOCT model using mixed-integer optimization while
+        considering fairness constraints. It sets up the optimization problem,
+        solves it, and stores the results.
         """
         self._extract_metadata(X, y, protect_feat)
         self._protect_feat = protect_feat
@@ -1106,16 +1285,31 @@ class FairOCT(FlowOCTMultipleSink):
         return self
 
     def predict(self, X):
-        """Classify test points using the FairTree classifier
+        """
+        Predict class labels for samples in X using the fitted FairOCT model.
+
         Parameters
         ----------
-        X : array-like, shape (n_samples, n_features)
-            The input samples.
+        X : array-like of shape (n_samples, n_features)
+            The input samples for which to make predictions. Each feature should be binary (0 or 1).
+
         Returns
         -------
-        y : ndarray, shape (n_samples,)
-            The label for each sample is the label of the closest sample
-            seen during fit.
+        y_pred : ndarray of shape (n_samples,)
+            The predicted class labels for each sample in X.
+
+        Raises
+        ------
+        NotFittedError
+            If the model has not been fitted yet.
+        ValueError
+            If X contains non-binary values or has a different number of features than the training data.
+
+        Notes
+        -----
+        This method uses the fair decision tree learned during the fit process to classify new samples.
+        It traverses the tree for each sample in X, following the branching decisions until
+        reaching a leaf node, and returns the corresponding class prediction.
         """
         # Check is fit had been called
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
