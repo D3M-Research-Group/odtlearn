@@ -392,11 +392,11 @@ class FairConstrainedOCT(ConstrainedOCT):
         # Check is fit had been called
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
 
+        check_columns_match(self._X_col_labels, X)
+
         # This will again convert a pandas df to numpy array
         # but we have the column information from when we called fit
         X = check_array(X)
-
-        check_columns_match(self._X_col_labels, X)
 
         return self._make_prediction(X)
 

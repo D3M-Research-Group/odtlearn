@@ -112,7 +112,11 @@ class Binarizer(BaseEstimator, TransformerMixin):
         X = pd.DataFrame(X)
 
         if self.categorical_cols:
-            cat_encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+            cat_encoder = OneHotEncoder(
+                handle_unknown="ignore",
+                sparse_output=False,
+                drop="if_binary",
+            )
             cat_encoder.fit(X[self.categorical_cols])
             self.encoders_["categorical"] = cat_encoder
 
@@ -123,12 +127,12 @@ class Binarizer(BaseEstimator, TransformerMixin):
 
         if self.real_cols:
             real_encoder = KBinsDiscretizer(
-                n_bins=self.n_bins, encode="onehot-dense", strategy=self.bin_strategy
+                n_bins=self.n_bins, encode="ordinal", strategy=self.bin_strategy
             )
             real_encoder.fit(X[self.real_cols])
             self.encoders_["real"] = real_encoder
 
-        # Generate and store column names for the transformed data
+        # Generate column names for the transformed data
         self.column_names_ = self._get_feature_names_out()
 
         return self
@@ -148,41 +152,49 @@ class Binarizer(BaseEstimator, TransformerMixin):
             The binarized input data.
         """
         X = pd.DataFrame(X)
-        result = pd.DataFrame(index=X.index)
+        result = pd.DataFrame()
 
-        for col_type in ["categorical", "integer", "real"]:
-            if col_type in self.encoders_:
-                cols = getattr(self, f"{col_type}_cols")
-                encoder = self.encoders_[col_type]
+        if self.categorical_cols:
+            cat_bin = self.encoders_["categorical"].transform(X[self.categorical_cols])
+            result = pd.concat(
+                [
+                    result,
+                    pd.DataFrame(
+                        cat_bin,
+                        columns=self.encoders_["categorical"].get_feature_names_out(
+                            self.categorical_cols
+                        ),
+                    ),
+                ],
+                axis=1,
+            )
 
-                if col_type in ["categorical", "integer"]:
-                    bin_data = encoder.transform(X[cols])
-                    bin_df = pd.DataFrame(
-                        bin_data,
-                        columns=encoder.get_feature_names_out(cols),
-                        index=X.index,
-                    )
+        if self.integer_cols:
+            int_bin = self.encoders_["integer"].transform(X[self.integer_cols])
+            int_features = self.encoders_["integer"].get_feature_names_out(
+                self.integer_cols
+            )
+            for col in self.integer_cols:
+                col_features = [f for f in int_features if f.startswith(f"{col}_")]
+                col_bin = int_bin[
+                    :, [i for i, f in enumerate(int_features) if f in col_features]
+                ]
+                col_bin_cumsum = np.cumsum(col_bin, axis=1)
+                result = pd.concat(
+                    [result, pd.DataFrame(col_bin_cumsum, columns=col_features)], axis=1
+                )
 
-                    if col_type == "integer":
-                        for col in cols:
-                            col_features = [
-                                f for f in bin_df.columns if f.startswith(f"{col}_")
-                            ]
-                            bin_df[col_features] = bin_df[col_features].cumsum(axis=1)
+        if self.real_cols:
+            real_bin = self.encoders_["real"].transform(X[self.real_cols])
+            real_bin_df = pd.DataFrame(real_bin, columns=self.real_cols)
+            for col in self.real_cols:
+                col_bin = pd.get_dummies(real_bin_df[col], prefix=col, dtype=np.float64)
+                col_bin_cumsum = col_bin.cumsum(axis=1)
+                col_bin_cumsum.columns = [
+                    x.replace(".0", "") for x in col_bin_cumsum.columns
+                ]
+                result = pd.concat([result, col_bin_cumsum], axis=1)
 
-                else:  # real columns
-                    bin_data = encoder.transform(X[cols])
-                    bin_df = pd.DataFrame(
-                        bin_data,
-                        columns=[
-                            f"{col}_{i}" for col in cols for i in range(self.n_bins)
-                        ],
-                        index=X.index,
-                    )
-
-                result = pd.concat([result, bin_df], axis=1)
-
-        # Ensure all columns from fit are present, fill with 0 if missing
         for col in self.column_names_:
             if col not in result.columns:
                 result[col] = 0

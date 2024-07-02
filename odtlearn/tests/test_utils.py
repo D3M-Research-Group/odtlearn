@@ -103,7 +103,7 @@ def comparison_data():
     )
     cont_cols_only = pd.DataFrame.from_dict(
         {
-            "cont_val_0.0": {
+            "cont_val_0": {
                 0: 0,
                 1: 0,
                 2: 0,
@@ -115,7 +115,7 @@ def comparison_data():
                 8: 0,
                 9: 1,
             },
-            "cont_val_1.0": {
+            "cont_val_1": {
                 0: 0,
                 1: 0,
                 2: 0,
@@ -245,4 +245,4 @@ def test_binarizer_transform(example_data):
     )
     X_bin = binarizer.fit_transform(df)
     assert X_bin.shape == (10, 15)
-    assert all(X_bin.dtypes == "int64")
+    assert all(X_bin.dtypes == "float64")
