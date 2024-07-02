@@ -639,11 +639,11 @@
         <span class="c1"># Check is fit had been called</span>
         <span class="n">check_is_fitted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;b_value&quot;</span><span class="p">,</span> <span class="s2">&quot;w_value&quot;</span><span class="p">,</span> <span class="s2">&quot;p_value&quot;</span><span class="p">])</span>
 
+        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
         <span class="c1"># This will again convert a pandas df to numpy array</span>
         <span class="c1"># but we have the column information from when we called fit</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-        <span class="n">check_columns_match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_prediction</span><span class="p">(</span><span class="n">X</span><span class="p">)</span></div></div>
 
