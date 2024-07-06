@@ -46,7 +46,7 @@ extensions = [
     "sphinx_copybutton",
     "numpydoc",
     # "sphinx_gallery.gen_gallery",
-    "sphinx_toggleprompt",
+    # "sphinx_toggleprompt",
     "nbsphinx",
     "autoapi.extension",
     "sphinx.ext.inheritance_diagram",
@@ -97,6 +97,9 @@ def skip_submodules(app, what, name, obj, skip, options):
         "odtlearn.tests.conftest",
         "odtlearn.utils._reingold_tilford",
         "odtlearn.utils.mip_cbc",
+        "odtlearn.utils.tree",
+        # "odtlearn.utils.callbacks",
+        # "odtlearn.utils.callback_helpers",
     ]:
         skip = True
     return skip
@@ -348,8 +351,8 @@ intersphinx_mapping = {
 # copybutton strip prompt text
 copybutton_prompt_text = ">>> "
 
-# toggle prompt
-toggleprompt_offset_right = 30
+# # toggle prompt
+# toggleprompt_offset_right = 30
 
 # GH REPO URL
 # rst_prolog = """
@@ -363,5 +366,5 @@ toggleprompt_offset_right = 30
 # NBSPHINX
 html_scaled_image_link = False
 
-nbsphinx_execute = "always"
+nbsphinx_execute = "auto"
 nbsphinx_allow_errors = True

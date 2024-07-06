@@ -3,6 +3,82 @@ from odtlearn.opt_pt import OptimalPrescriptiveTree
 
 
 class FlowOPTSingleSink(OptimalPrescriptiveTree):
+    """
+    A class for learning optimal prescriptive trees with a single sink node using flow optimization.
+
+    Parameters
+    ----------
+    solver : str
+        The solver to use for the optimization problem. Can be either "gurobi" or "cbc".
+    depth : int
+        The maximum depth of the tree to be learned.
+    time_limit : int
+        The time limit (in seconds) for solving the optimization problem.
+    num_threads : int
+        The number of threads to use for solving the optimization problem.
+    verbose : bool
+        Whether to print verbose output during the tree learning process.
+
+    Attributes
+    ----------
+    _b : dict
+        A dictionary of binary decision variables representing the branching decisions at each node.
+    _p : dict
+        A dictionary of binary decision variables representing the prediction decisions at each node.
+    _w : dict
+        A dictionary of continuous decision variables representing the treatment weights at each node.
+    _z : dict
+        A dictionary of continuous decision variables representing the flow of each datapoint to each node.
+
+    Methods
+    -------
+    _tree_struc_variables()
+        Defines the decision variables related to the tree structure.
+    _flow_variables()
+        Defines the decision variables related to the flow of datapoints.
+    _define_variables()
+        Defines all the decision variables used in the optimization problem.
+    _tree_structure_constraints()
+        Defines the constraints related to the tree structure.
+    _flow_constraints()
+        Defines the constraints related to the flow of datapoints.
+    _define_constraints()
+        Defines all the constraints used in the optimization problem.
+
+    Notes
+    -----
+    This is a base class and should not be instantiated directly. Instead, use one of the
+    derived classes that implement a specific prescriptive tree method, such as
+    :mod:`FlowOPT_IPW <odtlearn.flow_opt_ipw.FlowOPT_IPW>`.
+
+    This class extends the :mod:`OptimalPrescriptiveTree <odtlearn.opt_pt.OptimalPrescriptiveTree>` class
+    to learn optimal prescriptive trees
+    with a single sink node using flow optimization. It formulates the problem as a mixed-integer
+    program (MIP) and solves it using either the Gurobi or CBC solver.
+
+    The key idea is to model the flow of each datapoint through the tree, allowing it to reach
+    a single sink node (i.e., leaf) with a specific treatment recommendation. The objective
+    is to optimize the treatment recommendation based on the characteristics of each datapoint.
+
+    The class defines decision variables and constraints specific to the flow optimization
+    formulation with a single sink node.
+    The :meth:`_define_variables <odtlearn.flow_opt_ss.FlowOPTSingleSink._define_variables>` method defines
+    the decision variables, including the tree structure variables (`_b`, `_p`, `_w`) and the flow variable (`_z`).
+
+    The :meth:`_define_constraints <odtlearn.flow_opt_ss.FlowOPTSingleSink._define_constraints>` method
+    defines the constraints, including the tree structure
+    constraints and flow constraints. These constraints ensure the validity of the tree structure
+    and the proper flow of datapoints through the tree to a single sink node.
+
+    The class inherits the :meth:`fit <odtlearn.opt_pt.OptimalPrescriptiveTree.fit>`,
+    :meth:`predict <odtlearn.opt_pt.OptimalPrescriptiveTree.predict>`,
+    :meth:`print_tree <odtlearn.opt_pt.OptimalPrescriptiveTree.print_tree>`,
+    and :meth:`plot_tree <odtlearn.opt_pt.OptimalPrescriptiveTree.plot_tree>` methods from the
+    :mod:`OptimalPrescriptiveTree <odtlearn.opt_pt.OptimalPrescriptiveTree>` class to learn the optimal prescriptive
+    tree, make predictions,
+    and visualize the learned tree.
+    """
+
     def __init__(
         self,
         solver,

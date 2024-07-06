@@ -151,15 +151,35 @@ class Solver:
         prepped = self.prep_indices(*indices)
         if len(prepped) > 1:
             for element in product(*prepped):
-                name_element_dict[element] = f"{name}[{element}]"
+                name_element_dict[element] = (
+                    f"{name}_{element}".replace("[", "_")
+                    .replace("]", "_")
+                    .replace(" ", "_")
+                )
                 var_dict[element] = self.model.add_var(
-                    lb=lb, ub=ub, obj=obj, var_type=vtype, name=f"{name}[{element}]"
+                    lb=lb,
+                    ub=ub,
+                    obj=obj,
+                    var_type=vtype,
+                    name=f"{name}_{element}".replace("[", "_")
+                    .replace("]", "_")
+                    .replace(" ", "_"),
                 )
         else:
             for element in prepped[0]:
-                name_element_dict[element] = f"{name}[{element}]"
+                name_element_dict[element] = (
+                    f"{name}_{element}".replace("[", "_")
+                    .replace("]", "_")
+                    .replace(" ", "_")
+                )
                 var_dict[element] = self.model.add_var(
-                    lb=lb, ub=ub, obj=obj, var_type=vtype, name=f"{name}[{element}]"
+                    lb=lb,
+                    ub=ub,
+                    obj=obj,
+                    var_type=vtype,
+                    name=f"{name}_{element}".replace("[", "_")
+                    .replace("]", "_")
+                    .replace(" ", "_"),
                 )
         self.var_name_dict[name] = name_element_dict
         return var_dict

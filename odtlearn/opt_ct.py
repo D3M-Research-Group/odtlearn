@@ -7,6 +7,50 @@ from odtlearn.utils.TreePlotter import MPLPlotter
 
 
 class OptimalClassificationTree(OptimalDecisionTree):
+    """
+    A class for learning optimal classification trees using mixed-integer programming.
+
+    Parameters
+    ----------
+    solver : str
+        The solver to use for the MIP formulation. Currently, only "gurobi" and "CBC" are supported.
+    depth : int
+        The maximum depth of the tree to be learned.
+    time_limit : int
+        The time limit (in seconds) for solving the MIP formulation.
+    num_threads : int, optional
+        The number of threads the solver should use. If not specified,
+        solver uses all available threads.
+    verbose : bool, default=False
+        Whether to print verbose output during the tree learning process.
+
+    Attributes
+    ----------
+    b_value : numpy.ndarray
+        The values of the branching decision variables in the learned tree.
+    w_value : numpy.ndarray
+        The values of the prediction decision variables in the learned tree.
+    p_value : numpy.ndarray
+        The values of the pruning decision variables in the learned tree.
+
+    Methods
+    -------
+    fit(X, y)
+        Fit the optimal classification tree to the given training data.
+    predict(X)
+        Make predictions using the fitted optimal classification tree.
+    print_tree()
+        Print the structure of the fitted optimal classification tree.
+    plot_tree(*kwargs)
+        Plot the fitted optimal classification tree using matplotlib.
+
+    Notes
+    -----
+    This class extends the :mod:`OptimalDecisionTree <odtlearn.opt_dt.OptimalDecisionTree>` base
+    class to learn optimal classification trees. It formulates the problem as a mixed-integer
+    program and solves it using either the Gurobi or CBC solver.
+    """
+
     def __init__(
         self,
         solver,
@@ -42,7 +86,7 @@ class OptimalClassificationTree(OptimalDecisionTree):
             self._y = y
         self._labels = np.unique(self._y)
 
-    def _get_node_status(self, b, w, p, n):
+    def _get_node_status(self, b, w, p, n, feature_names=None):
         """
         This function give the status of a given node in a tree. By status we mean whether the node
             1- is pruned? i.e., we have made a prediction at one of its ancestors
@@ -72,6 +116,8 @@ class OptimalClassificationTree(OptimalDecisionTree):
             leaf = 1 iff node n is a leaf in the tree
         value :  double
             if node n is a leaf, value represent the prediction at this node
+        feature_names: List, default=None
+            Alternative list of feature names to use when getting node status
         """
 
         pruned = False
@@ -96,9 +142,11 @@ class OptimalClassificationTree(OptimalDecisionTree):
 
         if n in self._tree.Nodes:
             if (pruned is False) and (leaf is False):  # branching
-                for f in self._X_col_labels:
+                for feat_idx, f in enumerate(self._X_col_labels):
                     if b[n, f] > 0.5:
-                        selected_feature = f
+                        selected_feature = (
+                            f if feature_names is None else feature_names[feat_idx]
+                        )
                         branching = True
         return pruned, branching, selected_feature, cutoff, leaf, value
 
@@ -139,10 +187,21 @@ class OptimalClassificationTree(OptimalDecisionTree):
         return np.array(prediction)
 
     def print_tree(self):
-        """Print the fitted tree with the branching features, the threshold values for
-        each branching node's test, and the predictions asserted for each assignment node
+        """
+        Print a text representation of the fitted tree.
 
-        The method uses the Gurobi model's name for determining how to generate the tree
+        This method prints the structure of the fitted tree, including the branching features,
+        the threshold values for each branching node's test, and the predictions asserted for each leaf node.
+
+        Raises
+        ------
+        NotFittedError
+            If the model has not been fitted yet.
+
+        Notes
+        -----
+        The tree is printed in a depth-first manner, with each node represented by its index,
+        branching feature and threshold (for internal nodes), or prediction (for leaf nodes).
         """
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
         for n in self._tree.Nodes + self._tree.Leaves:
@@ -175,56 +234,87 @@ class OptimalClassificationTree(OptimalDecisionTree):
         edge_annotation=True,
         arrow_annotation_font_scale=0.8,
         debug=False,
+        distance=1.0,
+        feature_names=None,
     ):
-        """Plot the fitted tree with the branching features, the threshold values for
-        each branching node's test, and the predictions asserted for each assignment node
-        using matplotlib. The method uses the Gurobi model's name for determining how
-        to generate the tree. It does some preprocessing before passing the tree to the
-        `_MPLTreeExporter` class from the sklearn package. The arguments for the
-        `plot_tree` method are based on the arguments of the sklearn `plot_tree` function.
+        """
+        Plot the fitted tree using matplotlib.
 
         Parameters
         ----------
         label : {'all', 'root', 'none'}, default='all'
-        Whether to show informative labels for impurity, etc.
-        Options include 'all' to show at every node, 'root' to show only at
-        the top root node, or 'none' to not show at any node.
-
-        filled : bool, default=False
-            When set to ``True``, paint nodes to indicate majority class for
-            classification, extremity of values for regression, or purity of node
-            for multi-output.
-
+            Whether to show informative labels for impurity, etc.
+            Options include 'all' to show at every node, 'root' to show only at
+            the top root node, or 'none' to not show at any node.
+        filled : bool, default=True
+            When set to True, paint nodes to indicate majority treatment for
+            prescriptive trees.
         rounded : bool, default=False
-            When set to ``True``, draw node boxes with rounded corners and use
+            When set to True, draw node boxes with rounded corners and use
             Helvetica fonts instead of Times-Roman.
-
-        precision: int, default=3
+        precision : int, default=3
             Number of digits of precision for floating point in the values of
             impurity, threshold and value attributes of each node.
         ax : matplotlib axis, default=None
-            Axes to plot to. If None, use current axis. Any previous content
-        is cleared.
-
+            Axes to plot to. If None, use current axis. Any previous content is cleared.
         fontsize : int, default=None
             Size of text font. If None, determined automatically to fit figure.
+        color_dict : dict, optional
+            A dictionary specifying the colors for nodes and leaves.
+            Default: {"node": None, "leaves": []}
+        edge_annotation : bool, optional (default=True)
+            Whether to display annotations on the edges.
+        arrow_annotation_font_scale : float, optional (default=0.5)
+            The font scale for the arrow annotations.
+        debug : bool, optional (default=False)
+            Whether to print debug information.
+        distance: float, default=1.0
+            Adjust distance between levels in the tree.
+        feature_names : list of str, default=None
+            A list of feature names to use for the plot. If None, the feature names from the
+            fitted tree will be used. The feature names should be in the same order as the
+            columns of the data used to fit the tree.
 
-        color_dict: dict, default={"node": None, "leaves": []}
-            A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
-            If None, the colors are chosen using the sklearn `plot_tree` color palette
+        Returns
+        -------
+        ax : matplotlib.axes.Axes
+            The matplotlib Axes containing the plot.
+
+        Raises
+        ------
+        NotFittedError
+            If the model has not been fitted yet.
+
+        Notes
+        -----
+        This method visualizes the fitted tree structure using matplotlib.
+        Each node in the tree is represented by a box, with arrows indicating the branching structure.
         """
         check_is_fitted(self, ["b_value", "w_value", "p_value"])
+
+        # Use the provided feature names if available, otherwise use the original feature names
+        if feature_names is not None:
+            assert len(feature_names) == len(
+                self._X_col_labels
+            ), "The number of provided feature names does not match the number of columns in the data"
+            column_names = feature_names
+        else:
+            column_names = self._X_col_labels
 
         node_dict = {}
         for node in np.arange(1, self._tree.total_nodes + 1):
             node_dict[node] = self._get_node_status(
-                self.b_value, self.w_value, self.p_value, node
+                self.b_value,
+                self.w_value,
+                self.p_value,
+                node,
+                feature_names=column_names,
             )
 
         exporter = MPLPlotter(
             self._tree,
             node_dict,
-            self._X_col_labels,
+            column_names,
             self._tree.depth,
             self._classes,
             type(self).__name__,
@@ -238,4 +328,4 @@ class OptimalClassificationTree(OptimalDecisionTree):
             arrow_annotation_font_scale=arrow_annotation_font_scale,
             debug=debug,
         )
-        return exporter.export(ax=ax)
+        return exporter.export(ax=ax, distance=distance)

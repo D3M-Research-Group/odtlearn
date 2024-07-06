@@ -27,7 +27,6 @@ INSTALL_REQUIRES = [
     "scipy",
     "scikit-learn",
     "pandas",
-    "gurobipy",
     "mip",
 ]
 CLASSIFIERS = [
@@ -43,6 +42,7 @@ CLASSIFIERS = [
     "Programming Language :: Python :: 3.9",
 ]
 EXTRAS_REQUIRE = {
+    "gurobi": ["gurobipy"],
     "tests": ["pytest", "pytest-cov"],
     "docs": [
         "sphinx",

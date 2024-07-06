@@ -13,7 +13,7 @@ from odtlearn.utils.validation import check_integer, check_same_as_X
 
 
 class RobustOCT(OptimalClassificationTree):
-    """An optimal robust decision tree classifier, fitted on a given integer-valued
+    """An optimal robust decision tree classifier, fit on a given integer-valued
     data set and a given cost-and-budget uncertainty set to produce a tree robust
     against distribution shifts.
 
@@ -62,8 +62,8 @@ class RobustOCT(OptimalClassificationTree):
 
         Parameters
         ----------
-        grb_model :
-            The gurobi model solved to optimality (or reached to the time limit).
+        model :
+            The model solved to optimality (or reached to the time limit).
         b :
             The values of branching decision variable b.
         w :
@@ -131,7 +131,7 @@ class RobustOCT(OptimalClassificationTree):
                 if terminal:
                     break
                 else:
-                    for (f, theta) in self._f_theta_indices:
+                    for f, theta in self._f_theta_indices:
                         if self.b_value[node, f, theta] > 0.5:  # b[n,f]== 1
                             if X.at[i, f] >= theta + 1:
                                 node = self._tree.get_right_children(node)
@@ -196,24 +196,35 @@ class RobustOCT(OptimalClassificationTree):
         self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
     def fit(self, X, y, costs=None, budget=-1):
-        """Fit an optimal robust classification tree given data, labels,
-        costs of uncertainty, and budget of uncertainty
+        """
+        Fit a robust optimal classification tree to the given training data.
 
         Parameters
         ----------
-        X : array-like, shape (n_samples, n_features)
-            The training input samples.
-        y : array-like, shape (n_samples,)
-            The target values. An array of int.
-        costs : array-like, shape (n_samples, n_features), default = budget + 1
-            The costs of uncertainty
-        budget : float, default = -1
-            The budget of uncertainty
+        X : array-like of shape (n_samples, n_features)
+            The training input samples. Features should be integer-valued.
+        y : array-like of shape (n_samples,)
+            The target values (class labels) for the training samples.
+        costs : array-like of shape (n_samples, n_features), optional
+            The costs of uncertainty for each feature and sample. If None, defaults to budget + 1.
+        budget : float, optional
+            The budget of uncertainty. Default is -1.
 
         Returns
         -------
         self : object
             Returns self.
+
+        Raises
+        ------
+        ValueError
+            If X contains non-integer values or if inputs have inconsistent numbers of samples.
+
+        Notes
+        -----
+        This method fits the RobustOCT model using mixed-integer optimization while
+        considering potential adversarial perturbations within the given budget.
+        It sets up the optimization problem, solves it, and stores the results.
         """
         self._extract_metadata(
             X,
@@ -320,19 +331,31 @@ class RobustOCT(OptimalClassificationTree):
         return self
 
     def predict(self, X):
-        """Given the input covariates, predict the class labels of each sample
-        based on the fitted optimal robust classification tree
+        """
+        Predict class labels for samples in X using the fitted RobustOCT model.
 
         Parameters
         ----------
-        X : array-like, shape (n_samples, n_features)
-            The input samples.
+        X : array-like of shape (n_samples, n_features)
+            The input samples for which to make predictions. Features should be integer-valued.
 
         Returns
         -------
-        y : ndarray, shape (n_samples,)
-            The label for each sample is the label of the closest sample
-            seen during fit.
+        y_pred : ndarray of shape (n_samples,)
+            The predicted class labels for each sample in X.
+
+        Raises
+        ------
+        NotFittedError
+            If the model has not been fitted yet.
+        ValueError
+            If X contains non-integer values or has a different number of features than the training data.
+
+        Notes
+        -----
+        This method uses the robust decision tree learned during the fit process to classify new samples.
+        It traverses the tree for each sample in X, following the branching decisions until
+        reaching a leaf node, and returns the corresponding class prediction.
         """
         check_is_fitted(self, ["b_value", "w_value"])
         # Convert to dataframe
@@ -361,7 +384,7 @@ class RobustOCT(OptimalClassificationTree):
                     assignment_nodes += [n]
                     break
             if not terminal:
-                for (f, theta) in self._solver.model._data["f_theta_indices"]:
+                for f, theta in self._solver.model._data["f_theta_indices"]:
                     if self.b_value[n, f, theta] > 0.5:  # b[n,f]== 1
                         print("Feature: ", f, ", Cutoff: ", theta)
                         break
@@ -378,43 +401,54 @@ class RobustOCT(OptimalClassificationTree):
         edge_annotation=True,
         arrow_annotation_font_scale=0.8,
         debug=False,
+        feature_names=None,
     ):
-        """Plot the fitted tree with the branching features, the threshold values for
-        each branching node's test, and the predictions asserted for each assignment node
-        using matplotlib. The method uses the Gurobi model's name for determining how
-        to generate the tree. It does some preprocessing before passing the tree to the
-        `_MPLTreeExporter` class from the sklearn package. The arguments for the
-        `plot_tree` method are based on the arguments of the sklearn `plot_tree` function.
+        """
+        Plot the fitted robust classification tree using matplotlib.
 
         Parameters
         ----------
         label : {'all', 'root', 'none'}, default='all'
-        Whether to show informative labels for impurity, etc.
-        Options include 'all' to show at every node, 'root' to show only at
-        the top root node, or 'none' to not show at any node.
-
-        filled : bool, default=False
-            When set to ``True``, paint nodes to indicate majority class for
+            Whether to show informative labels for impurity, etc.
+            Options include 'all' to show at every node, 'root' to show only at
+            the top root node, or 'none' to not show at any node.
+        filled : bool, default=True
+            When set to True, paint nodes to indicate majority class for
             classification, extremity of values for regression, or purity of node
             for multi-output.
-
         rounded : bool, default=False
-            When set to ``True``, draw node boxes with rounded corners and use
+            When set to True, draw node boxes with rounded corners and use
             Helvetica fonts instead of Times-Roman.
-
-        precision: int, default=3
+        precision : int, default=3
             Number of digits of precision for floating point in the values of
             impurity, threshold and value attributes of each node.
         ax : matplotlib axis, default=None
             Axes to plot to. If None, use current axis. Any previous content
-        is cleared.
-
+            is cleared.
         fontsize : int, default=None
             Size of text font. If None, determined automatically to fit figure.
-
-        color_dict: dict, default={"node": None, "leaves": []}
+        color_dict : dict, default={"node": None, "leaves": []}
             A dictionary specifying the colors for nodes and leaves in the plot in #RRGGBB format.
-            If None, the colors are chosen using the sklearn `plot_tree` color palette
+            If None, the colors are chosen using the sklearn `plot_tree` color palette.
+        edge_annotation : bool, default=True
+            Whether to display annotations on the edges.
+        arrow_annotation_font_scale : float, default=0.8
+            The font scale for the arrow annotations.
+        debug : bool, default=False
+            Whether to print debug information.
+        feature_names : list of str, default=None
+            A list of feature names to use for the plot. If None, the feature names from the
+            fitted tree will be used. The feature names should be in the same order as the
+            columns of the data used to fit the tree.
+
+        Returns
+        -------
+        matplotlib.axes.Axes
+            The matplotlib Axes containing the plotted tree.
+
+        Notes
+        -----
+        This method uses the MPLPlotter class to visualize the robust classification tree.
         """
         check_is_fitted(self, ["b_value", "w_value"])
 
@@ -422,10 +456,19 @@ class RobustOCT(OptimalClassificationTree):
         for node in np.arange(1, self._tree.total_nodes + 1):
             node_dict[node] = self._get_node_status(self.b_value, self.w_value, node)
 
+        # Use the provided feature names if available, otherwise use the original feature names
+        if feature_names is not None:
+            assert len(feature_names) == len(
+                self._X_col_labels
+            ), "The number of provided feature names does not match the number of columns in the data"
+            column_names = feature_names
+        else:
+            column_names = self._X_col_labels
+
         exporter = MPLPlotter(
             self._tree,
             node_dict,
-            self._X_col_labels,
+            column_names,
             self._tree.depth,
             self._classes,
             type(self).__name__,

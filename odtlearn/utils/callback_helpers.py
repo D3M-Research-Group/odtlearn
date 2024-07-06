@@ -6,6 +6,25 @@ import numpy as np
 
 
 def get_left_exp_integer(solver, main_grb_obj, n, i):
+    """
+    Get the expression for the left branch constraint in the Benders' subproblem.
+
+    Parameters
+    ----------
+    solver : Solver
+        The solver object used for solving the optimization problem.
+    main_grb_obj : object
+        The main Gurobi model object.
+    n : int
+        The index of the current node.
+    i : int
+        The index of the current datapoint.
+
+    Returns
+    -------
+    lhs : LinExpr
+        The left-hand side expression of the left branch constraint.
+    """
     lhs = solver.quicksum(
         -1 * main_grb_obj._b[n, f]
         for f in main_grb_obj._X_col_labels
@@ -16,6 +35,25 @@ def get_left_exp_integer(solver, main_grb_obj, n, i):
 
 
 def get_right_exp_integer(solver, main_grb_obj, n, i):
+    """
+    Get the expression for the right branch constraint in the Benders' subproblem.
+
+    Parameters
+    ----------
+    solver : Solver
+        The solver object used for solving the optimization problem.
+    main_grb_obj : object
+        The main Gurobi model object.
+    n : int
+        The index of the current node.
+    i : int
+        The index of the current datapoint.
+
+    Returns
+    -------
+    lhs : LinExpr
+        The left-hand side expression of the right branch constraint.
+    """
     lhs = solver.quicksum(
         -1 * main_grb_obj._b[n, f]
         for f in main_grb_obj._X_col_labels
@@ -26,27 +64,64 @@ def get_right_exp_integer(solver, main_grb_obj, n, i):
 
 
 def get_target_exp_integer(main_grb_obj, n, i):
+    """
+    Get the expression for the target constraint in the Benders' subproblem.
+
+    Parameters
+    ----------
+    main_grb_obj : object
+        The main Gurobi model object.
+    n : int
+        The index of the current node.
+    i : int
+        The index of the current datapoint.
+
+    Returns
+    -------
+    lhs : LinExpr
+        The left-hand side expression of the target constraint.
+    """
     label_i = main_grb_obj._y[i]
     lhs = -1 * main_grb_obj._w[n, label_i]
     return lhs
 
 
 def get_cut_integer(solver, main_grb_obj, left, right, target, i):
+    """
+    Get the Benders' cut expression for the current subproblem.
+
+    Parameters
+    ----------
+    solver : Solver
+        The solver object used for solving the optimization problem.
+    main_grb_obj : object
+        The main Gurobi model object.
+    left : list
+        The list of nodes in the left branch of the current subproblem.
+    right : list
+        The list of nodes in the right branch of the current subproblem.
+    target : list
+        The list of target nodes in the current subproblem.
+    i : int
+        The index of the current datapoint.
+
+    Returns
+    -------
+    lhs : LinExpr
+        The left-hand side expression of the Benders' cut.
+    """
     lhs = solver.lin_expr(0.0)
     lhs += main_grb_obj._g[i]
     for n in left:
         tmp_lhs = get_left_exp_integer(solver, main_grb_obj, n, i)
-        # lhs = lhs + tmp_lhs
         lhs += tmp_lhs
 
     for n in right:
         tmp_lhs = get_right_exp_integer(solver, main_grb_obj, n, i)
-        # lhs = lhs + tmp_lhs
         lhs += tmp_lhs
 
     for n in target:
         tmp_lhs = get_target_exp_integer(main_grb_obj, n, i)
-        # lhs = lhs + tmp_lhs
         lhs += tmp_lhs
 
     return lhs
@@ -56,6 +131,37 @@ def get_cut_integer(solver, main_grb_obj, left, right, target, i):
 
 
 def get_cut_expression(master, solver, X, b, w, path, xi, v, i, f_theta_indices):
+    """
+    Get the cut expression for the RobustOCT subproblem.
+
+    Parameters
+    ----------
+    master : object
+        The master problem object.
+    solver : Solver
+        The solver object used for solving the optimization problem.
+    X : DataFrame
+        The input data.
+    b : dict
+        The dictionary of binary decision variables representing the branching decisions.
+    w : dict
+        The dictionary of binary decision variables representing the prediction decisions.
+    path : list
+        The current path in the tree.
+    xi : dict
+        The dictionary of feature perturbations.
+    v : bool
+        The label perturbation flag.
+    i : int
+        The index of the current datapoint.
+    f_theta_indices : list
+        The list of feature-threshold index pairs.
+
+    Returns
+    -------
+    expr : LinExpr
+        The cut expression for the current subproblem.
+    """
     expr = solver.lin_expr(0)
     node_leaf_cutoff = np.power(
         2, master._tree.depth
@@ -109,7 +215,42 @@ def get_all_terminal_paths(
     curr_feature_path=[],
     curr_cutoff_path=[],
 ):
-    """find all terminal paths"""
+    """
+    Find all terminal paths in the decision tree.
+
+    Parameters
+    ----------
+    master : object
+        The master problem object.
+    b : dict
+        The dictionary of binary decision variables representing the branching decisions.
+    w : dict
+        The dictionary of binary decision variables representing the prediction decisions.
+    terminal_nodes : list, optional
+        The list of terminal nodes.
+    path_dict : dict, optional
+        The dictionary storing the paths to each terminal node.
+    feature_path_dict : dict, optional
+        The dictionary storing the feature paths to each terminal node.
+    assignment_dict : dict, optional
+        The dictionary storing the class assignments at each terminal node.
+    cutoff_dict : dict, optional
+        The dictionary storing the cutoff values along each path.
+    curr_node : int, optional
+        The current node being processed.
+    curr_path : list, optional
+        The current path being traversed.
+    curr_feature_path : list, optional
+        The current feature path being traversed.
+    curr_cutoff_path : list, optional
+        The current cutoff path being traversed.
+
+    Returns
+    -------
+    tuple
+        A tuple containing the updated terminal_nodes, path_dict, feature_path_dict,
+        assignment_dict, and cutoff_dict.
+    """
     new_path_dict = copy.deepcopy(path_dict)
     new_terminal_nodes = copy.deepcopy(terminal_nodes)
     new_feature_path_dict = copy.deepcopy(feature_path_dict)
@@ -135,7 +276,7 @@ def get_all_terminal_paths(
     # b[n,f,theta]== 1
     curr_feature = None
     curr_theta = None
-    for (f, theta) in master._solver.model._data["f_theta_indices"]:
+    for f, theta in master._solver.model._data["f_theta_indices"]:
         if b[curr_node, f, theta] > 0.5:
             curr_feature = f
             curr_theta = theta
@@ -210,7 +351,25 @@ def get_all_terminal_paths(
 
 
 def get_nominal_path(master, b, w, i):
-    """Get the nominal path for a correctly classified point"""
+    """
+    Get the nominal path for a correctly classified datapoint.
+
+    Parameters
+    ----------
+    master : object
+        The master problem object.
+    b : dict
+        The dictionary of binary decision variables representing the branching decisions.
+    w : dict
+        The dictionary of binary decision variables representing the prediction decisions.
+    i : int
+        The index of the current datapoint.
+
+    Returns
+    -------
+    tuple
+        A tuple containing the nominal path and the predicted class label.
+    """
     path = []
     curr_node = 1
 
@@ -222,7 +381,7 @@ def get_nominal_path(master, b, w, i):
                 return path, k
 
         # braching node - find which feature to branch on
-        for (f, theta) in master._solver.model._data["f_theta_indices"]:
+        for f, theta in master._solver.model._data["f_theta_indices"]:
             if b[curr_node, f, theta] > 0.5:
                 if master._X.at[i, f] >= theta + 1:
                     curr_node = (2 * curr_node) + 1  # go right
@@ -244,6 +403,40 @@ def shortest_path_solver(
     initial_mins,
     initial_maxes,
 ):
+    """
+    Solve the shortest path problem for a given datapoint.
+
+    Parameters
+    ----------
+    master : object
+        The master problem object.
+    i : int
+        The index of the current datapoint.
+    label : int
+        The true class label of the datapoint.
+    terminal_nodes : list
+        The list of terminal nodes.
+    terminal_path_dict : dict
+        The dictionary storing the paths to each terminal node.
+    terminal_features_dict : dict
+        The dictionary storing the feature paths to each terminal node.
+    terminal_assignments_dict : dict
+        The dictionary storing the class assignments at each terminal node.
+    terminal_cutoffs_dict : dict
+        The dictionary storing the cutoff values along each path.
+    initial_xi : dict
+        The initial dictionary of feature perturbations.
+    initial_mins : dict
+        The initial dictionary of minimum feature values.
+    initial_maxes : dict
+        The initial dictionary of maximum feature values.
+
+    Returns
+    -------
+    tuple
+        A tuple containing the best path, best cost, feature perturbations (xi),
+        and label perturbation flag (v).
+    """
     best_cost = (master._solver.model._data["epsilon"] + 1) * master._tree.depth
     best_path = []
     xi = copy.deepcopy(initial_xi)
