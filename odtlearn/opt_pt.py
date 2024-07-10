@@ -4,6 +4,10 @@ from sklearn.utils.validation import check_is_fitted
 
 from odtlearn.opt_dt import OptimalDecisionTree
 from odtlearn.utils.TreePlotter import MPLPlotter
+from numpy import int64, ndarray, str_
+from pandas.core.frame import DataFrame
+from pandas.core.series import Series
+from typing import Dict, Tuple, Union
 
 
 class OptimalPrescriptiveTree(OptimalDecisionTree):
@@ -69,15 +73,20 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
 
     def __init__(
         self,
-        solver,
-        depth,
-        time_limit,
-        num_threads,
-        verbose,
+        solver: str,
+        depth: int,
+        time_limit: int,
+        num_threads: None,
+        verbose: bool,
     ) -> None:
         super().__init__(solver, depth, time_limit, num_threads, verbose)
 
-    def _extract_metadata(self, X, y, t):
+    def _extract_metadata(
+        self,
+        X: Union[DataFrame, ndarray],
+        y: Union[Series, ndarray],
+        t: Union[Series, ndarray],
+    ) -> None:
         """A function for extracting metadata from the inputs before converting
         them into numpy arrays to work with the sklearn API
 
@@ -105,7 +114,18 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
         self._t = t
         self._treatments = np.unique(t)
 
-    def _get_node_status(self, b, w, p, n, feature_names=None):
+    def _get_node_status(
+        self,
+        b: Union[Dict[Tuple[int, str], float], Dict[Tuple[int, str_], float]],
+        w: Dict[Tuple[int, int64], float],
+        p: Dict[int, float],
+        n: int,
+        feature_names: None = None,
+    ) -> Union[
+        Tuple[bool, bool, str, int, bool, None],
+        Tuple[bool, bool, None, int, bool, int64],
+        Tuple[bool, bool, str_, int, bool, None],
+    ]:
         """
         This function give the status of a given node in a tree. By status we mean whether the node
         1- is pruned? i.e., we have made a prediction at one of its ancestors
@@ -169,7 +189,7 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
                         branching = True
         return pruned, branching, selected_feature, cutoff, leaf, value
 
-    def _make_prediction(self, X):
+    def _make_prediction(self, X: ndarray) -> ndarray:
         prediction = []
         for i in range(X.shape[0]):
             current = 1

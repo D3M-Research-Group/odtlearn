@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+from typing import Union
 
 import mip
+from sklearn.utils.validation import check_is_fitted
 
 from odtlearn.utils.solver import Solver
 from odtlearn.utils.Tree import _Tree
@@ -70,7 +72,12 @@ class OptimalDecisionTree(ABC):
     """
 
     def __init__(
-        self, solver, depth=1, time_limit=60, num_threads=None, verbose=False
+        self,
+        solver: str,
+        depth: int = 1,
+        time_limit: int = 60,
+        num_threads: Union[None, int] = None,
+        verbose: bool = False,
     ) -> None:
 
         self.solver_name = solver
@@ -88,7 +95,7 @@ class OptimalDecisionTree(ABC):
             self._solver.model.threads = num_threads
         self._solver.model.max_seconds = time_limit
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         rep = (
             f"{type(self).__name__}(solver={self.solver_name},"
             f"depth={self._depth},"
@@ -110,7 +117,7 @@ class OptimalDecisionTree(ABC):
     def _define_objective(self):
         pass
 
-    def _create_main_problem(self):
+    def _create_main_problem(self) -> None:
         """
         This function creates and return a model based on the
         variables, constraints, and objective defined within a subclass
@@ -192,3 +199,97 @@ class OptimalDecisionTree(ABC):
     @store_search_progress_log.setter
     def store_search_progress_log(self, store: bool):
         self._solver.model.store_search_progress_log = store
+
+    def plot_search_progress(
+        self,
+        ax=None,
+        title="Search Progress",
+        xlabel="Time (s)",
+        ylabel="Objective Bound",
+        lw=2,
+        alpha=0.8,
+        legend_loc="best",
+        legend_fontsize=None,
+        grid=True,
+        color_ub="b",
+        color_lb="r",
+        log_scale=False,
+    ) -> None:
+        """
+        Plots the search progress log showing the lower and upper objective bounds over time.
+
+        Parameters
+        ----------
+        ax : matplotlib axis, default=None
+            Axes to plot to. If None, use current axis. Any previous content is cleared.
+        title : str, optional, default: 'Search Progress'
+            The title of the plot.
+        xlabel : str, optional, default: 'Time (s)'
+            The label for the x-axis.
+        ylabel : str, optional, default: 'Objective Bound'
+            The label for the y-axis.
+        lw : float, optional, default: 2
+            The line width of the bound lines.
+        alpha : float, optional, default: 0.8
+            The alpha blending value between 0 (transparent) and 1 (opaque).
+        legend_loc : str, optional, default: 'best'
+            The location of the legend.
+        legend_fontsize : int or str, optional
+            The font size for the legend labels.
+        grid : bool, optional, default: True
+            Whether to show the grid lines.
+        color_ub : color str or tuple of floats, optional, default: 'b'
+            The color to use for the upper bound line.
+        color_lb : color str or tuple of floats, optional, default: 'r'
+            The color to use for the lower bound line.
+        log_scale : bool, optional, default: False
+            Whether to use a log scale for the y-axis.
+
+        Raises
+        ------
+        NotFittedError
+            If the model has not been fitted yet.
+        AttributeError
+            If the search progress log was not recorded during fitting.
+
+        Notes
+        -----
+        The search progress log must be enabled prior to fitting by setting
+        `store_search_progress_log` to True.
+        """
+        import matplotlib.pyplot as plt
+
+        # Check if model has been fit
+        check_is_fitted(self, ["b_value", "w_value"])
+
+        # Check if search progress log exists
+        if len(self.search_progress_log.log) == 0:
+            raise AttributeError(
+                "No search progress log found. Make sure to set "
+                "'store_search_progress_log=True' before fitting."
+            )
+
+        # Extract times and bounds from log
+        times, bounds = zip(*self.search_progress_log.log)
+        lb, ub = zip(*bounds)
+
+        # Create plot
+        if ax is None:
+            ax = plt.gca()
+        ax.clear()
+        ax.plot(times, lb, label="Lower Bound", lw=lw, alpha=alpha, color=color_lb)
+        ax.plot(times, ub, label="Upper Bound", lw=lw, alpha=alpha, color=color_ub)
+
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.set_title(title)
+
+        if log_scale:
+            ax.set_yscale("log")
+
+        ax.legend(loc=legend_loc, fontsize=legend_fontsize)
+
+        if grid:
+            ax.grid()
+
+        return ax

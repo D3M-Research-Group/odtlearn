@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import KBinsDiscretizer, OneHotEncoder
+from pandas.core.frame import DataFrame
+from typing import List, Optional
 
 
 class Binarizer(BaseEstimator, TransformerMixin):
@@ -53,12 +55,12 @@ class Binarizer(BaseEstimator, TransformerMixin):
 
     def __init__(
         self,
-        categorical_cols=None,
-        integer_cols=None,
-        real_cols=None,
-        n_bins=4,
-        bin_strategy="uniform",
-    ):
+        categorical_cols: Optional[List[str]] = None,
+        integer_cols: Optional[List[str]] = None,
+        real_cols: Optional[List[str]] = None,
+        n_bins: int = 4,
+        bin_strategy: str = "uniform",
+    ) -> None:
         assert any(
             [x is not None for x in [categorical_cols, integer_cols, real_cols]]
         ), (
@@ -91,7 +93,7 @@ class Binarizer(BaseEstimator, TransformerMixin):
         self.encoders_ = {}
         self.column_names_ = None
 
-    def fit(self, X, y=None):
+    def fit(self, X: DataFrame, y: None = None) -> "Binarizer":
         """
         Fit the Binarizer to the input data.
 
@@ -137,7 +139,7 @@ class Binarizer(BaseEstimator, TransformerMixin):
 
         return self
 
-    def transform(self, X):
+    def transform(self, X: DataFrame) -> DataFrame:
         """
         Transform the input data using the fitted Binarizer.
 
@@ -201,7 +203,7 @@ class Binarizer(BaseEstimator, TransformerMixin):
 
         return result[self.column_names_]
 
-    def _get_feature_names_out(self):
+    def _get_feature_names_out(self) -> List[str]:
         """Get feature names for the binarized columns."""
         feature_names = []
 

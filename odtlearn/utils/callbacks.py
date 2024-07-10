@@ -1,7 +1,10 @@
 import copy
 import heapq
+from typing import Any, Dict, List, Tuple, Union
 
 from mip import ConstrsGenerator, Model
+from numpy import int64, str_
+from pandas.core.frame import DataFrame
 
 from odtlearn.utils.callback_helpers import (
     get_all_terminal_paths,
@@ -10,9 +13,20 @@ from odtlearn.utils.callback_helpers import (
     get_nominal_path,
     shortest_path_solver,
 )
+from odtlearn.utils.solver import Solver
 
 
-def benders_subproblem(main_model_obj, b, p, w, i):
+def benders_subproblem(
+    main_model_obj: "BendersOCT",  # noqa: F821
+    b: Union[Dict[Tuple[int, str_], float], Dict[Tuple[int, str], float]],
+    p: Dict[int, float],
+    w: Dict[Tuple[int, int64], float],
+    i: int,
+) -> Union[
+    Tuple[int, List[int], List[Any], List[int]],
+    Tuple[int, List[Any], List[int], List[int]],
+    Tuple[int, List[int], List[int], List[int]],
+]:
     """
     Solve the Benders' subproblem for a given datapoint.
 
@@ -89,7 +103,9 @@ class BendersCallback(ConstrsGenerator):
 
     """
 
-    def __init__(self, X, obj, solver, **kwargs):
+    def __init__(
+        self, X: DataFrame, obj: "BendersOCT", solver: Solver, **kwargs  # noqa: F821
+    ) -> None:
         self.X = X
         self.obj = obj
         self.solver = solver
@@ -98,7 +114,7 @@ class BendersCallback(ConstrsGenerator):
         self.b = kwargs.get("b")
         self.w = kwargs.get("w")
 
-    def generate_constrs(self, model: Model, depth: int = 0, npass: int = 0):
+    def generate_constrs(self, model: Model, depth: int = 0, npass: int = 0) -> None:
         """
         Generate Benders' cuts at the current node in the branch-and-bound tree.
 

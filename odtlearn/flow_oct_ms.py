@@ -80,12 +80,12 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
 
     def __init__(
         self,
-        solver,
-        _lambda,
-        depth,
-        time_limit,
-        num_threads,
-        verbose,
+        solver: str,
+        _lambda: float,
+        depth: int,
+        time_limit: int,
+        num_threads: None,
+        verbose: bool,
     ) -> None:
         self._lambda = _lambda
 
@@ -97,7 +97,7 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
             verbose,
         )
 
-    def _tree_struc_variables(self):
+    def _tree_struc_variables(self) -> None:
         # b[n,f] ==1 iff at node n we branch on feature f
         self._b = self._solver.add_vars(
             self._tree.Nodes, self._X_col_labels, vtype=ODTL.BINARY, name="b"
@@ -117,7 +117,7 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
             name="w",
         )
 
-    def _flow_variables(self):
+    def _flow_variables(self) -> None:
         # zeta[i,n,k] is the amount of flow through the edge connecting node n to sink node t,k for datapoint i
         self._zeta = self._solver.add_vars(
             self._datapoints,
@@ -136,11 +136,11 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
             name="z",
         )
 
-    def _define_variables(self):
+    def _define_variables(self) -> None:
         self._tree_struc_variables()
         self._flow_variables()
 
-    def _tree_structure_constraints(self):
+    def _tree_structure_constraints(self) -> None:
         # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
         self._solver.add_constrs(
             (
@@ -176,7 +176,7 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
             for n in self._tree.Nodes + self._tree.Leaves
         )
 
-    def _flow_constraints(self):
+    def _flow_constraints(self) -> None:
         # Flow Constraints
         # z[i,n] = z[i,l(n)] + z[i,r(n)] + (zeta[i,n,k] for all k in Labels)    forall i, n in Nodes
         for n in self._tree.Nodes:
@@ -200,7 +200,7 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
                 for i in self._datapoints
             )
 
-    def _arc_constraints(self):
+    def _arc_constraints(self) -> None:
         # Arc constraints
         # z[i,l(n)] <= sum(b[n,f], f if x[i,f]=0)    forall i, n in Nodes
         for i in self._datapoints:
@@ -236,7 +236,7 @@ class FlowOCTMultipleSink(OptimalClassificationTree):
         # z[i,1] = 1 for all i datapoints
         self._solver.add_constrs(self._z[i, 1] == 1 for i in self._datapoints)
 
-    def _define_constraints(self):
+    def _define_constraints(self) -> None:
         self._tree_structure_constraints()
         self._flow_constraints()
         self._arc_constraints()

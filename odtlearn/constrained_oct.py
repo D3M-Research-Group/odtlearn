@@ -25,7 +25,13 @@ class ConstrainedOCT(FlowOCTMultipleSink):
     """
 
     def __init__(
-        self, solver, _lambda, depth, time_limit, num_threads, verbose
+        self,
+        solver: str,
+        _lambda: float,
+        depth: int,
+        time_limit: int,
+        num_threads: None,
+        verbose: bool,
     ) -> None:
 
         super().__init__(solver, _lambda, depth, time_limit, num_threads, verbose)
@@ -34,6 +40,6 @@ class ConstrainedOCT(FlowOCTMultipleSink):
     def _define_side_constraints(self):
         pass
 
-    def _define_constraints(self):
+    def _define_constraints(self) -> None:
         super()._define_constraints()
         self._define_side_constraints()

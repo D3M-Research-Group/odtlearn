@@ -1,6 +1,10 @@
 import warnings
+from typing import Any, Union
 
 import numpy as np
+from numpy import ndarray
+from pandas.core.frame import DataFrame
+from pandas.core.series import Series
 from sklearn.utils.multiclass import unique_labels
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
@@ -55,9 +59,10 @@ class FlowOCT(FlowOCTSingleSink):
     :mod:`FlowOCTSingleSink <odtlearn.flow_oct_ss.FlowOCTSingleSink>`
     class and adds the specific objective function and model fitting process.
 
-    The class supports two objective modes: "acc" (accuracy) and "balance". The accuracy objective
-    aims to maximize the prediction accuracy of the learned tree, while the balance objective aims
-    to learn a balanced optimal decision tree to better generalize to out-of-sample data.
+    The class supports three objective modes: "acc" (accuracy), "balance", and "custom". The accuracy objective
+    aims to maximize the prediction accuracy of the learned tree, the balance objective aims
+    to learn a balanced optimal decision tree to better generalize to out-of-sample data, and the
+    custom objective allows users to pass their own weights.
 
     The The :meth:`fit <odtlearn.flow_oct.FlowOCT.fit>` method method is used to fit the optimal
     classification tree to the given training data. It
@@ -83,13 +88,13 @@ class FlowOCT(FlowOCTSingleSink):
 
     def __init__(
         self,
-        solver,
-        _lambda=0,
-        obj_mode="acc",
-        depth=1,
-        time_limit=60,
-        num_threads=None,
-        verbose=False,
+        solver: str,
+        _lambda: float = 0.0,
+        obj_mode: str = "acc",
+        depth: int = 1,
+        time_limit: int = 60,
+        num_threads: Union[None, int] = None,
+        verbose: bool = False,
     ) -> None:
         super().__init__(
             solver,
@@ -102,9 +107,8 @@ class FlowOCT(FlowOCTSingleSink):
         if obj_mode not in ["acc", "balance", "custom"]:
             raise ValueError("objective must be one of 'acc', 'balance', or 'custom'")
         self._obj_mode = obj_mode
-        self.weights = None
 
-    def _define_objective(self):
+    def _define_objective(self) -> None:
         obj = self._solver.lin_expr(0)
         for n in self._tree.Nodes:
             for f in self._X_col_labels:
@@ -115,7 +119,12 @@ class FlowOCT(FlowOCTSingleSink):
 
         self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
-    def fit(self, X, y, weights=None):
+    def fit(
+        self,
+        X: Union[ndarray, DataFrame],
+        y: Union[ndarray, Series],
+        weights: Union[Series, ndarray, None] = None,
+    ) -> "FlowOCT":
         """
         Fit the FlowOCT model to the given training data.
 
@@ -175,6 +184,8 @@ class FlowOCT(FlowOCTSingleSink):
                 )
             else:
                 self.weights = np.array(weights)
+        else:
+            self.weights = None
 
         # Generate weights based on obj_mode
         if self._obj_mode == "acc":
@@ -198,7 +209,7 @@ class FlowOCT(FlowOCTSingleSink):
 
         return self
 
-    def predict(self, X):
+    def predict(self, X: Union[DataFrame, ndarray]) -> ndarray:
         """
         Predict class labels for samples in X using the fitted FlowOCT model.
 
@@ -345,13 +356,13 @@ class BendersOCT(FlowOCTSingleSink):
 
     def __init__(
         self,
-        solver,
-        _lambda=0,
-        obj_mode="acc",
-        depth=1,
-        time_limit=60,
-        num_threads=None,
-        verbose=False,
+        solver: str,
+        _lambda: float = 0.0,
+        obj_mode: str = "acc",
+        depth: int = 1,
+        time_limit: int = 60,
+        num_threads: Union[None, int] = None,
+        verbose: bool = False,
     ) -> None:
 
         super().__init__(
@@ -377,10 +388,10 @@ class BendersOCT(FlowOCTSingleSink):
             self._datapoints, vtype=ODTL.CONTINUOUS, ub=1, name="g"
         )
 
-    def _define_constraints(self):
+    def _define_constraints(self) -> None:
         self._tree_structure_constraints()
 
-    def _define_objective(self):
+    def _define_objective(self) -> None:
         obj = self._solver.lin_expr(0)
         for n in self._tree.Nodes:
             for f in self._X_col_labels:
@@ -391,7 +402,12 @@ class BendersOCT(FlowOCTSingleSink):
 
         self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
-    def fit(self, X, y, weights=None):
+    def fit(
+        self,
+        X: Union[ndarray, DataFrame],
+        y: Union[ndarray, Series],
+        weights: Union[Series, ndarray, None] = None,
+    ) -> "BendersOCT":
         """
         Fit the BendersOCT model to the given training data.
 
@@ -504,7 +520,7 @@ class BendersOCT(FlowOCTSingleSink):
 
         return self
 
-    def predict(self, X):
+    def predict(self, X: Union[DataFrame, ndarray]) -> ndarray[Any, Any]:
         """
         Predict class labels for samples in X using the fitted BendersOCT model.
 

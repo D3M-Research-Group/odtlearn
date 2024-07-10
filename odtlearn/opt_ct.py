@@ -1,5 +1,10 @@
+from typing import Dict, Optional, Tuple, Union
+
 import numpy as np
 import pandas as pd
+from numpy import int64, ndarray, str_
+from pandas.core.frame import DataFrame
+from pandas.core.series import Series
 from sklearn.utils.validation import check_is_fitted
 
 from odtlearn.opt_dt import OptimalDecisionTree
@@ -53,15 +58,17 @@ class OptimalClassificationTree(OptimalDecisionTree):
 
     def __init__(
         self,
-        solver,
-        depth,
-        time_limit,
-        num_threads,
-        verbose,
+        solver: str,
+        depth: int,
+        time_limit: int,
+        num_threads: Union[None, int],
+        verbose: bool,
     ) -> None:
         super().__init__(solver, depth, time_limit, num_threads, verbose)
 
-    def _extract_metadata(self, X, y):
+    def _extract_metadata(
+        self, X: Union[ndarray, DataFrame], y: Union[ndarray, Series]
+    ) -> None:
         """A function for extracting metadata from the inputs before converting
         them into numpy arrays to work with the sklearn API
 
@@ -81,12 +88,23 @@ class OptimalClassificationTree(OptimalDecisionTree):
         self._datapoints = np.arange(0, self._X.shape[0])
 
         if isinstance(y, (pd.Series, pd.DataFrame)):
-            self._y = y.values.squeeze()
+            y_val = y.values
+            self._y = y_val.squeeze()
         else:
             self._y = y
         self._labels = np.unique(self._y)
 
-    def _get_node_status(self, b, w, p, n, feature_names=None):
+    def _get_node_status(
+        self,
+        b: Dict[Tuple[int, str_], float],
+        w: Dict[Tuple[int, int64], float],
+        p: Dict[int, float],
+        n: Union[int, int64],
+        feature_names: Optional[ndarray] = None,
+    ) -> Union[
+        Tuple[bool, bool, None, int, bool, int64],
+        Tuple[bool, bool, str_, int, bool, None],
+    ]:
         """
         This function give the status of a given node in a tree. By status we mean whether the node
             1- is pruned? i.e., we have made a prediction at one of its ancestors
@@ -150,7 +168,7 @@ class OptimalClassificationTree(OptimalDecisionTree):
                         branching = True
         return pruned, branching, selected_feature, cutoff, leaf, value
 
-    def _make_prediction(self, X):
+    def _make_prediction(self, X: ndarray) -> ndarray:
         prediction = []
         for i in range(X.shape[0]):
             current = 1
@@ -186,7 +204,7 @@ class OptimalClassificationTree(OptimalDecisionTree):
                         current = self._tree.get_left_children(current)
         return np.array(prediction)
 
-    def print_tree(self):
+    def print_tree(self) -> None:
         """
         Print a text representation of the fitted tree.
 

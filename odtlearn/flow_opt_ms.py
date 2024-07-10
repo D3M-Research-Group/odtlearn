@@ -99,11 +99,11 @@ class FlowOPTMultipleSink(OptimalPrescriptiveTree):
 
     def __init__(
         self,
-        solver,
-        depth,
-        time_limit,
-        num_threads,
-        verbose,
+        solver: str,
+        depth: int,
+        time_limit: int,
+        num_threads: None,
+        verbose: bool,
     ) -> None:
 
         super().__init__(
@@ -114,7 +114,7 @@ class FlowOPTMultipleSink(OptimalPrescriptiveTree):
             verbose,
         )
 
-    def _tree_struc_variables(self):
+    def _tree_struc_variables(self) -> None:
         self._b = self._solver.add_vars(
             self._tree.Nodes, self._X_col_labels, vtype=ODTL.BINARY, name="b"
         )
@@ -129,7 +129,7 @@ class FlowOPTMultipleSink(OptimalPrescriptiveTree):
             name="w",
         )
 
-    def _flow_variables(self):
+    def _flow_variables(self) -> None:
         self._zeta = self._solver.add_vars(
             self._datapoints,
             self._tree.Nodes + self._tree.Leaves,
@@ -146,11 +146,11 @@ class FlowOPTMultipleSink(OptimalPrescriptiveTree):
             name="z",
         )
 
-    def _define_variables(self):
+    def _define_variables(self) -> None:
         self._tree_struc_variables()
         self._flow_variables()
 
-    def _tree_structure_constraints(self):
+    def _tree_structure_constraints(self) -> None:
         # sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes
         self._solver.add_constrs(
             (
@@ -181,7 +181,7 @@ class FlowOPTMultipleSink(OptimalPrescriptiveTree):
             for n in self._tree.Nodes + self._tree.Leaves
         )
 
-    def _flow_constraints(self):
+    def _flow_constraints(self) -> None:
         # z[i,n] = z[i,l(n)] + z[i,r(n)] + zeta[i,n]    forall i, n in Nodes
         for n in self._tree.Nodes:
             n_left = int(self._tree.get_left_children(n))
@@ -205,7 +205,7 @@ class FlowOPTMultipleSink(OptimalPrescriptiveTree):
                 for i in self._datapoints
             )
 
-    def _arc_constraints(self):
+    def _arc_constraints(self) -> None:
         # z[i,l(n)] <= sum(b[n,f], f if x[i,f]<=0)    forall i, n in Nodes
         for i in self._datapoints:
             self._solver.add_constrs(
@@ -243,7 +243,7 @@ class FlowOPTMultipleSink(OptimalPrescriptiveTree):
 
         self._solver.add_constrs(self._z[i, 1] == 1 for i in self._datapoints)
 
-    def _define_constraints(self):
+    def _define_constraints(self) -> None:
         self._tree_structure_constraints()
         self._flow_constraints()
         self._arc_constraints()

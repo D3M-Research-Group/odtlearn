@@ -1,4 +1,6 @@
 import numpy as np
+from numpy import int64
+from typing import Any, List, Union
 
 
 class _Tree:
@@ -12,19 +14,19 @@ class _Tree:
     In this class we assume that we have a complete binary tree; we only receive the depth from the user
     """
 
-    def __init__(self, d):
+    def __init__(self, d: int) -> None:
         self.depth = d
         self.Nodes = [i for i in range(1, np.power(2, d))]
         self.Leaves = [i for i in range(np.power(2, d), np.power(2, d + 1))]
         self.total_nodes = len(self.Nodes) + len(self.Leaves)
 
-    def get_left_children(self, n):
+    def get_left_children(self, n: int) -> int:
         if n in self.Nodes:
             return 2 * n
         else:
             raise IndexError("Node index not found in tree")
 
-    def get_right_children(self, n):
+    def get_right_children(self, n: int) -> int:
         if n in self.Nodes:
             return 2 * n + 1
         else:
@@ -36,7 +38,7 @@ class _Tree:
         else:
             raise IndexError("Node index not found in tree")
 
-    def get_ancestors(self, n):
+    def get_ancestors(self, n: Union[int, int64]) -> List[Union[Any, int]]:
         ancestors = []
         if (n in self.Nodes) or (n in self.Leaves):
             current = n

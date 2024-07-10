@@ -1,3 +1,8 @@
+from typing import Union
+
+from numpy import ndarray
+from pandas.core.frame import DataFrame
+from pandas.core.series import Series
 from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 from odtlearn import ODTL
@@ -88,11 +93,11 @@ class FlowOPT_IPW(FlowOPTSingleSink):
 
     def __init__(
         self,
-        solver,
-        depth=1,
-        time_limit=60,
-        num_threads=None,
-        verbose=False,
+        solver: str,
+        depth: int = 1,
+        time_limit: int = 60,
+        num_threads: Union[None, int] = None,
+        verbose: bool = False,
     ) -> None:
         super().__init__(
             solver,
@@ -102,7 +107,13 @@ class FlowOPT_IPW(FlowOPTSingleSink):
             verbose,
         )
 
-    def fit(self, X, t, y, ipw):
+    def fit(
+        self,
+        X: Union[ndarray, DataFrame],
+        t: Union[Series, ndarray],
+        y: Union[Series, ndarray],
+        ipw: Union[Series, ndarray],
+    ) -> "FlowOPT_IPW":
         """
         Fit the FlowOPT_IPW model to the given training data.
 
@@ -179,7 +190,7 @@ class FlowOPT_IPW(FlowOPTSingleSink):
         # Return the classifier
         return self
 
-    def predict(self, X):
+    def predict(self, X: Union[ndarray, DataFrame]) -> ndarray:
         """
         Predict optimal treatments for samples in X using the fitted FlowOPT_IPW model.
 
@@ -297,11 +308,11 @@ class FlowOPT_DM(FlowOPTMultipleSink):
 
     def __init__(
         self,
-        solver,
-        depth=1,
-        time_limit=60,
-        num_threads=None,
-        verbose=False,
+        solver: str,
+        depth: int = 1,
+        time_limit: int = 60,
+        num_threads: Union[None, int] = None,
+        verbose: bool = False,
     ) -> None:
         super().__init__(
             solver,
@@ -311,7 +322,7 @@ class FlowOPT_DM(FlowOPTMultipleSink):
             verbose,
         )
 
-    def _define_objective(self):
+    def _define_objective(self) -> None:
         # define objective function
         obj = self._solver.lin_expr(0)
         for i in self._datapoints:
@@ -323,7 +334,13 @@ class FlowOPT_DM(FlowOPTMultipleSink):
 
         self._solver.set_objective(obj, ODTL.MAXIMIZE)
 
-    def fit(self, X, t, y, y_hat):
+    def fit(
+        self,
+        X: Union[ndarray, DataFrame],
+        t: Union[Series, ndarray],
+        y: Union[Series, ndarray],
+        y_hat: Union[ndarray, DataFrame],
+    ) -> "FlowOPT_DM":
         """
         Fit the FlowOPT_DM model to the given training data.
 
@@ -401,7 +418,7 @@ class FlowOPT_DM(FlowOPTMultipleSink):
         # Return the classifier
         return self
 
-    def predict(self, X):
+    def predict(self, X: Union[ndarray, DataFrame]) -> ndarray:
         """
         Predict optimal treatments for samples in X using the fitted FlowOPT_DM model.
 
@@ -520,11 +537,23 @@ class FlowOPT_DR(FlowOPTMultipleSink):
     """
 
     def __init__(
-        self, solver, depth=1, time_limit=60, num_threads=None, verbose=False
+        self,
+        solver: str,
+        depth: int = 1,
+        time_limit: int = 60,
+        num_threads: Union[None, int] = None,
+        verbose: bool = False,
     ) -> None:
         super().__init__(solver, depth, time_limit, num_threads, verbose)
 
-    def fit(self, X, t, y, ipw, y_hat):
+    def fit(
+        self,
+        X: Union[ndarray, DataFrame],
+        t: Union[Series, ndarray],
+        y: Union[Series, ndarray],
+        ipw: Union[Series, ndarray],
+        y_hat: Union[ndarray, DataFrame],
+    ) -> "FlowOPT_DR":
         """
         Fit the FlowOPT_DR model to the given training data.
 
@@ -607,7 +636,7 @@ class FlowOPT_DR(FlowOPTMultipleSink):
         # Return the classifier
         return self
 
-    def predict(self, X):
+    def predict(self, X: Union[ndarray, DataFrame]) -> ndarray:
         """
         Predict optimal treatments for samples in X using the fitted FlowOPT_DR model.
 
@@ -662,7 +691,7 @@ class FlowOPT_DR(FlowOPTMultipleSink):
 
         return self._make_prediction(X)
 
-    def _define_objective(self):
+    def _define_objective(self) -> None:
         # define objective function
         obj = self._solver.lin_expr(0)
         for i in self._datapoints:

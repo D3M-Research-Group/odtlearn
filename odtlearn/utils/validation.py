@@ -1,5 +1,11 @@
+from typing import Union
+
 import numpy as np
 import pandas as pd
+from numpy import ndarray
+from pandas.core.frame import DataFrame
+from pandas.core.indexes.base import Index
+from pandas.core.series import Series
 from sklearn.utils.validation import (
     _assert_all_finite,
     check_array,
@@ -8,7 +14,7 @@ from sklearn.utils.validation import (
 )
 
 
-def check_ipw(X, ipw):
+def check_ipw(X: ndarray, ipw: Union[ndarray, Series]) -> ndarray:
     """
     Check and validate inverse probability weights (IPW).
 
@@ -56,7 +62,9 @@ def check_ipw(X, ipw):
     return ipw
 
 
-def check_y_hat(X, treatments, y_hat):
+def check_y_hat(
+    X: ndarray, treatments: ndarray, y_hat: Union[DataFrame, ndarray]
+) -> ndarray:
     """
     Check and validate counterfactual predictions (y_hat).
 
@@ -112,7 +120,7 @@ def check_y_hat(X, treatments, y_hat):
     return y_hat
 
 
-def check_y(X, y):
+def check_y(X: ndarray, y: Union[ndarray, Series]) -> ndarray:
     """
     Check and validate target values (y).
 
@@ -153,7 +161,9 @@ def check_y(X, y):
     return y
 
 
-def check_columns_match(original_columns, new_data):
+def check_columns_match(
+    original_columns: Union[ndarray, Index], new_data: Union[ndarray, DataFrame]
+) -> None:
     """
     Check if the columns in new_data match the original_columns.
 
@@ -211,7 +221,7 @@ def check_columns_match(original_columns, new_data):
         ), f"Fit data has {len(original_columns)} columns but new data has {new_data.shape[1]} columns."
 
 
-def check_binary(df):
+def check_binary(df: Union[DataFrame, ndarray]) -> None:
     """
     Check if all values in the DataFrame are binary (0 or 1).
 
