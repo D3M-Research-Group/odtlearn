@@ -18,7 +18,7 @@ Classes
 
 
 
-.. py:class:: FlowOCT(solver, _lambda=0, obj_mode='acc', depth=1, time_limit=60, num_threads=None, verbose=False)
+.. py:class:: FlowOCT(solver: str, _lambda: float = 0.0, obj_mode: str = 'acc', depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
 
    Bases: :py:obj:`odtlearn.flow_oct_ss.FlowOCTSingleSink`
@@ -73,9 +73,10 @@ Classes
    :mod:`FlowOCTSingleSink <odtlearn.flow_oct_ss.FlowOCTSingleSink>`
    class and adds the specific objective function and model fitting process.
 
-   The class supports two objective modes: "acc" (accuracy) and "balance". The accuracy objective
-   aims to maximize the prediction accuracy of the learned tree, while the balance objective aims
-   to learn a balanced optimal decision tree to better generalize to out-of-sample data.
+   The class supports three objective modes: "acc" (accuracy), "balance", and "custom". The accuracy objective
+   aims to maximize the prediction accuracy of the learned tree, the balance objective aims
+   to learn a balanced optimal decision tree to better generalize to out-of-sample data, and the
+   custom objective allows users to pass their own weights.
 
    The The :meth:`fit <odtlearn.flow_oct.FlowOCT.fit>` method method is used to fit the optimal
    classification tree to the given training data. It
@@ -113,7 +114,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: fit(X, y, weights=None)
+   .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], y: Union[numpy.ndarray, pandas.core.series.Series], weights: Union[pandas.core.series.Series, numpy.ndarray, None] = None) -> FlowOCT
 
       
       Fit the FlowOCT model to the given training data.
@@ -169,7 +170,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
-   .. py:method:: predict(X)
+   .. py:method:: predict(X: Union[pandas.core.frame.DataFrame, numpy.ndarray]) -> numpy.ndarray
 
       
       Predict class labels for samples in X using the fitted FlowOCT model.
@@ -230,7 +231,7 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: BendersOCT(solver, _lambda=0, obj_mode='acc', depth=1, time_limit=60, num_threads=None, verbose=False)
+.. py:class:: BendersOCT(solver: str, _lambda: float = 0.0, obj_mode: str = 'acc', depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
 
    Bases: :py:obj:`odtlearn.flow_oct_ss.FlowOCTSingleSink`
@@ -338,7 +339,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: fit(X, y, weights=None)
+   .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], y: Union[numpy.ndarray, pandas.core.series.Series], weights: Union[pandas.core.series.Series, numpy.ndarray, None] = None) -> BendersOCT
 
       
       Fit the BendersOCT model to the given training data.
@@ -406,7 +407,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
-   .. py:method:: predict(X)
+   .. py:method:: predict(X: Union[pandas.core.frame.DataFrame, numpy.ndarray]) -> numpy.ndarray[Any, Any]
 
       
       Predict class labels for samples in X using the fitted BendersOCT model.

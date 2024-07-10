@@ -24,7 +24,7 @@ Functions
 
 
 
-.. py:function:: get_left_exp_integer(solver, main_grb_obj, n, i)
+.. py:function:: get_left_exp_integer(solver: odtlearn.utils.solver.Solver, main_grb_obj: BendersOCT, n: int, i: int) -> mip.entities.LinExpr
 
    
    Get the expression for the left branch constraint in the Benders' subproblem.
@@ -64,7 +64,7 @@ Functions
    ..
        !! processed by numpydoc !!
 
-.. py:function:: get_right_exp_integer(solver, main_grb_obj, n, i)
+.. py:function:: get_right_exp_integer(solver: odtlearn.utils.solver.Solver, main_grb_obj: BendersOCT, n: int, i: int) -> mip.entities.LinExpr
 
    
    Get the expression for the right branch constraint in the Benders' subproblem.
@@ -104,7 +104,7 @@ Functions
    ..
        !! processed by numpydoc !!
 
-.. py:function:: get_target_exp_integer(main_grb_obj, n, i)
+.. py:function:: get_target_exp_integer(main_grb_obj: BendersOCT, n: int, i: int) -> mip.entities.LinExpr
 
    
    Get the expression for the target constraint in the Benders' subproblem.
@@ -141,7 +141,7 @@ Functions
    ..
        !! processed by numpydoc !!
 
-.. py:function:: get_cut_integer(solver, main_grb_obj, left, right, target, i)
+.. py:function:: get_cut_integer(solver: odtlearn.utils.solver.Solver, main_grb_obj: BendersOCT, left: List[Union[Any, int]], right: List[Union[Any, int]], target: List[int], i: int) -> mip.entities.LinExpr
 
    
    Get the Benders' cut expression for the current subproblem.

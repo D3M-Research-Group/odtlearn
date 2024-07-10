@@ -23,7 +23,7 @@ Functions
 
 
 
-.. py:function:: check_ipw(X, ipw)
+.. py:function:: check_ipw(X: numpy.ndarray, ipw: Union[numpy.ndarray, pandas.core.series.Series]) -> numpy.ndarray
 
    
    Check and validate inverse probability weights (IPW).
@@ -73,7 +73,7 @@ Functions
    ..
        !! processed by numpydoc !!
 
-.. py:function:: check_y_hat(X, treatments, y_hat)
+.. py:function:: check_y_hat(X: numpy.ndarray, treatments: numpy.ndarray, y_hat: Union[pandas.core.frame.DataFrame, numpy.ndarray]) -> numpy.ndarray
 
    
    Check and validate counterfactual predictions (y_hat).
@@ -129,7 +129,7 @@ Functions
    ..
        !! processed by numpydoc !!
 
-.. py:function:: check_y(X, y)
+.. py:function:: check_y(X: numpy.ndarray, y: Union[numpy.ndarray, pandas.core.series.Series]) -> numpy.ndarray
 
    
    Check and validate target values (y).
@@ -176,7 +176,7 @@ Functions
    ..
        !! processed by numpydoc !!
 
-.. py:function:: check_columns_match(original_columns, new_data)
+.. py:function:: check_columns_match(original_columns: Union[numpy.ndarray, pandas.core.indexes.base.Index], new_data: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> None
 
    
    Check if the columns in new_data match the original_columns.
@@ -231,7 +231,7 @@ Functions
    ..
        !! processed by numpydoc !!
 
-.. py:function:: check_binary(df)
+.. py:function:: check_binary(df: Union[pandas.core.frame.DataFrame, numpy.ndarray]) -> None
 
    
    Check if all values in the DataFrame are binary (0 or 1).

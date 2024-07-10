@@ -19,7 +19,7 @@ Classes
 
 
 
-.. py:class:: FlowOPT_IPW(solver, depth=1, time_limit=60, num_threads=None, verbose=False)
+.. py:class:: FlowOPT_IPW(solver: str, depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
 
    Bases: :py:obj:`odtlearn.flow_opt_ss.FlowOPTSingleSink`
@@ -115,7 +115,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: fit(X, t, y, ipw)
+   .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], t: Union[pandas.core.series.Series, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray], ipw: Union[pandas.core.series.Series, numpy.ndarray]) -> FlowOPT_IPW
 
       
       Fit the FlowOPT_IPW model to the given training data.
@@ -177,7 +177,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
-   .. py:method:: predict(X)
+   .. py:method:: predict(X: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> numpy.ndarray
 
       
       Predict optimal treatments for samples in X using the fitted FlowOPT_IPW model.
@@ -235,7 +235,7 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: FlowOPT_DM(solver, depth=1, time_limit=60, num_threads=None, verbose=False)
+.. py:class:: FlowOPT_DM(solver: str, depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
 
    Bases: :py:obj:`odtlearn.flow_opt_ms.FlowOPTMultipleSink`
@@ -318,7 +318,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: fit(X, t, y, y_hat)
+   .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], t: Union[pandas.core.series.Series, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray], y_hat: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> FlowOPT_DM
 
       
       Fit the FlowOPT_DM model to the given training data.
@@ -381,7 +381,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
-   .. py:method:: predict(X)
+   .. py:method:: predict(X: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> numpy.ndarray
 
       
       Predict optimal treatments for samples in X using the fitted FlowOPT_DM model.
@@ -439,7 +439,7 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: FlowOPT_DR(solver, depth=1, time_limit=60, num_threads=None, verbose=False)
+.. py:class:: FlowOPT_DR(solver: str, depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
 
    Bases: :py:obj:`odtlearn.flow_opt_ms.FlowOPTMultipleSink`
@@ -523,7 +523,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: fit(X, t, y, ipw, y_hat)
+   .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], t: Union[pandas.core.series.Series, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray], ipw: Union[pandas.core.series.Series, numpy.ndarray], y_hat: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> FlowOPT_DR
 
       
       Fit the FlowOPT_DR model to the given training data.
@@ -591,7 +591,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
-   .. py:method:: predict(X)
+   .. py:method:: predict(X: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> numpy.ndarray
 
       
       Predict optimal treatments for samples in X using the fitted FlowOPT_DR model.

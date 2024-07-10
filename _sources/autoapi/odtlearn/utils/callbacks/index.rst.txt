@@ -27,7 +27,7 @@ Functions
 
 
 
-.. py:function:: benders_subproblem(main_model_obj, b, p, w, i)
+.. py:function:: benders_subproblem(main_model_obj: BendersOCT, b: Union[Dict[Tuple[int, numpy.str_], float], Dict[Tuple[int, str], float]], p: Dict[int, float], w: Dict[Tuple[int, numpy.int64], float], i: int) -> Union[Tuple[int, List[int], List[Any], List[int]], Tuple[int, List[Any], List[int], List[int]], Tuple[int, List[int], List[int], List[int]]]
 
    
    Solve the Benders' subproblem for a given datapoint.
@@ -70,7 +70,7 @@ Functions
    ..
        !! processed by numpydoc !!
 
-.. py:class:: BendersCallback(X, obj, solver, **kwargs)
+.. py:class:: BendersCallback(X: pandas.core.frame.DataFrame, obj: BendersOCT, solver: odtlearn.utils.solver.Solver, **kwargs)
 
 
    Bases: :py:obj:`mip.ConstrsGenerator`
@@ -104,7 +104,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: generate_constrs(model: mip.Model, depth: int = 0, npass: int = 0)
+   .. py:method:: generate_constrs(model: mip.Model, depth: int = 0, npass: int = 0) -> None
 
       
       Generate Benders' cuts at the current node in the branch-and-bound tree.

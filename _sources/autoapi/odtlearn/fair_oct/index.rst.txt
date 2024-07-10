@@ -23,7 +23,7 @@ Classes
 
 
 
-.. py:class:: FairConstrainedOCT(solver, positive_class, _lambda, obj_mode, fairness_bound, depth, time_limit, num_threads, verbose)
+.. py:class:: FairConstrainedOCT(solver: str, positive_class: int, _lambda: float, obj_mode: str, fairness_bound: float, depth: int, time_limit: int, num_threads: None, verbose: bool)
 
 
    Bases: :py:obj:`odtlearn.constrained_oct.ConstrainedOCT`
@@ -128,7 +128,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: fit(X, y, protect_feat, legit_factor, weights=None)
+   .. py:method:: fit(X: numpy.ndarray, y: numpy.ndarray, protect_feat: numpy.ndarray, legit_factor: numpy.ndarray, weights: None = None) -> Union[FairCSPOCT, FairSPOCT, FairEOddsOCT, FairEOppOCT, FairPEOCT]
 
       
       Fit the Fair Constrained Optimal Classification Tree (FairConstrainedOCT) model to the given training data.
@@ -213,7 +213,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
-   .. py:method:: predict(X)
+   .. py:method:: predict(X: Union[pandas.core.frame.DataFrame, numpy.ndarray]) -> numpy.ndarray
 
       
       Predict class labels for samples in X using the fitted Fair Constrained Optimal Classification Tree model.
@@ -276,7 +276,7 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: FairSPOCT(solver, positive_class, depth=1, time_limit=60, _lambda=0, obj_mode='acc', fairness_bound=1, num_threads=None, verbose=False)
+.. py:class:: FairSPOCT(solver: str, positive_class: int, depth: int = 1, time_limit: int = 60, _lambda: float = 0, obj_mode: str = 'acc', fairness_bound: float = 1, num_threads: Union[None, int] = None, verbose: bool = False)
 
 
    Bases: :py:obj:`FairConstrainedOCT`
@@ -331,7 +331,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: calc_metric(protect_feat, y)
+   .. py:method:: calc_metric(protect_feat: Union[pandas.core.frame.DataFrame, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray])
 
       
       Calculate the statistical parity metric for the given data.
@@ -370,7 +370,7 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: FairCSPOCT(solver, positive_class, depth=1, time_limit=60, _lambda=0, obj_mode='acc', fairness_bound=1, num_threads=None, verbose=False)
+.. py:class:: FairCSPOCT(solver: str, positive_class: int, depth: int = 1, time_limit: int = 60, _lambda: float = 0, obj_mode: str = 'acc', fairness_bound: float = 1, num_threads: Union[None, int] = None, verbose: bool = False)
 
 
    Bases: :py:obj:`FairConstrainedOCT`
@@ -425,7 +425,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: calc_metric(protect_feat, legit_factor, y)
+   .. py:method:: calc_metric(protect_feat: Union[pandas.core.frame.DataFrame, numpy.ndarray], legit_factor: Union[pandas.core.frame.DataFrame, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray])
 
       
       Calculate the conditional statistical parity metric for the given data.
@@ -468,7 +468,7 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: FairPEOCT(solver, positive_class, depth=1, time_limit=60, _lambda=0, obj_mode='acc', fairness_bound=1, num_threads=None, verbose=False)
+.. py:class:: FairPEOCT(solver: str, positive_class: int, depth: int = 1, time_limit: int = 60, _lambda: float = 0, obj_mode: str = 'acc', fairness_bound: float = 1, num_threads: Union[None, int] = None, verbose: bool = False)
 
 
    Bases: :py:obj:`FairConstrainedOCT`
@@ -526,7 +526,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: calc_metric(protect_feat, y, y_pred)
+   .. py:method:: calc_metric(protect_feat: Union[pandas.core.frame.DataFrame, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray], y_pred: Union[pandas.core.series.Series, numpy.ndarray])
 
       
       Calculate the predictive equality metric for the given data.
@@ -569,7 +569,7 @@ Classes
           !! processed by numpydoc !!
 
 
-.. py:class:: FairEOppOCT(solver, positive_class, depth=1, time_limit=60, _lambda=0, obj_mode='acc', fairness_bound=1, num_threads=None, verbose=False)
+.. py:class:: FairEOppOCT(solver: str, positive_class: int, depth: int = 1, time_limit: int = 60, _lambda: float = 0, obj_mode: str = 'acc', fairness_bound: float = 1, num_threads: Union[None, int] = None, verbose: bool = False)
 
 
    Bases: :py:obj:`FairConstrainedOCT`
@@ -632,7 +632,7 @@ Classes
 
 
 
-.. py:class:: FairEOddsOCT(solver, positive_class, depth=1, time_limit=60, _lambda=0, obj_mode='acc', fairness_bound=1, num_threads=None, verbose=False)
+.. py:class:: FairEOddsOCT(solver: str, positive_class: int, depth: int = 1, time_limit: int = 60, _lambda: float = 0, obj_mode: str = 'acc', fairness_bound: float = 1, num_threads: Union[None, int] = None, verbose: bool = False)
 
 
    Bases: :py:obj:`FairConstrainedOCT`

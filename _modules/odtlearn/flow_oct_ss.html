@@ -249,7 +249,7 @@
         </div>
         <article role="main">
           <h1>Source code for odtlearn.flow_oct_ss</h1><div class="highlight"><pre>
-<span></span><span class="c1"># from gurobipy import GRB, quicksum</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">odtlearn</span> <span class="kn">import</span> <span class="n">ODTL</span>
 <span class="kn">from</span> <span class="nn">odtlearn.opt_ct</span> <span class="kn">import</span> <span class="n">OptimalClassificationTree</span>
@@ -333,12 +333,12 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">solver</span><span class="p">,</span>
-        <span class="n">_lambda</span><span class="p">,</span>
-        <span class="n">depth</span><span class="p">,</span>
-        <span class="n">time_limit</span><span class="p">,</span>
-        <span class="n">num_threads</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="n">_lambda</span>
@@ -351,7 +351,7 @@
             <span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_tree_struc_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_tree_struc_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># b[n,f] ==1 iff at node n we branch on feature f</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_vars</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_col_labels</span><span class="p">,</span> <span class="n">vtype</span><span class="o">=</span><span class="n">ODTL</span><span class="o">.</span><span class="n">BINARY</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;b&quot;</span>
@@ -371,7 +371,7 @@
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_flow_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_flow_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># zeta[i,n] is the amount of flow through the edge connecting node n</span>
         <span class="c1"># to sink node t for data-point i</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_vars</span><span class="p">(</span>
@@ -391,11 +391,11 @@
             <span class="n">name</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_define_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_define_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tree_struc_variables</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_flow_variables</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_tree_structure_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_tree_structure_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># sum(b[n,f], f) + p[n] + sum(p[m], m in A(n)) = 1   forall n in Nodes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">add_constrs</span><span class="p">(</span>
             <span class="p">(</span>
@@ -423,7 +423,7 @@
             <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Leaves</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_flow_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_flow_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># z[i,n] = z[i,l(n)] + z[i,r(n)] + zeta[i,n]    forall i, n in Nodes</span>
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
             <span class="n">n_left</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">get_left_children</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
@@ -442,7 +442,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_arc_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_arc_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># z[i,l(n)] &lt;= sum(b[n,f], f if x[i,f]=0) forall i, n in Nodes</span>
         <span class="c1"># changed this to loop over the indicies of X and check if the column values at a given idx</span>
         <span class="c1"># equals zero</span>
@@ -479,7 +479,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_zeta</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datapoints</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_define_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_define_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tree_structure_constraints</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_flow_constraints</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_arc_constraints</span><span class="p">()</span></div>

@@ -251,9 +251,13 @@
           <h1>Source code for odtlearn.fair_oct</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
+<span class="kn">from</span> <span class="nn">pandas.core.frame</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">pandas.core.series</span> <span class="kn">import</span> <span class="n">Series</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_is_fitted</span><span class="p">,</span> <span class="n">check_X_y</span>
 
@@ -345,15 +349,15 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">solver</span><span class="p">,</span>
-        <span class="n">positive_class</span><span class="p">,</span>
-        <span class="n">_lambda</span><span class="p">,</span>
-        <span class="n">obj_mode</span><span class="p">,</span>
-        <span class="n">fairness_bound</span><span class="p">,</span>
-        <span class="n">depth</span><span class="p">,</span>
-        <span class="n">time_limit</span><span class="p">,</span>
-        <span class="n">num_threads</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">positive_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">obj_mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">fairness_bound</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_positive_class</span> <span class="o">=</span> <span class="n">positive_class</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_bound</span> <span class="o">=</span> <span class="n">fairness_bound</span>
@@ -364,7 +368,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_extract_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_extract_metadata</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Series</span><span class="p">],</span>
+        <span class="n">protect_feat</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
         <span class="nb">super</span><span class="p">(</span><span class="n">ConstrainedOCT</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_extract_metadata</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protect_feat</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_protect_feat_col_labels</span> <span class="o">=</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">columns</span>
@@ -374,7 +384,7 @@
                 <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;P_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">protect_feat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_add_fairness_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_df</span><span class="p">,</span> <span class="n">p_prime_df</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_add_fairness_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_df</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">p_prime_df</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add the fairness constraint to the MIP problem.</span>
 
@@ -445,7 +455,7 @@
 
         <span class="k">return</span> <span class="n">constraint_added</span>
 
-    <span class="k">def</span> <span class="nf">_define_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_define_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Max sum(sum(zeta[i,n,y(i)]))</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">lin_expr</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tree</span><span class="o">.</span><span class="n">Nodes</span><span class="p">:</span>
@@ -462,7 +472,14 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">set_objective</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ODTL</span><span class="o">.</span><span class="n">MAXIMIZE</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FairConstrainedOCT.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairConstrainedOCT.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="FairConstrainedOCT.fit"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairConstrainedOCT.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">protect_feat</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">legit_factor</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">weights</span><span class="p">:</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;FairCSPOCT&quot;</span><span class="p">,</span> <span class="s2">&quot;FairSPOCT&quot;</span><span class="p">,</span> <span class="s2">&quot;FairEOddsOCT&quot;</span><span class="p">,</span> <span class="s2">&quot;FairEOppOCT&quot;</span><span class="p">,</span> <span class="s2">&quot;FairPEOCT&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fit the Fair Constrained Optimal Classification Tree (FairConstrainedOCT) model to the given training data.</span>
 
@@ -592,7 +609,7 @@
         <span class="c1"># Return the classifier</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="FairConstrainedOCT.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairConstrainedOCT.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="viewcode-block" id="FairConstrainedOCT.predict"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairConstrainedOCT.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict class labels for samples in X using the fitted Fair Constrained Optimal Classification Tree model.</span>
 
@@ -684,15 +701,15 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">solver</span><span class="p">,</span>
-        <span class="n">positive_class</span><span class="p">,</span>
-        <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
-        <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
-        <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">positive_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">obj_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;acc&quot;</span><span class="p">,</span>
+        <span class="n">fairness_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -707,7 +724,7 @@
             <span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Loop through all possible combinations of the protected feature</span>
         <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_P_col_labels</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="mi">2</span><span class="p">):</span>
@@ -718,7 +735,9 @@
                 <span class="n">p_prime_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span> <span class="o">==</span> <span class="n">p_prime</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_add_fairness_constraint</span><span class="p">(</span><span class="n">p_df</span><span class="p">,</span> <span class="n">p_prime_df</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FairSPOCT.calc_metric"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairSPOCT.calc_metric">[docs]</a>    <span class="k">def</span> <span class="nf">calc_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="FairSPOCT.calc_metric"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairSPOCT.calc_metric">[docs]</a>    <span class="k">def</span> <span class="nf">calc_metric</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">],</span> <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Series</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">]</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the statistical parity metric for the given data.</span>
 
@@ -804,15 +823,15 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">solver</span><span class="p">,</span>
-        <span class="n">positive_class</span><span class="p">,</span>
-        <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
-        <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
-        <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">positive_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">obj_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;acc&quot;</span><span class="p">,</span>
+        <span class="n">fairness_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -827,7 +846,7 @@
             <span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Loop through all possible combinations of the protected feature</span>
         <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_P_col_labels</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="mi">2</span><span class="p">):</span>
@@ -844,7 +863,12 @@
                     <span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_add_fairness_constraint</span><span class="p">(</span><span class="n">p_df</span><span class="p">,</span> <span class="n">p_prime_df</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FairCSPOCT.calc_metric"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairCSPOCT.calc_metric">[docs]</a>    <span class="k">def</span> <span class="nf">calc_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">legit_factor</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="FairCSPOCT.calc_metric"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairCSPOCT.calc_metric">[docs]</a>    <span class="k">def</span> <span class="nf">calc_metric</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">protect_feat</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">legit_factor</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Series</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">],</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the conditional statistical parity metric for the given data.</span>
 
@@ -948,15 +972,15 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">solver</span><span class="p">,</span>
-        <span class="n">positive_class</span><span class="p">,</span>
-        <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
-        <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
-        <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">positive_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">obj_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;acc&quot;</span><span class="p">,</span>
+        <span class="n">fairness_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -971,7 +995,7 @@
             <span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Loop through all possible combinations of the protected feature</span>
         <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_P_col_labels</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="mi">2</span><span class="p">):</span>
@@ -987,7 +1011,12 @@
                 <span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_add_fairness_constraint</span><span class="p">(</span><span class="n">p_df</span><span class="p">,</span> <span class="n">p_prime_df</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FairPEOCT.calc_metric"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairPEOCT.calc_metric">[docs]</a>    <span class="k">def</span> <span class="nf">calc_metric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protect_feat</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="FairPEOCT.calc_metric"><a class="viewcode-back" href="../../autoapi/odtlearn/fair_oct/index.html#odtlearn.fair_oct.FairPEOCT.calc_metric">[docs]</a>    <span class="k">def</span> <span class="nf">calc_metric</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">protect_feat</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Series</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">y_pred</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Series</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">],</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the predictive equality metric for the given data.</span>
 
@@ -1092,15 +1121,15 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">solver</span><span class="p">,</span>
-        <span class="n">positive_class</span><span class="p">,</span>
-        <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
-        <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
-        <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">positive_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">obj_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;acc&quot;</span><span class="p">,</span>
+        <span class="n">fairness_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -1115,7 +1144,7 @@
             <span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Loop through all possible combinations of the protected feature</span>
         <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_P_col_labels</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="mi">2</span><span class="p">):</span>
@@ -1169,15 +1198,15 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">solver</span><span class="p">,</span>
-        <span class="n">positive_class</span><span class="p">,</span>
-        <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
-        <span class="n">_lambda</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
-        <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">solver</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">positive_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">time_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
+        <span class="n">_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">obj_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;acc&quot;</span><span class="p">,</span>
+        <span class="n">fairness_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">num_threads</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -1192,7 +1221,7 @@
             <span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_define_side_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Loop through all possible combinations of the protected feature</span>
         <span class="k">for</span> <span class="n">protected_feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_P_col_labels</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">combo</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X_p</span><span class="p">[</span><span class="n">protected_feature</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="mi">2</span><span class="p">):</span>

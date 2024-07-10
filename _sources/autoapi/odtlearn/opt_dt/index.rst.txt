@@ -17,7 +17,7 @@ Classes
 
 
 
-.. py:class:: OptimalDecisionTree(solver, depth=1, time_limit=60, num_threads=None, verbose=False)
+.. py:class:: OptimalDecisionTree(solver: str, depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
 
    Bases: :py:obj:`abc.ABC`
@@ -362,5 +362,76 @@ Classes
    .. py:method:: predict()
       :abstractmethod:
 
+
+   .. py:method:: plot_search_progress(ax=None, title='Search Progress', xlabel='Time (s)', ylabel='Objective Bound', lw=2, alpha=0.8, legend_loc='best', legend_fontsize=None, grid=True, color_ub='b', color_lb='r', log_scale=False) -> None
+
+      
+      Plots the search progress log showing the lower and upper objective bounds over time.
+
+
+      :Parameters:
+
+          **ax** : matplotlib axis, default=None
+              Axes to plot to. If None, use current axis. Any previous content is cleared.
+
+          **title** : str, optional, default: 'Search Progress'
+              The title of the plot.
+
+          **xlabel** : str, optional, default: 'Time (s)'
+              The label for the x-axis.
+
+          **ylabel** : str, optional, default: 'Objective Bound'
+              The label for the y-axis.
+
+          **lw** : float, optional, default: 2
+              The line width of the bound lines.
+
+          **alpha** : float, optional, default: 0.8
+              The alpha blending value between 0 (transparent) and 1 (opaque).
+
+          **legend_loc** : str, optional, default: 'best'
+              The location of the legend.
+
+          **legend_fontsize** : int or str, optional
+              The font size for the legend labels.
+
+          **grid** : bool, optional, default: True
+              Whether to show the grid lines.
+
+          **color_ub** : color str or tuple of floats, optional, default: 'b'
+              The color to use for the upper bound line.
+
+          **color_lb** : color str or tuple of floats, optional, default: 'r'
+              The color to use for the lower bound line.
+
+          **log_scale** : bool, optional, default: False
+              Whether to use a log scale for the y-axis.
+
+
+
+
+
+      :Raises:
+
+          NotFittedError
+              If the model has not been fitted yet.
+
+          AttributeError
+              If the search progress log was not recorded during fitting.
+
+
+
+
+      .. rubric:: Notes
+
+      The search progress log must be enabled prior to fitting by setting
+      `store_search_progress_log` to True.
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
 
 

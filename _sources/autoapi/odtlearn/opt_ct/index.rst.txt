@@ -17,7 +17,7 @@ Classes
 
 
 
-.. py:class:: OptimalClassificationTree(solver, depth, time_limit, num_threads, verbose)
+.. py:class:: OptimalClassificationTree(solver: str, depth: int, time_limit: int, num_threads: Union[None, int], verbose: bool)
 
 
    Bases: :py:obj:`odtlearn.opt_dt.OptimalDecisionTree`
@@ -84,7 +84,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: print_tree()
+   .. py:method:: print_tree() -> None
 
       
       Print a text representation of the fitted tree.

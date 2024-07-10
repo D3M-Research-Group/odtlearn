@@ -25,7 +25,7 @@ Functions
 
 
 
-.. py:class:: Binarizer(categorical_cols=None, integer_cols=None, real_cols=None, n_bins=4, bin_strategy='uniform')
+.. py:class:: Binarizer(categorical_cols: Optional[List[str]] = None, integer_cols: Optional[List[str]] = None, real_cols: Optional[List[str]] = None, n_bins: int = 4, bin_strategy: str = 'uniform')
 
 
    Bases: :py:obj:`sklearn.base.BaseEstimator`, :py:obj:`sklearn.base.TransformerMixin`
@@ -93,7 +93,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
-   .. py:method:: fit(X, y=None)
+   .. py:method:: fit(X: pandas.core.frame.DataFrame, y: None = None) -> Binarizer
 
       
       Fit the Binarizer to the input data.
@@ -128,7 +128,7 @@ Functions
       ..
           !! processed by numpydoc !!
 
-   .. py:method:: transform(X)
+   .. py:method:: transform(X: pandas.core.frame.DataFrame) -> pandas.core.frame.DataFrame
 
       
       Transform the input data using the fitted Binarizer.

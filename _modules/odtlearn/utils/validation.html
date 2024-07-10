@@ -249,8 +249,14 @@
         </div>
         <article role="main">
           <h1>Source code for odtlearn.utils.validation</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
+<span class="kn">from</span> <span class="nn">pandas.core.frame</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">pandas.core.indexes.base</span> <span class="kn">import</span> <span class="n">Index</span>
+<span class="kn">from</span> <span class="nn">pandas.core.series</span> <span class="kn">import</span> <span class="n">Series</span>
 <span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_assert_all_finite</span><span class="p">,</span>
     <span class="n">check_array</span><span class="p">,</span>
@@ -259,7 +265,7 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="check_ipw"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_ipw">[docs]</a><span class="k">def</span> <span class="nf">check_ipw</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">ipw</span><span class="p">):</span>
+<div class="viewcode-block" id="check_ipw"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_ipw">[docs]</a><span class="k">def</span> <span class="nf">check_ipw</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">ipw</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Series</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check and validate inverse probability weights (IPW).</span>
 
@@ -307,7 +313,9 @@
     <span class="k">return</span> <span class="n">ipw</span></div>
 
 
-<div class="viewcode-block" id="check_y_hat"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_y_hat">[docs]</a><span class="k">def</span> <span class="nf">check_y_hat</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">treatments</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">):</span>
+<div class="viewcode-block" id="check_y_hat"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_y_hat">[docs]</a><span class="k">def</span> <span class="nf">check_y_hat</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">treatments</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check and validate counterfactual predictions (y_hat).</span>
 
@@ -363,7 +371,7 @@
     <span class="k">return</span> <span class="n">y_hat</span></div>
 
 
-<div class="viewcode-block" id="check_y"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_y">[docs]</a><span class="k">def</span> <span class="nf">check_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="check_y"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_y">[docs]</a><span class="k">def</span> <span class="nf">check_y</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Series</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check and validate target values (y).</span>
 
@@ -404,7 +412,9 @@
     <span class="k">return</span> <span class="n">y</span></div>
 
 
-<div class="viewcode-block" id="check_columns_match"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_columns_match">[docs]</a><span class="k">def</span> <span class="nf">check_columns_match</span><span class="p">(</span><span class="n">original_columns</span><span class="p">,</span> <span class="n">new_data</span><span class="p">):</span>
+<div class="viewcode-block" id="check_columns_match"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_columns_match">[docs]</a><span class="k">def</span> <span class="nf">check_columns_match</span><span class="p">(</span>
+    <span class="n">original_columns</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Index</span><span class="p">],</span> <span class="n">new_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if the columns in new_data match the original_columns.</span>
 
@@ -462,7 +472,7 @@
         <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Fit data has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">original_columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> columns but new data has </span><span class="si">{</span><span class="n">new_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns.&quot;</span></div>
 
 
-<div class="viewcode-block" id="check_binary"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_binary">[docs]</a><span class="k">def</span> <span class="nf">check_binary</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<div class="viewcode-block" id="check_binary"><a class="viewcode-back" href="../../../autoapi/odtlearn/utils/validation/index.html#odtlearn.utils.validation.check_binary">[docs]</a><span class="k">def</span> <span class="nf">check_binary</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if all values in the DataFrame are binary (0 or 1).</span>
 
