@@ -5,10 +5,7 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
-[tool.pytest.ini_options]
-markers = [
-    "test_solver: marks tests as run only when we have a Gurobi license (deselect with '-m \"not test_solver\"')"
-]
+
 
 [tool.isort]
 profile = "black"
