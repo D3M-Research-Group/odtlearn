@@ -284,9 +284,9 @@
 <span class="sd">        The value of the class label which is corresponding to the desired outcome</span>
 <span class="sd">    _lambda : float</span>
 <span class="sd">        The regularization parameter in the objective. Must be in the interval [0, 1).</span>
-<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;custom&#39;}, optional (default=&#39;acc&#39;)</span>
+<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;weighted&#39;}, optional (default=&#39;acc&#39;)</span>
 <span class="sd">        The objective mode to use.</span>
-<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;custom&#39; for user-defined weights.</span>
+<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;weighted&#39; for user-defined weights.</span>
 <span class="sd">    fairness_bound: float (0,1], default=1</span>
 <span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
 <span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
@@ -363,7 +363,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_fairness_bound</span> <span class="o">=</span> <span class="n">fairness_bound</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
         <span class="k">if</span> <span class="n">obj_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="s2">&quot;balance&quot;</span><span class="p">,</span> <span class="s2">&quot;custom&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;objective must be one of &#39;acc&#39;, &#39;balance&#39;, or &#39;custom&#39;&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;objective must be one of &#39;acc&#39;, &#39;balance&#39;, or &#39;weighted&#39;&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span> <span class="n">_lambda</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">time_limit</span><span class="p">,</span> <span class="n">num_threads</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
@@ -498,7 +498,7 @@
 <span class="sd">        weights : array-like of shape (n_samples,), optional (default=None)</span>
 <span class="sd">            Sample weights. If None, then samples are equally weighted when obj_mode is &#39;acc&#39;,</span>
 <span class="sd">            or weights are automatically calculated when obj_mode is &#39;balance&#39;.</span>
-<span class="sd">            Must be provided when obj_mode is &#39;custom&#39;.</span>
+<span class="sd">            Must be provided when obj_mode is &#39;weighted&#39;.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -509,7 +509,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If X or protect_feat contains non-binary values, or if inputs have inconsistent numbers of samples.</span>
-<span class="sd">            Also raised if weights are not provided when obj_mode is &#39;custom&#39;, or if the number</span>
+<span class="sd">            Also raised if weights are not provided when obj_mode is &#39;weighted&#39;, or if the number</span>
 <span class="sd">            of weights doesn&#39;t match the number of samples.</span>
 <span class="sd">        AssertionError</span>
 <span class="sd">            If the fairness bound is not in the range (0, 1].</span>
@@ -530,9 +530,9 @@
 <span class="sd">        The behavior of this method depends on the `obj_mode` specified during initialization:</span>
 <span class="sd">        - If obj_mode is &#39;acc&#39;, equal weights are used (weights parameter is ignored).</span>
 <span class="sd">        - If obj_mode is &#39;balance&#39;, weights are automatically calculated to balance class importance.</span>
-<span class="sd">        - If obj_mode is &#39;custom&#39;, the provided weights are used.</span>
+<span class="sd">        - If obj_mode is &#39;weighted&#39;, the provided weights are used.</span>
 
-<span class="sd">        When obj_mode is not &#39;custom&#39; and weights are provided, a warning is issued and the weights are ignored.</span>
+<span class="sd">        When obj_mode is not &#39;weighted&#39; and weights are provided, a warning is issued and the weights are ignored.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -579,7 +579,7 @@
 
         <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">!=</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Weights are ignored because obj_mode is not &#39;custom&#39;.&quot;</span><span class="p">)</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Weights are ignored because obj_mode is not &#39;weighted&#39;.&quot;</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;The number of weights must match the number of samples.&quot;</span>
@@ -597,7 +597,9 @@
             <span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Weights must be provided when obj_mode is &#39;custom&#39;.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Weights must be provided when obj_mode is &#39;weighted&#39;.&quot;</span>
+                <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_main_problem</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_X</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="p">)</span>
@@ -688,9 +690,9 @@
 <span class="sd">        The given time limit (in seconds) for solving the MIO problem</span>
 <span class="sd">    _lambda : float, default = 0</span>
 <span class="sd">        The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
-<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;custom&#39;}, optional (default=&#39;acc&#39;)</span>
+<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;weighted&#39;}, optional (default=&#39;acc&#39;)</span>
 <span class="sd">        The objective mode to use.</span>
-<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;custom&#39; for user-defined weights.</span>
+<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;weighted&#39; for user-defined weights.</span>
 <span class="sd">    fairness_bound: float (0,1], default=1</span>
 <span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
 <span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>
@@ -811,9 +813,9 @@
 <span class="sd">        The given time limit (in seconds) for solving the MIO problem</span>
 <span class="sd">    _lambda : float, default = 0</span>
 <span class="sd">        The regularization parameter in the objective. _lambda is in the interval [0,1)</span>
-<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;custom&#39;}, optional (default=&#39;acc&#39;)</span>
+<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;weighted&#39;}, optional (default=&#39;acc&#39;)</span>
 <span class="sd">        The objective mode to use.</span>
-<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;custom&#39; for user-defined weights.</span>
+<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;weighted&#39; for user-defined weights.</span>
 <span class="sd">    fairness_bound: float (0,1], default=1</span>
 <span class="sd">        The bound of the fairness constraint. The smaller the value the stricter</span>
 <span class="sd">        the fairness constraint and 1 corresponds to no fairness constraint enforced</span>

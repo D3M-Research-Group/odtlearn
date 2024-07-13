@@ -363,7 +363,7 @@ Classes
       :abstractmethod:
 
 
-   .. py:method:: plot_search_progress(ax=None, title='Search Progress', xlabel='Time (s)', ylabel='Objective Bound', lw=2, alpha=0.8, legend_loc='best', legend_fontsize=None, grid=True, color_ub='b', color_lb='r', log_scale=False) -> None
+   .. py:method:: plot_search_progress(ax=None, title='Search Progress', xlabel='Time (s)', ylabel='Objective Bound', lw=2, alpha=0.8, legend_loc='best', legend_fontsize=None, grid=True, color_ub='b', color_lb='r', log_scale=False) -> matplotlib.axes.Axes
 
       
       Plots the search progress log showing the lower and upper objective bounds over time.

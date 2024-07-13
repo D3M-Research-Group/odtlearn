@@ -276,9 +276,9 @@
 <span class="sd">        The solver to use for the MIP formulation. Currently, only &quot;gurobi&quot; and &quot;CBC&quot; are supported.</span>
 <span class="sd">    _lambda : float, default=0</span>
 <span class="sd">        The regularization parameter for controlling the complexity of the learned tree.</span>
-<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;custom&#39;}, optional (default=&#39;acc&#39;)</span>
+<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;weighted&#39;}, optional (default=&#39;acc&#39;)</span>
 <span class="sd">        The objective mode to use.</span>
-<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;custom&#39; for user-defined weights.</span>
+<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;weighted&#39; for user-defined weights.</span>
 <span class="sd">    depth : int, default=1</span>
 <span class="sd">        The maximum depth of the tree to be learned.</span>
 <span class="sd">    time_limit : int, default=60</span>
@@ -310,10 +310,10 @@
 <span class="sd">    :mod:`FlowOCTSingleSink &lt;odtlearn.flow_oct_ss.FlowOCTSingleSink&gt;`</span>
 <span class="sd">    class and adds the specific objective function and model fitting process.</span>
 
-<span class="sd">    The class supports three objective modes: &quot;acc&quot; (accuracy), &quot;balance&quot;, and &quot;custom&quot;. The accuracy objective</span>
+<span class="sd">    The class supports three objective modes: &quot;acc&quot; (accuracy), &quot;balance&quot;, and &quot;weighted&quot;. The accuracy objective</span>
 <span class="sd">    aims to maximize the prediction accuracy of the learned tree, the balance objective aims</span>
 <span class="sd">    to learn a balanced optimal decision tree to better generalize to out-of-sample data, and the</span>
-<span class="sd">    custom objective allows users to pass their own weights.</span>
+<span class="sd">    weighted objective allows users to pass their own weights.</span>
 
 <span class="sd">    The The :meth:`fit &lt;odtlearn.flow_oct.FlowOCT.fit&gt;` method method is used to fit the optimal</span>
 <span class="sd">    classification tree to the given training data. It</span>
@@ -355,8 +355,8 @@
             <span class="n">num_threads</span><span class="p">,</span>
             <span class="n">verbose</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="n">obj_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="s2">&quot;balance&quot;</span><span class="p">,</span> <span class="s2">&quot;custom&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;objective must be one of &#39;acc&#39;, &#39;balance&#39;, or &#39;custom&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">obj_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="s2">&quot;balance&quot;</span><span class="p">,</span> <span class="s2">&quot;weighted&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;objective must be one of &#39;acc&#39;, &#39;balance&#39;, or &#39;weighted&#39;&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
 
     <span class="k">def</span> <span class="nf">_define_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -388,7 +388,7 @@
 <span class="sd">        weights : array-like of shape (n_samples,), optional (default=None)</span>
 <span class="sd">            Sample weights. If None, then samples are equally weighted when obj_mode is &#39;acc&#39;,</span>
 <span class="sd">            or weights are automatically calculated when obj_mode is &#39;balance&#39;.</span>
-<span class="sd">            Must be provided when obj_mode is &#39;custom&#39;.</span>
+<span class="sd">            Must be provided when obj_mode is &#39;weighted&#39;.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -399,7 +399,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If X contains non-binary values, or if X and y have inconsistent numbers of samples.</span>
-<span class="sd">            Also raised if weights are not provided when obj_mode is &#39;custom&#39;, or if the number</span>
+<span class="sd">            Also raised if weights are not provided when obj_mode is &#39;weighted&#39;, or if the number</span>
 <span class="sd">            of weights doesn&#39;t match the number of samples.</span>
 
 <span class="sd">        Notes</span>
@@ -407,9 +407,9 @@
 <span class="sd">        The behavior of this method depends on the `obj_mode` specified during initialization:</span>
 <span class="sd">        - If obj_mode is &#39;acc&#39;, equal weights are used (weights parameter is ignored).</span>
 <span class="sd">        - If obj_mode is &#39;balance&#39;, weights are automatically calculated to balance class importance.</span>
-<span class="sd">        - If obj_mode is &#39;custom&#39;, the provided weights are used.</span>
+<span class="sd">        - If obj_mode is &#39;weighted&#39;, the provided weights are used.</span>
 
-<span class="sd">        When obj_mode is not &#39;custom&#39; and weights are provided, a warning is issued and the weights are ignored.</span>
+<span class="sd">        When obj_mode is not &#39;weighted&#39; and weights are provided, a warning is issued and the weights are ignored.</span>
 
 <span class="sd">        This method fits the FlowOCT model using mixed-integer optimization.</span>
 <span class="sd">        It sets up the optimization problem, solves it, and stores the results.</span>
@@ -427,8 +427,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_classes</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">!=</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Weights are ignored because obj_mode is not &#39;custom&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">!=</span> <span class="s2">&quot;weighted&quot;</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Weights are ignored because obj_mode is not &#39;weighted&#39;.&quot;</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;The number of weights must match the number of samples.&quot;</span>
@@ -446,9 +446,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                 <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">class_counts</span><span class="p">[</span><span class="n">yi</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="p">))</span> <span class="k">for</span> <span class="n">yi</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">&quot;weighted&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Weights must be provided when obj_mode is &#39;custom&#39;.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Weights must be provided when obj_mode is &#39;weighted&#39;.&quot;</span>
+                <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_main_problem</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_solver</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>
@@ -530,9 +532,9 @@
 <span class="sd">        The solver to use for the MIP formulation. Currently, only &quot;gurobi&quot; and &quot;CBC&quot; are supported.</span>
 <span class="sd">    _lambda : float, default=0</span>
 <span class="sd">        The regularization parameter for controlling the complexity of the learned tree.</span>
-<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;custom&#39;}, optional (default=&#39;acc&#39;)</span>
+<span class="sd">    obj_mode : {&#39;acc&#39;, &#39;balance&#39;, &#39;weighted&#39;}, optional (default=&#39;acc&#39;)</span>
 <span class="sd">        The objective mode to use.</span>
-<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;custom&#39; for user-defined weights.</span>
+<span class="sd">        &#39;acc&#39; for accuracy, &#39;balance&#39; for balanced accuracy, &#39;weighted&#39; for user-defined weights.</span>
 <span class="sd">    depth : int, default=1</span>
 <span class="sd">        The maximum depth of the tree to be learned.</span>
 <span class="sd">    time_limit : int, default=60</span>
@@ -626,8 +628,8 @@
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="n">_lambda</span>
-        <span class="k">if</span> <span class="n">obj_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="s2">&quot;balance&quot;</span><span class="p">,</span> <span class="s2">&quot;custom&quot;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;objective must be one of &#39;acc&#39;, &#39;balance&#39;, or &#39;custom&#39;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">obj_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span> <span class="s2">&quot;balance&quot;</span><span class="p">,</span> <span class="s2">&quot;weighted&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;objective must be one of &#39;acc&#39;, &#39;balance&#39;, or &#39;weighted&#39;&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">=</span> <span class="n">obj_mode</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -671,7 +673,7 @@
 <span class="sd">        weights : array-like of shape (n_samples,), optional (default=None)</span>
 <span class="sd">            Sample weights. If None, then samples are equally weighted when obj_mode is &#39;acc&#39;,</span>
 <span class="sd">            or weights are automatically calculated when obj_mode is &#39;balance&#39;.</span>
-<span class="sd">            Must be provided when obj_mode is &#39;custom&#39;.</span>
+<span class="sd">            Must be provided when obj_mode is &#39;weighted&#39;.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -682,7 +684,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If X contains non-binary values, or if X and y have inconsistent numbers of samples.</span>
-<span class="sd">            Also raised if weights are not provided when obj_mode is &#39;custom&#39;, or if the number</span>
+<span class="sd">            Also raised if weights are not provided when obj_mode is &#39;weighted&#39;, or if the number</span>
 <span class="sd">            of weights doesn&#39;t match the number of samples.</span>
 
 <span class="sd">        Notes</span>
@@ -690,9 +692,9 @@
 <span class="sd">        The behavior of this method depends on the `obj_mode` specified during initialization:</span>
 <span class="sd">        - If obj_mode is &#39;acc&#39;, equal weights are used (weights parameter is ignored).</span>
 <span class="sd">        - If obj_mode is &#39;balance&#39;, weights are automatically calculated to balance class importance.</span>
-<span class="sd">        - If obj_mode is &#39;custom&#39;, the provided weights are used.</span>
+<span class="sd">        - If obj_mode is &#39;weighted&#39;, the provided weights are used.</span>
 
-<span class="sd">        When obj_mode is not &#39;custom&#39; and weights are provided, a warning is issued and the weights are ignored.</span>
+<span class="sd">        When obj_mode is not &#39;weighted&#39; and weights are provided, a warning is issued and the weights are ignored.</span>
 
 <span class="sd">        This method fits the BendersOCT model using Benders&#39; decomposition approach.</span>
 <span class="sd">        It sets up the master problem and subproblems, iteratively solves them,</span>
@@ -719,8 +721,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_classes</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">!=</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Weights are ignored because obj_mode is not &#39;custom&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">!=</span> <span class="s2">&quot;weighted&quot;</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Weights are ignored because obj_mode is not &#39;weighted&#39;.&quot;</span><span class="p">)</span>
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;The number of weights must match the number of samples.&quot;</span>
@@ -736,9 +738,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                 <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">class_counts</span><span class="p">[</span><span class="n">yi</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="p">))</span> <span class="k">for</span> <span class="n">yi</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_mode</span> <span class="o">==</span> <span class="s2">&quot;weighted&quot;</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Weights must be provided when obj_mode is &#39;custom&#39;.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Weights must be provided when obj_mode is &#39;weighted&#39;.&quot;</span>
+                <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_main_problem</span><span class="p">()</span>
 

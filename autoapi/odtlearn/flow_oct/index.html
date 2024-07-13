@@ -281,8 +281,8 @@ to produce a provably optimal decision tree.</p>
 </dd>
 <dt><strong>_lambda</strong><span class="classifier">float, default=0</span></dt><dd><p>The regularization parameter for controlling the complexity of the learned tree.</p>
 </dd>
-<dt><strong>obj_mode</strong><span class="classifier">{‘acc’, ‘balance’, ‘custom’}, optional (default=’acc’)</span></dt><dd><p>The objective mode to use.
-‘acc’ for accuracy, ‘balance’ for balanced accuracy, ‘custom’ for user-defined weights.</p>
+<dt><strong>obj_mode</strong><span class="classifier">{‘acc’, ‘balance’, ‘weighted’}, optional (default=’acc’)</span></dt><dd><p>The objective mode to use.
+‘acc’ for accuracy, ‘balance’ for balanced accuracy, ‘weighted’ for user-defined weights.</p>
 </dd>
 <dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>The maximum depth of the tree to be learned.</p>
 </dd>
@@ -305,10 +305,10 @@ directly to learn optimal
 classification trees. It inherits the basic structure and functionality from the
 <a class="reference internal" href="../flow_oct_ss/index.html#odtlearn.flow_oct_ss.FlowOCTSingleSink" title="odtlearn.flow_oct_ss.FlowOCTSingleSink"><code class="xref py py-mod docutils literal notranslate"><span class="pre">FlowOCTSingleSink</span></code></a>
 class and adds the specific objective function and model fitting process.</p>
-<p>The class supports three objective modes: “acc” (accuracy), “balance”, and “custom”. The accuracy objective
+<p>The class supports three objective modes: “acc” (accuracy), “balance”, and “weighted”. The accuracy objective
 aims to maximize the prediction accuracy of the learned tree, the balance objective aims
 to learn a balanced optimal decision tree to better generalize to out-of-sample data, and the
-custom objective allows users to pass their own weights.</p>
+weighted objective allows users to pass their own weights.</p>
 <p>The The <a class="reference internal" href="#odtlearn.flow_oct.FlowOCT.fit" title="odtlearn.flow_oct.FlowOCT.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit</span></code></a> method method is used to fit the optimal
 classification tree to the given training data. It
 preprocesses the input data, creates the main optimization problem, and solves it using the
@@ -355,7 +355,7 @@ to make predictions on new data.</p>
 </dd>
 <dt><strong>weights</strong><span class="classifier">array-like of shape (n_samples,), optional (default=None)</span></dt><dd><p>Sample weights. If None, then samples are equally weighted when obj_mode is ‘acc’,
 or weights are automatically calculated when obj_mode is ‘balance’.
-Must be provided when obj_mode is ‘custom’.</p>
+Must be provided when obj_mode is ‘weighted’.</p>
 </dd>
 </dl>
 </dd>
@@ -368,7 +368,7 @@ Must be provided when obj_mode is ‘custom’.</p>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt>ValueError</dt><dd><p>If X contains non-binary values, or if X and y have inconsistent numbers of samples.
-Also raised if weights are not provided when obj_mode is ‘custom’, or if the number
+Also raised if weights are not provided when obj_mode is ‘weighted’, or if the number
 of weights doesn’t match the number of samples.</p>
 </dd>
 </dl>
@@ -378,8 +378,8 @@ of weights doesn’t match the number of samples.</p>
 <p>The behavior of this method depends on the <cite>obj_mode</cite> specified during initialization:
 - If obj_mode is ‘acc’, equal weights are used (weights parameter is ignored).
 - If obj_mode is ‘balance’, weights are automatically calculated to balance class importance.
-- If obj_mode is ‘custom’, the provided weights are used.</p>
-<p>When obj_mode is not ‘custom’ and weights are provided, a warning is issued and the weights are ignored.</p>
+- If obj_mode is ‘weighted’, the provided weights are used.</p>
+<p>When obj_mode is not ‘weighted’ and weights are provided, a warning is issued and the weights are ignored.</p>
 <p>This method fits the FlowOCT model using mixed-integer optimization.
 It sets up the optimization problem, solves it, and stores the results.</p>
 </dd></dl>
@@ -448,8 +448,8 @@ data set to produce a provably optimal decision tree.</p>
 </dd>
 <dt><strong>_lambda</strong><span class="classifier">float, default=0</span></dt><dd><p>The regularization parameter for controlling the complexity of the learned tree.</p>
 </dd>
-<dt><strong>obj_mode</strong><span class="classifier">{‘acc’, ‘balance’, ‘custom’}, optional (default=’acc’)</span></dt><dd><p>The objective mode to use.
-‘acc’ for accuracy, ‘balance’ for balanced accuracy, ‘custom’ for user-defined weights.</p>
+<dt><strong>obj_mode</strong><span class="classifier">{‘acc’, ‘balance’, ‘weighted’}, optional (default=’acc’)</span></dt><dd><p>The objective mode to use.
+‘acc’ for accuracy, ‘balance’ for balanced accuracy, ‘weighted’ for user-defined weights.</p>
 </dd>
 <dt><strong>depth</strong><span class="classifier">int, default=1</span></dt><dd><p>The maximum depth of the tree to be learned.</p>
 </dd>
@@ -535,7 +535,7 @@ using the <a class="reference internal" href="#odtlearn.flow_oct.BendersOCT.pred
 </dd>
 <dt><strong>weights</strong><span class="classifier">array-like of shape (n_samples,), optional (default=None)</span></dt><dd><p>Sample weights. If None, then samples are equally weighted when obj_mode is ‘acc’,
 or weights are automatically calculated when obj_mode is ‘balance’.
-Must be provided when obj_mode is ‘custom’.</p>
+Must be provided when obj_mode is ‘weighted’.</p>
 </dd>
 </dl>
 </dd>
@@ -548,7 +548,7 @@ Must be provided when obj_mode is ‘custom’.</p>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt>ValueError</dt><dd><p>If X contains non-binary values, or if X and y have inconsistent numbers of samples.
-Also raised if weights are not provided when obj_mode is ‘custom’, or if the number
+Also raised if weights are not provided when obj_mode is ‘weighted’, or if the number
 of weights doesn’t match the number of samples.</p>
 </dd>
 </dl>
@@ -558,8 +558,8 @@ of weights doesn’t match the number of samples.</p>
 <p>The behavior of this method depends on the <cite>obj_mode</cite> specified during initialization:
 - If obj_mode is ‘acc’, equal weights are used (weights parameter is ignored).
 - If obj_mode is ‘balance’, weights are automatically calculated to balance class importance.
-- If obj_mode is ‘custom’, the provided weights are used.</p>
-<p>When obj_mode is not ‘custom’ and weights are provided, a warning is issued and the weights are ignored.</p>
+- If obj_mode is ‘weighted’, the provided weights are used.</p>
+<p>When obj_mode is not ‘weighted’ and weights are provided, a warning is issued and the weights are ignored.</p>
 <p>This method fits the BendersOCT model using Benders’ decomposition approach.
 It sets up the master problem and subproblems, iteratively solves them,
 and generates Benders’ cuts until convergence or the time limit is reached.</p>

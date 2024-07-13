@@ -262,7 +262,7 @@
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 
 <span class="kn">from</span> <span class="nn">odtlearn.fair_oct</span> <span class="kn">import</span> <span class="n">FairSPOCT</span>
-<span class="kn">from</span> <span class="nn">odtlearn.utils.binarize</span> <span class="kn">import</span> <span class="n">Binarizer</span>
+<span class="kn">from</span> <span class="nn">odtlearn.utils.binarize</span> <span class="kn">import</span> <span class="n">Binarizer</span><span class="p">,</span> <span class="n">binarize</span>
 <br/></pre></div>
 </div>
 </div>
@@ -287,7 +287,7 @@
 <li><p>positive_class: The value of the class label corresponding to the desired outcome. In this case, we set it to 1, representing loan approval.</p></li>
 <li><p>time_limit: The maximum time (in seconds) allowed for solving the optimization problem.</p></li>
 <li><p>num_threads: The number of threads the solver should use. If set to None, it will use all available threads.</p></li>
-<li><p>obj_mode: The objective to be used for learning the optimal decision tree. We set it to “acc” to optimize for accuracy, but you can also use “balance” for balanced accuracy or even “custom” to specify your own weights for each observation.</p></li>
+<li><p>obj_mode: The objective to be used for learning the optimal decision tree. We set it to “acc” to optimize for accuracy, but you can also use “balance” for balanced accuracy or even “weighted” to specify your own weights for each observation.</p></li>
 <li><p>verbose: If set to True, the solver will display verbose output during the optimization process.</p></li>
 </ul>
 <div class="nbinput nblast docutils container">
@@ -339,7 +339,7 @@
 <section id="Initialize-FairSPOCT-classifier-with-a-less-strict-fairness-bound">
 <h3>Initialize FairSPOCT classifier with a less strict fairness bound<a class="headerlink" href="#Initialize-FairSPOCT-classifier-with-a-less-strict-fairness-bound" title="Permalink to this heading">#</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_less_strict</span> <span class="o">=</span> <span class="n">FairSPOCT</span><span class="p">(</span>
@@ -353,7 +353,7 @@
     <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
     <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -367,7 +367,7 @@ Set parameter TimeLimit to value 60
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit the classifier</span>
@@ -393,7 +393,7 @@ CPU model: Apple M1 Pro
 Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
 
 Optimize a model with 7232 rows, 3785 columns and 29354 nonzeros
-Model fingerprint: 0x74d1434c
+Model fingerprint: 0x43381646
 Variable types: 30 continuous, 3755 integer (3755 binary)
 Coefficient statistics:
   Matrix range     [2e-02, 1e+00]
@@ -401,87 +401,86 @@ Coefficient statistics:
   Bounds range     [1e+00, 1e+00]
   RHS range        [1e+00, 1e+00]
 Found heuristic solution: objective 56.4300000
-Presolve removed 3367 rows and 968 columns
-Presolve time: 0.19s
-Presolved: 3865 rows, 2817 columns, 21981 nonzeros
-Variable types: 28 continuous, 2789 integer (2787 binary)
+Presolve removed 3367 rows and 996 columns
+Presolve time: 0.33s
+Presolved: 3865 rows, 2789 columns, 19713 nonzeros
+Variable types: 28 continuous, 2761 integer (2759 binary)
 Concurrent LP optimizer: primal simplex, dual simplex, and barrier
 Showing barrier log only...
 
 Root barrier log...
 
-Ordering time: 0.06s
+Ordering time: 0.01s
 
 Barrier statistics:
- Dense cols : 31
- AA&#39; NZ     : 9.482e+04
- Factor NZ  : 3.109e+05 (roughly 5 MB of memory)
- Factor Ops : 6.778e+07 (less than 1 second per iteration)
+ Dense cols : 141
+ AA&#39; NZ     : 1.943e+04
+ Factor NZ  : 1.051e+05 (roughly 4 MB of memory)
+ Factor Ops : 8.299e+06 (less than 1 second per iteration)
  Threads    : 6
 
                   Objective                Residual
 Iter       Primal          Dual         Primal    Dual     Compl     Time
-   0   3.56909950e+03  3.58565472e+04  2.51e+02 2.35e-01  4.49e+01     0s
-   1   2.60802983e+03  3.16301390e+04  1.84e+02 1.38e+00  2.52e+01     0s
-   2   2.96532833e+02  1.88091169e+04  1.79e+01 1.30e-03  3.83e+00     0s
+   0   4.97225075e+03  3.00467936e+04  7.17e+02 2.47e-01  5.00e+01     0s
 
-Barrier performed 2 iterations in 0.28 seconds (0.36 work units)
+Barrier performed 0 iterations in 0.48 seconds (0.31 work units)
 Barrier solve interrupted - model solved by another algorithm
 
 
-Solved with primal simplex
+Solved with dual simplex
 
-Root relaxation: objective 7.918167e+01, 2573 iterations, 0.09 seconds (0.21 work units)
+Root relaxation: objective 7.918750e+01, 2041 iterations, 0.11 seconds (0.06 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
 
-     0     0   79.18167    0  562   56.43000   79.18167  40.3%     -    0s
-     0     0   79.18070    0  623   56.43000   79.18070  40.3%     -    0s
-H    0     0                      62.3400000   79.18070  27.0%     -    0s
-     0     0   79.18036    0  627   62.34000   79.18036  27.0%     -    0s
-     0     0   79.17947    0  754   62.34000   79.17947  27.0%     -    0s
-     0     0   79.17947    0  762   62.34000   79.17947  27.0%     -    0s
-H    0     0                      69.2700000   79.17909  14.3%     -    0s
-H    0     0                      70.2600000   79.17909  12.7%     -    0s
-     0     0   79.17909    0  766   70.26000   79.17909  12.7%     -    0s
-     0     0   79.17909    0  751   70.26000   79.17909  12.7%     -    0s
-     0     0   79.17909    0  752   70.26000   79.17909  12.7%     -    0s
-     0     0   79.17909    0  752   70.26000   79.17909  12.7%     -    0s
-     0     0   79.17909    0  761   70.26000   79.17909  12.7%     -    0s
-     0     0   79.17909    0  734   70.26000   79.17909  12.7%     -    0s
-     0     0   79.17881    0  721   70.26000   79.17881  12.7%     -    0s
-     0     0   79.17870    0  728   70.26000   79.17870  12.7%     -    0s
-     0     0   79.17870    0  746   70.26000   79.17870  12.7%     -    0s
-     0     0   79.17870    0  717   70.26000   79.17870  12.7%     -    0s
-     0     2   79.17869    0  706   70.26000   79.17869  12.7%     -    0s
-H   31    34                      71.2500000   79.17795  11.1%   187    1s
-H   69    45                      72.2200000   79.17795  9.63%   149    1s
-H  141    85                      73.2000000   79.17795  8.17%   180    1s
-H  144    85                      74.1900000   79.17795  6.72%   180    1s
-H  240   136                      75.1800000   79.17795  5.32%   187    1s
-H  688   274                      75.1900000   79.16667  5.29%   151    2s
-  3597   576 infeasible   29        75.19000   77.66150  3.29%  98.7    5s
-* 3764   489              28      76.1600000   77.65583  1.96%  97.5    5s
+     0     0   79.18750    0  401   56.43000   79.18750  40.3%     -    0s
+H    0     0                      69.2900000   79.18750  14.3%     -    0s
+H    0     0                      70.2600000   79.18750  12.7%     -    0s
+     0     0   79.18390    0  655   70.26000   79.18390  12.7%     -    0s
+     0     0   79.18000    0  703   70.26000   79.18000  12.7%     -    0s
+     0     0   79.18000    0  651   70.26000   79.18000  12.7%     -    1s
+     0     0   79.18000    0  644   70.26000   79.18000  12.7%     -    1s
+     0     0   79.18000    0  604   70.26000   79.18000  12.7%     -    1s
+     0     0   79.17900    0  572   70.26000   79.17900  12.7%     -    1s
+H    0     0                      71.2500000   79.17701  11.1%     -    1s
+     0     0   79.17701    0  324   71.25000   79.17701  11.1%     -    1s
+H    0     0                      73.2200000   79.17701  8.14%     -    1s
+     0     0   79.17701    0  555   73.22000   79.17701  8.14%     -    1s
+     0     0   79.17468    0  374   73.22000   79.17468  8.13%     -    1s
+     0     0   79.17455    0  554   73.22000   79.17455  8.13%     -    1s
+     0     0   79.17292    0  340   73.22000   79.17292  8.13%     -    2s
+     0     0   79.17000    0  573   73.22000   79.17000  8.13%     -    2s
+     0     0   79.17000    0  553   73.22000   79.17000  8.13%     -    2s
+     0     2   79.17000    0  553   73.22000   79.17000  8.13%     -    2s
+*  260   140              28      74.1800000   79.17000  6.73%   148    3s
+H  339   159                      75.1800000   79.17000  5.31%   138    3s
+H  340   159                      76.1600000   79.17000  3.95%   138    3s
+H  344   159                      76.1700000   79.17000  3.94%   139    3s
+  1028   345   77.66500   18  376   76.17000   79.16444  3.93%   138    5s
+* 1154   342              21      76.1800000   79.16000  3.91%   135    5s
 
 Cutting planes:
-  Gomory: 3
-  Cover: 26
-  MIR: 3
-  Inf proof: 3
-  Zero half: 20
+  Gomory: 1
+  Cover: 31
+  MIR: 4
+  Flow cover: 3
+  Inf proof: 2
+  Zero half: 81
 
-Explored 5582 nodes (514386 simplex iterations) in 5.97 seconds (10.05 work units)
+Explored 5122 nodes (570604 simplex iterations) in 9.22 seconds (12.15 work units)
 Thread count was 8 (of 8 available processors)
 
-Solution count 10: 76.16 75.19 75.18 ... 62.34
+Solution count 10: 76.18 76.17 76.16 ... 56.43
 
 Optimal solution found (tolerance 1.00e-04)
-Best objective 7.616000000000e+01, best bound 7.616000000000e+01, gap 0.0000%
+Best objective 7.618000000000e+01, best bound 7.618000000000e+01, gap 0.0000%
+
+User-callback calls 12273, time in user-callback 0.14 sec
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -502,9 +501,9 @@ FairSPOCT(solver=gurobi,depth=3,time_limit=60,num_threads=None,verbose=False)
 <li><p>Predictive features, on the other hand, are variables that are used to make predictions but should not lead to unfair treatment of protected groups. These features should be carefully selected to avoid perpetuating biases or discrimination. For instance, while ‘Age’ and ‘Income’ might be predictive of loan approval, they should not be used in a way that unfairly disadvantages certain protected groups.</p></li>
 </ul>
 <p>It is essential to engage with domain experts, stakeholders, and affected communities to determine which features should be considered legitimate factors and which should be used solely for prediction purposes. This helps ensure that the fair optimal classification tree aligns with the specific fairness requirements and societal expectations of the problem at hand.</p>
-<p>In addition to looking at the progress log, we can check optimization statistics by looking at properties such as <code class="docutils literal notranslate"><span class="pre">optim_gap</span></code> and <code class="docutils literal notranslate"><span class="pre">num_solutions</span></code>.</p>
+<p>In addition to looking at the progress log displayed when calling <code class="docutils literal notranslate"><span class="pre">fit</span></code>, we can check optimization statistics by looking at properties such as <code class="docutils literal notranslate"><span class="pre">optim_gap</span></code> and <code class="docutils literal notranslate"><span class="pre">num_solutions</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_less_strict</span><span class="o">.</span><span class="n">optim_gap</span>
@@ -512,7 +511,7 @@ FairSPOCT(solver=gurobi,depth=3,time_limit=60,num_threads=None,verbose=False)
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -520,9 +519,66 @@ FairSPOCT(solver=gurobi,depth=3,time_limit=60,num_threads=None,verbose=False)
 0.0
 </pre></div></div>
 </div>
+<p>We also provide a simple function allowing users to plot the search progress log over time. Note that you must set the attribute <code class="docutils literal notranslate"><span class="pre">store_search_progress_log</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> before calling the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method to ensure that the bound information is stored.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_progress_example</span> <span class="o">=</span> <span class="n">FairSPOCT</span><span class="p">(</span>
+    <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
+    <span class="n">positive_class</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">_lambda</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">time_limit</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+    <span class="n">fairness_bound</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">num_threads</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">obj_mode</span><span class="o">=</span><span class="s2">&quot;acc&quot;</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">fcl_progress_example</span><span class="o">.</span><span class="n">store_search_progress_log</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit the classifier</span>
+<span class="n">fcl_progress_example</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X_train_bin</span><span class="p">,</span>
+                    <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                    <span class="n">protect_feat</span><span class="o">=</span><span class="n">gender_train</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;Male&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Female&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+                    <span class="n">legit_factor</span><span class="o">=</span><span class="n">prev_default_train</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Once the optimal decision tree has been fit, you can generate a customizable a plot of the upper and lower bounds by calling the <code class="docutils literal notranslate"><span class="pre">plot_search_progress</span></code> method.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fcl_progress_example</span><span class="o">.</span><span class="n">plot_search_progress</span><span class="p">(</span><span class="n">log_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;AxesSubplot:title={&#39;center&#39;:&#39;Search Progress&#39;}, xlabel=&#39;Time (s)&#39;, ylabel=&#39;Objective Bound&#39;&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_FairOCT_17_1.png" src="../_images/notebooks_FairOCT_17_1.png" />
+</div>
+</div>
 <p>Next we calculate the fairness metric and accuracy on the test data.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sp_metric</span> <span class="o">=</span> <span class="n">fcl_less_strict</span><span class="o">.</span><span class="n">calc_metric</span><span class="p">(</span>
@@ -594,7 +650,7 @@ Test Accuracy (Less Strict Fairness Bound): 0.850
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FairOCT_18_0.png" src="../_images/notebooks_FairOCT_18_0.png" />
+<img alt="../_images/notebooks_FairOCT_23_0.png" src="../_images/notebooks_FairOCT_23_0.png" />
 </div>
 </div>
 </section>
@@ -842,7 +898,7 @@ Test Accuracy (Stricter Fairness Bound): 0.850
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_FairOCT_27_0.png" src="../_images/notebooks_FairOCT_27_0.png" />
+<img alt="../_images/notebooks_FairOCT_32_0.png" src="../_images/notebooks_FairOCT_32_0.png" />
 </div>
 </div>
 <p>Comparing the results of the two FairSPOCT classifiers with different fairness bound values, we can observe the following:</p>

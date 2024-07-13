@@ -13,7 +13,7 @@
     "from sklearn.model_selection import train_test_split\n",
     "\n",
     "from odtlearn.fair_oct import FairSPOCT\n",
-    "from odtlearn.utils.binarize import Binarizer\n"
+    "from odtlearn.utils.binarize import Binarizer, binarize\n"
    ]
   },
   {
@@ -49,7 +49,7 @@
     "- positive_class: The value of the class label corresponding to the desired outcome. In this case, we set it to 1, representing loan approval.\n",
     "- time_limit: The maximum time (in seconds) allowed for solving the optimization problem.\n",
     "- num_threads: The number of threads the solver should use. If set to None, it will use all available threads.\n",
-    "- obj_mode: The objective to be used for learning the optimal decision tree. We set it to \"acc\" to optimize for accuracy, but you can also use \"balance\" for balanced accuracy or even \"custom\" to specify your own weights for each observation.\n",
+    "- obj_mode: The objective to be used for learning the optimal decision tree. We set it to \"acc\" to optimize for accuracy, but you can also use \"balance\" for balanced accuracy or even \"weighted\" to specify your own weights for each observation.\n",
     "- verbose: If set to True, the solver will display verbose output during the optimization process.\n"
    ]
   },
@@ -122,7 +122,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
+   "execution_count": 15,
    "metadata": {},
    "outputs": [
     {
@@ -146,12 +146,12 @@
     "    num_threads=None,\n",
     "    obj_mode=\"acc\",\n",
     "    verbose=False,\n",
-    ")\n"
+    ")"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 16,
    "metadata": {},
    "outputs": [
     {
@@ -168,7 +168,7 @@
       "Thread count: 8 physical cores, 8 logical processors, using up to 8 threads\n",
       "\n",
       "Optimize a model with 7232 rows, 3785 columns and 29354 nonzeros\n",
-      "Model fingerprint: 0x74d1434c\n",
+      "Model fingerprint: 0x43381646\n",
       "Variable types: 30 continuous, 3755 integer (3755 binary)\n",
       "Coefficient statistics:\n",
       "  Matrix range     [2e-02, 1e+00]\n",
@@ -176,83 +176,88 @@
       "  Bounds range     [1e+00, 1e+00]\n",
       "  RHS range        [1e+00, 1e+00]\n",
       "Found heuristic solution: objective 56.4300000\n",
-      "Presolve removed 3367 rows and 968 columns\n",
-      "Presolve time: 0.19s\n",
-      "Presolved: 3865 rows, 2817 columns, 21981 nonzeros\n",
-      "Variable types: 28 continuous, 2789 integer (2787 binary)\n",
+      "Presolve removed 3367 rows and 996 columns\n",
+      "Presolve time: 0.33s\n",
+      "Presolved: 3865 rows, 2789 columns, 19713 nonzeros\n",
+      "Variable types: 28 continuous, 2761 integer (2759 binary)\n",
       "Concurrent LP optimizer: primal simplex, dual simplex, and barrier\n",
       "Showing barrier log only...\n",
       "\n",
       "Root barrier log...\n",
       "\n",
-      "Ordering time: 0.06s\n",
+      "Ordering time: 0.01s\n",
       "\n",
       "Barrier statistics:\n",
-      " Dense cols : 31\n",
-      " AA' NZ     : 9.482e+04\n",
-      " Factor NZ  : 3.109e+05 (roughly 5 MB of memory)\n",
-      " Factor Ops : 6.778e+07 (less than 1 second per iteration)\n",
+      " Dense cols : 141\n",
+      " AA' NZ     : 1.943e+04\n",
+      " Factor NZ  : 1.051e+05 (roughly 4 MB of memory)\n",
+      " Factor Ops : 8.299e+06 (less than 1 second per iteration)\n",
       " Threads    : 6\n",
       "\n",
       "                  Objective                Residual\n",
       "Iter       Primal          Dual         Primal    Dual     Compl     Time\n",
-      "   0   3.56909950e+03  3.58565472e+04  2.51e+02 2.35e-01  4.49e+01     0s\n",
-      "   1   2.60802983e+03  3.16301390e+04  1.84e+02 1.38e+00  2.52e+01     0s\n",
-      "   2   2.96532833e+02  1.88091169e+04  1.79e+01 1.30e-03  3.83e+00     0s\n",
+      "   0   4.97225075e+03  3.00467936e+04  7.17e+02 2.47e-01  5.00e+01     0s\n",
       "\n",
-      "Barrier performed 2 iterations in 0.28 seconds (0.36 work units)\n",
+      "Barrier performed 0 iterations in 0.48 seconds (0.31 work units)\n",
       "Barrier solve interrupted - model solved by another algorithm\n",
       "\n",
       "\n",
-      "Solved with primal simplex\n",
+      "Solved with dual simplex\n",
       "\n",
-      "Root relaxation: objective 7.918167e+01, 2573 iterations, 0.09 seconds (0.21 work units)\n",
+      "Root relaxation: objective 7.918750e+01, 2041 iterations, 0.11 seconds (0.06 work units)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
       "\n",
       "    Nodes    |    Current Node    |     Objective Bounds      |     Work\n",
       " Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time\n",
       "\n",
-      "     0     0   79.18167    0  562   56.43000   79.18167  40.3%     -    0s\n",
-      "     0     0   79.18070    0  623   56.43000   79.18070  40.3%     -    0s\n",
-      "H    0     0                      62.3400000   79.18070  27.0%     -    0s\n",
-      "     0     0   79.18036    0  627   62.34000   79.18036  27.0%     -    0s\n",
-      "     0     0   79.17947    0  754   62.34000   79.17947  27.0%     -    0s\n",
-      "     0     0   79.17947    0  762   62.34000   79.17947  27.0%     -    0s\n",
-      "H    0     0                      69.2700000   79.17909  14.3%     -    0s\n",
-      "H    0     0                      70.2600000   79.17909  12.7%     -    0s\n",
-      "     0     0   79.17909    0  766   70.26000   79.17909  12.7%     -    0s\n",
-      "     0     0   79.17909    0  751   70.26000   79.17909  12.7%     -    0s\n",
-      "     0     0   79.17909    0  752   70.26000   79.17909  12.7%     -    0s\n",
-      "     0     0   79.17909    0  752   70.26000   79.17909  12.7%     -    0s\n",
-      "     0     0   79.17909    0  761   70.26000   79.17909  12.7%     -    0s\n",
-      "     0     0   79.17909    0  734   70.26000   79.17909  12.7%     -    0s\n",
-      "     0     0   79.17881    0  721   70.26000   79.17881  12.7%     -    0s\n",
-      "     0     0   79.17870    0  728   70.26000   79.17870  12.7%     -    0s\n",
-      "     0     0   79.17870    0  746   70.26000   79.17870  12.7%     -    0s\n",
-      "     0     0   79.17870    0  717   70.26000   79.17870  12.7%     -    0s\n",
-      "     0     2   79.17869    0  706   70.26000   79.17869  12.7%     -    0s\n",
-      "H   31    34                      71.2500000   79.17795  11.1%   187    1s\n",
-      "H   69    45                      72.2200000   79.17795  9.63%   149    1s\n",
-      "H  141    85                      73.2000000   79.17795  8.17%   180    1s\n",
-      "H  144    85                      74.1900000   79.17795  6.72%   180    1s\n",
-      "H  240   136                      75.1800000   79.17795  5.32%   187    1s\n",
-      "H  688   274                      75.1900000   79.16667  5.29%   151    2s\n",
-      "  3597   576 infeasible   29        75.19000   77.66150  3.29%  98.7    5s\n",
-      "* 3764   489              28      76.1600000   77.65583  1.96%  97.5    5s\n",
+      "     0     0   79.18750    0  401   56.43000   79.18750  40.3%     -    0s\n",
+      "H    0     0                      69.2900000   79.18750  14.3%     -    0s\n",
+      "H    0     0                      70.2600000   79.18750  12.7%     -    0s\n",
+      "     0     0   79.18390    0  655   70.26000   79.18390  12.7%     -    0s\n",
+      "     0     0   79.18000    0  703   70.26000   79.18000  12.7%     -    0s\n",
+      "     0     0   79.18000    0  651   70.26000   79.18000  12.7%     -    1s\n",
+      "     0     0   79.18000    0  644   70.26000   79.18000  12.7%     -    1s\n",
+      "     0     0   79.18000    0  604   70.26000   79.18000  12.7%     -    1s\n",
+      "     0     0   79.17900    0  572   70.26000   79.17900  12.7%     -    1s\n",
+      "H    0     0                      71.2500000   79.17701  11.1%     -    1s\n",
+      "     0     0   79.17701    0  324   71.25000   79.17701  11.1%     -    1s\n",
+      "H    0     0                      73.2200000   79.17701  8.14%     -    1s\n",
+      "     0     0   79.17701    0  555   73.22000   79.17701  8.14%     -    1s\n",
+      "     0     0   79.17468    0  374   73.22000   79.17468  8.13%     -    1s\n",
+      "     0     0   79.17455    0  554   73.22000   79.17455  8.13%     -    1s\n",
+      "     0     0   79.17292    0  340   73.22000   79.17292  8.13%     -    2s\n",
+      "     0     0   79.17000    0  573   73.22000   79.17000  8.13%     -    2s\n",
+      "     0     0   79.17000    0  553   73.22000   79.17000  8.13%     -    2s\n",
+      "     0     2   79.17000    0  553   73.22000   79.17000  8.13%     -    2s\n",
+      "*  260   140              28      74.1800000   79.17000  6.73%   148    3s\n",
+      "H  339   159                      75.1800000   79.17000  5.31%   138    3s\n",
+      "H  340   159                      76.1600000   79.17000  3.95%   138    3s\n",
+      "H  344   159                      76.1700000   79.17000  3.94%   139    3s\n",
+      "  1028   345   77.66500   18  376   76.17000   79.16444  3.93%   138    5s\n",
+      "* 1154   342              21      76.1800000   79.16000  3.91%   135    5s\n",
       "\n",
       "Cutting planes:\n",
-      "  Gomory: 3\n",
-      "  Cover: 26\n",
-      "  MIR: 3\n",
-      "  Inf proof: 3\n",
-      "  Zero half: 20\n",
+      "  Gomory: 1\n",
+      "  Cover: 31\n",
+      "  MIR: 4\n",
+      "  Flow cover: 3\n",
+      "  Inf proof: 2\n",
+      "  Zero half: 81\n",
       "\n",
-      "Explored 5582 nodes (514386 simplex iterations) in 5.97 seconds (10.05 work units)\n",
+      "Explored 5122 nodes (570604 simplex iterations) in 9.22 seconds (12.15 work units)\n",
       "Thread count was 8 (of 8 available processors)\n",
       "\n",
-      "Solution count 10: 76.16 75.19 75.18 ... 62.34\n",
+      "Solution count 10: 76.18 76.17 76.16 ... 56.43\n",
       "\n",
       "Optimal solution found (tolerance 1.00e-04)\n",
-      "Best objective 7.616000000000e+01, best bound 7.616000000000e+01, gap 0.0000%\n"
+      "Best objective 7.618000000000e+01, best bound 7.618000000000e+01, gap 0.0000%\n",
+      "\n",
+      "User-callback calls 12273, time in user-callback 0.14 sec\n"
      ]
     },
     {
@@ -261,7 +266,7 @@
        "FairSPOCT(solver=gurobi,depth=3,time_limit=60,num_threads=None,verbose=False)"
       ]
      },
-     "execution_count": 5,
+     "execution_count": 16,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -299,12 +304,12 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "In addition to looking at the progress log, we can check optimization statistics by looking at properties such as `optim_gap` and `num_solutions`."
+    "In addition to looking at the progress log displayed when calling `fit`, we can check optimization statistics by looking at properties such as `optim_gap` and `num_solutions`."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": 17,
    "metadata": {},
    "outputs": [
     {
@@ -313,7 +318,7 @@
        "0.0"
       ]
      },
-     "execution_count": 6,
+     "execution_count": 17,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -326,12 +331,91 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "We also provide a simple function allowing users to plot the search progress log over time. Note that you must set the attribute `store_search_progress_log` to `True` before calling the `fit` method to ensure that the bound information is stored. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "fcl_progress_example = FairSPOCT(\n",
+    "    solver=\"gurobi\",\n",
+    "    positive_class=1,\n",
+    "    depth=3,\n",
+    "    _lambda=0.01,\n",
+    "    time_limit=60,\n",
+    "    fairness_bound=1,\n",
+    "    num_threads=None,\n",
+    "    obj_mode=\"acc\",\n",
+    "    verbose=False,\n",
+    ")\n",
+    "fcl_progress_example.store_search_progress_log = True"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Fit the classifier\n",
+    "fcl_progress_example.fit(X=X_train_bin,\n",
+    "                    y=y_train.values,\n",
+    "                    protect_feat=gender_train.map({'Male': 0, 'Female': 1}).values.reshape(-1,1),\n",
+    "                    legit_factor=prev_default_train.values)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Once the optimal decision tree has been fit, you can generate a customizable a plot of the upper and lower bounds by calling the `plot_search_progress` method."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<AxesSubplot:title={'center':'Search Progress'}, xlabel='Time (s)', ylabel='Objective Bound'>"
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "iVBORw0KGgoAAAANSUhEUgAAAYQAAAEWCAYAAABmE+CbAAAAOXRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjUuMywgaHR0cHM6Ly9tYXRwbG90bGliLm9yZy/NK7nSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAldUlEQVR4nO3deZhU5Zn38e/dTUMjS7OKIrIIBiWACI2yKILJGB02Tcw7wxgUTTQaNSbOvDEmRjETc2n0nddlnDiaqCQ6LkPiNjGoibaAcSW2G4gYFxYRkK0b2pal7/njnGqLXqvpqjpVdX6f66qrq86pPueug9avz/M85znm7oiIiBRFXYCIiOQGBYKIiAAKBBERCSkQREQEUCCIiEhIgSAiIoACQaRFZjbVzNZGXYdINigQJGeZ2XFm9hcz225mW8zsOTMbH3VdLTGzCjOrNbMdZvaJmf3ezA6Oui6RVCgQJCeZWXfgf4BbgF7AIcDVwGcZ2FeHNG/yInfvCnwB6AH8/0zvMwOfQWJIgSC56gsA7n6fu+9190/d/Ul3fz3xBjM7x8xWmNlWM3vCzAYlrbvJzNaYWZWZLTOz45PWzTezhWZ2j5lVAfPMrJeZ3WVmH4Xbezi5GDP7ZzPbaGbrzezsVD6Au28BfgeMDLfxgZldZmavAzvNrIOZzTKzt8xsW3h2cWTSPsea2atmVm1m/21mD5jZz8J1U81sbbi9j4G7zKzIzH5oZn8zs81m9qCZ9QrfXxp+3s3hvl42s37hunlm9l64n/fN7Iy2/VNJoVAgSK56B9hrZgvM7BQz65m80sxmAz8Cvgr0BZYA9yW95WVgDMHZxX8B/21mpUnrZwMLCf6Cvxf4LXAA8EXgQPb9q/4goIzgLOWbwK0N62mKmfUBvga8mrR4DjA93O9hYc3fCz/D48BjZtbRzDoCDwF3h5/hPuC0Brs4KFw3CDgPuBg4FTgB6A9sBW4N33tW+BkOBXoD5wOfmlkX4GbgFHfvBkwCKlv7bFKg3F0PPXLyARxJ8IW4FtgDPAr0C9f9Efhm0nuLgBpgUDPb2gocFT6fDyxOWncwUAf0bOL3pgKfAh2Slm0EJjSzn4qwjm3AOoKw6Ruu+wA4J+m9PwEebPAZ1oX7nBI+t6T1S4GfJdW1CyhNWr8C+FKDz7Ub6ACcA/wFGN2g3i5hrV8DOkf9b65HtA+dIUjOcvcV7j7P3QcQNLv0B24MVw8CbgqbP7YBWwAj+CseM/uXsDlpe7i+DOiTtPk1Sc8PBba4+9ZmStns7nuSXtcAXVso/bvu3sPdD3H3M9x9UzP77Q98mPR568L1h4Tr1rm7N/O7AJvcvTbp9SDgoaRjsgLYC/QjOAN6Arg/bBb7hZmVuPtO4B8IzhjWm9kfzOyIFj6bFDAFguQFd3+b4GxhZLhoDfDt8Is38ejs7n8J+wt+APwfgr/6ewDbCQKjfpNJz9cAvcysR4Y/RsP9fkTwJQ6AmRlBOK0D1gOHhMsSDm1hWxB8jlMaHJNSd1/n7rvd/Wp3H0HQLDQDOBPA3Z9w978jOKN4G7ij/R9T8pECQXKSmR0RduQOCF8fStD+/kL4ltuAy83si+H6MjP7eriuG0ET0yagg5ldCXRvbl/uvp6gCeo/zKynmZWY2ZSMfLB9PQhMN7MvmVkJ8M8Eo6j+AjxP8Nf9RWHn82zgmFa2dxtwTaJz3cz6hr+HmU0zs1FmVgxUETQl1ZlZPzObHfYlfAbsIGg+kxhSIEiuqgaOBV40s50EQfAmwZcm7v4QcB1BE0hVuO6U8HefABYRdEx/CNTSuLmlobkEX5JvE/QRfC+Nn6VJ7r4S+AbB0NpPgJnATHff5e67CDrMv0nQxv8NgmG4LQ27vYmgn+VJM6smOGbHhusOIuhEryJoSnqWoBmpCLiU4GxlC0GH9AVp+5CSV2zfJkoRyVVm9iJwm7vfFXUtUph0hiCSo8zsBDM7KGwyOgsYTXDmI5IRurpRJHcNJ+hn6AK8B5we9neIZISajEREBFCTkYiIhPK6yahPnz4+ePBgAHbu3EmXLl2iLSiH6Hg0pmPSmI5JY3E4JsuWLfvE3fs2XJ7XgTB48GBeeeUVACoqKpg6dWq0BeUQHY/GdEwa0zFpLA7HxMw+bGq5moxERARQIIiISEiBICIiQJ73IYhIbtm9ezdr166ltra29TfnqLKyMlasWBF1GWlRWlrKgAEDKCkpSen9CgQRSZu1a9fSrVs3Bg8ezL4TteaP6upqunXrFnUZ7ebubN68mbVr1zJkyJCUfkdNRiKSNrW1tfTu3Ttvw6CQmBm9e/du09maAkFE0kphkDva+m8Rz0C48kq4/HKoqYm6EhGRnBHPQHj8cXjqKXj55agrEZE069q1pbubZt4HH3xA586dGTNmDEcddRSTJk1i5cqVGd9vOj53PANh2LDg59bmbqErIpKaPXv2NFo2dOhQKisree211zjrrLP4+c9/HkFlbRfPQJg4Mfi5bVukZYhIdlRWVjJhwgRGjx7NaaedxtatW9m4cSPjxo0D4LXXXsPMWL16NRB8odfU1LBp0ya+9rWvMX78eMaPH89zzz0HwPz585k7dy6TJ09m7ty5Le67qqqKnj17AkGn+9lnn82oUaM4+uijeeaZZwC4++67ueiii+p/Z8aMGVRUVADBX/4//vGPOeqoo5gwYQIbNmwA4P3332fixImMGjWKK664Ii3HKZ7DTnv0CH5u3x5pGSIFrbw8M9sN5y9rizPPPJNbbrmFE044gSuvvJKrr76aG2+8kdraWqqqqliyZAnl5eUsWbKEMWPGcOCBB3LAAQfwrW99i+9///scd9xxrF69mq985Sv11ygsX76cpUuX0rlz50b7+9vf/saYMWOorq6mpqaGF198EYBbb70VM+ONN97g7bff5qSTTuKdd95psfadO3cyYcIErrnmGn7wgx9wxx13cMUVV3DJJZdwwQUXcOaZZ3Lrrbe2+Zg0Jd6BoDMEkYK3fft2tm3bxgknnADAWWedxde//nUAJk2axHPPPcfixYv50Y9+xKJFi6ipqeH4448H4E9/+hPLly+v31ZVVRU7duwAYNasWU2GAXzeZATwwAMPcN5557Fo0SKWLl3KxRdfDMARRxzBoEGDWg2Ejh07MmPGDADGjRvHU089BcBzzz3H7373OwDmzp3LZZdd1uZj05ACQUQyYz/+ks+2KVOmsGTJEj788ENmz57Nddddx549ezj11FMBqKur44UXXqC0tLTR76Y6RfasWbM4++yzW3xPhw4dqKurq3+dfO1ASUlJ/fDR4uLiffos0j3EN559CGVlwU8FgkjBKysro2fPnixZsgSA3/72t/VnC8cffzz33HMPhx9+OEVFRfTq1Ysnn3yS4447DoCTTjqJW265pX5bib/622Lp0qUMHTq0fn/33nsvAO+88w6rV69m+PDhDB48mMrKSurq6lizZg0vvfRSq9udPHky999/P0D9NtsrZ84QzOxI4BKgD/Bnd/9lxnamPgSRglVTU8OAAQPqX1966aUsWLCA888/n5qaGg477DDuuusuILinirszZcoUgPq+gkQn8M0338yFF17I6NGj2bNnD1Om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",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "fcl_progress_example.plot_search_progress(log_scale=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "Next we calculate the fairness metric and accuracy on the test data."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
+   "execution_count": 20,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -786,7 +870,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.9.13"
+   "version": "3.9.undefined"
   }
  },
  "nbformat": 4,
