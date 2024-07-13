@@ -25,9 +25,9 @@ class FlowOCT(FlowOCTSingleSink):
         The solver to use for the MIP formulation. Currently, only "gurobi" and "CBC" are supported.
     _lambda : float, default=0
         The regularization parameter for controlling the complexity of the learned tree.
-    obj_mode : {'acc', 'balance', 'custom'}, optional (default='acc')
+    obj_mode : {'acc', 'balance', 'weighted'}, optional (default='acc')
         The objective mode to use.
-        'acc' for accuracy, 'balance' for balanced accuracy, 'custom' for user-defined weights.
+        'acc' for accuracy, 'balance' for balanced accuracy, 'weighted' for user-defined weights.
     depth : int, default=1
         The maximum depth of the tree to be learned.
     time_limit : int, default=60
@@ -59,10 +59,10 @@ class FlowOCT(FlowOCTSingleSink):
     :mod:`FlowOCTSingleSink <odtlearn.flow_oct_ss.FlowOCTSingleSink>`
     class and adds the specific objective function and model fitting process.
 
-    The class supports three objective modes: "acc" (accuracy), "balance", and "custom". The accuracy objective
+    The class supports three objective modes: "acc" (accuracy), "balance", and "weighted". The accuracy objective
     aims to maximize the prediction accuracy of the learned tree, the balance objective aims
     to learn a balanced optimal decision tree to better generalize to out-of-sample data, and the
-    custom objective allows users to pass their own weights.
+    weighted objective allows users to pass their own weights.
 
     The The :meth:`fit <odtlearn.flow_oct.FlowOCT.fit>` method method is used to fit the optimal
     classification tree to the given training data. It
@@ -104,8 +104,8 @@ class FlowOCT(FlowOCTSingleSink):
             num_threads,
             verbose,
         )
-        if obj_mode not in ["acc", "balance", "custom"]:
-            raise ValueError("objective must be one of 'acc', 'balance', or 'custom'")
+        if obj_mode not in ["acc", "balance", "weighted"]:
+            raise ValueError("objective must be one of 'acc', 'balance', or 'weighted'")
         self._obj_mode = obj_mode
 
     def _define_objective(self) -> None:
@@ -137,7 +137,7 @@ class FlowOCT(FlowOCTSingleSink):
         weights : array-like of shape (n_samples,), optional (default=None)
             Sample weights. If None, then samples are equally weighted when obj_mode is 'acc',
             or weights are automatically calculated when obj_mode is 'balance'.
-            Must be provided when obj_mode is 'custom'.
+            Must be provided when obj_mode is 'weighted'.
 
         Returns
         -------
@@ -148,7 +148,7 @@ class FlowOCT(FlowOCTSingleSink):
         ------
         ValueError
             If X contains non-binary values, or if X and y have inconsistent numbers of samples.
-            Also raised if weights are not provided when obj_mode is 'custom', or if the number
+            Also raised if weights are not provided when obj_mode is 'weighted', or if the number
             of weights doesn't match the number of samples.
 
         Notes
@@ -156,9 +156,9 @@ class FlowOCT(FlowOCTSingleSink):
         The behavior of this method depends on the `obj_mode` specified during initialization:
         - If obj_mode is 'acc', equal weights are used (weights parameter is ignored).
         - If obj_mode is 'balance', weights are automatically calculated to balance class importance.
-        - If obj_mode is 'custom', the provided weights are used.
+        - If obj_mode is 'weighted', the provided weights are used.
 
-        When obj_mode is not 'custom' and weights are provided, a warning is issued and the weights are ignored.
+        When obj_mode is not 'weighted' and weights are provided, a warning is issued and the weights are ignored.
 
         This method fits the FlowOCT model using mixed-integer optimization.
         It sets up the optimization problem, solves it, and stores the results.
@@ -176,8 +176,8 @@ class FlowOCT(FlowOCTSingleSink):
         self._classes = unique_labels(y)
 
         if weights is not None:
-            if self._obj_mode != "custom":
-                warnings.warn("Weights are ignored because obj_mode is not 'custom'.")
+            if self._obj_mode != "weighted":
+                warnings.warn("Weights are ignored because obj_mode is not 'weighted'.")
             elif len(weights) != len(y):
                 raise ValueError(
                     "The number of weights must match the number of samples."
@@ -195,9 +195,11 @@ class FlowOCT(FlowOCTSingleSink):
             self.weights = np.array(
                 [1 / (class_counts[yi] * len(self._labels)) for yi in y]
             )
-        elif self._obj_mode == "custom":
+        elif self._obj_mode == "weighted":
             if self.weights is None:
-                raise ValueError("Weights must be provided when obj_mode is 'custom'.")
+                raise ValueError(
+                    "Weights must be provided when obj_mode is 'weighted'."
+                )
 
         self._create_main_problem()
         self._solver.optimize(
@@ -279,9 +281,9 @@ class BendersOCT(FlowOCTSingleSink):
         The solver to use for the MIP formulation. Currently, only "gurobi" and "CBC" are supported.
     _lambda : float, default=0
         The regularization parameter for controlling the complexity of the learned tree.
-    obj_mode : {'acc', 'balance', 'custom'}, optional (default='acc')
+    obj_mode : {'acc', 'balance', 'weighted'}, optional (default='acc')
         The objective mode to use.
-        'acc' for accuracy, 'balance' for balanced accuracy, 'custom' for user-defined weights.
+        'acc' for accuracy, 'balance' for balanced accuracy, 'weighted' for user-defined weights.
     depth : int, default=1
         The maximum depth of the tree to be learned.
     time_limit : int, default=60
@@ -375,8 +377,8 @@ class BendersOCT(FlowOCTSingleSink):
         )
 
         self._lambda = _lambda
-        if obj_mode not in ["acc", "balance", "custom"]:
-            raise ValueError("objective must be one of 'acc', 'balance', or 'custom'")
+        if obj_mode not in ["acc", "balance", "weighted"]:
+            raise ValueError("objective must be one of 'acc', 'balance', or 'weighted'")
         self._obj_mode = obj_mode
         self.weights = None
 
@@ -420,7 +422,7 @@ class BendersOCT(FlowOCTSingleSink):
         weights : array-like of shape (n_samples,), optional (default=None)
             Sample weights. If None, then samples are equally weighted when obj_mode is 'acc',
             or weights are automatically calculated when obj_mode is 'balance'.
-            Must be provided when obj_mode is 'custom'.
+            Must be provided when obj_mode is 'weighted'.
 
         Returns
         -------
@@ -431,7 +433,7 @@ class BendersOCT(FlowOCTSingleSink):
         ------
         ValueError
             If X contains non-binary values, or if X and y have inconsistent numbers of samples.
-            Also raised if weights are not provided when obj_mode is 'custom', or if the number
+            Also raised if weights are not provided when obj_mode is 'weighted', or if the number
             of weights doesn't match the number of samples.
 
         Notes
@@ -439,9 +441,9 @@ class BendersOCT(FlowOCTSingleSink):
         The behavior of this method depends on the `obj_mode` specified during initialization:
         - If obj_mode is 'acc', equal weights are used (weights parameter is ignored).
         - If obj_mode is 'balance', weights are automatically calculated to balance class importance.
-        - If obj_mode is 'custom', the provided weights are used.
+        - If obj_mode is 'weighted', the provided weights are used.
 
-        When obj_mode is not 'custom' and weights are provided, a warning is issued and the weights are ignored.
+        When obj_mode is not 'weighted' and weights are provided, a warning is issued and the weights are ignored.
 
         This method fits the BendersOCT model using Benders' decomposition approach.
         It sets up the master problem and subproblems, iteratively solves them,
@@ -468,8 +470,8 @@ class BendersOCT(FlowOCTSingleSink):
         self._classes = unique_labels(y)
 
         if weights is not None:
-            if self._obj_mode != "custom":
-                warnings.warn("Weights are ignored because obj_mode is not 'custom'.")
+            if self._obj_mode != "weighted":
+                warnings.warn("Weights are ignored because obj_mode is not 'weighted'.")
             elif len(weights) != len(y):
                 raise ValueError(
                     "The number of weights must match the number of samples."
@@ -485,9 +487,11 @@ class BendersOCT(FlowOCTSingleSink):
             self.weights = np.array(
                 [1 / (class_counts[yi] * len(self._labels)) for yi in y]
             )
-        elif self._obj_mode == "custom":
+        elif self._obj_mode == "weighted":
             if self.weights is None:
-                raise ValueError("Weights must be provided when obj_mode is 'custom'.")
+                raise ValueError(
+                    "Weights must be provided when obj_mode is 'weighted'."
+                )
 
         self._create_main_problem()
 

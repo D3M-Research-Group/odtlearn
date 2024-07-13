@@ -214,7 +214,7 @@ class OptimalDecisionTree(ABC):
         color_ub="b",
         color_lb="r",
         log_scale=False,
-    ) -> None:
+    ) -> "matplotlib.axes.Axes":  # noqa: F821
         """
         Plots the search progress log showing the lower and upper objective bounds over time.
 

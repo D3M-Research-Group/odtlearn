@@ -396,7 +396,7 @@ def test_bad_obj_mode(synthetic_data_1, class_name):
     X, y, protect_feat, legit_factor = synthetic_data_1
     with pytest.raises(
         ValueError,
-        match="objective must be one of 'acc', 'balance', or 'custom'",
+        match="objective must be one of 'acc', 'balance', or 'weighted'",
     ):
         fcl = class_name(
             solver="cbc",
@@ -493,6 +493,6 @@ def test_custom_weights_missing(synthetic_data_1, fair_class):
     )
 
     with pytest.raises(
-        ValueError, match="Weights must be provided when obj_mode is 'custom'."
+        ValueError, match="Weights must be provided when obj_mode is 'weighted'."
     ):
         model.fit(X, y, protect_feat, legit_factor)
