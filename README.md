@@ -15,13 +15,18 @@ The [package documentation](https://d3m-research-group.github.io/odtlearn/index.
 
 ## Installation
 
+The latest stable version can be installed from PyPI with the command:
+
+``` bash
+pip install odtlearn
+```
+
 The current development version can be installed from source with the following command:
 
 ``` bash
 pip install git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
 ```
 
-A release version of the package will be available on PyPI shortly.
 
 ### Obtain Gurobi License
 To use Gurobi with ODTlearn, you must have a valid Gurobi License. [Free licenses are available for academic use](https://www.gurobi.com/academia/academic-program-and-licenses/) and additional methods for obtaining a Gurobi license can be found [here](https://www.gurobi.com/solutions/licensing/).
