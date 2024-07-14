@@ -1,4 +1,4 @@
-from odtlearn._version import __version__
+from ._version import __version__
 
 
 class ODTL:
