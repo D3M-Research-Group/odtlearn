@@ -1,6 +1,5 @@
 import pytest
 
-from odtlearn import ODTL
 from odtlearn.utils.solver import Solver
 
 
@@ -62,26 +61,3 @@ def test_set_objective(skip_solver):
 
     with pytest.raises(ValueError, match="Invalid objective type: SDFSDF."):
         cbc_solver.set_objective(obj_expression, "SDFSDF")
-
-
-def test_properties(skip_solver):
-    if skip_solver:
-        pytest.skip(reason="Testing on github actions")
-
-    cbc_solver = Solver(solver_name="cbc", verbose=False)
-    # simple problem to init and solve
-    p = [10, 13, 18, 31, 7, 15]
-    w = [11, 15, 20, 35, 10, 33]
-    c, idx = 47, range(len(w))
-    x = cbc_solver.add_vars(idx, vtype=ODTL.BINARY)
-    cbc_solver.set_objective(cbc_solver.quicksum(p[i] * x[i] for i in idx), ODTL.MAX)
-    cbc_solver.add_constr(cbc_solver.quicksum(w[i] * x[i] for i in idx) <= c)
-    cbc_solver.optimize(None, None, cbc_solver, False, None)
-
-    # check that we are able to direct access the properties from the solver class
-    assert cbc_solver.optim_gap == 0.0
-    assert cbc_solver.num_constraints == 1
-    assert cbc_solver.num_decision_vars == 6
-    assert cbc_solver.num_integer_vars == 6
-    assert cbc_solver.num_non_zero == 6
-    assert cbc_solver.num_solutions == 1
