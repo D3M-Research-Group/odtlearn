@@ -1,26 +1,24 @@
-:py:mod:`odtlearn.robust_oct`
-=============================
+odtlearn.robust_oct
+===================
 
 .. py:module:: odtlearn.robust_oct
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    odtlearn.robust_oct.RobustOCT
 
 
-
+Module Contents
+---------------
 
 .. py:class:: RobustOCT(solver, depth=1, time_limit=1800, num_threads=None, verbose=False)
 
-
    Bases: :py:obj:`odtlearn.opt_ct.OptimalClassificationTree`
+
 
    
    An optimal robust decision tree classifier, fit on a given integer-valued
@@ -63,6 +61,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: fit(X, y, costs=None, budget=-1)
 
       
@@ -112,6 +111,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: predict(X)
 
       
@@ -155,6 +155,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: print_tree()
 
       
@@ -187,6 +188,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: plot_tree(label='all', filled=True, rounded=False, precision=3, ax=None, fontsize=None, color_dict={'node': None, 'leaves': []}, edge_annotation=True, arrow_annotation_font_scale=0.8, debug=False, feature_names=None)
 

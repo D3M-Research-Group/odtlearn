@@ -1,5 +1,5 @@
-:py:mod:`odtlearn.utils.Tree`
-=============================
+odtlearn.utils.Tree
+===================
 
 .. py:module:: odtlearn.utils.Tree
 

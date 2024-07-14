@@ -1,26 +1,24 @@
-:py:mod:`odtlearn.opt_dt`
-=========================
+odtlearn.opt_dt
+===============
 
 .. py:module:: odtlearn.opt_dt
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    odtlearn.opt_dt.OptimalDecisionTree
 
 
-
+Module Contents
+---------------
 
 .. py:class:: OptimalDecisionTree(solver: str, depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
-
    Bases: :py:obj:`abc.ABC`
+
 
    
    An abstract base class for learning optimal decision trees using mixed-integer programming.
@@ -112,6 +110,17 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: fit()
+      :abstractmethod:
+
+
+
+   .. py:method:: predict()
+      :abstractmethod:
+
+
+
    .. py:property:: optim_gap
       :type: float
 
@@ -136,6 +145,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:property:: objective_value
       :type: float
 
@@ -159,6 +169,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:property:: objective_bound
       :type: float
@@ -185,6 +196,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:property:: num_decision_vars
       :type: int
 
@@ -208,6 +220,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:property:: num_integer_vars
       :type: int
@@ -233,6 +246,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:property:: num_non_zero
       :type: int
 
@@ -256,6 +270,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:property:: num_solutions
       :type: int
@@ -281,6 +296,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:property:: num_constraints
       :type: int
 
@@ -305,6 +321,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:property:: search_progress_log
       :type: mip.ProgressLog
 
@@ -328,6 +345,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:property:: store_search_progress_log
       :type: bool
@@ -354,13 +372,6 @@ Classes
 
       ..
           !! processed by numpydoc !!
-
-   .. py:method:: fit()
-      :abstractmethod:
-
-
-   .. py:method:: predict()
-      :abstractmethod:
 
 
    .. py:method:: plot_search_progress(ax=None, title='Search Progress', xlabel='Time (s)', ylabel='Objective Bound', lw=2, alpha=0.8, legend_loc='best', legend_fontsize=None, grid=True, color_ub='b', color_lb='r', log_scale=False) -> matplotlib.axes.Axes

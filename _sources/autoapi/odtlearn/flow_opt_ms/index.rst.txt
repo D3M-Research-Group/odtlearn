@@ -1,26 +1,24 @@
-:py:mod:`odtlearn.flow_opt_ms`
-==============================
+odtlearn.flow_opt_ms
+====================
 
 .. py:module:: odtlearn.flow_opt_ms
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    odtlearn.flow_opt_ms.FlowOPTMultipleSink
 
 
-
+Module Contents
+---------------
 
 .. py:class:: FlowOPTMultipleSink(solver: str, depth: int, time_limit: int, num_threads: None, verbose: bool)
 
-
    Bases: :py:obj:`odtlearn.opt_pt.OptimalPrescriptiveTree`
+
 
    
     A base class for learning optimal prescriptive trees with multiple sink nodes using flow optimization.

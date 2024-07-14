@@ -1,34 +1,32 @@
-:py:mod:`odtlearn.utils.binarize`
-=================================
+odtlearn.utils.binarize
+=======================
 
 .. py:module:: odtlearn.utils.binarize
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    odtlearn.utils.binarize.Binarizer
 
 
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
    odtlearn.utils.binarize.binarize
 
 
+Module Contents
+---------------
 
 .. py:class:: Binarizer(categorical_cols: Optional[List[str]] = None, integer_cols: Optional[List[str]] = None, real_cols: Optional[List[str]] = None, n_bins: int = 4, bin_strategy: str = 'uniform')
 
-
    Bases: :py:obj:`sklearn.base.BaseEstimator`, :py:obj:`sklearn.base.TransformerMixin`
+
 
    
    A transformer that binarizes categorical, integer, and real-valued columns.
@@ -93,6 +91,7 @@ Functions
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: fit(X: pandas.core.frame.DataFrame, y: None = None) -> Binarizer
 
       
@@ -127,6 +126,7 @@ Functions
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: transform(X: pandas.core.frame.DataFrame) -> pandas.core.frame.DataFrame
 

@@ -1,14 +1,11 @@
-:py:mod:`odtlearn.fair_oct`
-===========================
+odtlearn.fair_oct
+=================
 
 .. py:module:: odtlearn.fair_oct
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
@@ -21,12 +18,13 @@ Classes
    odtlearn.fair_oct.FairOCT
 
 
-
+Module Contents
+---------------
 
 .. py:class:: FairConstrainedOCT(solver: str, positive_class: int, _lambda: float, obj_mode: str, fairness_bound: float, depth: int, time_limit: int, num_threads: None, verbose: bool)
 
-
    Bases: :py:obj:`odtlearn.constrained_oct.ConstrainedOCT`
+
 
    
    Base class for fair constrained optimal classification trees.
@@ -128,6 +126,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: fit(X: numpy.ndarray, y: numpy.ndarray, protect_feat: numpy.ndarray, legit_factor: numpy.ndarray, weights: None = None) -> Union[FairCSPOCT, FairSPOCT, FairEOddsOCT, FairEOppOCT, FairPEOCT]
 
       
@@ -213,6 +212,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: predict(X: Union[pandas.core.frame.DataFrame, numpy.ndarray]) -> numpy.ndarray
 
       
@@ -278,8 +278,8 @@ Classes
 
 .. py:class:: FairSPOCT(solver: str, positive_class: int, depth: int = 1, time_limit: int = 60, _lambda: float = 0, obj_mode: str = 'acc', fairness_bound: float = 1, num_threads: Union[None, int] = None, verbose: bool = False)
 
-
    Bases: :py:obj:`FairConstrainedOCT`
+
 
    
    An optimal classification tree fit on a given binary-valued data set
@@ -331,6 +331,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: calc_metric(protect_feat: Union[pandas.core.frame.DataFrame, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray])
 
       
@@ -372,8 +373,8 @@ Classes
 
 .. py:class:: FairCSPOCT(solver: str, positive_class: int, depth: int = 1, time_limit: int = 60, _lambda: float = 0, obj_mode: str = 'acc', fairness_bound: float = 1, num_threads: Union[None, int] = None, verbose: bool = False)
 
-
    Bases: :py:obj:`FairConstrainedOCT`
+
 
    
    An optimal classification tree fit on a given binary-valued data set
@@ -425,6 +426,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: calc_metric(protect_feat: Union[pandas.core.frame.DataFrame, numpy.ndarray], legit_factor: Union[pandas.core.frame.DataFrame, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray])
 
       
@@ -470,8 +472,8 @@ Classes
 
 .. py:class:: FairPEOCT(solver: str, positive_class: int, depth: int = 1, time_limit: int = 60, _lambda: float = 0, obj_mode: str = 'acc', fairness_bound: float = 1, num_threads: Union[None, int] = None, verbose: bool = False)
 
-
    Bases: :py:obj:`FairConstrainedOCT`
+
 
    
    An optimal classification tree fit on a given binary-valued data set
@@ -526,6 +528,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: calc_metric(protect_feat: Union[pandas.core.frame.DataFrame, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray], y_pred: Union[pandas.core.series.Series, numpy.ndarray])
 
       
@@ -571,8 +574,8 @@ Classes
 
 .. py:class:: FairEOppOCT(solver: str, positive_class: int, depth: int = 1, time_limit: int = 60, _lambda: float = 0, obj_mode: str = 'acc', fairness_bound: float = 1, num_threads: Union[None, int] = None, verbose: bool = False)
 
-
    Bases: :py:obj:`FairConstrainedOCT`
+
 
    
    An optimal classification tree fit on a given binary-valued data set
@@ -627,6 +630,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: calc_metric()
       :abstractmethod:
 
@@ -634,8 +638,8 @@ Classes
 
 .. py:class:: FairEOddsOCT(solver: str, positive_class: int, depth: int = 1, time_limit: int = 60, _lambda: float = 0, obj_mode: str = 'acc', fairness_bound: float = 1, num_threads: Union[None, int] = None, verbose: bool = False)
 
-
    Bases: :py:obj:`FairConstrainedOCT`
+
 
    
    An optimal classification tree fit on a given binary-valued data set
@@ -693,8 +697,8 @@ Classes
 
 .. py:class:: FairOCT(solver, positive_class, _lambda=0, depth=1, obj_mode='acc', fairness_type=None, fairness_bound=1, time_limit=60, num_threads=None, verbose=False)
 
-
    Bases: :py:obj:`odtlearn.flow_oct_ms.FlowOCTMultipleSink`
+
 
    
    An optimal and fair classification tree fitted on a given binary-valued
@@ -747,6 +751,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: fit(X, y, protect_feat, legit_factor)
 
       
@@ -796,6 +801,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: predict(X)
 
       
@@ -839,6 +845,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: get_SP(protect_feat, y)
 
       
@@ -868,6 +875,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: get_CSP(protect_feat, legit_factor, y)
 
@@ -902,6 +910,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: get_EqOdds(protect_feat, y, y_pred)
 
       
@@ -934,6 +943,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: get_CondEqOdds(protect_feat, legit_factor, y, y_pred)
 
@@ -969,6 +979,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: fairness_metric_summary(metric, new_data=None)
 

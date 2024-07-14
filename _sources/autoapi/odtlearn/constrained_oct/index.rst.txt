@@ -1,26 +1,24 @@
-:py:mod:`odtlearn.constrained_oct`
-==================================
+odtlearn.constrained_oct
+========================
 
 .. py:module:: odtlearn.constrained_oct
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    odtlearn.constrained_oct.ConstrainedOCT
 
 
-
+Module Contents
+---------------
 
 .. py:class:: ConstrainedOCT(solver: str, _lambda: float, depth: int, time_limit: int, num_threads: None, verbose: bool)
 
-
    Bases: :py:obj:`odtlearn.flow_oct_ms.FlowOCTMultipleSink`
+
 
    
    A parent class for classification trees that incorporate

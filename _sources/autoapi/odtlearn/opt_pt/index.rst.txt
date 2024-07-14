@@ -1,26 +1,24 @@
-:py:mod:`odtlearn.opt_pt`
-=========================
+odtlearn.opt_pt
+===============
 
 .. py:module:: odtlearn.opt_pt
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    odtlearn.opt_pt.OptimalPrescriptiveTree
 
 
-
+Module Contents
+---------------
 
 .. py:class:: OptimalPrescriptiveTree(solver: str, depth: int, time_limit: int, num_threads: None, verbose: bool)
 
-
    Bases: :py:obj:`odtlearn.opt_dt.OptimalDecisionTree`
+
 
    
    A class for learning optimal prescriptive trees using mixed-integer programming.
@@ -108,6 +106,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: print_tree()
 
       
@@ -140,6 +139,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: plot_tree(label='all', filled=True, rounded=False, precision=3, ax=None, fontsize=None, color_dict={'node': None, 'leaves': []}, edge_annotation=True, arrow_annotation_font_scale=0.8, debug=False, distance=1.0, feature_names=None)
 

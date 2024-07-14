@@ -1,15 +1,11 @@
-:py:mod:`odtlearn.utils.validation`
-===================================
+odtlearn.utils.validation
+=========================
 
 .. py:module:: odtlearn.utils.validation
 
 
-Module Contents
----------------
-
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
@@ -22,6 +18,8 @@ Functions
    odtlearn.utils.validation.check_same_as_X
 
 
+Module Contents
+---------------
 
 .. py:function:: check_ipw(X: numpy.ndarray, ipw: Union[numpy.ndarray, pandas.core.series.Series]) -> numpy.ndarray
 

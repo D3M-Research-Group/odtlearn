@@ -1,21 +1,21 @@
-:py:mod:`odtlearn.utils`
-========================
+odtlearn.utils
+==============
 
 .. py:module:: odtlearn.utils
 
 
 Submodules
 ----------
+
 .. toctree::
-   :titlesonly:
    :maxdepth: 1
 
-   Tree/index.rst
-   TreePlotter/index.rst
-   binarize/index.rst
-   callback_helpers/index.rst
-   callbacks/index.rst
-   solver/index.rst
-   validation/index.rst
+   /autoapi/odtlearn/utils/Tree/index
+   /autoapi/odtlearn/utils/TreePlotter/index
+   /autoapi/odtlearn/utils/binarize/index
+   /autoapi/odtlearn/utils/callback_helpers/index
+   /autoapi/odtlearn/utils/callbacks/index
+   /autoapi/odtlearn/utils/solver/index
+   /autoapi/odtlearn/utils/validation/index
 
 

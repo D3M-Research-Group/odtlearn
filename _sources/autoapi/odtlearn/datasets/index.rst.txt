@@ -1,15 +1,11 @@
-:py:mod:`odtlearn.datasets`
-===========================
+odtlearn.datasets
+=================
 
 .. py:module:: odtlearn.datasets
 
 
-Module Contents
----------------
-
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
@@ -22,6 +18,8 @@ Functions
    odtlearn.datasets.robust_example
 
 
+Module Contents
+---------------
 
 .. py:function:: prescriptive_ex_data()
 

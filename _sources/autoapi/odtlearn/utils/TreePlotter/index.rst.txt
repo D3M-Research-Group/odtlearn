@@ -1,26 +1,24 @@
-:py:mod:`odtlearn.utils.TreePlotter`
-====================================
+odtlearn.utils.TreePlotter
+==========================
 
 .. py:module:: odtlearn.utils.TreePlotter
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    odtlearn.utils.TreePlotter.MPLPlotter
 
 
-
+Module Contents
+---------------
 
 .. py:class:: MPLPlotter(tree, node_dict, column_names, max_depth, classes, model_name, label='all', filled=False, rounded=False, precision=3, fontsize=None, color_dict={'node': None, 'leaves': []}, edge_annotation=True, arrow_annotation_font_scale=0.5, debug=False)
 
-
    Bases: :py:obj:`sklearn.tree._export._MPLTreeExporter`
+
 
    
    A class for plotting optimal decision trees using Matplotlib.
@@ -145,6 +143,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: get_fill_color(node_id)
 
 
@@ -155,6 +154,5 @@ Classes
 
 
    .. py:method:: recurse(node, ax, max_x, max_y, depth=0)
-
 
 

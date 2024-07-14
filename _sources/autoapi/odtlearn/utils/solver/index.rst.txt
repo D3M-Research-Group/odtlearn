@@ -1,36 +1,31 @@
-:py:mod:`odtlearn.utils.solver`
-===============================
+odtlearn.utils.solver
+=====================
 
 .. py:module:: odtlearn.utils.solver
 
 
-Module Contents
----------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   odtlearn.utils.solver.Solver
-
-
-
-
 Attributes
-~~~~~~~~~~
+----------
 
 .. autoapisummary::
 
    odtlearn.utils.solver.GRB_CBC_CONST_MAP
 
 
+Classes
+-------
+
+.. autoapisummary::
+
+   odtlearn.utils.solver.Solver
+
+
+Module Contents
+---------------
+
 .. py:data:: GRB_CBC_CONST_MAP
 
-   
-
 .. py:class:: Solver(solver_name, verbose)
-
 
    
    A wrapper class on top the python-mip Model and solver classes. This class contains functions for interacting
@@ -55,6 +50,7 @@ Attributes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: get_var_value(objs, var_name=None)
 
       
@@ -88,6 +84,7 @@ Attributes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: optimize(X, obj, solver, callback=False, callback_action=None, **kwargs)
 
@@ -135,6 +132,7 @@ Attributes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: prep_indices(*indices)
 
       
@@ -167,6 +165,7 @@ Attributes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: add_vars(*indices, lb=0.0, ub=float('inf'), obj=0.0, vtype='C', name: str = '')
 
@@ -215,6 +214,7 @@ Attributes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: add_constrs(cons_expr_tuple)
 
       
@@ -246,6 +246,7 @@ Attributes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: add_constr(cons_expr)
 
       
@@ -276,6 +277,7 @@ Attributes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: lin_expr(arg1=0.0, sense=None)
 
@@ -310,6 +312,7 @@ Attributes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: set_objective(expr, sense)
 
@@ -346,6 +349,7 @@ Attributes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: quicksum(terms)
 
       
@@ -376,6 +380,7 @@ Attributes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: store_data(key, value)
 

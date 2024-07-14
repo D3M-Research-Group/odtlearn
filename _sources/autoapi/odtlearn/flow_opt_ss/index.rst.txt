@@ -1,26 +1,24 @@
-:py:mod:`odtlearn.flow_opt_ss`
-==============================
+odtlearn.flow_opt_ss
+====================
 
 .. py:module:: odtlearn.flow_opt_ss
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    odtlearn.flow_opt_ss.FlowOPTSingleSink
 
 
-
+Module Contents
+---------------
 
 .. py:class:: FlowOPTSingleSink(solver: str, depth: int, time_limit: int, num_threads: None, verbose: bool)
 
-
    Bases: :py:obj:`odtlearn.opt_pt.OptimalPrescriptiveTree`
+
 
    
    A class for learning optimal prescriptive trees with a single sink node using flow optimization.

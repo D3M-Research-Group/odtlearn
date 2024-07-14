@@ -1,14 +1,11 @@
-:py:mod:`odtlearn.flow_oct`
-===========================
+odtlearn.flow_oct
+=================
 
 .. py:module:: odtlearn.flow_oct
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
@@ -16,12 +13,13 @@ Classes
    odtlearn.flow_oct.BendersOCT
 
 
-
+Module Contents
+---------------
 
 .. py:class:: FlowOCT(solver: str, _lambda: float = 0.0, obj_mode: str = 'acc', depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
-
    Bases: :py:obj:`odtlearn.flow_oct_ss.FlowOCTSingleSink`
+
 
    
    An optimal decision tree classifier, fitted on a given integer-valued data set
@@ -114,6 +112,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], y: Union[numpy.ndarray, pandas.core.series.Series], weights: Union[pandas.core.series.Series, numpy.ndarray, None] = None) -> FlowOCT
 
       
@@ -169,6 +168,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: predict(X: Union[pandas.core.frame.DataFrame, numpy.ndarray]) -> numpy.ndarray
 
@@ -233,8 +233,8 @@ Classes
 
 .. py:class:: BendersOCT(solver: str, _lambda: float = 0.0, obj_mode: str = 'acc', depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
-
    Bases: :py:obj:`odtlearn.flow_oct_ss.FlowOCTSingleSink`
+
 
    
    An optimal decision tree classifier using Benders' decomposition, fitted on a given integer-valued
@@ -339,6 +339,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], y: Union[numpy.ndarray, pandas.core.series.Series], weights: Union[pandas.core.series.Series, numpy.ndarray, None] = None) -> BendersOCT
 
       
@@ -406,6 +407,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: predict(X: Union[pandas.core.frame.DataFrame, numpy.ndarray]) -> numpy.ndarray[Any, Any]
 

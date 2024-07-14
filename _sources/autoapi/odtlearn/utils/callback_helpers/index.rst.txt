@@ -1,15 +1,11 @@
-:py:mod:`odtlearn.utils.callback_helpers`
-=========================================
+odtlearn.utils.callback_helpers
+===============================
 
 .. py:module:: odtlearn.utils.callback_helpers
 
 
-Module Contents
----------------
-
-
 Functions
-~~~~~~~~~
+---------
 
 .. autoapisummary::
 
@@ -23,6 +19,8 @@ Functions
    odtlearn.utils.callback_helpers.shortest_path_solver
 
 
+Module Contents
+---------------
 
 .. py:function:: get_left_exp_integer(solver: odtlearn.utils.solver.Solver, main_grb_obj: BendersOCT, n: int, i: int) -> mip.entities.LinExpr
 

@@ -1,101 +1,96 @@
-:py:mod:`odtlearn`
-==================
+odtlearn
+========
 
 .. py:module:: odtlearn
 
 
 Subpackages
 -----------
-.. toctree::
-   :titlesonly:
-   :maxdepth: 3
 
-   utils/index.rst
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/odtlearn/utils/index
 
 
 Submodules
 ----------
+
 .. toctree::
-   :titlesonly:
    :maxdepth: 1
 
-   constrained_oct/index.rst
-   datasets/index.rst
-   fair_oct/index.rst
-   flow_oct/index.rst
-   flow_oct_ms/index.rst
-   flow_oct_ss/index.rst
-   flow_opt/index.rst
-   flow_opt_ms/index.rst
-   flow_opt_ss/index.rst
-   opt_ct/index.rst
-   opt_dt/index.rst
-   opt_pt/index.rst
-   robust_oct/index.rst
-
-
-Package Contents
-----------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   odtlearn.ODTL
-
-
+   /autoapi/odtlearn/constrained_oct/index
+   /autoapi/odtlearn/datasets/index
+   /autoapi/odtlearn/fair_oct/index
+   /autoapi/odtlearn/flow_oct/index
+   /autoapi/odtlearn/flow_oct_ms/index
+   /autoapi/odtlearn/flow_oct_ss/index
+   /autoapi/odtlearn/flow_opt/index
+   /autoapi/odtlearn/flow_opt_ms/index
+   /autoapi/odtlearn/flow_opt_ss/index
+   /autoapi/odtlearn/opt_ct/index
+   /autoapi/odtlearn/opt_dt/index
+   /autoapi/odtlearn/opt_pt/index
+   /autoapi/odtlearn/robust_oct/index
 
 
 Attributes
-~~~~~~~~~~
+----------
 
 .. autoapisummary::
 
    odtlearn.name
 
 
-.. py:class:: ODTL
+Classes
+-------
 
+.. autoapisummary::
+
+   odtlearn.ODTL
+
+
+Package Contents
+----------------
+
+.. py:class:: ODTL
 
    .. py:attribute:: MIN
       :value: 'MIN'
 
-      
+
 
    .. py:attribute:: MAX
       :value: 'MAX'
 
-      
+
 
    .. py:attribute:: MINIMIZE
       :value: 'MIN'
 
-      
+
 
    .. py:attribute:: MAXIMIZE
       :value: 'MAX'
 
-      
+
 
    .. py:attribute:: BINARY
       :value: 'B'
 
-      
+
 
    .. py:attribute:: CONTINUOUS
       :value: 'C'
 
-      
+
 
    .. py:attribute:: INTEGER
       :value: 'I'
 
-      
 
 
 .. py:data:: name
    :value: 'odtlearn'
 
-   
 

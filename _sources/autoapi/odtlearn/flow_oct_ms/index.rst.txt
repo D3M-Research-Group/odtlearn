@@ -1,26 +1,24 @@
-:py:mod:`odtlearn.flow_oct_ms`
-==============================
+odtlearn.flow_oct_ms
+====================
 
 .. py:module:: odtlearn.flow_oct_ms
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
    odtlearn.flow_oct_ms.FlowOCTMultipleSink
 
 
-
+Module Contents
+---------------
 
 .. py:class:: FlowOCTMultipleSink(solver: str, _lambda: float, depth: int, time_limit: int, num_threads: None, verbose: bool)
 
-
    Bases: :py:obj:`odtlearn.opt_ct.OptimalClassificationTree`
+
 
    
    A base class for learning optimal classification trees using flow-based formulation with multiple sink nodes.

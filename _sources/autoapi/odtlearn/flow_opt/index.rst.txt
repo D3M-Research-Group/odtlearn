@@ -1,14 +1,11 @@
-:py:mod:`odtlearn.flow_opt`
-===========================
+odtlearn.flow_opt
+=================
 
 .. py:module:: odtlearn.flow_opt
 
 
-Module Contents
----------------
-
 Classes
-~~~~~~~
+-------
 
 .. autoapisummary::
 
@@ -17,12 +14,13 @@ Classes
    odtlearn.flow_opt.FlowOPT_DR
 
 
-
+Module Contents
+---------------
 
 .. py:class:: FlowOPT_IPW(solver: str, depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
-
    Bases: :py:obj:`odtlearn.flow_opt_ss.FlowOPTSingleSink`
+
 
    
    A user-facing class for learning optimal prescriptive trees with inverse probability weighting (IPW) objective.
@@ -115,6 +113,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], t: Union[pandas.core.series.Series, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray], ipw: Union[pandas.core.series.Series, numpy.ndarray]) -> FlowOPT_IPW
 
       
@@ -177,6 +176,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: predict(X: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> numpy.ndarray
 
       
@@ -237,8 +237,8 @@ Classes
 
 .. py:class:: FlowOPT_DM(solver: str, depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
-
    Bases: :py:obj:`odtlearn.flow_opt_ms.FlowOPTMultipleSink`
+
 
    
    A user-facing class for learning optimal prescriptive trees with direct method (DM) objective.
@@ -318,6 +318,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], t: Union[pandas.core.series.Series, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray], y_hat: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> FlowOPT_DM
 
       
@@ -381,6 +382,7 @@ Classes
       ..
           !! processed by numpydoc !!
 
+
    .. py:method:: predict(X: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> numpy.ndarray
 
       
@@ -441,8 +443,8 @@ Classes
 
 .. py:class:: FlowOPT_DR(solver: str, depth: int = 1, time_limit: int = 60, num_threads: Union[None, int] = None, verbose: bool = False)
 
-
    Bases: :py:obj:`odtlearn.flow_opt_ms.FlowOPTMultipleSink`
+
 
    
    A user-facing class for learning optimal prescriptive trees with doubly robust (DR) objective.
@@ -523,6 +525,7 @@ Classes
 
    ..
        !! processed by numpydoc !!
+
    .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], t: Union[pandas.core.series.Series, numpy.ndarray], y: Union[pandas.core.series.Series, numpy.ndarray], ipw: Union[pandas.core.series.Series, numpy.ndarray], y_hat: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> FlowOPT_DR
 
       
@@ -590,6 +593,7 @@ Classes
 
       ..
           !! processed by numpydoc !!
+
 
    .. py:method:: predict(X: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> numpy.ndarray
 
