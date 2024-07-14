@@ -77,3 +77,5 @@ target/
 
 # ipynb checkpoints
 .ipynb_checkpoints/
+
+odtlearn/_version.py
