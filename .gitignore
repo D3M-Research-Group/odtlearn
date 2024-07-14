@@ -78,4 +78,4 @@ target/
 # ipynb checkpoints
 .ipynb_checkpoints/
 
-odtlearn/_version.py
+_version.py
