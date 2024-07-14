@@ -79,3 +79,4 @@ target/
 .ipynb_checkpoints/
 
 _version.py
+odtlearn/_version.py
