@@ -3,7 +3,7 @@
 # https://github.com/coin-or/python-mip/blob/master/mip/cbc.py
 # Original Authors: Python-MIP Team
 # Original License: EPL v 2.0 (License text available at https://github.com/coin-or/python-mip/blob/master/LICENSE)
-# Modified by: Patrick Vossler (patrick.vossler18@gmail.com)
+# Modified by: Patrick Vossler (patrick.vossler18@gmail.com) and Nathan Justin (nathanjustin14@gmail.com)
 
 import logging
 import multiprocessing as multip
@@ -47,6 +47,7 @@ warningMessages = 0
 
 ffi = FFI()
 has_cbc = False
+cbclib = None
 os_is_64_bit = maxsize > 2**32
 INF = float("inf")
 cut_idx = 0
@@ -104,8 +105,11 @@ try:
         if not libfile:
             raise NotImplementedError("You operating system/platform is not supported")
     old_dir = os.getcwd()
-    os.chdir(pathlib)
-    cbclib = ffi.dlopen(libfile)
+    try:
+        os.chdir(pathlib)
+        cbclib = ffi.dlopen(libfile)
+    except OSError as e:
+        print(f"Error opening library: {e}")
     os.chdir(old_dir)
     has_cbc = True
 except Exception as e:

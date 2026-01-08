@@ -3,6 +3,7 @@ from typing import Union
 
 import mip
 from sklearn.utils.validation import check_is_fitted
+from sklearn.utils import Tags
 
 from odtlearn.utils.solver import Solver
 from odtlearn.utils.Tree import _Tree
@@ -104,6 +105,13 @@ class OptimalDecisionTree(ABC):
             f"verbose={self._verbose})"
         )
         return rep
+    
+    def __sklearn_tags__(self):
+        return Tags(
+            estimator_type="classifier",
+            target_tags={},
+            requires_fit=True,
+        )
 
     @abstractmethod
     def _define_variables(self):

@@ -10,12 +10,13 @@ requires-python = ">=3.8"
 license = { file = "LICENSE" }
 authors = [
     { name = "Patrick Vossler" },
-    { name = "Sina Aghaei" },
     { name = "Nathan Justin" },
+    { name = "Sina Aghaei" },
     { name = "Nathanael Jo" },
 ]
 maintainers = [
     { name = "Patrick Vossler", email = "patrick.vossler18@gmail.com" },
+    { name = "Nathan Justin", email = "nathanjustin14@gmail.com" },
 ]
 keywords = [
     "Optimization",
@@ -39,7 +40,6 @@ classifiers = [
 
 dependencies = [
     "cffi>=1.15",
-    "mip>=1.15",
     "scikit-learn>=1.2",
     "numpy>=1.23",
     "pandas>=1.5",
@@ -67,6 +67,8 @@ docs = [
 ]
 test = ["pytest>=7.4", "gurobipy>=10.0.0"]
 
+mip = ["mip>=1.15; python_version < '3.12'"]
+
 [project.urls]
 "Homepage" = "https://d3m-research-group.github.io/odtlearn/"
 "Repository" = "https://github.com/D3M-Research-Group/odtlearn"
@@ -79,8 +81,6 @@ include = ["odtlearn*"]
 odtlearn = [
     "data/*.csv",
     "data/*.npz",
-    "data/prescriptive/test_v2_200.csv",
-    "data/prescriptive/train_v2_100.csv",
     "data/prescriptive/train_50.csv",
 ]
 
