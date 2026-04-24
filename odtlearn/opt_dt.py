@@ -5,7 +5,8 @@ import mip
 from sklearn.utils.validation import check_is_fitted
 from sklearn.utils import Tags
 
-from odtlearn.utils.solver import Solver
+from odtlearn.solvers.cbc_solver import CBCSolver
+from odtlearn.solvers.gurobi_solver import GurobiSolver
 from odtlearn.utils.Tree import _Tree
 
 
@@ -90,11 +91,17 @@ class OptimalDecisionTree(ABC):
         self._tree = _Tree(self._depth)
         self._time_limit = time_limit
 
-        self._solver = Solver(self.solver_name, verbose)
+        if solver.lower() == "gurobi":
+            self._solver = GurobiSolver(verbose)
+        elif solver.lower() == "cbc":
+            self._solver = CBCSolver(verbose)
+        else:
+            raise ValueError("Solver not supported: ", solver)
 
+        self._solver.set_time_limit(time_limit)
         if num_threads is not None:
-            self._solver.model.threads = num_threads
-        self._solver.model.max_seconds = time_limit
+            self._solver.set_num_threads(num_threads)
+        
 
     def __repr__(self) -> str:
         rep = (
@@ -147,7 +154,7 @@ class OptimalDecisionTree(ABC):
         """
         The optimality gap considering the cost of the best solution found.
         """
-        return self._solver.model.gap
+        return self._solver.get_gap()
 
     @property
     def objective_value(self) -> float:
@@ -155,7 +162,7 @@ class OptimalDecisionTree(ABC):
         Objective function value of the solution found or None if the model was not optimized.
         """
 
-        return self._solver.model.objective_value
+        return self._solver.get_objective_value()
 
     @property
     def objective_bound(self) -> float:
@@ -163,50 +170,49 @@ class OptimalDecisionTree(ABC):
         A valid estimate computed for the optimal solution cost.
         The bound is equal to the objective value if the optimal solution is found.
         """
-        return self._solver.model.objective_bound
+        return self._solver.get_objective_bound()
 
     @property
     def num_decision_vars(self) -> int:
         """Number of decision variables in the model."""
-        return self._solver.model.num_cols
+        return self._solver.get_num_variables()
 
     @property
     def num_integer_vars(self) -> int:
         """Number of integer variables in the model."""
-        return self._solver.model.num_int
+        return self._solver.get_num_int_variables()
 
     @property
     def num_non_zero(self) -> int:
         """Number of non-zeros in the constraint matrix."""
-        return self._solver.model.num_nz
+        return self._solver.get_num_nonzeroes()
 
     @property
     def num_solutions(self) -> int:
         """Number of solutions found during the optimization."""
-        return self._solver.model.num_solutions
+        return self._solver.get_num_soluions()
 
     @property
     def num_constraints(self) -> int:
         """Number of constraints in the model."""
-        return self._solver.model.num_rows
+        return self._solver.get_num_constraints()
 
     @property
-    def search_progress_log(self) -> mip.ProgressLog:
+    def search_progress_log(self):
         """Log of bound improvements during the optimization."""
-        return self._solver.model.search_progress_log
+        return self._solver.get_search_progress_log()
 
     @property
     def store_search_progress_log(self) -> bool:
         """
-        Boolean for whether the search progress log should be stored or not.
-        As in python-mip this is disabled by default.
+        Boolean for whether a search progress log should be stored or not.
         Enable storing the search progress log to analyze bound improvements over time.
         """
-        return self._solver.model.__store_search_progress_log
+        return self._solver.store_search_progress_log
 
     @store_search_progress_log.setter
     def store_search_progress_log(self, store: bool):
-        self._solver.model.store_search_progress_log = store
+        self._solver.store_search_progress_log = store
 
     def plot_search_progress(
         self,
@@ -271,14 +277,14 @@ class OptimalDecisionTree(ABC):
         check_is_fitted(self, ["b_value", "w_value"])
 
         # Check if search progress log exists
-        if len(self.search_progress_log.log) == 0:
+        if len(self.search_progress_log) == 0:
             raise AttributeError(
                 "No search progress log found. Make sure to set "
                 "'store_search_progress_log=True' before fitting."
             )
 
         # Extract times and bounds from log
-        times, bounds = zip(*self.search_progress_log.log)
+        times, bounds = zip(*self.search_progress_log)
         lb, ub = zip(*bounds)
 
         # Create plot

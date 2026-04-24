@@ -7,7 +7,6 @@ from sklearn.utils.validation import check_is_fitted, check_X_y
 
 from odtlearn import ODTL
 from odtlearn.opt_ct import OptimalClassificationTree
-from odtlearn.utils.callbacks import RobustBendersCallback
 from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.validation import check_integer, check_same_as_X
 
@@ -307,21 +306,13 @@ class RobustOCT(OptimalClassificationTree):
         self._solver.store_data("w", self._w)
 
         self._solver.store_data("solver", self._solver)
-        self._solver.store_data("self", self)
+        self._solver.store_data("obj", self)
+        self._solver.store_data("X", X)
         self._solver.store_data("datapoints", self._datapoints)
 
-        callback_action = RobustBendersCallback
+        self._solver.set_callback("robust_benders")
 
-        self._solver.optimize(
-            self._X,
-            self,
-            self._solver,
-            callback=True,
-            callback_action=callback_action,
-            b=self._b,
-            t=self._t,
-            w=self._w,
-        )
+        self._solver.optimize()
 
         # Store fitted decision variable values
         self.b_value = self._solver.get_var_value(self._b, "b")

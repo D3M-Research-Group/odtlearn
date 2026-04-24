@@ -351,7 +351,7 @@ class FairConstrainedOCT(ConstrainedOCT):
                 )
 
         self._create_main_problem()
-        self._solver.optimize(self._X, self, self._solver)
+        self._solver.optimize()
 
         self.b_value = self._solver.get_var_value(self._b, "b")
         self.w_value = self._solver.get_var_value(self._w, "w")
@@ -1308,7 +1308,7 @@ class FairOCT(FlowOCTMultipleSink):
         # Store the classes seen during fit
         self._classes = unique_labels(y)
         self._create_main_problem()
-        self._solver.optimize(self._X, self, self._solver)
+        self._solver.optimize()
         self.b_value = self._solver.get_var_value(self._b, "b")
         self.w_value = self._solver.get_var_value(self._w, "w")
         self.p_value = self._solver.get_var_value(self._p, "p")

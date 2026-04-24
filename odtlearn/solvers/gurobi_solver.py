@@ -1,31 +1,22 @@
-from itertools import product
+from gurobipy import Model, GRB, quicksum, LinExpr
 
-from mip import LinExpr, Model, xsum
+from odtlearn.solvers.solver import Solver
 
-from odtlearn.utils.mip_cbc import SolverCbc
+from odtlearn.callbacks.gurobi_callbacks import BendersCallback, RobustBendersCallback, logging_callback
 
-GRB_CBC_CONST_MAP = {-1: "MAX", 1: "MIN"}
-
-
-class Solver:
+class GurobiSolver(Solver):
     """
-    A wrapper class on top the python-mip Model and solver classes. This class contains functions for interacting
-    with the solver for setting up, optimizing, and getting optimal values of a model.
-    When using CBC, this class interacts with a slightly modified version of the SolverCbc class
-    from the python-mip package.
+    A wrapper class on top of gurobipy Model.
     """
 
-    def __init__(self, solver_name, verbose) -> None:
-        self.solver_name = solver_name.lower()
-        self.var_name_dict = {}
-
-        if self.solver_name == "cbc":
-            self.model = Model(solver_name="cbc")
-            self.model.solver = SolverCbc(self.model, "cbc", self.model.sense, verbose)
-        elif self.solver_name == "gurobi":
-            self.model = Model(solver_name="gurobi")
-        else:
-            raise NotImplementedError(f"Solver {solver_name} not currently supported.")
+    def __init__(self) -> None:
+        self.solver_name = "gurobi"
+        
+        self.model = Model()
+        self.callback = None
+        self.store_search_progress_log = False
+        self.model._search_progress_log = []
+        
 
     def get_var_value(self, objs, var_name=None):
         """
@@ -46,10 +37,41 @@ class Solver:
         result_dict = {}
         for key, _ in objs.items():
             name = self.var_name_dict[var_name][key]
-            result_dict[key] = self.model.var_by_name(name).x
+            result_dict[key] = self.model.getVarByName(name).X
         return result_dict
 
-    def optimize(self, X, obj, solver, callback=False, callback_action=None, **kwargs):
+    def set_callback(self, callback_type):
+        """
+        Set the callback used when solving.
+        
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The input samples.
+
+        obj : DecisionTree object
+            A copy of the DecisionTree object that is passed to the callback action.
+
+        callback: bool, default=False
+            Boolean specifying whether this model uses a callback when solving the problem
+
+        callback_type: string
+            Indicates which callback to use
+
+        kwargs: Additional arguments to be passed to the callback action
+
+        Returns
+        -------
+        None
+        """
+        if callback_type == "benders":
+            self.callback = BendersCallback()
+        elif callback_type == "robust_benders":
+            self.callback = RobustBendersCallback()
+        else:
+            raise ValueError("callback_type not supported")
+
+    def optimize(self):
         """Optimize the constructed model
 
         Parameters
@@ -75,45 +97,13 @@ class Solver:
         -------
         None
         """
-        if callback:
-            if callback_action is not None:
-                self.model.lazy_constrs_generator = callback_action(
-                    X, obj, solver, **kwargs
-                )
-                self.model.optimize()
-            else:
-                raise ValueError("Must supply callback action if callback=True")
+        if self.callback is not None:
+            self.callback.store_search_progress_log = self.store_search_progress_log
+            self.model.optimize(self.callback)
+        elif self.store_search_progress_log:
+            self.model.optimize(logging_callback)
         else:
             self.model.optimize()
-
-    def prep_indices(self, *indices):
-        """
-        Helper function for prepping variable indices to generate
-        decision variables with indices that mimic the structure of Gurobi-created
-        decision variables
-
-        Parameters
-        ----------
-        indices: List
-            list of lists of indices.
-
-        Returns
-        -------
-        A list with the generated indices.
-
-        """
-        prepped = []
-        # if given an integer, create range
-        for elem in indices:
-            if type(elem) is int:
-                prepped.append(list(range(elem)))
-            # if given float, coerce to integer
-            elif type(elem) is float:
-                prepped.append(list(range(int(elem))))
-            # otherwise just pass the element to be zipped
-            else:
-                prepped.append(elem)
-        return prepped
 
     def add_vars(
         self, *indices, lb=0.0, ub=float("inf"), obj=0.0, vtype="C", name: str = ""
@@ -146,42 +136,7 @@ class Solver:
         -------
         Dictionary of new variable objects.
         """
-        var_dict = {}
-        name_element_dict = {}
-        prepped = self.prep_indices(*indices)
-        if len(prepped) > 1:
-            for element in product(*prepped):
-                name_element_dict[element] = (
-                    f"{name}_{element}".replace("[", "_")
-                    .replace("]", "_")
-                    .replace(" ", "_")
-                )
-                var_dict[element] = self.model.add_var(
-                    lb=lb,
-                    ub=ub,
-                    obj=obj,
-                    var_type=vtype,
-                    name=f"{name}_{element}".replace("[", "_")
-                    .replace("]", "_")
-                    .replace(" ", "_"),
-                )
-        else:
-            for element in prepped[0]:
-                name_element_dict[element] = (
-                    f"{name}_{element}".replace("[", "_")
-                    .replace("]", "_")
-                    .replace(" ", "_")
-                )
-                var_dict[element] = self.model.add_var(
-                    lb=lb,
-                    ub=ub,
-                    obj=obj,
-                    var_type=vtype,
-                    name=f"{name}_{element}".replace("[", "_")
-                    .replace("]", "_")
-                    .replace(" ", "_"),
-                )
-        self.var_name_dict[name] = name_element_dict
+        var_dict = self.model.addVars(*indices, lb=lb, ub=ub, obj=obj, vtype=vtype, name=name)
         return var_dict
 
     def add_constrs(self, cons_expr_tuple):
@@ -198,7 +153,7 @@ class Solver:
         None
         """
         for cons in cons_expr_tuple:
-            self.model.add_constr(cons)
+            self.model.addConstr(cons)
 
     def add_constr(self, cons_expr):
         """
@@ -213,9 +168,9 @@ class Solver:
         -------
         None
         """
-        self.model.add_constr(cons_expr)
+        self.model.addConstr(cons_expr)
 
-    def lin_expr(self, arg1=0.0, sense=None):
+    def lin_expr(self, arg1=0.0):
         """
         Initialize a linear expression object
 
@@ -227,12 +182,11 @@ class Solver:
         sense: str | None, default=None
             Argument for specifying whether the expression is to be minimized or maximized.
 
-
         Returns
         -------
         Initalized LinExpr
         """
-        return LinExpr(const=arg1, sense=sense)
+        return LinExpr(arg1)
 
     def set_objective(self, expr, sense):
         """
@@ -245,8 +199,8 @@ class Solver:
             The linear expression to be used as the objective for the problem.
 
         sense: str
-            A string specifying whether the objective should be minimized (1 or GRB.MINIMIZE)
-            or maximized (-1 or GRB.MAXIMIZE)
+            A string specifying whether the objective should be minimized (1)
+            or maximized (-1)
 
         Returns
         -------
@@ -254,11 +208,12 @@ class Solver:
         """
         self.model.objective = expr
         if type(sense) is int:
-            mapped_sense = GRB_CBC_CONST_MAP.get(sense, None)
-            if mapped_sense is None:
-                raise ValueError(f"Invalid objective type: {sense}.")
+            if sense == GRB.MAXIMIZE:
+                sense = "MAX"
+            elif sense == GRB.MINIMIZE:
+                sense = "MIN"
             else:
-                sense = mapped_sense
+                raise ValueError(f"Invalid objective type: {sense}.")
         elif type(sense) is str:
             if sense not in ["MAX", "MIN"]:
                 raise ValueError(f"Invalid objective type: {sense}.")
@@ -281,12 +236,11 @@ class Solver:
         LinExpr
 
         """
-        return xsum(terms)
+        return quicksum(terms)
 
     def store_data(self, key, value):
         """
-        Store data to be used in the callback action. For Gurobi, data can
-        typically be stored as private attributes of the model (i.e., model._data_var).
+        Store data to be used in the callback action.
         For consistency across solvers, we store the data in the model._data attribute
         as a dictionary.
 
@@ -307,3 +261,43 @@ class Solver:
         except AttributeError:
             self.model._data = {}
         self.model._data[key] = value
+
+    def get_gap(self):
+        return self.model.MIPGap
+
+    def get_objective_value(self):
+        return self.model.ObjVal
+
+    def get_objective_bound(self):
+        return self.model.ObjBound
+
+    def get_num_variables(self):
+        return self.model.NumVars
+
+    def get_num_int_variables(self):
+        return self.model.NumIntVars
+
+    def get_num_nonzeroes(self):
+        return self.model.NumNZs
+
+    def get_num_soluions(self):
+        return self.model.SolCount
+
+    def get_num_constraints(self):
+        return self.model.NumConstrs
+
+    def set_time_limit(self, seconds):
+        self.model.setParam('TimeLimit', seconds)
+
+    def set_num_threads(self, num_threads):
+        self.model.setParam('Threads', num_threads)
+    
+    def add_lazy_constraint(self, model, constr):
+        model.cbLazy(constr)
+    
+    def get_callback_solution(self, model, var):
+        return model.cbGetSolution(var)
+    
+    def get_search_progress_log(self):
+        return self.model._search_progress_log
+    

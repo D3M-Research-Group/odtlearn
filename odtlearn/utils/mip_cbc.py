@@ -109,7 +109,7 @@ try:
         os.chdir(pathlib)
         cbclib = ffi.dlopen(libfile)
     except OSError as e:
-        print(f"Error opening library: {e}")
+        raise NotImplementedError(f"Error opening library: {e}")
     os.chdir(old_dir)
     has_cbc = True
 except Exception as e:

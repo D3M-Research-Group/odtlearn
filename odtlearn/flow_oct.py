@@ -10,7 +10,6 @@ from sklearn.utils.validation import check_array, check_is_fitted, check_X_y
 
 from odtlearn import ODTL
 from odtlearn.flow_oct_ss import FlowOCTSingleSink
-from odtlearn.utils.callbacks import BendersCallback
 from odtlearn.utils.validation import check_binary, check_columns_match
 
 
@@ -202,9 +201,7 @@ class FlowOCT(FlowOCTSingleSink):
                 )
 
         self._create_main_problem()
-        self._solver.optimize(
-            self._X, self, self._solver, callback=False, callback_action=None
-        )
+        self._solver.optimize()
         self.b_value = self._solver.get_var_value(self._b, "b")
         self.w_value = self._solver.get_var_value(self._w, "w")
         self.p_value = self._solver.get_var_value(self._p, "p")
@@ -501,22 +498,13 @@ class BendersOCT(FlowOCTSingleSink):
         self._solver.store_data("p", self._p)
         self._solver.store_data("w", self._w)
         # We also pass the following information to the model as we need them in the callback
-        # self._solver.model._self_obj = self
-        self._solver.store_data("self", self)
+        self._solver.store_data("obj", self)
+        self._solver.store_data("X", X)
+        self._solver.store_data("solver", self._solver)
 
-        callback_action = BendersCallback
+        self._solver.set_callback("benders")
 
-        self._solver.optimize(
-            self._X,
-            self,
-            self._solver,
-            callback=True,
-            callback_action=callback_action,
-            g=self._g,
-            b=self._b,
-            p=self._p,
-            w=self._w,
-        )
+        self._solver.optimize()
 
         self.b_value = self._solver.get_var_value(self._b, "b")
         self.w_value = self._solver.get_var_value(self._w, "w")
