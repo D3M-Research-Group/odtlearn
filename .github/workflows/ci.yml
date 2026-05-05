@@ -27,9 +27,9 @@ jobs:
           pip install build
           pip install .[test]
           python -c "
-            import sys, subprocess
-            if sys.version_info < (3, 12):
-                subprocess.check_call(['pip', 'install', '.[mip]'])
+          import sys, subprocess
+          if sys.version_info < (3, 12):
+            subprocess.check_call(['pip', 'install', '.[mip]'])
           "
       # Only build CBC for Python < 3.12
       - name: Compile CBC binary
