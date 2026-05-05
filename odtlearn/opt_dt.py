@@ -1,11 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Union
 
-import mip
 from sklearn.utils.validation import check_is_fitted
 from sklearn.utils import Tags
 
-from odtlearn.solvers.cbc_solver import CBCSolver
 from odtlearn.solvers.gurobi_solver import GurobiSolver
 from odtlearn.utils.Tree import _Tree
 
@@ -94,7 +92,15 @@ class OptimalDecisionTree(ABC):
         if solver.lower() == "gurobi":
             self._solver = GurobiSolver(verbose)
         elif solver.lower() == "cbc":
-            self._solver = CBCSolver(verbose)
+            try:
+                # Need to have installed Python-MIP, unsupported for Python 3.12 and above
+                from odtlearn.solvers.cbc_solver import CBCSolver
+                self._solver = CBCSolver(verbose)
+            except ModuleNotFoundError as e:
+                raise ImportError(
+                    "CBC solver requires the 'mip' package, which is not installed "
+                    "or not supported for your Python version (3.12 and above)"
+                ) from e
         else:
             raise ValueError("Solver not supported: ", solver)
 

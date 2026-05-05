@@ -93,7 +93,7 @@ def small_binary_dataset():
 
 def test_FlowOCT_X_nonbinary_error():
     # Test that we raise a ValueError if X matrix has values other than zero or one
-    clf = FlowOCT(solver="cbc", depth=1, time_limit=2, _lambda=1)
+    clf = FlowOCT(solver="gurobi", depth=1, time_limit=2, _lambda=1)
 
     with pytest.raises(
         AssertionError,
@@ -118,7 +118,7 @@ def test_FlowOCT_X_nonbinary_error():
 def test_FlowOCT_X_data_shape_error():
     X = np.ones(100).reshape(100, 1)
 
-    clf = FlowOCT(solver="cbc", depth=1, time_limit=2, _lambda=1)
+    clf = FlowOCT(solver="gurobi", depth=1, time_limit=2, _lambda=1)
 
     with pytest.raises(
         ValueError, match="Found input variables with inconsistent numbers of samples"
@@ -130,7 +130,7 @@ def test_FlowOCT_X_data_shape_error():
 # test that tree is fitted before trying to fit, predict, print, or plot
 def test_check_fit(synthetic_data_1):
     X, y = synthetic_data_1
-    clf = FlowOCT(solver="cbc", depth=1, time_limit=2, _lambda=1)
+    clf = FlowOCT(solver="gurobi", depth=1, time_limit=2, _lambda=1)
     with pytest.raises(
         NotFittedError,
         match=(
@@ -167,7 +167,7 @@ def test_FlowOCT_classifier():
     )
     y = train.pop("y")
     test = pd.DataFrame({"x1": [1, 1, 0, 0, 1], "x2": [1, 1, 1, 0, 1]})
-    clf = FlowOCT(solver="cbc", depth=1, time_limit=20, _lambda=0.2)
+    clf = FlowOCT(solver="gurobi", depth=1, time_limit=20, _lambda=0.2)
 
     clf.fit(train, y)
     # Test that after running the fit method we have b, w, and p
@@ -238,6 +238,44 @@ def test_FlowOCT_classifier():
             np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]),
             "gurobi",
         ),
+    ],
+)
+def test_FlowOCT_same_predictions_gb(
+    synthetic_data_1, d, _lambda, benders, expected_pred, solver, skip_solver
+):
+    if skip_solver:
+        pytest.skip(reason="Gurobi license not available.")
+    X, y = synthetic_data_1
+
+    if benders:
+        stcl = BendersOCT(
+            solver=solver,
+            depth=d,
+            time_limit=100,
+            _lambda=_lambda,
+            num_threads=None,
+            obj_mode="acc",
+        )
+        stcl.fit(X, y)
+        # stcl.print_tree()
+        assert_allclose(stcl.predict(X), expected_pred)
+
+    else:
+        stcl = FlowOCT(
+            solver=solver,
+            depth=d,
+            time_limit=100,
+            _lambda=_lambda,
+            num_threads=None,
+            obj_mode="acc",
+        )
+        stcl.fit(X, y)
+        # stcl.print_tree()
+        assert_allclose(stcl.predict(X), expected_pred)
+
+@pytest.mark.parametrize(
+    "d, _lambda, benders, expected_pred, solver",
+    [
         (
             0,
             0,
@@ -296,9 +334,10 @@ def test_FlowOCT_classifier():
         ),
     ],
 )
-def test_FlowOCT_same_predictions(
+def test_FlowOCT_same_predictions_cbc(
     synthetic_data_1, d, _lambda, benders, expected_pred, solver, skip_solver
 ):
+    pytest.importorskip("mip")
     if skip_solver:
         pytest.skip(reason="Gurobi license not available.")
     X, y = synthetic_data_1
@@ -357,6 +396,44 @@ def test_FlowOCT_same_predictions(
             np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1]),
             "gurobi",
         ),
+    ],
+)
+def test_FlowOCT_obj_mode_gb(
+    synthetic_data_2, benders, obj_mode, expected_pred, solver, skip_solver
+):
+    X, y = synthetic_data_2
+
+    if skip_solver:
+        pytest.skip(reason="Testing on github actions")
+
+    if benders:
+        bstcl = BendersOCT(
+            solver=solver,
+            depth=2,
+            time_limit=100,
+            _lambda=0,
+            num_threads=None,
+            obj_mode=obj_mode,
+        )
+        bstcl.fit(X, y)
+        # stcl.print_tree()
+        assert_allclose(bstcl.predict(X), expected_pred)
+    else:
+        stcl = FlowOCT(
+            solver=solver,
+            depth=2,
+            time_limit=100,
+            _lambda=0,
+            num_threads=None,
+            obj_mode=obj_mode,
+        )
+        stcl.fit(X, y)
+        # stcl.print_tree()
+        assert_allclose(stcl.predict(X), expected_pred)
+
+@pytest.mark.parametrize(
+    "benders, obj_mode ,expected_pred, solver",
+    [
         (
             False,
             "acc",
@@ -383,9 +460,10 @@ def test_FlowOCT_same_predictions(
         ),
     ],
 )
-def test_FlowOCT_obj_mode(
+def test_FlowOCT_obj_mode_cbc(
     synthetic_data_2, benders, obj_mode, expected_pred, solver, skip_solver
 ):
+    pytest.importorskip("mip")
     X, y = synthetic_data_2
 
     if skip_solver:
@@ -420,7 +498,7 @@ def test_FlowOCT_obj_mode(
 def test_FlowOCT_plot_print(synthetic_data_1):
     X, y = synthetic_data_1
     stcl = FlowOCT(
-        solver="cbc",
+        solver="gurobi",
         depth=1,
         time_limit=100,
         num_threads=None,
@@ -438,7 +516,7 @@ def test_wrong_objective_FlowOCT(synthetic_data_1):
         match="objective must be one of 'acc', 'balance', or 'weighted'",
     ):
         stcl = FlowOCT(
-            solver="cbc",
+            solver="gurobi",
             depth=1,
             time_limit=100,
             num_threads=None,
@@ -451,7 +529,7 @@ def test_wrong_objective_FlowOCT(synthetic_data_1):
         match="objective must be one of 'acc', 'balance', or 'weighted'",
     ):
         bstcl = BendersOCT(
-            solver="cbc",
+            solver="gurobi",
             depth=1,
             time_limit=100,
             num_threads=None,
@@ -469,7 +547,7 @@ def test_custom_weights(OCTClass, small_binary_dataset):
     weights[y == 1] = 10
 
     # Fit the model with custom weights
-    oct = OCTClass(solver="cbc", obj_mode="weighted", depth=2, time_limit=10)
+    oct = OCTClass(solver="gurobi", obj_mode="weighted", depth=2, time_limit=10)
     oct.fit(X, y, weights=weights)
     y_pred = oct.predict(X)
 
@@ -482,7 +560,7 @@ def test_custom_weights_ignored_warning(OCTClass, small_binary_dataset):
     X, y = small_binary_dataset
     weights = np.ones_like(y)
 
-    oct = OCTClass(solver="cbc", obj_mode="acc", depth=2, time_limit=10)
+    oct = OCTClass(solver="gurobi", obj_mode="acc", depth=2, time_limit=10)
     with pytest.warns(
         UserWarning, match="Weights are ignored because obj_mode is not 'weighted'."
     ):
@@ -493,7 +571,7 @@ def test_custom_weights_ignored_warning(OCTClass, small_binary_dataset):
 def test_custom_weights_missing_error(OCTClass, small_binary_dataset):
     X, y = small_binary_dataset
 
-    oct = OCTClass(solver="cbc", obj_mode="weighted", depth=2, time_limit=10)
+    oct = OCTClass(solver="gurobi", obj_mode="weighted", depth=2, time_limit=10)
     with pytest.raises(
         ValueError, match="Weights must be provided when obj_mode is 'weighted'."
     ):
@@ -505,7 +583,7 @@ def test_custom_weights_wrong_length(OCTClass, small_binary_dataset):
     X, y = small_binary_dataset
     weights = np.ones(len(y) - 1)  # Wrong length
 
-    oct = OCTClass(solver="cbc", obj_mode="weighted", depth=2, time_limit=10)
+    oct = OCTClass(solver="gurobi", obj_mode="weighted", depth=2, time_limit=10)
     with pytest.raises(
         ValueError, match="The number of weights must match the number of samples."
     ):
@@ -517,11 +595,11 @@ def test_weight_consistency(OCTClass, small_binary_dataset):
     X, y = small_binary_dataset
 
     # Fit with 'acc' mode
-    oct_acc = OCTClass(solver="cbc", obj_mode="acc", depth=2, time_limit=10)
+    oct_acc = OCTClass(solver="gurobi", obj_mode="acc", depth=2, time_limit=10)
     oct_acc.fit(X, y)
 
     # Fit with 'weighted' mode and uniform weights
-    oct_custom = OCTClass(solver="cbc", obj_mode="weighted", depth=2, time_limit=10)
+    oct_custom = OCTClass(solver="gurobi", obj_mode="weighted", depth=2, time_limit=10)
     oct_custom.fit(X, y, weights=np.ones_like(y))
 
     # Predictions should be the same

@@ -499,7 +499,7 @@ class BendersOCT(FlowOCTSingleSink):
         self._solver.store_data("w", self._w)
         # We also pass the following information to the model as we need them in the callback
         self._solver.store_data("obj", self)
-        self._solver.store_data("X", X)
+        self._solver.store_data("X", self._X)
         self._solver.store_data("solver", self._solver)
 
         self._solver.set_callback("benders")

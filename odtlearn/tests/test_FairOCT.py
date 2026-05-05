@@ -5,6 +5,7 @@ import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
 from sklearn.exceptions import NotFittedError
+import sys
 
 from odtlearn.fair_oct import (
     FairCSPOCT,
@@ -31,8 +32,11 @@ def class_names():
 
 # @pytest.fixture
 def solvers():
-    return ["gurobi", "cbc"]
-
+    solvers = ["gurobi"]
+    if sys.version_info < (3, 12):
+        solvers += ["cbc"]
+    return solvers
+        
 
 # @pytest.fixture
 def objectives():
@@ -161,15 +165,65 @@ def test_FairOCT_same_predictions(
         ("SP", 0.2, 0.5, "gurobi", FairSPOCT),
         ("PE", 1, 0.111, "gurobi", FairPEOCT),
         ("PE", 0.04, 0, "gurobi", FairPEOCT),
+    ],
+)
+def test_FairOCT_metrics_gb(
+    synthetic_data_1, f, b, g0_value, solver, class_name, skip_solver
+):
+    if skip_solver:
+        pytest.skip(reason="Testing on github actions")
+
+    X, y, protect_feat, legit_factor = synthetic_data_1
+
+    fcl = class_name(
+        solver=solver,
+        positive_class=1,
+        depth=2,
+        _lambda=0,
+        time_limit=100,
+        fairness_bound=b,
+        num_threads=None,
+        obj_mode="acc",
+    )
+
+    fcl_dep = FairOCT(
+        solver=solver,
+        positive_class=1,
+        depth=2,
+        _lambda=0,
+        time_limit=100,
+        fairness_type=f,
+        fairness_bound=b,
+        num_threads=None,
+        obj_mode="acc",
+    )
+
+    fcl.fit(X, y, protect_feat, legit_factor)
+    fcl_dep.fit(X, y, protect_feat, legit_factor)
+    if f == "SP":
+        sp_val_dep = fcl_dep.get_SP(protect_feat, fcl.predict(X))
+        sp_val = fcl.calc_metric(protect_feat, fcl.predict(X))
+        assert_allclose(np.round(sp_val[(0, 1)], 3), g0_value)
+        assert_allclose(np.round(sp_val_dep[(0, 1)], 3), g0_value)
+    else:
+        eq_val_dep = fcl_dep.get_EqOdds(protect_feat, y, fcl.predict(X))
+        eq_val = fcl.calc_metric(protect_feat, y, fcl.predict(X))
+        assert_allclose(np.round(eq_val[(0, 0, 1)], 3), g0_value)
+        assert_allclose(np.round(eq_val_dep[(0, 0, 1)], 3), g0_value)
+
+@pytest.mark.parametrize(
+    "f, b, g0_value, solver, class_name",
+    [
         ("SP", 1, 0.214, "cbc", FairSPOCT),
         ("SP", 0.2, 0.5, "cbc", FairSPOCT),
         ("PE", 1, 0.111, "cbc", FairPEOCT),
         ("PE", 0.04, 0, "cbc", FairPEOCT),
     ],
 )
-def test_FairOCT_metrics(
+def test_FairOCT_metrics_cbc(
     synthetic_data_1, f, b, g0_value, solver, class_name, skip_solver
 ):
+    pytest.importorskip("mip")
     if skip_solver:
         pytest.skip(reason="Testing on github actions")
 
@@ -222,7 +276,7 @@ def test_check_fit(synthetic_data_1, obj_mode, class_name):
 
     # check first for depreciated class
     fcl = FairOCT(
-        solver="cbc",
+        solver="gurobi",
         positive_class=1,
         depth=2,
         _lambda=0,
@@ -261,7 +315,7 @@ def test_check_fit(synthetic_data_1, obj_mode, class_name):
 
     # now do for new version of classes
     fcl = class_name(
-        solver="cbc",
+        solver="gurobi",
         positive_class=1,
         depth=2,
         _lambda=0,
@@ -307,7 +361,7 @@ def test_FairOCT_visualize_tree(synthetic_data_1, class_name):
 
     # first test depreciated version
     fcl_dep = FairOCT(
-        solver="cbc",
+        solver="gurobi",
         positive_class=1,
         depth=2,
         _lambda=0,
@@ -324,7 +378,7 @@ def test_FairOCT_visualize_tree(synthetic_data_1, class_name):
 
     # now test each class
     fcl = class_name(
-        solver="cbc",
+        solver="gurobi",
         positive_class=1,
         depth=2,
         _lambda=0,
@@ -356,7 +410,7 @@ def test_FairOCT_visualize_tree(synthetic_data_1, class_name):
 def test_handle_pandas_cols(synthetic_data_1, f, pd_data, class_name):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
-        solver="cbc",
+        solver="gurobi",
         positive_class=1,
         depth=2,
         _lambda=0,
@@ -399,7 +453,7 @@ def test_bad_obj_mode(synthetic_data_1, class_name):
         match="objective must be one of 'acc', 'balance', or 'weighted'",
     ):
         fcl = class_name(
-            solver="cbc",
+            solver="gurobi",
             positive_class=1,
             depth=2,
             _lambda=0,
@@ -419,7 +473,7 @@ def test_bad_obj_mode_dep(synthetic_data_1):
         match="Invalid objective mode. obj_mode should be one of acc or balance.",
     ):
         fcl = FairOCT(
-            solver="cbc",
+            solver="gurobi",
             positive_class=1,
             depth=2,
             _lambda=0,
@@ -439,7 +493,7 @@ def test_bad_obj_mode_dep(synthetic_data_1):
 def test_fairness_metric_summary(synthetic_data_1, f, b):
     X, y, protect_feat, legit_factor = synthetic_data_1
     fcl = FairOCT(
-        solver="cbc",
+        solver="gurobi",
         positive_class=1,
         depth=2,
         _lambda=0.01,
@@ -463,7 +517,7 @@ def test_custom_weights_error(synthetic_data_1, fair_class):
     weights = np.array([0.1, 0.2, 0.3])  # Incorrect number of weights
 
     model = fair_class(
-        solver="cbc",
+        solver="gurobi",
         positive_class=1,
         depth=2,
         _lambda=0,
@@ -484,7 +538,7 @@ def test_custom_weights_missing(synthetic_data_1, fair_class):
     X, y, protect_feat, legit_factor = synthetic_data_1
 
     model = fair_class(
-        solver="cbc",
+        solver="gurobi",
         positive_class=1,
         depth=2,
         _lambda=0,

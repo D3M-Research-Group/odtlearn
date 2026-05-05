@@ -1,4 +1,4 @@
-from gurobipy import Model, GRB, quicksum, LinExpr
+from gurobipy import Model, GRB, quicksum, LinExpr, Env
 
 from odtlearn.solvers.solver import Solver
 
@@ -9,9 +9,14 @@ class GurobiSolver(Solver):
     A wrapper class on top of gurobipy Model.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, verbose) -> None:
         self.solver_name = "gurobi"
-        
+
+        env = Env(empty=True)
+        if not verbose:
+            env.setParam("OutputFlag", 0)
+        env.start()
+
         self.model = Model()
         self.callback = None
         self.store_search_progress_log = False
@@ -34,11 +39,7 @@ class GurobiSolver(Solver):
         -------
         A dict with the values of each variable from the solution
         """
-        result_dict = {}
-        for key, _ in objs.items():
-            name = self.var_name_dict[var_name][key]
-            result_dict[key] = self.model.getVarByName(name).X
-        return result_dict
+        return {key: var.X for key, var in objs.items()}
 
     def set_callback(self, callback_type):
         """
@@ -70,6 +71,7 @@ class GurobiSolver(Solver):
             self.callback = RobustBendersCallback()
         else:
             raise ValueError("callback_type not supported")
+        self.model.setParam('LazyConstraints', 1)
 
     def optimize(self):
         """Optimize the constructed model
@@ -137,6 +139,8 @@ class GurobiSolver(Solver):
         Dictionary of new variable objects.
         """
         var_dict = self.model.addVars(*indices, lb=lb, ub=ub, obj=obj, vtype=vtype, name=name)
+        # print("🤢")
+        # print(var_dict)
         return var_dict
 
     def add_constrs(self, cons_expr_tuple):
@@ -206,21 +210,19 @@ class GurobiSolver(Solver):
         -------
         None
         """
-        self.model.objective = expr
         if type(sense) is int:
-            if sense == GRB.MAXIMIZE:
-                sense = "MAX"
-            elif sense == GRB.MINIMIZE:
-                sense = "MIN"
-            else:
+            if sense not in [GRB.MAXIMIZE, GRB.MINIMIZE]:
                 raise ValueError(f"Invalid objective type: {sense}.")
         elif type(sense) is str:
-            if sense not in ["MAX", "MIN"]:
+            if sense == "MAX":
+                sense = GRB.MAXIMIZE
+            elif sense == "MIN":
+                sense = GRB.MINIMIZE
+            else:
                 raise ValueError(f"Invalid objective type: {sense}.")
         else:
             raise TypeError("Objective sense must be integer or string.")
-
-        self.model.sense = sense
+        self.model.setObjective(expr, sense)
 
     def quicksum(self, terms):
         """

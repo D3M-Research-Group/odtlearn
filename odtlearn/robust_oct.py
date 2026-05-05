@@ -279,8 +279,7 @@ class RobustOCT(OptimalClassificationTree):
         else:
             # By default, set costs to be budget + 1 (i.e. no uncertainty)
             gammas_df = deepcopy(self._X).astype("float")
-            for col in gammas_df.columns:
-                gammas_df[col].values[:] = budget + 1
+            gammas_df[:] = budget + 1
             self._costs = gammas_df
             self._solver.store_data("costs", gammas_df)
 
@@ -307,7 +306,7 @@ class RobustOCT(OptimalClassificationTree):
 
         self._solver.store_data("solver", self._solver)
         self._solver.store_data("obj", self)
-        self._solver.store_data("X", X)
+        self._solver.store_data("X", self._X)
         self._solver.store_data("datapoints", self._datapoints)
 
         self._solver.set_callback("robust_benders")

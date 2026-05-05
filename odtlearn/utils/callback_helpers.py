@@ -2,6 +2,7 @@ import copy
 from typing import Any, Dict, List, Tuple, Union
 
 import numpy as np
+from pandas import DataFrame
 from numpy import int64, str_
 import heapq
 
@@ -9,7 +10,7 @@ from odtlearn.solvers.solver import Solver
 
 # helper functions for BenderOCT callback
 
-def benders_callback(model, X, obj, solver):
+def benders_callback(model, X: DataFrame, obj, solver: Solver):
     g_trans, p_trans, b_trans, w_trans = (
             {k: solver.get_callback_solution(model, v) for k, v in obj._g.items()},
             {k: solver.get_callback_solution(model, v) for k, v in obj._p.items()},
@@ -34,23 +35,23 @@ def benders_callback(model, X, obj, solver):
                 )
                 solver.add_lazy_constraint(model, lhs)
 
-def robust_benders_callback(model, X, obj, solver: Solver):
+def robust_benders_callback(model, X: DataFrame, obj, solver):
     t_trans, b_trans, w_trans = (
-            {k: solver.get_callback_solution(model, v) for k, v in model._t.items()},
-            {k: solver.get_callback_solution(model, v) for k, v in model._b.items()},
-            {k: solver.get_callback_solution(model, v) for k, v in model._w.items()},
+            {k: solver.get_callback_solution(model, v) for k, v in obj._t.items()},
+            {k: solver.get_callback_solution(model, v) for k, v in obj._b.items()},
+            {k: solver.get_callback_solution(model, v) for k, v in obj._w.items()},
         )
     # Initialize a blank-slate xi
     initial_xi = {}
-    for c in model._data["cat_features"]:
+    for c in obj._cat_features:
         initial_xi[c] = 0
 
     # Initialize dictionaries to store min and max values of each feature:
     initial_mins = {}
     initial_maxes = {}
-    for c in model._data["cat_features"]:
-        initial_mins[c] = model._data["min_values"][c]
-        initial_maxes[c] = model._data["max_values"][c]
+    for c in obj._cat_features:
+        initial_mins[c] = obj._min_values[c]
+        initial_maxes[c] = obj._min_values[c]
 
     whole_expr = solver.lin_expr(0)  # Constraint RHS expression
     priority_queue = []  # Stores elements of form (path_cost, index)
@@ -65,7 +66,7 @@ def robust_benders_callback(model, X, obj, solver: Solver):
     correct_points = []  # List of indices of nominally correctly classified points
 
     # Find nominal path for every data point
-    for i in model._data["datapoints"]:
+    for i in obj._datapoints:
         nom_path, k = get_nominal_path(obj, b_trans, w_trans, i)
         if k != obj._y[i]:
             # Misclassified nominally - no need to check for shortest path
@@ -79,10 +80,10 @@ def robust_benders_callback(model, X, obj, solver: Solver):
                 initial_xi,
                 False,
                 i,
-                model._data["f_theta_indices"],
+                obj._f_theta_indices,
             )
             whole_expr += curr_expr
-            new_constr = model._data["t"][i] <= curr_expr
+            new_constr = obj._t[i] <= curr_expr
             solver.add_lazy_constraint(model, new_constr)
         else:
             # Correctly classified - put into pool of problems for shortest path
@@ -125,7 +126,7 @@ def robust_benders_callback(model, X, obj, solver: Solver):
         # Get next least-cost point and see if still under epsilon budget
         current_point = heapq.heappop(priority_queue)
         curr_cost = current_point[0]
-        if curr_cost + total_cost > model._data["epsilon"]:
+        if curr_cost + total_cost > obj._epsilon:
             # Push point back into queue
             heapq.heappush(priority_queue, current_point)
             break
@@ -141,7 +142,7 @@ def robust_benders_callback(model, X, obj, solver: Solver):
             xi_dict[i],
             v_dict[i],
             i,
-            model._data["f_theta_indices"],
+            obj._f_theta_indices,
         )
         total_cost += curr_cost
 
@@ -162,12 +163,12 @@ def robust_benders_callback(model, X, obj, solver: Solver):
                 initial_xi,
                 False,
                 i,
-                self.obj._solver.model._data["f_theta_indices"],
+                obj._f_theta_indices,
             )
         new_constr = (
             solver.quicksum(
-                model._data["t"][i]
-                for i in model._data["datapoints"]
+                obj._t[i]
+                for i in obj._datapoints
             )
             <= whole_expr
         )
@@ -526,7 +527,7 @@ def get_cut_expression(master, solver, X, b, w, path, xi, v, i, f_theta_indices)
             expr += solver.quicksum(
                 master._w[n, lab] for lab in master._labels if (lab != master._y[i])
             )
-    return expr <= 0
+    return expr
 
 
 def get_all_terminal_paths(
@@ -604,7 +605,7 @@ def get_all_terminal_paths(
     # b[n,f,theta]== 1
     curr_feature = None
     curr_theta = None
-    for f, theta in master._solver.model._data["f_theta_indices"]:
+    for f, theta in master._f_theta_indices:
         if b[curr_node, f, theta] > 0.5:
             curr_feature = f
             curr_theta = theta
@@ -709,7 +710,7 @@ def get_nominal_path(master, b, w, i):
                 return path, k
 
         # braching node - find which feature to branch on
-        for f, theta in master._solver.model._data["f_theta_indices"]:
+        for f, theta in master._f_theta_indices:
             if b[curr_node, f, theta] > 0.5:
                 if master._X.at[i, f] >= theta + 1:
                     curr_node = (2 * curr_node) + 1  # go right
@@ -765,7 +766,7 @@ def shortest_path_solver(
         A tuple containing the best path, best cost, feature perturbations (xi),
         and label perturbation flag (v).
     """
-    best_cost = (master._solver.model._data["epsilon"] + 1) * master._tree.depth
+    best_cost = (master._epsilon + 1) * master._tree.depth
     best_path = []
     xi = copy.deepcopy(initial_xi)
     v = False
@@ -779,7 +780,7 @@ def shortest_path_solver(
         curr_mins = copy.deepcopy(initial_mins)
         curr_maxes = copy.deepcopy(initial_maxes)
         curr_path = terminal_path_dict[j]
-        curr_cost = master._solver.model._data["eta"] * int(
+        curr_cost = master._eta * int(
             curr_v
         )  # Start with cost if correctly classify point
         best_so_far = True
@@ -803,7 +804,7 @@ def shortest_path_solver(
                     delta_x = theta - master._X.at[i, f] + 1  # positive value
 
                     # cost increases by gamma per unit increase of xi
-                    curr_cost += master._solver.model._data["gammas"].loc[i][f] * (
+                    curr_cost += master._gammas.loc[i][f] * (
                         delta_x - curr_xi[f]
                     )
                     curr_xi[f] = delta_x
@@ -822,7 +823,7 @@ def shortest_path_solver(
                     delta_x = theta - master._X.at[i, f]  # negative value
 
                     # cost increases by gamma per unit decrease of xi
-                    curr_cost += master._solver.model._data["gammas"].loc[i][f] * (
+                    curr_cost += master._gammas.loc[i][f] * (
                         curr_xi[f] - delta_x
                     )
                     curr_xi[f] = delta_x
