@@ -5,6 +5,7 @@ from numpy.testing import assert_allclose
 from sklearn.exceptions import NotFittedError
 
 from odtlearn.flow_oct import BendersOCT, FlowOCT
+from odtlearn.tests.test_utils import gurobi_available
 
 
 # fmt: off
@@ -243,6 +244,8 @@ def test_FlowOCT_classifier():
 def test_FlowOCT_same_predictions_gb(
     synthetic_data_1, d, _lambda, benders, expected_pred, solver, skip_solver
 ):
+    if not gurobi_available():
+        pytest.skip(reason="Gurobi not available")
     if skip_solver:
         pytest.skip(reason="Gurobi license not available.")
     X, y = synthetic_data_1
@@ -401,6 +404,8 @@ def test_FlowOCT_same_predictions_cbc(
 def test_FlowOCT_obj_mode_gb(
     synthetic_data_2, benders, obj_mode, expected_pred, solver, skip_solver
 ):
+    if not gurobi_available():
+        pytest.skip(reason="Gurobi not available")
     X, y = synthetic_data_2
 
     if skip_solver:

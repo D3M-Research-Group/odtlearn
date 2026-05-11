@@ -51,7 +51,7 @@ def robust_benders_callback(model, X: DataFrame, obj, solver):
     initial_maxes = {}
     for c in obj._cat_features:
         initial_mins[c] = obj._min_values[c]
-        initial_maxes[c] = obj._min_values[c]
+        initial_maxes[c] = obj._max_values[c]
 
     whole_expr = solver.lin_expr(0)  # Constraint RHS expression
     priority_queue = []  # Stores elements of form (path_cost, index)

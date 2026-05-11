@@ -1,13 +1,23 @@
 from abc import ABCMeta
-
+import pytest
 from odtlearn.opt_dt import OptimalDecisionTree
+from odtlearn.tests.test_utils import gurobi_available
 
 
 def test_dt_abc():
+    solver = "cbc"
+    try:
+        import mip
+    except ImportError:
+        if gurobi_available():
+            solver = "gurobi"
+        else:
+            pytest.skip(reason="No solver available to test with")
+
     OptimalDecisionTree.__abstractmethods__ = set()
 
     test_opt_dt = OptimalDecisionTree(
-        solver="gurobi", depth=10, time_limit=60, num_threads=5, verbose=True
+        solver=solver, depth=10, time_limit=60, num_threads=5, verbose=True
     )
     vars_defined = test_opt_dt._define_variables()
     constraints_defined = test_opt_dt._define_constraints()

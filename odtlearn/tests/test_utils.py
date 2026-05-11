@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import pytest
 from numpy.testing import assert_allclose
@@ -246,3 +247,25 @@ def test_binarizer_transform(example_data):
     X_bin = binarizer.fit_transform(df)
     assert X_bin.shape == (10, 15)
     assert all(X_bin.dtypes == "float64")
+
+def gurobi_available():
+    try:
+        import gurobipy
+    except ImportError:
+        return False
+
+    # Check for license file or env var
+    lic = os.environ.get("GRB_LICENSE_FILE")
+
+    if lic and os.path.exists(lic):
+        return True
+
+    # fallback: default license locations
+    if os.path.exists(os.path.expanduser("~/gurobi.lic")):
+        return True
+    
+    # Or, check for WLS License
+    if all([os.environ.get("GRB_WLSACCESSID"), os.environ.get("GRB_WLSSECRET"), os.environ.get("GRB_LICENSEID"),]):
+        return True
+
+    return False

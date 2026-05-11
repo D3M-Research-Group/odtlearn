@@ -6,6 +6,7 @@ from sklearn.exceptions import NotFittedError
 from importlib import resources
 
 from odtlearn.flow_opt import FlowOPT_DM, FlowOPT_DR, FlowOPT_IPW
+from odtlearn.tests.test_utils import gurobi_available
 
 
 @pytest.fixture
@@ -105,6 +106,8 @@ def test_FlowOPT_X_treatment_error():
 ])
 # fmt: on
 def test_FlowOPT_classifier_gb(data, method, solver, expected_pred, skip_solver):
+    if not gurobi_available():
+        pytest.skip(reason="Gurobi not available")
     if skip_solver:
         pytest.skip(reason="Testing on github actions")
     df = data

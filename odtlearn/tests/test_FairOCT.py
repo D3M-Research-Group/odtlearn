@@ -16,6 +16,7 @@ from odtlearn.fair_oct import (
     FairSPOCT,
 )
 from odtlearn.flow_oct import FlowOCT
+from odtlearn.tests.test_utils import gurobi_available
 
 
 # @pytest.fixture
@@ -32,7 +33,9 @@ def class_names():
 
 # @pytest.fixture
 def solvers():
-    solvers = ["gurobi"]
+    solvers = []
+    if gurobi_available():
+        solvers += ["gurobi"]
     if sys.version_info < (3, 12):
         solvers += ["cbc"]
     return solvers
@@ -170,6 +173,8 @@ def test_FairOCT_same_predictions(
 def test_FairOCT_metrics_gb(
     synthetic_data_1, f, b, g0_value, solver, class_name, skip_solver
 ):
+    if not gurobi_available():
+        pytest.skip(reason="Gurobi not available")
     if skip_solver:
         pytest.skip(reason="Testing on github actions")
 

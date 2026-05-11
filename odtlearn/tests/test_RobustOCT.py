@@ -5,6 +5,7 @@ from numpy.testing import assert_allclose
 from sklearn.exceptions import NotFittedError
 
 from odtlearn.robust_oct import RobustOCT
+from odtlearn.tests.test_utils import gurobi_available
 
 
 @pytest.fixture
@@ -215,9 +216,18 @@ def test_RobustOCT_prediction_shape_error():
 
 
 def test_RobustOCT_with_uncertainty_success(skip_solver):
+    solver = "cbc"
+    try:
+        import mip
+    except:
+        if gurobi_available():
+            solver = "gurobi"
+        else:
+            pytest.skip(reason="No solver available")
+
     if skip_solver:
         pytest.skip(reason="Testing on github actions")
-    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
+    clf = RobustOCT(solver=solver, depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -238,9 +248,17 @@ def test_RobustOCT_with_uncertainty_success(skip_solver):
 
 
 def test_RobustOCT_no_uncertainty_success(skip_solver):
+    solver = "cbc"
+    try:
+        import mip
+    except:
+        if gurobi_available():
+            solver = "gurobi"
+        else:
+            pytest.skip(reason="No solver available")
     if skip_solver:
         pytest.skip(reason="Testing on github actions")
-    clf = RobustOCT(solver="gurobi", depth=1, time_limit=20)
+    clf = RobustOCT(solver=solver, depth=1, time_limit=20)
     train = pd.DataFrame(
         {"x1": [1, 2, 2, 2, 3], "x2": [1, 2, 1, 0, 1], "y": [1, 1, -1, -1, -1]},
         index=["A", "B", "C", "D", "E"],
@@ -278,6 +296,8 @@ def test_RobustOCT_no_uncertainty_success(skip_solver):
     ],
 )
 def test_RobustOCT_correctness_gb(synthetic_data_1, d, expected_pred, solver, skip_solver):
+    if not gurobi_available():
+        pytest.skip(reason="Gurobi not available")
     if skip_solver:
         pytest.skip(reason="Testing on github actions")
     X, y = synthetic_data_1
@@ -357,6 +377,8 @@ def test_RobustOCT_uncertainty_correctness_gb(
     Scenario 2: Perfect split (uncertainty budget not large enough)
     Scenario 3: Split X2, split X1 at node 3 but assign 0 at node 2 (because uncertainty in X1)
     """
+    if not gurobi_available():
+        pytest.skip(reason="Gurobi not available")
     if skip_solver:
         pytest.skip(reason="Testing on github actions")
     X, y = synthetic_data_1
@@ -464,12 +486,20 @@ def test_check_fit(synthetic_data_1):
 
 
 def test_RobustOCT_visualize_tree(synthetic_data_1, synthetic_costs_1, skip_solver):
+    solver = "cbc"
+    try:
+        import mip
+    except:
+        if gurobi_available():
+            solver = "gurobi"
+        else:
+            pytest.skip(reason="No solver available")
     if skip_solver:
         pytest.skip(reason="Testing on github actions")
     X, y = synthetic_data_1
     costs = synthetic_costs_1
     robust_classifier = RobustOCT(
-        solver="gurobi",
+        solver=solver,
         depth=1,
         time_limit=100,
     )
