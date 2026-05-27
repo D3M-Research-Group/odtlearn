@@ -4,15 +4,16 @@ import numpy as np
 from pandas import DataFrame
 from numpy import int64
 import heapq
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
-from odtlearn.solvers.solver import Solver
-from odtlearn.flow_oct import BendersOCT
-from odtlearn.robust_oct import RobustOCT
+if TYPE_CHECKING:
+    from odtlearn.solvers.solver import Solver
+    from odtlearn.flow_oct import BendersOCT
+    from odtlearn.robust_oct import RobustOCT
 
 
 # helper functions for BenderOCT callback
-def benders_callback(model: BendersOCT, X: DataFrame, obj, solver: Solver) -> None:
+def benders_callback(model: "BendersOCT", X: DataFrame, obj, solver: "Solver") -> None:
     """
     The BendersOCT callback function, called at every integer solution.
 
@@ -53,7 +54,7 @@ def benders_callback(model: BendersOCT, X: DataFrame, obj, solver: Solver) -> No
 
 
 def robust_benders_callback(
-    model: RobustOCT, X: DataFrame, obj, solver: Solver
+    model: "RobustOCT", X: DataFrame, obj, solver: "Solver"
 ) -> None:
     """
     The RobustOCT callback function, called at every integer solution.
@@ -196,7 +197,7 @@ def robust_benders_callback(
 
 
 def benders_subproblem(
-    main_model_obj: BendersOCT,  # noqa: F821
+    main_model_obj: "BendersOCT",  # noqa: F821
     b: dict[tuple[int, str], float],
     p: dict[int, float],
     w: dict[tuple[int, int64], float],
@@ -263,7 +264,7 @@ def benders_subproblem(
 
 
 def get_left_exp_integer(
-    solver: Solver, main_grb_obj: BendersOCT, n: int, i: int  # noqa: F821
+    solver: "Solver", main_grb_obj: "BendersOCT", n: int, i: int  # noqa: F821
 ) -> Any:
     """
     Get the expression for the left branch constraint in the Benders' subproblem.
@@ -295,7 +296,7 @@ def get_left_exp_integer(
 
 
 def get_right_exp_integer(
-    solver: Solver, main_grb_obj: BendersOCT, n: int, i: int  # noqa: F821
+    solver: "Solver", main_grb_obj: "BendersOCT", n: int, i: int  # noqa: F821
 ) -> Any:
     """
     Get the expression for the right branch constraint in the Benders' subproblem.
@@ -327,7 +328,7 @@ def get_right_exp_integer(
 
 
 def get_target_exp_integer(
-    main_grb_obj: BendersOCT, n: int, i: int  # noqa: F821
+    main_grb_obj: "BendersOCT", n: int, i: int  # noqa: F821
 ) -> Any:
     """
     Get the expression for the target constraint in the Benders' subproblem.
@@ -353,8 +354,8 @@ def get_target_exp_integer(
 
 
 def get_cut_integer(
-    solver: Solver,
-    main_grb_obj: BendersOCT,  # noqa: F821
+    solver: "Solver",
+    main_grb_obj: "BendersOCT",  # noqa: F821
     left: list[int],
     right: list[int],
     target: list[int],
@@ -403,8 +404,8 @@ def get_cut_integer(
 
 # helper functions for RobustTree callback
 def get_cut_expression(
-    master: RobustOCT,
-    solver: Solver,
+    master: "RobustOCT",
+    solver: "Solver",
     X: DataFrame,
     path: list[int],
     xi: dict,
@@ -479,7 +480,7 @@ def get_cut_expression(
 
 
 def get_all_terminal_paths(
-    master: RobustOCT,
+    master: "RobustOCT",
     b: dict[tuple[int, str], float],
     w: dict[tuple[int, int64], float],
     terminal_nodes: list = [],
@@ -628,7 +629,7 @@ def get_all_terminal_paths(
 
 
 def get_nominal_path(
-    master: RobustOCT,
+    master: "RobustOCT",
     b: dict[tuple[int, str], float],
     w: dict[tuple[int, int64], float],
     i: int,
@@ -673,7 +674,7 @@ def get_nominal_path(
 
 
 def shortest_path_solver(
-    master: RobustOCT,
+    master: "RobustOCT",
     i: int,
     label: int,
     terminal_nodes: list[int],
