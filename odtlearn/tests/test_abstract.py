@@ -7,7 +7,7 @@ from odtlearn.tests.test_utils import gurobi_available
 def test_dt_abc():
     solver = "cbc"
     try:
-        import mip
+        import mip  # noqa: F401
     except ImportError:
         if gurobi_available():
             solver = "gurobi"

@@ -1,9 +1,7 @@
 from gurobipy import GRB
 
-from odtlearn.utils.callback_helpers import (
-    benders_callback,
-    robust_benders_callback
-)
+from odtlearn.utils.callback_helpers import benders_callback, robust_benders_callback
+
 
 class BendersCallback:
     """
@@ -16,7 +14,7 @@ class BendersCallback:
     the sub-problem which is a minimum cut and check if g[i] <= value of
     sub-problem[i]. If this is violated we add the corresponding benders
     constraint as lazy constraint to the master problem and proceed.
-    
+
     Parameters
     ----------
     store_search_progress_log : bool, optional (default=False)
@@ -28,7 +26,7 @@ class BendersCallback:
         Generate Benders' cuts at the current node in the branch-and-bound tree.
     """
 
-    def __init__(self, store_search_progress_log = False):
+    def __init__(self, store_search_progress_log=False):
         self.store_search_progress_log = store_search_progress_log
 
     def __call__(self, model, where) -> None:
@@ -45,7 +43,9 @@ class BendersCallback:
         if self.store_search_progress_log:
             logging_callback(model, where)
         if where == GRB.Callback.MIPSOL:
-            benders_callback(model, model._data['X'], model._data['obj'], model._data['solver'])
+            benders_callback(
+                model, model._data["X"], model._data["obj"], model._data["solver"]
+            )
 
 
 class RobustBendersCallback:
@@ -68,7 +68,7 @@ class RobustBendersCallback:
         Generate Benders' cuts at the current node in the branch-and-bound tree.
     """
 
-    def __init__(self, store_search_progress_log = False):
+    def __init__(self, store_search_progress_log=False):
         self.store_search_progress_log = store_search_progress_log
 
     def __call__(self, model, where):
@@ -85,7 +85,10 @@ class RobustBendersCallback:
         if self.store_search_progress_log:
             logging_callback(model, where)
         if where == GRB.Callback.MIPSOL:
-            robust_benders_callback(model, model._data['X'], model._data['obj'], model._data['solver'])
+            robust_benders_callback(
+                model, model._data["X"], model._data["obj"], model._data["solver"]
+            )
+
 
 def logging_callback(model, where):
     """

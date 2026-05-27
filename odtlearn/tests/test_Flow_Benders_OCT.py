@@ -8,7 +8,6 @@ from odtlearn.flow_oct import BendersOCT, FlowOCT
 from odtlearn.tests.test_utils import gurobi_available
 
 
-# fmt: off
 @pytest.fixture
 def synthetic_data_1():
     """
@@ -79,9 +78,6 @@ def synthetic_data_2():
     y = np.array([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0])
 
     return X, y
-
-
-# fmt: on
 
 
 @pytest.fixture
@@ -273,8 +269,8 @@ def test_FlowOCT_same_predictions_gb(
             obj_mode="acc",
         )
         stcl.fit(X, y)
-        # stcl.print_tree()
         assert_allclose(stcl.predict(X), expected_pred)
+
 
 @pytest.mark.parametrize(
     "d, _lambda, benders, expected_pred, solver",
@@ -435,6 +431,7 @@ def test_FlowOCT_obj_mode_gb(
         stcl.fit(X, y)
         # stcl.print_tree()
         assert_allclose(stcl.predict(X), expected_pred)
+
 
 @pytest.mark.parametrize(
     "benders, obj_mode ,expected_pred, solver",

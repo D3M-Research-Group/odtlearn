@@ -1,9 +1,7 @@
 from mip import ConstrsGenerator, Model
 
-from odtlearn.utils.callback_helpers import (
-    benders_callback,
-    robust_benders_callback
-)
+from odtlearn.utils.callback_helpers import benders_callback, robust_benders_callback
+
 
 class BendersCallback(ConstrsGenerator):
     """
@@ -45,7 +43,7 @@ class BendersCallback(ConstrsGenerator):
         npass : int, optional
             The pass number in the branch-and-bound process.
         """
-        benders_callback(model, self.data['X'], self.data['obj'], self.data['solver'])
+        benders_callback(model, self.data["X"], self.data["obj"], self.data["solver"])
 
 
 class RobustBendersCallback(ConstrsGenerator):
@@ -85,4 +83,6 @@ class RobustBendersCallback(ConstrsGenerator):
         npass : int, optional
             The pass number in the branch-and-bound process.
         """
-        robust_benders_callback(model, self.data['X'], self.data['obj'], self.data['solver'])
+        robust_benders_callback(
+            model, self.data["X"], self.data["obj"], self.data["solver"]
+        )

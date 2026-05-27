@@ -5,9 +5,10 @@ from mip import LinExpr, Model, xsum
 from odtlearn.utils.mip_cbc import SolverCbc
 
 from odtlearn.solvers.solver import Solver
-from odtlearn.callbacks.cbc_callbacks import *
+from odtlearn.callbacks.cbc_callbacks import BendersCallback, RobustBendersCallback
 
 GRB_CBC_CONST_MAP = {-1: "MAX", 1: "MIN"}
+
 
 class CBCSolver(Solver):
     """
@@ -16,6 +17,7 @@ class CBCSolver(Solver):
     When using CBC, this class interacts with a slightly modified version of the SolverCbc class
     from the python-mip package.
     """
+
     def __init__(self, verbose):
         self.var_name_dict = {}
         self.callback = None
@@ -119,13 +121,13 @@ class CBCSolver(Solver):
         self.var_name_dict[name] = name_element_dict
         return var_dict
 
-    def add_constr(self, cons_expr : LinExpr):
+    def add_constr(self, cons_expr: LinExpr):
         self.model.add_constr(cons_expr)
 
-    def lin_expr(self, arg1=0.0, sense : str = "") -> LinExpr:
+    def lin_expr(self, arg1=0.0, sense: str = "") -> LinExpr:
         return LinExpr(const=arg1, sense=sense)
 
-    def set_objective(self, expr : LinExpr, sense):
+    def set_objective(self, expr: LinExpr, sense):
         self.model.objective = expr
         if type(sense) is int:
             mapped_sense = GRB_CBC_CONST_MAP.get(sense, None)
@@ -180,13 +182,12 @@ class CBCSolver(Solver):
 
     def set_num_threads(self, num_threads):
         self.model.threads = num_threads
-    
-    def add_lazy_constraint(self, model : Model, constr : LinExpr):
+
+    def add_lazy_constraint(self, model: Model, constr: LinExpr):
         model += constr
 
-    def get_callback_solution(self, model : Model, var):
+    def get_callback_solution(self, model: Model, var):
         return model.translate(var).x
-    
+
     def get_search_progress_log(self):
         return self.model.search_progress_log.log
-    

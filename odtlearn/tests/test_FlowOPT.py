@@ -11,7 +11,11 @@ from odtlearn.tests.test_utils import gurobi_available
 
 @pytest.fixture
 def data():
-    with resources.files("odtlearn").joinpath("data/prescriptive/train_50.csv").open("rb") as data_stream:
+    with (
+        resources.files("odtlearn")
+        .joinpath("data/prescriptive/train_50.csv")
+        .open("rb") as data_stream
+    ):
         df = pd.read_csv(data_stream)
     return df
 
@@ -134,6 +138,8 @@ def test_FlowOPT_classifier_gb(data, method, solver, expected_pred, skip_solver)
 
     assert_allclose(clf.predict(X), expected_pred)
 
+
+# fmt: off
 @pytest.mark.parametrize("method,solver, expected_pred", [
     ('DR', 'cbc', np.array([0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
                             1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0,

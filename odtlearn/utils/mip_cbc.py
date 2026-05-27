@@ -1,9 +1,11 @@
 """Python-MIP interface to the COIN-OR Branch-and-Cut solver CBC"""
+
 # Modified version of the cbc.py file from the python-mip
 # https://github.com/coin-or/python-mip/blob/master/mip/cbc.py
 # Original Authors: Python-MIP Team
 # Original License: EPL v 2.0 (License text available at https://github.com/coin-or/python-mip/blob/master/LICENSE)
 # Modified by: Patrick Vossler (patrick.vossler18@gmail.com) and Nathan Justin (nathanjustin14@gmail.com)
+# flake8: noqa: E501,F824
 
 import logging
 import multiprocessing as multip
@@ -117,8 +119,7 @@ except Exception as e:
     has_cbc = False
 
 if has_cbc:
-    ffi.cdef(
-        """
+    ffi.cdef("""
     typedef int(*cbc_progress_callback)(void *model,
                                         int phase,
                                         int step,
@@ -565,8 +566,7 @@ if has_cbc:
     const char *Cbc_featureName(int i);
 
     void Cbc_reset(Cbc_Model *model);
-    """
-    )
+    """)
 
 CHAR_ONE = "{}".format(chr(1)).encode("utf-8")
 CHAR_ZERO = "\0".encode("utf-8")
@@ -1030,12 +1030,10 @@ class SolverCbc(Solver):
             return nameIdx
 
         # progress callback
-        @ffi.callback(
-            """
+        @ffi.callback("""
             int (void *, int, int, const char *, double, double, double,
             int, int *, void *)
-        """
-        )
+        """)
         def cbc_progress_callback(
             model,
             phase: int,
@@ -1058,11 +1056,9 @@ class SolverCbc(Solver):
             return
 
         # cut callback
-        @ffi.callback(
-            """
+        @ffi.callback("""
             void (void *osi_solver, void *osi_cuts, void *app_data, int level, int npass)
-        """
-        )
+        """)
         def cbc_cut_callback(osi_solver, osi_cuts, app_data, depth, npass):
             if (
                 osi_solver == ffi.NULL
@@ -1471,10 +1467,8 @@ class SolverCbc(Solver):
         elif ".bas" in file_path.lower():
             cbclib.Cbc_writeBasis(self._model, fpstr, CHAR_ONE, 2)
         else:
-            raise ValueError(
-                "Enter a valid extension (.lp, .mps or .bas) \
-                to indicate the file format"
-            )
+            raise ValueError("Enter a valid extension (.lp, .mps or .bas) \
+                to indicate the file format")
 
     def read(self, file_path: str) -> None:
         if not isfile(file_path):
@@ -1503,10 +1497,8 @@ class SolverCbc(Solver):
                 logger.info("Optimal LP basis successfully loaded.")
 
         else:
-            raise ValueError(
-                "Enter a valid extension (.lp, .mps or .bas) \
-                to indicate the file format"
-            )
+            raise ValueError("Enter a valid extension (.lp, .mps or .bas) \
+                to indicate the file format")
 
     def set_start(self, start: list[tuple[Var, numbers.Real]]) -> None:
         # Augment start list with default zero values for absent non-continuous variables

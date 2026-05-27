@@ -248,9 +248,10 @@ def test_binarizer_transform(example_data):
     assert X_bin.shape == (10, 15)
     assert all(X_bin.dtypes == "float64")
 
+
 def gurobi_available():
     try:
-        import gurobipy
+        import gurobipy  # noqa: F401
     except ImportError:
         return False
 
@@ -263,9 +264,15 @@ def gurobi_available():
     # fallback: default license locations
     if os.path.exists(os.path.expanduser("~/gurobi.lic")):
         return True
-    
+
     # Or, check for WLS License
-    if all([os.environ.get("GRB_WLSACCESSID"), os.environ.get("GRB_WLSSECRET"), os.environ.get("GRB_LICENSEID"),]):
+    if all(
+        [
+            os.environ.get("GRB_WLSACCESSID"),
+            os.environ.get("GRB_WLSSECRET"),
+            os.environ.get("GRB_LICENSEID"),
+        ]
+    ):
         return True
 
     return False

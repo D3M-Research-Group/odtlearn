@@ -95,6 +95,7 @@ class OptimalDecisionTree(ABC):
             try:
                 # Need to have installed Python-MIP, unsupported for Python 3.12 and above
                 from odtlearn.solvers.cbc_solver import CBCSolver
+
                 self._solver = CBCSolver(verbose)
             except ModuleNotFoundError as e:
                 raise ImportError(
@@ -107,7 +108,6 @@ class OptimalDecisionTree(ABC):
         self._solver.set_time_limit(time_limit)
         if num_threads is not None:
             self._solver.set_num_threads(num_threads)
-        
 
     def __repr__(self) -> str:
         rep = (
@@ -118,7 +118,7 @@ class OptimalDecisionTree(ABC):
             f"verbose={self._verbose})"
         )
         return rep
-    
+
     def __sklearn_tags__(self):
         return Tags(
             estimator_type="classifier",

@@ -6,9 +6,13 @@ from numpy import int64
 import heapq
 from typing import Any
 
+from odtlearn.solvers.solver import Solver
+from odtlearn.flow_oct import BendersOCT
+from odtlearn.robust_oct import RobustOCT
+
 
 # helper functions for BenderOCT callback
-def benders_callback(model: "BendersOCT", X: DataFrame, obj, solver: "Solver") -> None:
+def benders_callback(model: BendersOCT, X: DataFrame, obj, solver: Solver) -> None:
     """
     The BendersOCT callback function, called at every integer solution.
 
@@ -24,11 +28,11 @@ def benders_callback(model: "BendersOCT", X: DataFrame, obj, solver: "Solver") -
         The Solver object used.
     """
     g_trans, p_trans, b_trans, w_trans = (
-            {k: solver.get_callback_solution(model, v) for k, v in obj._g.items()},
-            {k: solver.get_callback_solution(model, v) for k, v in obj._p.items()},
-            {k: solver.get_callback_solution(model, v) for k, v in obj._b.items()},
-            {k: solver.get_callback_solution(model, v) for k, v in obj._w.items()},
-        )
+        {k: solver.get_callback_solution(model, v) for k, v in obj._g.items()},
+        {k: solver.get_callback_solution(model, v) for k, v in obj._p.items()},
+        {k: solver.get_callback_solution(model, v) for k, v in obj._b.items()},
+        {k: solver.get_callback_solution(model, v) for k, v in obj._w.items()},
+    )
 
     for i in range(len(X)):
         g_threshold = 0.5
@@ -47,7 +51,10 @@ def benders_callback(model: "BendersOCT", X: DataFrame, obj, solver: "Solver") -
                 )
                 solver.add_lazy_constraint(model, lhs)
 
-def robust_benders_callback(model : "RobustOCT", X: DataFrame, obj, solver: "Solver") -> None:
+
+def robust_benders_callback(
+    model: RobustOCT, X: DataFrame, obj, solver: Solver
+) -> None:
     """
     The RobustOCT callback function, called at every integer solution.
 
@@ -63,10 +70,10 @@ def robust_benders_callback(model : "RobustOCT", X: DataFrame, obj, solver: "Sol
         The Solver object used.
     """
     t_trans, b_trans, w_trans = (
-            {k: solver.get_callback_solution(model, v) for k, v in obj._t.items()},
-            {k: solver.get_callback_solution(model, v) for k, v in obj._b.items()},
-            {k: solver.get_callback_solution(model, v) for k, v in obj._w.items()},
-        )
+        {k: solver.get_callback_solution(model, v) for k, v in obj._t.items()},
+        {k: solver.get_callback_solution(model, v) for k, v in obj._b.items()},
+        {k: solver.get_callback_solution(model, v) for k, v in obj._w.items()},
+    )
     # Initialize a blank-slate xi
     initial_xi = {}
     for c in obj._cat_features:
@@ -85,9 +92,7 @@ def robust_benders_callback(model : "RobustOCT", X: DataFrame, obj, solver: "Sol
     xi_dict = (
         {}
     )  # Stores set of xi's from shortest path problem (feature perturbations)
-    v_dict = (
-        {}
-    )  # Stores set of v's from shortest path problem (label perturbations)
+    v_dict = {}  # Stores set of v's from shortest path problem (label perturbations)
     nom_path_dict = {}  # Stores set of nominal paths
     correct_points = []  # List of indices of nominally correctly classified points
 
@@ -186,18 +191,12 @@ def robust_benders_callback(model : "RobustOCT", X: DataFrame, obj, solver: "Sol
                 i,
                 obj._f_theta_indices,
             )
-        new_constr = (
-            solver.quicksum(
-                obj._t[i]
-                for i in obj._datapoints
-            )
-            <= whole_expr
-        )
+        new_constr = solver.quicksum(obj._t[i] for i in obj._datapoints) <= whole_expr
         solver.add_lazy_constraint(model, new_constr)
 
 
 def benders_subproblem(
-    main_model_obj: "BendersOCT",  # noqa: F821
+    main_model_obj: BendersOCT,  # noqa: F821
     b: dict[tuple[int, str], float],
     p: dict[int, float],
     w: dict[tuple[int, int64], float],
@@ -262,8 +261,9 @@ def benders_subproblem(
 
     return subproblem_value, left, right, target
 
+
 def get_left_exp_integer(
-    solver: "Solver", main_grb_obj: "BendersOCT", n: int, i: int  # noqa: F821
+    solver: Solver, main_grb_obj: BendersOCT, n: int, i: int  # noqa: F821
 ) -> Any:
     """
     Get the expression for the left branch constraint in the Benders' subproblem.
@@ -281,7 +281,7 @@ def get_left_exp_integer(
 
     Returns
     -------
-    lhs : Any 
+    lhs : Any
         The left-hand side expression of the left branch constraint. This is a
         LinExpr object in Gurobi and CBC.
     """
@@ -295,7 +295,7 @@ def get_left_exp_integer(
 
 
 def get_right_exp_integer(
-    solver: "Solver", main_grb_obj: "BendersOCT", n: int, i: int  # noqa: F821
+    solver: Solver, main_grb_obj: BendersOCT, n: int, i: int  # noqa: F821
 ) -> Any:
     """
     Get the expression for the right branch constraint in the Benders' subproblem.
@@ -327,7 +327,7 @@ def get_right_exp_integer(
 
 
 def get_target_exp_integer(
-    main_grb_obj: "BendersOCT", n: int, i: int  # noqa: F821
+    main_grb_obj: BendersOCT, n: int, i: int  # noqa: F821
 ) -> Any:
     """
     Get the expression for the target constraint in the Benders' subproblem.
@@ -353,8 +353,8 @@ def get_target_exp_integer(
 
 
 def get_cut_integer(
-    solver: "Solver",
-    main_grb_obj: "BendersOCT",  # noqa: F821
+    solver: Solver,
+    main_grb_obj: BendersOCT,  # noqa: F821
     left: list[int],
     right: list[int],
     target: list[int],
@@ -403,8 +403,14 @@ def get_cut_integer(
 
 # helper functions for RobustTree callback
 def get_cut_expression(
-        master : "RobustOCT", solver : "Solver", X : DataFrame, 
-        path : list[int], xi : dict, v : bool, i : int, f_theta_indices : list
+    master: RobustOCT,
+    solver: Solver,
+    X: DataFrame,
+    path: list[int],
+    xi: dict,
+    v: bool,
+    i: int,
+    f_theta_indices: list,
 ) -> Any:
     """
     Get the cut expression for the RobustOCT subproblem.
@@ -473,18 +479,18 @@ def get_cut_expression(
 
 
 def get_all_terminal_paths(
-    master : "RobustOCT",
+    master: RobustOCT,
     b: dict[tuple[int, str], float],
     w: dict[tuple[int, int64], float],
-    terminal_nodes : list = [],
-    path_dict : dict = {},
-    feature_path_dict : dict = {},
-    assignment_dict : dict = {},
-    cutoff_dict : dict = {},
-    curr_node : int = 1,
-    curr_path : list = [1],
-    curr_feature_path : list = [],
-    curr_cutoff_path : list = [],
+    terminal_nodes: list = [],
+    path_dict: dict = {},
+    feature_path_dict: dict = {},
+    assignment_dict: dict = {},
+    cutoff_dict: dict = {},
+    curr_node: int = 1,
+    curr_path: list = [1],
+    curr_feature_path: list = [],
+    curr_cutoff_path: list = [],
 ) -> tuple[list[int], dict, dict, dict, dict]:
     """
     Find all terminal paths in the decision tree.
@@ -622,8 +628,10 @@ def get_all_terminal_paths(
 
 
 def get_nominal_path(
-    master: "RobustOCT", b: dict[tuple[int, str], float],
-    w: dict[tuple[int, int64], float], i: int
+    master: RobustOCT,
+    b: dict[tuple[int, str], float],
+    w: dict[tuple[int, int64], float],
+    i: int,
 ) -> tuple[list[int], int]:
     """
     Get the nominal path for a correctly classified datapoint.
@@ -665,17 +673,17 @@ def get_nominal_path(
 
 
 def shortest_path_solver(
-    master : "RobustOCT",
-    i : int,
-    label : int,
-    terminal_nodes : list[int],
-    terminal_path_dict : dict,
-    terminal_features_dict : dict,
-    terminal_assignments_dict : dict,
-    terminal_cutoffs_dict : dict,
-    initial_xi : dict,
-    initial_mins : dict,
-    initial_maxes : dict,
+    master: RobustOCT,
+    i: int,
+    label: int,
+    terminal_nodes: list[int],
+    terminal_path_dict: dict,
+    terminal_features_dict: dict,
+    terminal_assignments_dict: dict,
+    terminal_cutoffs_dict: dict,
+    initial_xi: dict,
+    initial_mins: dict,
+    initial_maxes: dict,
 ) -> tuple[list[int], dict, float, bool]:
     """
     Solve the shortest path problem for a given datapoint.
@@ -749,9 +757,7 @@ def shortest_path_solver(
                     delta_x = theta - master._X.at[i, f] + 1  # positive value
 
                     # cost increases by gamma per unit increase of xi
-                    curr_cost += master._gammas.loc[i][f] * (
-                        delta_x - curr_xi[f]
-                    )
+                    curr_cost += master._gammas.loc[i][f] * (delta_x - curr_xi[f])
                     curr_xi[f] = delta_x
 
                 # Update bounds
@@ -768,9 +774,7 @@ def shortest_path_solver(
                     delta_x = theta - master._X.at[i, f]  # negative value
 
                     # cost increases by gamma per unit decrease of xi
-                    curr_cost += master._gammas.loc[i][f] * (
-                        curr_xi[f] - delta_x
-                    )
+                    curr_cost += master._gammas.loc[i][f] * (curr_xi[f] - delta_x)
                     curr_xi[f] = delta_x
 
                 # Update bounds

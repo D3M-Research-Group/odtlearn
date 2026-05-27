@@ -218,8 +218,8 @@ def test_RobustOCT_prediction_shape_error():
 def test_RobustOCT_with_uncertainty_success(skip_solver):
     solver = "cbc"
     try:
-        import mip
-    except:
+        import mip  # noqa: F401
+    except ImportError:
         if gurobi_available():
             solver = "gurobi"
         else:
@@ -250,8 +250,8 @@ def test_RobustOCT_with_uncertainty_success(skip_solver):
 def test_RobustOCT_no_uncertainty_success(skip_solver):
     solver = "cbc"
     try:
-        import mip
-    except:
+        import mip  # noqa: F401
+    except ImportError:
         if gurobi_available():
             solver = "gurobi"
         else:
@@ -295,7 +295,9 @@ def test_RobustOCT_no_uncertainty_success(skip_solver):
         ),
     ],
 )
-def test_RobustOCT_correctness_gb(synthetic_data_1, d, expected_pred, solver, skip_solver):
+def test_RobustOCT_correctness_gb(
+    synthetic_data_1, d, expected_pred, solver, skip_solver
+):
     if not gurobi_available():
         pytest.skip(reason="Gurobi not available")
     if skip_solver:
@@ -310,6 +312,7 @@ def test_RobustOCT_correctness_gb(synthetic_data_1, d, expected_pred, solver, sk
     robust_classifier.fit(X, y)
     assert_allclose(robust_classifier.predict(X), expected_pred)
 
+
 @pytest.mark.parametrize(
     "d, expected_pred, solver",
     [
@@ -318,7 +321,9 @@ def test_RobustOCT_correctness_gb(synthetic_data_1, d, expected_pred, solver, sk
         (2, np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1]), "cbc"),
     ],
 )
-def test_RobustOCT_correctness_cbc(synthetic_data_1, d, expected_pred, solver, skip_solver):
+def test_RobustOCT_correctness_cbc(
+    synthetic_data_1, d, expected_pred, solver, skip_solver
+):
     pytest.importorskip("mip")
     if skip_solver:
         pytest.skip(reason="Testing on github actions")
@@ -390,6 +395,7 @@ def test_RobustOCT_uncertainty_correctness_gb(
     )
     robust_classifier.fit(X, y, costs=costs, budget=budget)
     assert_allclose(robust_classifier.predict(X), expected_pred)
+
 
 @pytest.mark.parametrize(
     "d, budget, expected_pred, solver",
@@ -488,8 +494,8 @@ def test_check_fit(synthetic_data_1):
 def test_RobustOCT_visualize_tree(synthetic_data_1, synthetic_costs_1, skip_solver):
     solver = "cbc"
     try:
-        import mip
-    except:
+        import mip  # noqa: F401
+    except ImportError:
         if gurobi_available():
             solver = "gurobi"
         else:

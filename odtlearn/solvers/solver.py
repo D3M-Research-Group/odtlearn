@@ -2,9 +2,10 @@ from abc import ABC, abstractmethod
 from collections.abc import Mapping, Iterable
 from typing import Any, Optional, Union
 
+
 class Solver(ABC):
     """
-    An abstract base class for interacting with the solver, including for setting up, optimizing, 
+    An abstract base class for interacting with the solver, including for setting up, optimizing,
     and getting optimal values of a model.
 
     Parameters
@@ -35,18 +36,23 @@ class Solver(ABC):
     * `get_search_progress_log()`
     * `lin_expr()`
     * `quicksum()`
-    
-    
+
+
     """
 
-    def __init__(self, verbose : bool = False) -> None:
+    def __init__(self, verbose: bool = False) -> None:
         self.verbose = verbose
 
     # Methods to setup optimization problem
     @abstractmethod
     def add_vars(
-        self, *indices, lb : float = 0.0, ub : float = float("inf"), 
-        obj : float = 0.0, vtype : str = "C", name : str = ""
+        self,
+        *indices,
+        lb: float = 0.0,
+        ub: float = float("inf"),
+        obj: float = 0.0,
+        vtype: str = "C",
+        name: str = "",
     ) -> Mapping:
         """
         Create a dictionary with the decision variables with keys of the form
@@ -95,7 +101,7 @@ class Solver(ABC):
         """
         pass
 
-    def add_constrs(self, cons_expr_tuple : Iterable):
+    def add_constrs(self, cons_expr_tuple: Iterable):
         """
         Add constraint expressions to the model.
 
@@ -112,7 +118,7 @@ class Solver(ABC):
             self.add_constr(cons)
 
     @abstractmethod
-    def set_objective(self, expr, sense : Union[str, int]):
+    def set_objective(self, expr, sense: Union[str, int]):
         """
         Take the linear expression and set it as the objective for the problem.
 
@@ -133,7 +139,7 @@ class Solver(ABC):
         pass
 
     @abstractmethod
-    def set_time_limit(self, seconds : int):
+    def set_time_limit(self, seconds: int):
         """
         Set the time limit for the solver.
 
@@ -150,7 +156,7 @@ class Solver(ABC):
         pass
 
     @abstractmethod
-    def set_num_threads(self, num_threads : int):
+    def set_num_threads(self, num_threads: int):
         """
         Set the number of threads used by the solver.
 
@@ -167,7 +173,7 @@ class Solver(ABC):
         pass
 
     @abstractmethod
-    def set_callback(self, callback_type : str):
+    def set_callback(self, callback_type: str):
         """
         Set a callback for the solver.
 
@@ -185,7 +191,7 @@ class Solver(ABC):
         pass
 
     @abstractmethod
-    def store_data(self, key : str, value):
+    def store_data(self, key: str, value):
         """
         Store data to be used in the callback action.
         For consistency across solvers, we store the data in the model._data attribute
@@ -204,7 +210,6 @@ class Solver(ABC):
         None
         """
         pass
-
 
     # Methods used to initialte and use during solve
     @abstractmethod
@@ -253,10 +258,9 @@ class Solver(ABC):
         """
         pass
 
-
     # Methods to get solutions and solver statistics
     @abstractmethod
-    def get_var_value(self, objs : Mapping, var_name: str = None) -> Mapping:
+    def get_var_value(self, objs: Mapping, var_name: str = None) -> Mapping:
         """
         Get the value of a decision variable from a solved problem.
 
@@ -373,10 +377,9 @@ class Solver(ABC):
         """
         pass
 
-
     # Methods for variable and constraint construction
     @abstractmethod
-    def lin_expr(self, arg1 : float = 0.0) -> Any:
+    def lin_expr(self, arg1: float = 0.0) -> Any:
         """
         Initialize a linear expression object that the solver can read
 
@@ -392,7 +395,7 @@ class Solver(ABC):
         pass
 
     @abstractmethod
-    def quicksum(self, terms : Iterable) -> Any:
+    def quicksum(self, terms: Iterable) -> Any:
         """
         Sums together a list of variables to make a linear expression
 

@@ -39,7 +39,7 @@ def solvers():
     if sys.version_info < (3, 12):
         solvers += ["cbc"]
     return solvers
-        
+
 
 # @pytest.fixture
 def objectives():
@@ -215,6 +215,7 @@ def test_FairOCT_metrics_gb(
         eq_val = fcl.calc_metric(protect_feat, y, fcl.predict(X))
         assert_allclose(np.round(eq_val[(0, 0, 1)], 3), g0_value)
         assert_allclose(np.round(eq_val_dep[(0, 0, 1)], 3), g0_value)
+
 
 @pytest.mark.parametrize(
     "f, b, g0_value, solver, class_name",

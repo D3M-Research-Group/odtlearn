@@ -7,9 +7,17 @@ def prescriptive_ex_data():
     """
     Return tuple of the train and test dataframes from the prescriptive tree example notebook
     """
-    with resources.files("odtlearn").joinpath("data/prescriptive/train_v2_100.csv").open("rb") as train_stream:
+    with (
+        resources.files("odtlearn")
+        .joinpath("data/prescriptive/train_v2_100.csv")
+        .open("rb") as train_stream
+    ):
         train = pd.read_csv(train_stream)
-    with resources.files("odtlearn").joinpath("data/prescriptive/test_v2_200.csv").open("rb") as test_stream:
+    with (
+        resources.files("odtlearn")
+        .joinpath("data/prescriptive/test_v2_200.csv")
+        .open("rb") as test_stream
+    ):
         test = pd.read_csv(test_stream)
 
     return train, test
@@ -20,7 +28,11 @@ def balance_scale_data():
     Return a dataframe containing the balance-scale data set from the UCI ML repository.
     See the following URL for attribute information https://archive.ics.uci.edu/ml/datasets/Balance+Scale
     """
-    with resources.files("odtlearn").joinpath("data/balance-scale_enc.csv").open("rb") as stream:
+    with (
+        resources.files("odtlearn")
+        .joinpath("data/balance-scale_enc.csv")
+        .open("rb") as stream
+    ):
         return pd.read_csv(stream)
 
 
@@ -48,7 +60,9 @@ def flow_oct_example():
     X: numpy array of covariates from training set
     y: numpy array of responses from training set
     """  # noqa: E501
-    with resources.files("odtlearn").joinpath("data/example_1.npz").open("rb") as stream:
+    with (
+        resources.files("odtlearn").joinpath("data/example_1.npz").open("rb") as stream
+    ):
         npzfile = np.load(stream)
         return npzfile["X"], npzfile["y"]
 
@@ -84,7 +98,11 @@ def robustness_example():
     y: numpy array of responses from training set
     costs: numpy array of costs for each observation in the training set
     """  # noqa: E501
-    with resources.files("odtlearn").joinpath("data/example_1_robust.npz").open("rb") as stream:
+    with (
+        resources.files("odtlearn")
+        .joinpath("data/example_1_robust.npz")
+        .open("rb") as stream
+    ):
         npzfile = np.load(stream)
         return npzfile["X"], npzfile["y"], npzfile["costs"]
 
@@ -114,7 +132,9 @@ def example_2_data():
     X: numpy array of covariates from training set
     y: numpy array of responses from training set
     """  # noqa: E501
-    with resources.files("odtlearn").joinpath("data/example_2.npz").open("rb") as stream:
+    with (
+        resources.files("odtlearn").joinpath("data/example_2.npz").open("rb") as stream
+    ):
         npzfile = np.load(stream)
         return npzfile["X"], npzfile["y"]
 
@@ -149,9 +169,18 @@ def fairness_example():
     protect_feat: numpy array of the protected feature
     legit_factor: numpy array of the legitimate factor feature
     """  # noqa: E501
-    with resources.files("odtlearn").joinpath("data/fairness_example.npz").open("rb") as stream:
+    with (
+        resources.files("odtlearn")
+        .joinpath("data/fairness_example.npz")
+        .open("rb") as stream
+    ):
         npzfile = np.load(stream)
-        return npzfile["X"], npzfile["y"], npzfile["protect_feat"], npzfile["legit_factor"]
+        return (
+            npzfile["X"],
+            npzfile["y"],
+            npzfile["protect_feat"],
+            npzfile["legit_factor"],
+        )
 
 
 def robust_example():
