@@ -1,6 +1,6 @@
 # Optimal Classification Trees
 
-Classification trees are among the most popular and inherently interpretable machine learning models and are used routinely in applications ranging from revenue management and medicine to bioinformatics. In these settings, it is crucial to leverage the full potential of available data to obtain the best possible, i.e., optimal, classification tree. We say that a classification tree is *optimal* if there exists a mathematical proof that no other tree yields a lower misclassification rate in the population used for training the method. StrongTree is a Mixed-Integer Optimization (MIO) based formulation for learning optimal classification trees of a given depth. StrongTree significantly improves upon traditional heuristic approaches in terms of performance, is much faster than other MIO-based alternatives, and can handle real-valued covariates, unlike existing MIO-based methods. See the corresponding paper for a complete treatment of StrongTree (Aghaei et al., 2021). 
+Classification trees are among the most popular and inherently interpretable machine learning models and are used routinely in applications ranging from revenue management and medicine to bioinformatics. In these settings, it is crucial to leverage the full potential of available data to obtain the best possible, i.e., optimal, classification tree. We say that a classification tree is *optimal* if there exists a mathematical proof that no other tree yields a lower misclassification rate in the population used for training the method. StrongTree is a Mixed-Integer Optimization (MIO) based formulation for learning optimal classification trees of a given depth. StrongTree significantly improves upon traditional heuristic approaches in terms of performance, is much faster than other MIO-based alternatives, and can handle real-valued covariates, unlike existing MIO-based methods. See the corresponding paper for a complete treatment of StrongTree (Aghaei et al., 2025). 
 
 
 ## Choosing an Objective to Optimize
@@ -70,5 +70,5 @@ This preprocessing step allows `FlowOCT` and `BendersOCT` to handle a wide range
 
 
 ## References
-* Aghaei, S., Gómez, A., & Vayanos, P. (2021). Strong optimal classification trees. arXiv preprint arXiv:2103.15965. <https://arxiv.org/abs/2103.15965>
+* Aghaei, S., Gómez, A., & Vayanos, P. (2025). Strong optimal classification trees. Operations Research, 73(4), 2223-2241.
 

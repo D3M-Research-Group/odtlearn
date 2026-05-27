@@ -7,7 +7,7 @@ from odtlearn.utils.callback_helpers import (
 
 class BendersCallback(ConstrsGenerator):
     """
-    This class contains a function that is called by the solver at
+    This class contains a function that is called by the CBC solver at
     every node through the branch-&-bound tree while we solve the model.
 
     We are specifically interested at nodes
@@ -16,9 +16,17 @@ class BendersCallback(ConstrsGenerator):
     the sub-problem which is a minimum cut and check if g[i] <= value of
     sub-problem[i]. If this is violated we add the corresponding benders
     constraint as lazy constraint to the master problem and proceed.
-    Whenever we have no violated constraint, it means that we have found
-    the optimal solution.
 
+    Parameters
+    ----------
+    data : dict
+        A dictionary containing the data needed in the callback (i.e., the
+        training data, the BendersOCT object, and the CBCSolver object)
+
+    Methods
+    -------
+    generate_constrs(model, depth=0, npass=0)
+        Generate Benders' cuts at the current node in the branch-and-bound tree.
     """
 
     def __init__(self, data):
@@ -30,8 +38,8 @@ class BendersCallback(ConstrsGenerator):
 
         Parameters
         ----------
-        model : Model
-            The optimization model.
+        model : mip.Model
+            The optimization model
         depth : int, optional
             The depth of the current node in the branch-and-bound tree.
         npass : int, optional
@@ -42,7 +50,7 @@ class BendersCallback(ConstrsGenerator):
 
 class RobustBendersCallback(ConstrsGenerator):
     """
-    A callback class for generating Benders' cuts in the Robust Tree optimization.
+    A callback class for generating Benders' cuts in the Robust Tree optimization using CBC.
 
     This class contains a function that is called by the solver at every node in the
     branch-and-bound tree while solving the model. It checks for integer solutions to
@@ -51,18 +59,9 @@ class RobustBendersCallback(ConstrsGenerator):
 
     Parameters
     ----------
-    X : DataFrame
-        The input data.
-    obj : object
-        The main model object.
-    solver : Solver
-        The solver object used for solving the optimization problem.
-    b : dict
-        The dictionary of decision variables representing the branching decisions.
-    w : dict
-        The dictionary of decision variables representing the class assignments.
-    t : dict
-        The dictionary of decision variables representing the subproblem objective values.
+    data : dict
+        A dictionary containing the data needed in the callback (i.e., the
+        training data, the RobustOCT object, and the CBCSolver object)
 
     Methods
     -------

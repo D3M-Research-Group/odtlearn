@@ -7,7 +7,7 @@ from odtlearn.utils.TreePlotter import MPLPlotter
 from numpy import int64, ndarray, str_
 from pandas.core.frame import DataFrame
 from pandas.core.series import Series
-from typing import Dict, Tuple, Union
+from typing import Union
 
 
 class OptimalPrescriptiveTree(OptimalDecisionTree):
@@ -116,15 +116,15 @@ class OptimalPrescriptiveTree(OptimalDecisionTree):
 
     def _get_node_status(
         self,
-        b: Union[Dict[Tuple[int, str], float], Dict[Tuple[int, str_], float]],
-        w: Dict[Tuple[int, int64], float],
-        p: Dict[int, float],
+        b: Union[dict[tuple[int, str], float], dict[tuple[int, str_], float]],
+        w: dict[tuple[int, int64], float],
+        p: dict[int, float],
         n: int,
         feature_names: None = None,
     ) -> Union[
-        Tuple[bool, bool, str, int, bool, None],
-        Tuple[bool, bool, None, int, bool, int64],
-        Tuple[bool, bool, str_, int, bool, None],
+        tuple[bool, bool, str, int, bool, None],
+        tuple[bool, bool, None, int, bool, int64],
+        tuple[bool, bool, str_, int, bool, None],
     ]:
         """
         This function give the status of a given node in a tree. By status we mean whether the node

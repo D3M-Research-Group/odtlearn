@@ -1,7 +1,7 @@
 # Robust Optimal Classification Trees
 In many applications, full control of data collection in both training and deployment is rare. For example, the data collection mechanism may change between training and deployment, or the environment may change the distribution of data over time. This corresponds to a *distribution shift*, where the distribution of the training data does not match the distribution of the deployment data. As a result, any trained model can perform poorly in the testing/deployment phase in the presence of distribution shifts
 
-`RobustTreeClassifier` is an MIO-based method for building optimal classification trees robust to these distribution shifts for data with integer-valued features. Details on the method can be found in the paper (Justin et al. 2021).
+`RobustTreeClassifier` is an MIO-based method for building optimal classification trees robust to these distribution shifts for data with integer-valued features. Details on the method can be found in the paper (Justin et al. 2021, 2023).
 
 <p align="center">
     <img src="../_static/img/distribution-shift.png" alt="robust_shift" style="width:800px;"/>
@@ -24,3 +24,4 @@ For details on how the costs and budgets are mathematically derived from specifi
 
 ## References
 * Justin, N., Aghaei, S., Gómez, A., & Vayanos, P. (2021). Optimal robust classification trees. *The AAAI-2022 Workshop on Adversarial Machine Learning and Beyond*. <https://openreview.net/pdf?id=HbasA9ysA3>
+* Justin, N., Aghaei, S., Gómez, A., & Vayanos, P. (2023). Learning optimal classification trees robust to distribution shifts. arXiv preprint arXiv:2310.17772.

@@ -2,7 +2,7 @@
 <img src="./img/ODTlearn-color.png" alt="ODTlearn Logo" width="500"/>
 </p>
 
-A package for tree-based statistical estimation and inference using optimal decision trees. ODTlearn provides implementations of StrongTrees [1], FairTrees [2], RobustTrees [3] for classification, and Prescriptive Trees [4] for prescription.
+A package for tree-based statistical estimation and inference using optimal decision trees. ODTlearn provides implementations of StrongTrees [1], FairTrees [2], RobustTrees [3,4] for classification, and Prescriptive Trees [5] for prescription.
 
 ![Test badge](https://github.com/D3M-Research-Group/odtlearn/actions/workflows/ci.yml/badge.svg)
 ![Documentation badge](https://github.com/D3M-Research-Group/odtlearn/actions/workflows/sphinx.yml/badge.svg)
@@ -14,6 +14,7 @@ A package for tree-based statistical estimation and inference using optimal deci
 The [package documentation](https://d3m-research-group.github.io/odtlearn/index.html) contains usage examples and method reference.
 
 ## Installation
+This package supports Python 3.9 and later. CBC solver support is only available for Python 3.9-3.11.
 
 The latest stable version can be installed from PyPI with the command:
 
@@ -62,8 +63,9 @@ pre-commit install
 
 
 ## References
-* [1] Aghaei, S., Gómez, A., & Vayanos, P. (2021). Strong optimal classification trees. arXiv preprint arXiv:2103.15965. https://arxiv.org/abs/2103.15965.
-* [2] Jo, N., Aghaei, S., Benson, J., Gómez, A., & Vayanos, P. (2022). Learning optimal fair classification trees. arXiv preprint arXiv:2201.09932. https://arxiv.org/pdf/2201.09932.pdf
-* [3] Justin, N., Aghaei, S., Gomez, A., & Vayanos, P. (2021). Optimal Robust Classification Trees. In The AAAI-22 Workshop on Adversarial Machine Learning and Beyond. https://openreview.net/pdf?id=HbasA9ysA3
-* [4] Jo, N., Aghaei, S., Gómez, A., & Vayanos, P. (2021). Learning optimal prescriptive trees from observational data. arXiv preprint arXiv:2108.13628. https://arxiv.org/pdf/2108.13628.pdf
+* [1] Aghaei, S., Gómez, A., & Vayanos, P. (2025). Strong optimal classification trees. *Operations Research*, 73(4), 2223-2241.
+* [2] Jo, N., Aghaei, S., Benson, J., Gómez, A., & Vayanos, P. (2022). Learning optimal fair classification trees. *arXiv preprint* arXiv:2201.09932. https://arxiv.org/pdf/2201.09932.pdf
+* [3] Justin, N., Aghaei, S., Gomez, A., & Vayanos, P. (2021). Optimal Robust Classification Trees. In *The AAAI-22 Workshop on Adversarial Machine Learning and Beyond*. https://openreview.net/pdf?id=HbasA9ysA3
+* [4] Justin, N., Aghaei, S., Gómez, A., & Vayanos, P. (2023). Learning optimal classification trees robust to distribution shifts. *arXiv preprint* arXiv:2310.17772.
+* [5] Jo, N., Aghaei, S., Gómez, A., & Vayanos, P. (2021). Learning optimal prescriptive trees from observational data. *arXiv preprint* arXiv:2108.13628. https://arxiv.org/pdf/2108.13628.pdf
 

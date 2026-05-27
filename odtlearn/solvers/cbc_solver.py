@@ -16,8 +16,7 @@ class CBCSolver(Solver):
     When using CBC, this class interacts with a slightly modified version of the SolverCbc class
     from the python-mip package.
     """
-
-    def __init__(self, verbose) -> None:
+    def __init__(self, verbose):
         self.var_name_dict = {}
         self.callback = None
         self.model = Model(solver_name="cbc")
@@ -25,21 +24,6 @@ class CBCSolver(Solver):
         self.store_search_progress_log = False
 
     def get_var_value(self, objs, var_name=None):
-        """
-        Get the value of a decision variable from a solved problem.
-
-        Parameters
-        ----------
-        objs: dict
-            A dictionary of the model variables
-
-        var_name: str | None, default=None
-            The name supplied when the decision variable was initialized.
-
-        Returns
-        -------
-        A dict with the values of each variable from the solution
-        """
         result_dict = {}
         for key, _ in objs.items():
             name = self.var_name_dict[var_name][key]
@@ -47,29 +31,6 @@ class CBCSolver(Solver):
         return result_dict
 
     def set_callback(self, callback_type):
-        """
-        Set the callback used when solving.
-        
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, n_features)
-            The input samples.
-
-        obj : DecisionTree object
-            A copy of the DecisionTree object that is passed to the callback action.
-
-        callback: bool, default=False
-            Boolean specifying whether this model uses a callback when solving the problem
-
-        callback_type: string
-            Indicates which callback to use
-
-        kwargs: Additional arguments to be passed to the callback action
-
-        Returns
-        -------
-        None
-        """
         try:
             getattr(self.model, "_data")
         except AttributeError:
@@ -82,28 +43,6 @@ class CBCSolver(Solver):
             raise ValueError("callback_type not supported")
 
     def optimize(self):
-        """Optimize the constructed model
-
-        Parameters
-        ----------
-        X : array-like, shape (n_samples, n_features)
-            The input samples.
-
-        obj : DecisionTree object
-            A copy of the DecisionTree object that is passed to the callback action.
-
-        callback: bool, default=False
-            Boolean specifying whether this model uses a callback when solving the problem
-
-        callback_type: string
-            Indicates which callback to use
-
-        kwargs: Additional arguments to be passed to the callback action
-
-        Returns
-        -------
-        None
-        """
         if self.store_search_progress_log:
             self.model.store_search_progress_log = True
         if self.callback is not None:
@@ -142,34 +81,6 @@ class CBCSolver(Solver):
     def add_vars(
         self, *indices, lb=0.0, ub=float("inf"), obj=0.0, vtype="C", name: str = ""
     ):
-        """
-        Create a dictionary with the decision variables with keys of the form
-        {name}[(element of indices list)] and then add the variables to the model
-
-        Parameters
-        ----------
-        *indices: List
-            Arbitrary list of indices to use to create the decision variables.
-
-        lb: double, default=0.0
-            Lower bound for new variable.
-
-        ub: double, default=inf
-            Upper bound for new variable.
-
-        obj: double
-            Objective coefficient for new variable.
-
-        type: str, default="C"
-            Variable type for new variable. Accepted values are "C", "B", "I"
-
-        name: str, default=""
-            Name used when creating dictionary storing variables.
-
-        Returns
-        -------
-        Dictionary of new variable objects.
-        """
         var_dict = {}
         name_element_dict = {}
         prepped = self.prep_indices(*indices)
@@ -208,74 +119,13 @@ class CBCSolver(Solver):
         self.var_name_dict[name] = name_element_dict
         return var_dict
 
-    def add_constrs(self, cons_expr_tuple):
-        """
-        Add constraint expressions to the model.
-
-        Parameters
-        ----------
-        cons_expr_tuple: List[LinExpr]
-            A list of constraint expressions to be added to the model.
-
-        Returns
-        -------
-        None
-        """
-        for cons in cons_expr_tuple:
-            self.model.add_constr(cons)
-
-    def add_constr(self, cons_expr):
-        """
-        Add a constraint expression to the model.
-
-        Parameters
-        ----------
-        cons_expr: LinExpr
-            A constraint expression to be added to the model.
-
-        Returns
-        -------
-        None
-        """
+    def add_constr(self, cons_expr : LinExpr):
         self.model.add_constr(cons_expr)
 
-    def lin_expr(self, arg1=0.0, sense=None):
-        """
-        Initialize a linear expression object
-
-        Parameters
-        ----------
-        arg1: double | Variable , default=0.0
-            A constant or Variable to be used to initialize the linear expression
-
-        sense: str | None, default=None
-            Argument for specifying whether the expression is to be minimized or maximized.
-
-
-        Returns
-        -------
-        Initalized LinExpr
-        """
+    def lin_expr(self, arg1=0.0, sense : str = "") -> LinExpr:
         return LinExpr(const=arg1, sense=sense)
 
-    def set_objective(self, expr, sense):
-        """
-        Take the linear expression and set it as the objective for the problem.
-
-        Parameters
-        ----------
-
-        expr: LinExpr
-            The linear expression to be used as the objective for the problem.
-
-        sense: str
-            A string specifying whether the objective should be minimized (1 or GRB.MINIMIZE)
-            or maximized (-1 or GRB.MAXIMIZE)
-
-        Returns
-        -------
-        None
-        """
+    def set_objective(self, expr : LinExpr, sense):
         self.model.objective = expr
         if type(sense) is int:
             mapped_sense = GRB_CBC_CONST_MAP.get(sense, None)
@@ -292,40 +142,9 @@ class CBCSolver(Solver):
         self.model.sense = sense
 
     def quicksum(self, terms):
-        """
-        Pass through function for python-mip quicksum function
-
-        Parameters
-        ----------
-        terms: List[mip.Variable]
-            List of variables to be summed
-
-        Returns
-        -------
-        LinExpr
-
-        """
         return xsum(terms)
 
     def store_data(self, key, value):
-        """
-        Store data to be used in the callback action. For Gurobi, data can
-        typically be stored as private attributes of the model (i.e., model._data_var).
-        For consistency across solvers, we store the data in the model._data attribute
-        as a dictionary.
-
-        Parameters
-        ----------
-        key: str
-            The name under which to store the data
-
-        value: Any
-            The values to be stored in the dictionary.
-
-        Returns
-        -------
-        None
-        """
         try:
             getattr(self.model, "_data")
         except AttributeError:
@@ -362,10 +181,10 @@ class CBCSolver(Solver):
     def set_num_threads(self, num_threads):
         self.model.threads = num_threads
     
-    def add_lazy_constraint(self, model, constr):
+    def add_lazy_constraint(self, model : Model, constr : LinExpr):
         model += constr
 
-    def get_callback_solution(self, model, var):
+    def get_callback_solution(self, model : Model, var):
         return model.translate(var).x
     
     def get_search_progress_log(self):

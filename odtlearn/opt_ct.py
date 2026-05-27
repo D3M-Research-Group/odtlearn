@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Tuple, Union
+from typing import Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -96,14 +96,14 @@ class OptimalClassificationTree(OptimalDecisionTree):
 
     def _get_node_status(
         self,
-        b: Dict[Tuple[int, str_], float],
-        w: Dict[Tuple[int, int64], float],
-        p: Dict[int, float],
+        b: dict[tuple[int, str_], float],
+        w: dict[tuple[int, int64], float],
+        p: dict[int, float],
         n: Union[int, int64],
         feature_names: Optional[ndarray] = None,
     ) -> Union[
-        Tuple[bool, bool, None, int, bool, int64],
-        Tuple[bool, bool, str_, int, bool, None],
+        tuple[bool, bool, None, int, bool, int64],
+        tuple[bool, bool, str_, int, bool, None],
     ]:
         """
         This function give the status of a given node in a tree. By status we mean whether the node
