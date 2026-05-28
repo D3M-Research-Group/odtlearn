@@ -2,7 +2,7 @@ from gurobipy import Model, GRB, quicksum, LinExpr, Env, tupledict, Var
 
 from odtlearn.solvers.solver import Solver
 
-from odtlearn.callbacks.gurobi_callbacks import (
+from odtlearn.solvers.gurobi_callbacks import (
     BendersCallback,
     RobustBendersCallback,
     logging_callback,

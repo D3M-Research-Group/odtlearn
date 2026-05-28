@@ -47,8 +47,8 @@ dependencies = [
     "scikit-learn>=1.2",
     "numpy>=1.23",
     "pandas>=1.5",
-    "seaborn>=0.13.2",
-    "matplotlib>=3.5.3",
+    "seaborn>=0.13",
+    "matplotlib>=3.5",
 ]
 
 dynamic = ["version"]
@@ -69,9 +69,11 @@ docs = [
     "numpydoc>=1.6.0",
     "myst-parser>=2.0.0",
 ]
-test = ["pytest>=7.4", "gurobipy>=10.0.0"]
+test = ["pytest>=7.4", "gurobipy>=11.0", "mip>=1.15; python_version < '3.12'"]
 
-mip = ["mip>=1.15; python_version < '3.12'"]
+gurobi = ["gurobipy>=11.0"]
+
+cbc = ["mip>=1.15; python_version<'3.12'"]
 
 [project.urls]
 "Homepage" = "https://d3m-research-group.github.io/odtlearn/"

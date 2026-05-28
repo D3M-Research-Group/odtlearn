@@ -14,7 +14,7 @@ A package for tree-based statistical estimation and inference using optimal deci
 The [package documentation](https://d3m-research-group.github.io/odtlearn/index.html) contains usage examples and method reference.
 
 ## Installation
-This package supports Python 3.9 and later. CBC solver support is only available for Python 3.9-3.11.
+ODTlearn is a package for [Python](https://www.python.org/). To use ODTlearn first [download and install](https://www.python.org/downloads/) Python. ODTLearn supports Python 3.9 and later. CBC solver support is only available for Python 3.9-3.11.
 
 The latest stable version can be installed from PyPI with the command:
 
@@ -25,15 +25,29 @@ pip install odtlearn
 The current development version can be installed from source with the following command:
 
 ``` bash
-pip install git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
+pip install git+https://github.com/D3M-Research-Group/odtlearn.git
 ```
 
+This package gives you the option to either use Gurobi or Coin-OR Branch & Cut (CBC) as your base solver.
 
-### Obtain Gurobi License
+### Using Gurobi
 To use Gurobi with ODTlearn, you must have a valid Gurobi License. [Free licenses are available for academic use](https://www.gurobi.com/academia/academic-program-and-licenses/) and additional methods for obtaining a Gurobi license can be found [here](https://www.gurobi.com/solutions/licensing/).
 
-### CBC Binaries
-[Python-MIP](https://github.com/coin-or/python-mip) provides CBC binaries for 64-bit versions of Windows, Linux, and MacOS that run on Intel hardware, however we have observed that these binaries do not seem to work properly with lazy constraint generation, which is used in some of our MIO formulations. Thus, to ensure expected behavior when using ODTlearn, we strongly recommend building CBC from source. Below are the steps needed to compile CBC from source using [coinbrew](https://github.com/coin-or/coinbrew).
+Once a license is obtained, you must install the `gurobipy` package:
+```bash
+pip install gurobipy
+```
+
+### Using CBC
+Note that currently, CBC is only supported in ODTLearn for Python 3.9-3.11.
+
+First, install [Python-MIP](https://github.com/coin-or/python-mip):
+```bash
+pip install mip
+```
+
+Python-MIP provides CBC binaries for 64-bit versions of Windows, Linux, and MacOS that run on Intel hardware, however we have observed that these binaries do not seem to work properly with lazy constraint generation, which is used in some of our MIO formulations. Thus, to ensure expected behavior when using ODTlearn, we strongly recommend building CBC from source. Below are the steps needed to compile CBC from source using [coinbrew](https://github.com/coin-or/coinbrew).
+
 
 ``` bash
 mkdir CBC

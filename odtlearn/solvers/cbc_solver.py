@@ -5,7 +5,7 @@ from mip import LinExpr, Model, xsum
 from odtlearn.utils.mip_cbc import SolverCbc
 
 from odtlearn.solvers.solver import Solver
-from odtlearn.callbacks.cbc_callbacks import BendersCallback, RobustBendersCallback
+from odtlearn.solvers.cbc_callbacks import BendersCallback, RobustBendersCallback
 
 GRB_CBC_CONST_MAP = {-1: "MAX", 1: "MIN"}
 

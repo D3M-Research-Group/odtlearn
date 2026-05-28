@@ -4,7 +4,6 @@ from typing import Union
 from sklearn.utils.validation import check_is_fitted
 from sklearn.utils import Tags
 
-from odtlearn.solvers.gurobi_solver import GurobiSolver
 from odtlearn.utils.Tree import _Tree
 
 
@@ -90,7 +89,16 @@ class OptimalDecisionTree(ABC):
         self._time_limit = time_limit
 
         if solver.lower() == "gurobi":
-            self._solver = GurobiSolver(verbose)
+            try:
+                from odtlearn.solvers.gurobi_solver import GurobiSolver
+
+                self._solver = GurobiSolver(verbose)
+            except ModuleNotFoundError as e:
+                raise ImportError(
+                    "Gurobi solver requires the 'gurobipy' package, which is not installed. "
+                    "Install it with: [pip install gurobipy]. "
+                    "You must also have a valid Gurobi license."
+                ) from e
         elif solver.lower() == "cbc":
             try:
                 # Need to have installed Python-MIP, unsupported for Python 3.12 and above
@@ -100,7 +108,8 @@ class OptimalDecisionTree(ABC):
             except ModuleNotFoundError as e:
                 raise ImportError(
                     "CBC solver requires the 'mip' package, which is not installed "
-                    "or not supported for your Python version (3.12 and above)"
+                    "or not supported for your Python version (3.12 and above)."
+                    "Install it with: [pip install mip]. "
                 ) from e
         else:
             raise ValueError("Solver not supported: ", solver)
