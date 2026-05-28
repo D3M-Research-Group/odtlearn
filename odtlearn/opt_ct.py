@@ -8,7 +8,6 @@ from pandas.core.series import Series
 from sklearn.utils.validation import check_is_fitted
 
 from odtlearn.opt_dt import OptimalDecisionTree
-from odtlearn.utils.TreePlotter import MPLPlotter
 
 
 class OptimalClassificationTree(OptimalDecisionTree):
@@ -328,22 +327,29 @@ class OptimalClassificationTree(OptimalDecisionTree):
                 node,
                 feature_names=column_names,
             )
+        try:
+            from odtlearn.utils.TreePlotter import MPLPlotter
 
-        exporter = MPLPlotter(
-            self._tree,
-            node_dict,
-            column_names,
-            self._tree.depth,
-            self._classes,
-            type(self).__name__,
-            label=label,
-            filled=filled,
-            rounded=rounded,
-            precision=precision,
-            fontsize=fontsize,
-            color_dict=color_dict,
-            edge_annotation=edge_annotation,
-            arrow_annotation_font_scale=arrow_annotation_font_scale,
-            debug=debug,
-        )
+            exporter = MPLPlotter(
+                self._tree,
+                node_dict,
+                column_names,
+                self._tree.depth,
+                self._classes,
+                type(self).__name__,
+                label=label,
+                filled=filled,
+                rounded=rounded,
+                precision=precision,
+                fontsize=fontsize,
+                color_dict=color_dict,
+                edge_annotation=edge_annotation,
+                arrow_annotation_font_scale=arrow_annotation_font_scale,
+                debug=debug,
+            )
+        except ModuleNotFoundError as e:
+            raise ImportError(
+                "Plotting requires the 'seaborn' package, which is not installed. "
+                "Install it with: [pip install seaborn]. "
+            ) from e
         return exporter.export(ax=ax, distance=distance)

@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "odtlearn"
+version = "1.1.0"
 description = "A package for tree-based statistical estimation and inference using optimal decision trees."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -43,12 +44,9 @@ classifiers = [
 ]
 
 dependencies = [
-    "cffi>=1.15",
     "scikit-learn>=1.2",
     "numpy>=1.23",
     "pandas>=1.5",
-    "seaborn>=0.13",
-    "matplotlib>=3.5",
 ]
 
 dynamic = ["version"]
@@ -73,7 +71,9 @@ test = ["pytest>=7.4", "gurobipy>=11.0", "mip>=1.15; python_version < '3.12'"]
 
 gurobi = ["gurobipy>=11.0"]
 
-cbc = ["mip>=1.15; python_version<'3.12'"]
+cbc = ["mip>=1.15; python_version<'3.12'", "cffi>=1.15"]
+
+visualization = ["seaborn>=0.13", "matplotlib>=3.5"]
 
 [project.urls]
 "Homepage" = "https://d3m-research-group.github.io/odtlearn/"

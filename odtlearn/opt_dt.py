@@ -286,7 +286,13 @@ class OptimalDecisionTree(ABC):
         The search progress log must be enabled prior to fitting by setting
         `store_search_progress_log` to True.
         """
-        import matplotlib.pyplot as plt
+        try:
+            import matplotlib.pyplot as plt
+        except ImportError as e:
+            raise ImportError(
+                "Plotting requires the 'matplotlib' package, which is not installed. "
+                "Install it with: [pip install matplotlib]. "
+            ) from e
 
         # Check if model has been fit
         check_is_fitted(self, ["b_value", "w_value"])
