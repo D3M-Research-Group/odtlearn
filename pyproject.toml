@@ -65,7 +65,14 @@ docs = [
     "numpydoc>=1.6.0",
     "myst-parser>=2.0.0",
 ]
-test = ["pytest>=7.4", "gurobipy>=11.0", "mip>=1.15; python_version < '3.12'"]
+test = [
+    "pytest>=7.4", 
+    "gurobipy>=11.0", 
+    "mip>=1.15; python_version < '3.12'",
+    "cffi>=1.15; python_version < '3.12'",
+    "seaborn>=0.13",
+    "matplotlib>=3.5",
+]
 
 gurobi = ["gurobipy>=11.0"]
 
