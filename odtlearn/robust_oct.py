@@ -7,7 +7,6 @@ from sklearn.utils.validation import check_is_fitted, check_X_y
 
 from odtlearn import ODTL
 from odtlearn.opt_ct import OptimalClassificationTree
-from odtlearn.utils.TreePlotter import MPLPlotter
 from odtlearn.utils.validation import check_integer, check_same_as_X
 
 
@@ -454,22 +453,30 @@ class RobustOCT(OptimalClassificationTree):
             column_names = feature_names
         else:
             column_names = self._X_col_labels
+        try:
+            from odtlearn.utils.TreePlotter import MPLPlotter
 
-        exporter = MPLPlotter(
-            self._tree,
-            node_dict,
-            column_names,
-            self._tree.depth,
-            self._classes,
-            type(self).__name__,
-            label=label,
-            filled=filled,
-            rounded=rounded,
-            precision=precision,
-            fontsize=fontsize,
-            color_dict=color_dict,
-            edge_annotation=edge_annotation,
-            arrow_annotation_font_scale=arrow_annotation_font_scale,
-            debug=debug,
-        )
+            exporter = MPLPlotter(
+                self._tree,
+                node_dict,
+                column_names,
+                self._tree.depth,
+                self._classes,
+                type(self).__name__,
+                label=label,
+                filled=filled,
+                rounded=rounded,
+                precision=precision,
+                fontsize=fontsize,
+                color_dict=color_dict,
+                edge_annotation=edge_annotation,
+                arrow_annotation_font_scale=arrow_annotation_font_scale,
+                debug=debug,
+            )
+        except ModuleNotFoundError as e:
+            raise ImportError(
+                "Plotting requires the 'seaborn' package, which is not installed. "
+                "Install it with: [pip install seaborn]. "
+            ) from e
+
         return exporter.export(ax=ax)
