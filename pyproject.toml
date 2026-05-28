@@ -49,8 +49,6 @@ dependencies = [
     "pandas>=1.5",
 ]
 
-dynamic = ["version"]
-
 [project.optional-dependencies]
 docs = [
     "sphinx",
