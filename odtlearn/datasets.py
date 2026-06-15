@@ -9,13 +9,13 @@ def prescriptive_ex_data():
     """
     with (
         resources.files("odtlearn")
-        .joinpath("data/prescriptive/train_v2_100.csv")
+        .joinpath("data/prescriptive/train_500.csv")
         .open("rb") as train_stream
     ):
         train = pd.read_csv(train_stream)
     with (
         resources.files("odtlearn")
-        .joinpath("data/prescriptive/test_v2_200.csv")
+        .joinpath("data/prescriptive/test_100.csv")
         .open("rb") as test_stream
     ):
         test = pd.read_csv(test_stream)
