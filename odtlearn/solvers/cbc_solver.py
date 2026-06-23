@@ -19,11 +19,10 @@ class CBCSolver(Solver):
     """
 
     def __init__(self, verbose):
+        super().__init__(verbose)
         self.var_name_dict = {}
-        self.callback = None
         self.model = Model(solver_name="cbc")
         self.model.solver = SolverCbc(self.model, "cbc", self.model.sense, verbose)
-        self.store_search_progress_log = False
 
     def get_var_value(self, objs, var_name=None):
         result_dict = {}

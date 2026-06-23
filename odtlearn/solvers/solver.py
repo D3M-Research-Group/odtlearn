@@ -23,25 +23,31 @@ class Solver(ABC):
     * `set_objective()`
     * `set_time_limit()`
     * `set_num_threads()`
-    * `set_callback()`
-    * `store_data()`
+    * `get_num_variables()`
+    * `get_num_constraints()`
     * `optimize()`
-    * `add_lazy_constraint()`
-    * `get_callback_solution()`
     * `get_var_value()`
     * `get_gap()`
     * `get_objective_value()`
     * `get_objective_bound()`
-    * `get_num_constraints()`
+    * `get_num_int_variables()`
+    * `get_num_nonzeroes()`
+    * `get_num_soluions()`
     * `get_search_progress_log()`
     * `lin_expr()`
     * `quicksum()`
+    * `set_callback()`
+    * `add_lazy_constraint()`
+    * `get_callback_solution()`
+    * `store_data()`
 
 
     """
 
     def __init__(self, verbose: bool = False) -> None:
         self.verbose = verbose
+        self.store_search_progress_log = False
+        self.callback = None
 
     # Methods to setup optimization problem
     @abstractmethod
@@ -172,46 +178,29 @@ class Solver(ABC):
         """
         pass
 
-    @abstractmethod
-    def set_callback(self, callback_type: str):
-        """
-        Set a callback for the solver.
-
-        Parameters
-        ----------
-
-        callback_type : str
-            Name of callback to add to the solver.
-            Possible values are currently "benders" and "robust_benders"
-
-        Returns
-        -------
-        None
-        """
-        pass
-
-    @abstractmethod
-    def store_data(self, key: str, value):
-        """
-        Store data to be used in the callback action.
-        For consistency across solvers, we store the data in the model._data attribute
-        as a dictionary.
-
-        Parameters
-        ----------
-        key: str
-            The name under which to store the data
-
-        value: Any
-            The values to be stored in the dictionary.
-
-        Returns
-        -------
-        None
-        """
-        pass
-
     # Methods used to initialte and use during solve
+    @abstractmethod
+    def get_num_variables(self) -> int:
+        """
+        Get the number of variables in the optimization model.
+
+        Returns
+        -------
+        int
+        """
+        pass
+
+    @abstractmethod
+    def get_num_constraints(self) -> int:
+        """
+        Get the number of constraints in the model.
+
+        Returns
+        -------
+        int
+        """
+        pass
+
     @abstractmethod
     def optimize(self):
         """Optimize the constructed model
@@ -219,42 +208,6 @@ class Solver(ABC):
         Returns
         -------
         None
-        """
-        pass
-
-    @abstractmethod
-    def add_lazy_constraint(self, model, constr):
-        """Add a lazy constraint to the model
-
-        Parameters
-        ----------
-        model: Any
-            The model object to add the lazy constraint to.
-
-        constr: Any
-            The lazy constraint to add to the model.
-
-        Returns
-        -------
-        None
-        """
-        pass
-
-    @abstractmethod
-    def get_callback_solution(self, model, var) -> Any:
-        """Obtain the value of a variable in a solution within a callback
-
-        Parameters
-        ----------
-        model: Any
-            The model object containing the callback solution.
-
-        var: Any
-            The variable object to get the value of.
-
-        Returns
-        -------
-        The callback solution.
         """
         pass
 
@@ -313,17 +266,6 @@ class Solver(ABC):
         pass
 
     @abstractmethod
-    def get_num_variables(self) -> int:
-        """
-        Get the number of variables in the optimization model.
-
-        Returns
-        -------
-        int
-        """
-        pass
-
-    @abstractmethod
     def get_num_int_variables(self) -> int:
         """
         Get the number of integer-valued variables in the solution.
@@ -356,17 +298,6 @@ class Solver(ABC):
         """
 
     @abstractmethod
-    def get_num_constraints(self) -> int:
-        """
-        Get the number of constraints in the model.
-
-        Returns
-        -------
-        int
-        """
-        pass
-
-    @abstractmethod
     def get_search_progress_log(self) -> Iterable[tuple]:
         """
         Get the number of solutions found during the solve.
@@ -377,7 +308,7 @@ class Solver(ABC):
         """
         pass
 
-    # Methods for variable and constraint construction
+    # Methods for constructing linear expressions
     @abstractmethod
     def lin_expr(self, arg1: float = 0.0) -> Any:
         """
@@ -408,5 +339,81 @@ class Solver(ABC):
         -------
         Any, solver-dependent
 
+        """
+        pass
+
+    # Methods for callbacks
+    @abstractmethod
+    def set_callback(self, callback_type: str):
+        """
+        Set a callback for the solver.
+
+        Parameters
+        ----------
+
+        callback_type : str
+            Name of callback to add to the solver.
+            Possible values are currently "benders" and "robust_benders"
+
+        Returns
+        -------
+        None
+        """
+        pass
+
+    @abstractmethod
+    def add_lazy_constraint(self, model, constr):
+        """Add a lazy constraint to the model
+
+        Parameters
+        ----------
+        model: Any
+            The model object to add the lazy constraint to.
+
+        constr: Any
+            The lazy constraint to add to the model.
+
+        Returns
+        -------
+        None
+        """
+        pass
+
+    @abstractmethod
+    def get_callback_solution(self, model, var) -> Any:
+        """Obtain the value of a variable in a solution within a callback
+
+        Parameters
+        ----------
+        model: Any
+            The model object containing the callback solution.
+
+        var: Any
+            The variable object to get the value of.
+
+        Returns
+        -------
+        The callback solution.
+        """
+        pass
+
+    @abstractmethod
+    def store_data(self, key: str, value):
+        """
+        Store data to be used in the callback action.
+        For consistency across solvers, we store the data in the model._data attribute
+        as a dictionary.
+
+        Parameters
+        ----------
+        key: str
+            The name under which to store the data
+
+        value: Any
+            The values to be stored in the dictionary.
+
+        Returns
+        -------
+        None
         """
         pass

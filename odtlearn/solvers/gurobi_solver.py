@@ -21,9 +21,8 @@ class GurobiSolver(Solver):
             env.setParam("OutputFlag", 0)
         env.start()
 
+        super().__init__(verbose)
         self.model = Model()
-        self.callback = None
-        self.store_search_progress_log = False
         self.model._search_progress_log = []
 
     def get_var_value(self, objs, var_name=None):

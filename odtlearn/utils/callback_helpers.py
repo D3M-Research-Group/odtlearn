@@ -494,7 +494,8 @@ def get_all_terminal_paths(
     curr_cutoff_path: list = [],
 ) -> tuple[list[int], dict, dict, dict, dict]:
     """
-    Find all terminal paths in the decision tree.
+    Helper function for the Robust Benders callback.
+    Finds all terminal paths in the decision tree that lead to a classification.
 
     Parameters
     ----------
@@ -635,7 +636,8 @@ def get_nominal_path(
     i: int,
 ) -> tuple[list[int], int]:
     """
-    Get the nominal path for a correctly classified datapoint.
+    Helper function for the Robust Benders callback.
+    Gets the decision path for a correctly classified datapoint.
 
     Parameters
     ----------
@@ -687,7 +689,9 @@ def shortest_path_solver(
     initial_maxes: dict,
 ) -> tuple[list[int], dict, float, bool]:
     """
-    Solve the shortest path problem for a given datapoint.
+    Helper function for the Robust Benders callback.
+    Finds the minimum cost perturbation to misclassify datapoint i in a given tree via
+    a shortest path problem.
 
     Parameters
     ----------

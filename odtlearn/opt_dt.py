@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Union
 
+from numpy import ndarray
+from pandas.core.frame import DataFrame
+from pandas.core.series import Series
 from sklearn.utils.validation import check_is_fitted
 from sklearn.utils import Tags
 
@@ -157,11 +160,67 @@ class OptimalDecisionTree(ABC):
         self._define_objective()
 
     @abstractmethod
-    def fit(self):
+    def fit(
+        self,
+        X: Union[ndarray, DataFrame],
+        y: Union[ndarray, Series],
+    ) -> "OptimalDecisionTree":
+        """
+        Fit the optimal decision tree to the given training data.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The training input samples.
+        y : array-like of shape (n_samples,)
+            The target values (class labels) for the training samples.
+
+        Returns
+        -------
+        self : OptimalDecisionTree
+            Returns self.
+
+        Raises
+        ------
+        ValueError
+            If X contains invalid values, or if X and y have inconsistent numbers of samples.
+        """
         pass
 
     @abstractmethod
-    def predict(self):
+    def predict(self, X: Union[ndarray, DataFrame]) -> ndarray:
+        """
+        Make predictions using the fitted optimal decision tree.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input samples for which to make predictions. The features should
+            match those used during the fit method.
+
+        Returns
+        -------
+        y_pred : ndarray of shape (n_samples,)
+            The predicted class labels for each sample in X.
+
+        Raises
+        ------
+        NotFittedError
+            If the model has not been fitted yet.
+
+        ValueError
+            If the input X has a different number of features than the training data.
+
+        Notes
+        -----
+        This method uses the decision tree learned during the fit process to label
+        new samples. It traverses the tree for each sample in X, following the branching
+        decisions until reaching a leaf node, and returns the corresponding label.
+
+        The input X should have the same feature set as the training data used in fit().
+        If categorical variables were one-hot encoded for training, the same encoding
+        should be applied to X before calling predict().
+        """
         pass
 
     @property
@@ -226,7 +285,20 @@ class OptimalDecisionTree(ABC):
         return self._solver.store_search_progress_log
 
     @store_search_progress_log.setter
-    def store_search_progress_log(self, store: bool):
+    def store_search_progress_log(self, store: bool = True):
+        """
+        Sets the boolean for whether a search progress log should be stored or not.
+        Enable storing the search progress log to analyze bound improvements over time.
+
+        Parameters
+        ----------
+        store : bool, default = True
+            Boolean of whether to store the search progress log or not.
+
+        Returns
+        -------
+        None
+        """
         self._solver.store_search_progress_log = store
 
     def plot_search_progress(

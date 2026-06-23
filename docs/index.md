@@ -110,6 +110,6 @@ notebooks/index
 :hidden: true
 :maxdepth: 1
 
-contributing
+development/index
 ```
 
