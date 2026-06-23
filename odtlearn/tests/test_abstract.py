@@ -1,5 +1,6 @@
 from abc import ABCMeta
 import pytest
+import numpy as np
 from odtlearn.opt_dt import OptimalDecisionTree
 from odtlearn.tests.test_utils import gurobi_available
 
@@ -23,8 +24,27 @@ def test_dt_abc():
     constraints_defined = test_opt_dt._define_constraints()
     objective_defined = test_opt_dt._define_objective()
     main_problem_made = test_opt_dt._create_main_problem()
-    fit_on_data = test_opt_dt.fit()
-    predict_on_data = test_opt_dt.predict()
+
+    # fmt: off
+    X = np.array(
+        [
+            [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [1, 0],
+            [1, 0], [1, 0], [1, 0], [1, 0], [1, 0], [1, 0],
+            [1, 0], [1, 0], [1, 1], [1, 1], [1, 1], [1, 1],
+            [1, 1], [1, 1], [1, 1], [0, 1], [0, 1], [0, 1],
+            [0, 1], [0, 1], [0, 1], [0, 1]
+        ]
+    )
+    y = np.array(
+        [
+            0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0,
+            1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0,
+        ]
+    )
+    # fmt: on
+
+    fit_on_data = test_opt_dt.fit(X, y)
+    predict_on_data = test_opt_dt.predict(X)
     assert isinstance(OptimalDecisionTree, ABCMeta)
     assert vars_defined is None
     assert constraints_defined is None
