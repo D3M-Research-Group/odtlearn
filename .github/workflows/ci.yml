@@ -44,7 +44,7 @@ jobs:
           mkdir -p ~/build
           cd ~/build
           wget -nH https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
-          bash coinbrew fetch Cbc@master --no-prompt --skip-update
+          bash coinbrew fetch Cbc@stable/2.10 --no-prompt --skip-update
           bash coinbrew build Cbc@stable/2.10 --no-prompt --tests=none
 
       - name: Run tests with pytest
