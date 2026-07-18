@@ -26,7 +26,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install build
-          pip install .[docs, cbc]
+          pip install .[docs,cbc]
       # Only build CBC for Python < 3.12
       - name: Compile CBC binary
         if: ${{ matrix.python-version == '3.9' || matrix.python-version == '3.10' || matrix.python-version == '3.11' }}
