@@ -41,8 +41,16 @@ jobs:
       - name: Configure CBC
         run: |
           echo "$HOME/build/dist/bin" >> $GITHUB_PATH
-          echo "LD_LIBRARY_PATH=$HOME/build/dist/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
+          echo "LD_LIBRARY_PATH=$HOME/build/dist/lib:${LD_LIBRARY_PATH:-}" >> $GITHUB_ENV
           echo "CBC_LIBRARY=$HOME/build/dist/lib/libCbcSolver.so" >> $GITHUB_ENV
+      - name: Verify CBC environment
+        run: |
+          echo "PATH=$PATH"
+          echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+          ls -l $HOME/build/dist/lib/libCbcSolver.so
+          ldd $HOME/build/dist/lib/libCbcSolver.so
+          which cbc
+          cbc --version
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
