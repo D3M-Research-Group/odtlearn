@@ -46,7 +46,7 @@ jobs:
           pip install .[docs,cbc,visualization]
       - name: Test CBC
         run: |
-          python -c "from mip import Model; Model(solver_name="cbc"); print('CBC works')"
+              python -c 'from mip import Model; Model(solver_name="cbc"); print("CBC works")'
       - name: Build package
         run: python -m build
       - name: Build HTML
