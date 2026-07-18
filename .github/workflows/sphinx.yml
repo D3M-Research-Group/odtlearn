@@ -34,6 +34,10 @@ jobs:
           wget -nH https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
           bash coinbrew fetch Cbc@stable/2.10 --no-prompt --skip-update
           bash coinbrew build Cbc@stable/2.10 --no-prompt --tests=none
+      - name: Inspect CBC build
+        run: |
+          find ~/build -name "libCbc*" -o -name "libCbcSolver*"
+          find ~/build -name "cbc"
       - name: Configure CBC
         run: |
           echo "$HOME/build/dist/bin" >> $GITHUB_PATH
@@ -46,7 +50,15 @@ jobs:
           pip install .[docs,cbc,visualization]
       - name: Test CBC
         run: |
-              python -c 'from mip import Model; Model(solver_name="cbc"); print("CBC works")'
+          python - <<EOF
+          import os
+          print("LD_LIBRARY_PATH:", os.environ.get("LD_LIBRARY_PATH"))
+
+          from mip import Model, CBC
+
+          model = Model(solver_name=CBC)
+          print("CBC loaded successfully")
+          EOF
       - name: Build package
         run: python -m build
       - name: Build HTML
