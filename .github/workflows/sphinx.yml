@@ -31,7 +31,7 @@ jobs:
           cd docs
           make html
       - name: Upload artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: html-docs
           path: docs/_build/html/
