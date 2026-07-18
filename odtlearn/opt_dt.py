@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Union
 
-import mip
+from numpy import ndarray
+from pandas.core.frame import DataFrame
+from pandas.core.series import Series
 from sklearn.utils.validation import check_is_fitted
+from sklearn.utils import Tags
 
-from odtlearn.utils.solver import Solver
 from odtlearn.utils.Tree import _Tree
 
 
@@ -89,11 +91,35 @@ class OptimalDecisionTree(ABC):
         self._tree = _Tree(self._depth)
         self._time_limit = time_limit
 
-        self._solver = Solver(self.solver_name, verbose)
+        if solver.lower() == "gurobi":
+            try:
+                from odtlearn.solvers.gurobi_solver import GurobiSolver
 
+                self._solver = GurobiSolver(verbose)
+            except ModuleNotFoundError as e:
+                raise ImportError(
+                    "Gurobi solver requires the 'gurobipy' package, which is not installed. "
+                    "Install it with: [pip install gurobipy]. "
+                    "You must also have a valid Gurobi license."
+                ) from e
+        elif solver.lower() == "cbc":
+            try:
+                # Need to have installed Python-MIP, unsupported for Python 3.12 and above
+                from odtlearn.solvers.cbc_solver import CBCSolver
+
+                self._solver = CBCSolver(verbose)
+            except ModuleNotFoundError as e:
+                raise ImportError(
+                    "CBC solver requires the 'mip' package, which is not installed "
+                    "or not supported for your Python version (3.12 and above)."
+                    "Install it with: [pip install mip]. "
+                ) from e
+        else:
+            raise ValueError("Solver not supported: ", solver)
+
+        self._solver.set_time_limit(time_limit)
         if num_threads is not None:
-            self._solver.model.threads = num_threads
-        self._solver.model.max_seconds = time_limit
+            self._solver.set_num_threads(num_threads)
 
     def __repr__(self) -> str:
         rep = (
@@ -104,6 +130,13 @@ class OptimalDecisionTree(ABC):
             f"verbose={self._verbose})"
         )
         return rep
+
+    def __sklearn_tags__(self):
+        return Tags(
+            estimator_type="classifier",
+            target_tags={},
+            requires_fit=True,
+        )
 
     @abstractmethod
     def _define_variables(self):
@@ -127,11 +160,67 @@ class OptimalDecisionTree(ABC):
         self._define_objective()
 
     @abstractmethod
-    def fit(self):
+    def fit(
+        self,
+        X: Union[ndarray, DataFrame],
+        y: Union[ndarray, Series],
+    ) -> "OptimalDecisionTree":
+        """
+        Fit the optimal decision tree to the given training data.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The training input samples.
+        y : array-like of shape (n_samples,)
+            The target values (class labels) for the training samples.
+
+        Returns
+        -------
+        self : OptimalDecisionTree
+            Returns self.
+
+        Raises
+        ------
+        ValueError
+            If X contains invalid values, or if X and y have inconsistent numbers of samples.
+        """
         pass
 
     @abstractmethod
-    def predict(self):
+    def predict(self, X: Union[ndarray, DataFrame]) -> ndarray:
+        """
+        Make predictions using the fitted optimal decision tree.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            The input samples for which to make predictions. The features should
+            match those used during the fit method.
+
+        Returns
+        -------
+        y_pred : ndarray of shape (n_samples,)
+            The predicted class labels for each sample in X.
+
+        Raises
+        ------
+        NotFittedError
+            If the model has not been fitted yet.
+
+        ValueError
+            If the input X has a different number of features than the training data.
+
+        Notes
+        -----
+        This method uses the decision tree learned during the fit process to label
+        new samples. It traverses the tree for each sample in X, following the branching
+        decisions until reaching a leaf node, and returns the corresponding label.
+
+        The input X should have the same feature set as the training data used in fit().
+        If categorical variables were one-hot encoded for training, the same encoding
+        should be applied to X before calling predict().
+        """
         pass
 
     @property
@@ -139,7 +228,7 @@ class OptimalDecisionTree(ABC):
         """
         The optimality gap considering the cost of the best solution found.
         """
-        return self._solver.model.gap
+        return self._solver.get_gap()
 
     @property
     def objective_value(self) -> float:
@@ -147,7 +236,7 @@ class OptimalDecisionTree(ABC):
         Objective function value of the solution found or None if the model was not optimized.
         """
 
-        return self._solver.model.objective_value
+        return self._solver.get_objective_value()
 
     @property
     def objective_bound(self) -> float:
@@ -155,50 +244,62 @@ class OptimalDecisionTree(ABC):
         A valid estimate computed for the optimal solution cost.
         The bound is equal to the objective value if the optimal solution is found.
         """
-        return self._solver.model.objective_bound
+        return self._solver.get_objective_bound()
 
     @property
     def num_decision_vars(self) -> int:
         """Number of decision variables in the model."""
-        return self._solver.model.num_cols
+        return self._solver.get_num_variables()
 
     @property
     def num_integer_vars(self) -> int:
         """Number of integer variables in the model."""
-        return self._solver.model.num_int
+        return self._solver.get_num_int_variables()
 
     @property
     def num_non_zero(self) -> int:
         """Number of non-zeros in the constraint matrix."""
-        return self._solver.model.num_nz
+        return self._solver.get_num_nonzeroes()
 
     @property
     def num_solutions(self) -> int:
         """Number of solutions found during the optimization."""
-        return self._solver.model.num_solutions
+        return self._solver.get_num_soluions()
 
     @property
     def num_constraints(self) -> int:
         """Number of constraints in the model."""
-        return self._solver.model.num_rows
+        return self._solver.get_num_constraints()
 
     @property
-    def search_progress_log(self) -> mip.ProgressLog:
+    def search_progress_log(self):
         """Log of bound improvements during the optimization."""
-        return self._solver.model.search_progress_log
+        return self._solver.get_search_progress_log()
 
     @property
     def store_search_progress_log(self) -> bool:
         """
-        Boolean for whether the search progress log should be stored or not.
-        As in python-mip this is disabled by default.
+        Boolean for whether a search progress log should be stored or not.
         Enable storing the search progress log to analyze bound improvements over time.
         """
-        return self._solver.model.__store_search_progress_log
+        return self._solver.store_search_progress_log
 
     @store_search_progress_log.setter
-    def store_search_progress_log(self, store: bool):
-        self._solver.model.store_search_progress_log = store
+    def store_search_progress_log(self, store: bool = True):
+        """
+        Sets the boolean for whether a search progress log should be stored or not.
+        Enable storing the search progress log to analyze bound improvements over time.
+
+        Parameters
+        ----------
+        store : bool, default = True
+            Boolean of whether to store the search progress log or not.
+
+        Returns
+        -------
+        None
+        """
+        self._solver.store_search_progress_log = store
 
     def plot_search_progress(
         self,
@@ -257,20 +358,26 @@ class OptimalDecisionTree(ABC):
         The search progress log must be enabled prior to fitting by setting
         `store_search_progress_log` to True.
         """
-        import matplotlib.pyplot as plt
+        try:
+            import matplotlib.pyplot as plt
+        except ImportError as e:
+            raise ImportError(
+                "Plotting requires the 'matplotlib' package, which is not installed. "
+                "Install it with: [pip install matplotlib]. "
+            ) from e
 
         # Check if model has been fit
         check_is_fitted(self, ["b_value", "w_value"])
 
         # Check if search progress log exists
-        if len(self.search_progress_log.log) == 0:
+        if len(self.search_progress_log) == 0:
             raise AttributeError(
                 "No search progress log found. Make sure to set "
                 "'store_search_progress_log=True' before fitting."
             )
 
         # Extract times and bounds from log
-        times, bounds = zip(*self.search_progress_log.log)
+        times, bounds = zip(*self.search_progress_log)
         lb, ub = zip(*bounds)
 
         # Create plot

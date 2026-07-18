@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import KBinsDiscretizer, OneHotEncoder
 from pandas.core.frame import DataFrame
-from typing import List, Optional
+from typing import Optional
 
 
 class Binarizer(BaseEstimator, TransformerMixin):
@@ -55,9 +55,9 @@ class Binarizer(BaseEstimator, TransformerMixin):
 
     def __init__(
         self,
-        categorical_cols: Optional[List[str]] = None,
-        integer_cols: Optional[List[str]] = None,
-        real_cols: Optional[List[str]] = None,
+        categorical_cols: Optional[list[str]] = None,
+        integer_cols: Optional[list[str]] = None,
+        real_cols: Optional[list[str]] = None,
         n_bins: int = 4,
         bin_strategy: str = "uniform",
     ) -> None:
@@ -203,7 +203,7 @@ class Binarizer(BaseEstimator, TransformerMixin):
 
         return result[self.column_names_]
 
-    def _get_feature_names_out(self) -> List[str]:
+    def _get_feature_names_out(self) -> list[str]:
         """Get feature names for the binarized columns."""
         feature_names = []
 

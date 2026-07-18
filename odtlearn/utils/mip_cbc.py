@@ -1,9 +1,11 @@
 """Python-MIP interface to the COIN-OR Branch-and-Cut solver CBC"""
+
 # Modified version of the cbc.py file from the python-mip
 # https://github.com/coin-or/python-mip/blob/master/mip/cbc.py
 # Original Authors: Python-MIP Team
 # Original License: EPL v 2.0 (License text available at https://github.com/coin-or/python-mip/blob/master/LICENSE)
-# Modified by: Patrick Vossler (patrick.vossler18@gmail.com)
+# Modified by: Patrick Vossler (patrick.vossler18@gmail.com) and Nathan Justin (nathanjustin14@gmail.com)
+# flake8: noqa: E501,F824
 
 import logging
 import multiprocessing as multip
@@ -11,7 +13,7 @@ import numbers
 import os
 from os.path import dirname, exists, isfile
 from sys import maxsize, platform
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Union
 
 import mip
 from cffi import FFI
@@ -47,6 +49,7 @@ warningMessages = 0
 
 ffi = FFI()
 has_cbc = False
+cbclib = None
 os_is_64_bit = maxsize > 2**32
 INF = float("inf")
 cut_idx = 0
@@ -104,8 +107,11 @@ try:
         if not libfile:
             raise NotImplementedError("You operating system/platform is not supported")
     old_dir = os.getcwd()
-    os.chdir(pathlib)
-    cbclib = ffi.dlopen(libfile)
+    try:
+        os.chdir(pathlib)
+        cbclib = ffi.dlopen(libfile)
+    except OSError as e:
+        raise NotImplementedError(f"Error opening library: {e}")
     os.chdir(old_dir)
     has_cbc = True
 except Exception as e:
@@ -113,8 +119,7 @@ except Exception as e:
     has_cbc = False
 
 if has_cbc:
-    ffi.cdef(
-        """
+    ffi.cdef("""
     typedef int(*cbc_progress_callback)(void *model,
                                         int phase,
                                         int step,
@@ -561,8 +566,7 @@ if has_cbc:
     const char *Cbc_featureName(int i);
 
     void Cbc_reset(Cbc_Model *model);
-    """
-    )
+    """)
 
 CHAR_ONE = "{}".format(chr(1)).encode("utf-8")
 CHAR_ZERO = "\0".encode("utf-8")
@@ -669,7 +673,7 @@ class SolverCbc(Solver):
         self.__name_spacec = ffi.new("char[{}]".format(MAX_NAME_SIZE))
         self.__log = (
             []
-        )  # type: List[Tuple[numbers.Real, Tuple[numbers.Real, numbers.Real]]]
+        )  # type: list[tuple[numbers.Real, tuple[numbers.Real, numbers.Real]]]
         self.set_problem_name(name)
         self.__pumpp = DEF_PUMPP
 
@@ -795,7 +799,7 @@ class SolverCbc(Solver):
 
     def conflicting_nodes(
         self: "SolverCbc", v1: Union["Var", "LinExpr"]
-    ) -> Tuple[List["Var"], List["Var"]]:
+    ) -> tuple[list["Var"], list["Var"]]:
         """Returns all assignment conflicting with the assignment in v1 in the
         conflict graph.
         """
@@ -927,7 +931,7 @@ class SolverCbc(Solver):
 
     def generate_cuts(
         self,
-        cut_types: Optional[List[CutType]] = None,
+        cut_types: Optional[list[CutType]] = None,
         depth: int = 0,
         npass: int = 0,
         max_cuts: int = maxsize,
@@ -1004,7 +1008,7 @@ class SolverCbc(Solver):
         OsiCuts_delete(osi_cuts)
         return cp
 
-    def clique_merge(self, constrs: Optional[List["mip.Constr"]] = None):
+    def clique_merge(self, constrs: Optional[list["mip.Constr"]] = None):
         if constrs is None:
             cbclib.Cbc_strengthenPacking(self._model)
         else:
@@ -1015,7 +1019,7 @@ class SolverCbc(Solver):
 
     def optimize(self, relax: bool = False) -> OptimizationStatus:
         # get name indexes from an osi problem
-        def cbc_get_osi_name_indexes(osi_solver) -> Dict[str, int]:
+        def cbc_get_osi_name_indexes(osi_solver) -> dict[str, int]:
             nameIdx = {}
             n = cbclib.Osi_getNumCols(osi_solver)
             for i in range(n):
@@ -1026,12 +1030,10 @@ class SolverCbc(Solver):
             return nameIdx
 
         # progress callback
-        @ffi.callback(
-            """
+        @ffi.callback("""
             int (void *, int, int, const char *, double, double, double,
             int, int *, void *)
-        """
-        )
+        """)
         def cbc_progress_callback(
             model,
             phase: int,
@@ -1054,11 +1056,9 @@ class SolverCbc(Solver):
             return
 
         # cut callback
-        @ffi.callback(
-            """
+        @ffi.callback("""
             void (void *osi_solver, void *osi_cuts, void *app_data, int level, int npass)
-        """
-        )
+        """)
         def cbc_cut_callback(osi_solver, osi_cuts, app_data, depth, npass):
             if (
                 osi_solver == ffi.NULL
@@ -1316,7 +1316,7 @@ class SolverCbc(Solver):
 
     def get_log(
         self,
-    ) -> List[Tuple[numbers.Real, Tuple[numbers.Real, numbers.Real]]]:
+    ) -> list[tuple[numbers.Real, tuple[numbers.Real, numbers.Real]]]:
         return self.__log
 
     def get_objective_bound(self) -> numbers.Real:
@@ -1447,7 +1447,7 @@ class SolverCbc(Solver):
         mp = self._model
         cbclib.Cbc_addLazyConstraint(mp, numnz, cind, cval, sense, rhs)
 
-    def add_sos(self, sos: List[Tuple["Var", numbers.Real]], sos_type: int):
+    def add_sos(self, sos: list[tuple["Var", numbers.Real]], sos_type: int):
         starts = ffi.new("int[]", [0, len(sos)])
         idx = ffi.new("int[]", [v.idx for (v, f) in sos])
         w = ffi.new("double[]", [f for (v, f) in sos])
@@ -1467,10 +1467,8 @@ class SolverCbc(Solver):
         elif ".bas" in file_path.lower():
             cbclib.Cbc_writeBasis(self._model, fpstr, CHAR_ONE, 2)
         else:
-            raise ValueError(
-                "Enter a valid extension (.lp, .mps or .bas) \
-                to indicate the file format"
-            )
+            raise ValueError("Enter a valid extension (.lp, .mps or .bas) \
+                to indicate the file format")
 
     def read(self, file_path: str) -> None:
         if not isfile(file_path):
@@ -1499,12 +1497,10 @@ class SolverCbc(Solver):
                 logger.info("Optimal LP basis successfully loaded.")
 
         else:
-            raise ValueError(
-                "Enter a valid extension (.lp, .mps or .bas) \
-                to indicate the file format"
-            )
+            raise ValueError("Enter a valid extension (.lp, .mps or .bas) \
+                to indicate the file format")
 
-    def set_start(self, start: List[Tuple[Var, numbers.Real]]) -> None:
+    def set_start(self, start: list[tuple[Var, numbers.Real]]) -> None:
         # Augment start list with default zero values for absent non-continuous variables
         start_vars_set = set(var for var, _ in start)
 
@@ -1630,11 +1626,11 @@ class SolverCbc(Solver):
     def set_num_threads(self, threads: int):
         self.__threads = threads
 
-    def remove_constrs(self, constrs: List[int]):
+    def remove_constrs(self, constrs: list[int]):
         idx = ffi.new("int[]", constrs)
         cbclib.Cbc_deleteRows(self._model, len(constrs), idx)
 
-    def remove_vars(self, varsList: List[int]):
+    def remove_vars(self, varsList: list[int]):
         idx = ffi.new("int[]", varsList)
         cbclib.Cbc_deleteCols(self._model, len(varsList), idx)
 
@@ -1661,7 +1657,7 @@ class SolverCbc(Solver):
     def constr_get_slack(self, constr: Constr) -> Optional[numbers.Real]:
         return self.__slack[constr.idx]
 
-    def feature_values(self) -> List[float]:
+    def feature_values(self) -> list[float]:
         n = int(Cbc_nFeatures())
         fv = ffi.new("double[%d]" % n)
         Cbc_computeFeatures(self._model, fv)
@@ -1675,7 +1671,7 @@ class SolverCbc(Solver):
         Cbc_reset(self._model)
 
 
-def feature_names() -> List[str]:
+def feature_names() -> list[str]:
     n = int(Cbc_nFeatures())
     return [ffi.string(Cbc_featureName(i)).decode("utf-8") for i in range(n)]
 
@@ -1922,7 +1918,7 @@ class SolverOsi(Solver):
 
     def get_log(
         self,
-    ) -> List[Tuple[numbers.Real, Tuple[numbers.Real, numbers.Real]]]:
+    ) -> list[tuple[numbers.Real, tuple[numbers.Real, numbers.Real]]]:
         return []
 
     def get_objective_value_i(self, i: int) -> numbers.Real:
@@ -1951,7 +1947,7 @@ class SolverOsi(Solver):
                 "Unknown sense: {}, use {} or {}".format(sense, MAXIMIZE, MINIMIZE)
             )
 
-    def set_start(self, start: List[Tuple["Var", numbers.Real]]):
+    def set_start(self, start: list[tuple["Var", numbers.Real]]):
         raise NotImplementedError("MIPstart not available in OsiSolver")
 
     def set_objective(self, lin_expr: "LinExpr", sense: str = ""):
@@ -2091,7 +2087,7 @@ class SolverOsi(Solver):
         cbclib.Osi_getRowName(self.osi, idx, namep, MAX_NAME_SIZE)
         return ffi.string(namep).decode("utf-8")
 
-    def remove_constrs(self, constrsList: List[int]):
+    def remove_constrs(self, constrsList: list[int]):
         raise NotImplementedError("Not available in OsiSolver")
 
     def constr_get_index(self, name: str) -> int:
@@ -2226,7 +2222,7 @@ class SolverOsi(Solver):
         cbclib.Osi_getColName(self.osi, idx, namep, MAX_NAME_SIZE)
         return ffi.string(namep).decode("utf-8")
 
-    def remove_vars(self, varsList: List[int]):
+    def remove_vars(self, varsList: list[int]):
         raise NotImplementedError("Not supported in OsiSolver")
 
     def var_get_index(self, name: str) -> int:

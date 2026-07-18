@@ -1,6 +1,6 @@
 import numpy as np
 from numpy import int64
-from typing import Any, List, Union
+from typing import Any, Union
 
 
 class _Tree:
@@ -38,7 +38,7 @@ class _Tree:
         else:
             raise IndexError("Node index not found in tree")
 
-    def get_ancestors(self, n: Union[int, int64]) -> List[Union[Any, int]]:
+    def get_ancestors(self, n: Union[int, int64]) -> list[Union[Any, int]]:
         ancestors = []
         if (n in self.Nodes) or (n in self.Leaves):
             current = n

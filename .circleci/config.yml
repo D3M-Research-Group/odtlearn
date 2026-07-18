@@ -1,38 +1,47 @@
-version: 2
+version: 2.1
 
 jobs:
   build:
+    parameters:
+      python-version:
+        type: string
     docker:
-      - image: circleci/python:3.6.1
+      - image: cimg/python:<< parameters.python-version >>
     working_directory: ~/repo
     steps:
       - checkout
       - run:
-          name: install dependencies
+          name: Install dependencies
           command: |
-            wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-            chmod +x miniconda.sh && ./miniconda.sh -b -p ~/miniconda
-            export PATH="~/miniconda/bin:$PATH"
-            conda update --yes --quiet conda
-            conda create -n testenv --yes --quiet python=3
-            source activate testenv
-            conda install --yes pip numpy scipy scikit-learn matplotlib sphinx sphinx_rtd_theme numpydoc pillow
-            pip install sphinx-gallery
-            pip install .
-            cd doc
+            set -e
+            python --version
+            python -m pip install --upgrade pip setuptools wheel
+            pip install build
+            pip install .[test]
+            python -c "
+            import sys, subprocess
+            if sys.version_info < (3, 12):
+                subprocess.check_call(['pip', 'install', '.[mip]'])
+            "
+      - run:
+          name: Install pandoc
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y pandoc
+      - run:
+          name: Build documentation
+          command: |
+            cd docs
             make html
-      - store_artifacts:
-          path: doc/_build/html/
-          destination: doc
-      - store_artifacts:
-          path: ~/log.txt
-      - run: ls -ltrh doc/_build/html
-    filters:
-      branches:
-        ignore: gh-pages
+      - run:
+          name: Run tests
+          command: |
+            pytest odtlearn/tests -v
 
 workflows:
-  version: 2
-  workflow:
+  build-and-test:
     jobs:
-      - build
+      - build:
+          matrix:
+            parameters:
+              python-version: ["3.9", "3.11", "3.13", "3.14"]
