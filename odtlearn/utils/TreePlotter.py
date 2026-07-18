@@ -180,7 +180,7 @@ class MPLPlotter(_MPLTreeExporter):
 
         name = value if selected_feature is None else selected_feature
         if type(name) not in [str, np.str_]:
-            if type(name) != int:
+            if not isinstance(name, int):
                 name = str(int(name))
             else:
                 name = str(name)

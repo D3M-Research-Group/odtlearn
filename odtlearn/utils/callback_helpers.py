@@ -1,17 +1,271 @@
 import copy
-from typing import Any, List, Union
 
 import numpy as np
-from mip.entities import LinExpr
+from pandas import DataFrame
+from numpy import int64
+import heapq
+from typing import Any, TYPE_CHECKING
 
-from odtlearn.utils.solver import Solver
+if TYPE_CHECKING:
+    from odtlearn.solvers.solver import Solver
+    from odtlearn.flow_oct import BendersOCT
+    from odtlearn.robust_oct import RobustOCT
+
 
 # helper functions for BenderOCT callback
+def benders_callback(model: "BendersOCT", X: DataFrame, obj, solver: "Solver") -> None:
+    """
+    The BendersOCT callback function, called at every integer solution.
+
+    Parameters
+    ----------
+    model : Any
+        The solver model.
+    X : pandas.DataFrame
+        The training input samples.
+    obj : Any
+        The classifier object (e.g., BendersOCT).
+    solver : Solver
+        The Solver object used.
+    """
+    g_trans, p_trans, b_trans, w_trans = (
+        {k: solver.get_callback_solution(model, v) for k, v in obj._g.items()},
+        {k: solver.get_callback_solution(model, v) for k, v in obj._p.items()},
+        {k: solver.get_callback_solution(model, v) for k, v in obj._b.items()},
+        {k: solver.get_callback_solution(model, v) for k, v in obj._w.items()},
+    )
+
+    for i in range(len(X)):
+        g_threshold = 0.5
+        if g_trans[i] > g_threshold:
+            subproblem_value, left, right, target = benders_subproblem(
+                obj, b_trans, p_trans, w_trans, i
+            )
+            if subproblem_value == 0:
+                lhs = get_cut_integer(
+                    solver,
+                    obj,
+                    left,
+                    right,
+                    target,
+                    i,
+                )
+                solver.add_lazy_constraint(model, lhs)
+
+
+def robust_benders_callback(
+    model: "RobustOCT", X: DataFrame, obj, solver: "Solver"
+) -> None:
+    """
+    The RobustOCT callback function, called at every integer solution.
+
+    Parameters
+    ----------
+    model : Any
+        The solver model.
+    X : pandas.DataFrame
+        The training input samples.
+    obj : Any
+        The classifier object (e.g., RobustOCT).
+    solver : Solver
+        The Solver object used.
+    """
+    t_trans, b_trans, w_trans = (
+        {k: solver.get_callback_solution(model, v) for k, v in obj._t.items()},
+        {k: solver.get_callback_solution(model, v) for k, v in obj._b.items()},
+        {k: solver.get_callback_solution(model, v) for k, v in obj._w.items()},
+    )
+    # Initialize a blank-slate xi
+    initial_xi = {}
+    for c in obj._cat_features:
+        initial_xi[c] = 0
+
+    # Initialize dictionaries to store min and max values of each feature:
+    initial_mins = {}
+    initial_maxes = {}
+    for c in obj._cat_features:
+        initial_mins[c] = obj._min_values[c]
+        initial_maxes[c] = obj._max_values[c]
+
+    whole_expr = solver.lin_expr(0)  # Constraint RHS expression
+    priority_queue = []  # Stores elements of form (path_cost, index)
+    path_dict = {}  # Stores all paths from shortest path problem
+    xi_dict = (
+        {}
+    )  # Stores set of xi's from shortest path problem (feature perturbations)
+    v_dict = {}  # Stores set of v's from shortest path problem (label perturbations)
+    nom_path_dict = {}  # Stores set of nominal paths
+    correct_points = []  # List of indices of nominally correctly classified points
+
+    # Find nominal path for every data point
+    for i in obj._datapoints:
+        nom_path, k = get_nominal_path(obj, b_trans, w_trans, i)
+        if k != obj._y[i]:
+            # Misclassified nominally - no need to check for shortest path
+            curr_expr = get_cut_expression(
+                obj,
+                solver,
+                X,
+                nom_path,
+                initial_xi,
+                False,
+                i,
+                obj._f_theta_indices,
+            )
+            whole_expr += curr_expr
+            new_constr = obj._t[i] <= curr_expr
+            solver.add_lazy_constraint(model, new_constr)
+        else:
+            # Correctly classified - put into pool of problems for shortest path
+            correct_points += [i]
+            nom_path_dict[i] = nom_path
+
+    # Solve shortest path problem for every data point
+    # Get all paths
+    (
+        terminal_nodes,
+        terminal_path_dict,
+        terminal_features_dict,
+        terminal_assignments_dict,
+        terminal_cutoffs_dict,
+    ) = get_all_terminal_paths(obj, b_trans, w_trans)
+    for i in correct_points:
+        path, xi, cost, v = shortest_path_solver(
+            obj,
+            i,
+            obj._y[i],
+            terminal_nodes,
+            terminal_path_dict,
+            terminal_features_dict,
+            terminal_assignments_dict,
+            terminal_cutoffs_dict,
+            initial_xi=copy.deepcopy(initial_xi),
+            initial_mins=copy.deepcopy(initial_mins),
+            initial_maxes=copy.deepcopy(initial_maxes),
+        )
+        heapq.heappush(priority_queue, (cost, i))
+        path_dict[i] = path
+        xi_dict[i] = xi
+        v_dict[i] = v
+
+    # Add points that are misclassified to the constraint RHS
+    total_cost = 0
+    while True:
+        if len(priority_queue) == 0:
+            break
+
+        # Get next least-cost point and see if still under epsilon budget
+        current_point = heapq.heappop(priority_queue)
+        curr_cost = current_point[0]
+        if curr_cost + total_cost > obj._epsilon:
+            # Push point back into queue
+            heapq.heappush(priority_queue, current_point)
+            break
+        # Add RHS expression for point if still under budget
+        i = current_point[1]
+        whole_expr += get_cut_expression(
+            obj,
+            solver,
+            X,
+            path_dict[i],
+            xi_dict[i],
+            v_dict[i],
+            i,
+            obj._f_theta_indices,
+        )
+        total_cost += curr_cost
+
+    added_cut = round(sum(t_trans)) > len(
+        priority_queue
+    )  # current sum of t is larger than RHS -> violated constraint(s)
+    if added_cut:
+        while len(priority_queue) != 0:
+            current_point = heapq.heappop(priority_queue)
+            i = current_point[1]
+            whole_expr += get_cut_expression(
+                obj,
+                solver,
+                obj._X,
+                nom_path_dict[i],
+                initial_xi,
+                False,
+                i,
+                obj._f_theta_indices,
+            )
+        new_constr = solver.quicksum(obj._t[i] for i in obj._datapoints) <= whole_expr
+        solver.add_lazy_constraint(model, new_constr)
+
+
+def benders_subproblem(
+    main_model_obj: "BendersOCT",  # noqa: F821
+    b: dict[tuple[int, str], float],
+    p: dict[int, float],
+    w: dict[tuple[int, int64], float],
+    i: int,
+) -> tuple[int, list, list, list]:
+    """
+    Solve the Benders' subproblem for a given datapoint.
+
+    Parameters
+    ----------
+    main_model_obj : Any
+        The main model object.
+    b : dict
+        The dictionary of binary decision variables representing the branching decisions.
+    p : dict
+        The dictionary of binary decision variables representing the prediction decisions.
+    w : dict
+        The dictionary of binary decision variables representing the class assignments.
+    i : int
+        The index of the current datapoint.
+
+    Returns
+    -------
+    tuple
+        A tuple containing the subproblem value, left nodes, right nodes, and target nodes.
+    """
+    label_i = main_model_obj._y[i]
+    current = 1
+    right = []
+    left = []
+    target = []
+    subproblem_value = 0
+
+    while True:
+        (
+            _,
+            branching,
+            selected_feature,
+            _,
+            terminal,
+            _,
+        ) = main_model_obj._get_node_status(b, w, p, current)
+        if terminal:
+            target.append(current)
+            if current in main_model_obj._tree.Nodes:
+                left.append(current)
+                right.append(current)
+            if w[current, label_i] > 0.5:
+                subproblem_value = 1
+            break
+        elif branching:
+            if (
+                main_model_obj._X.at[i, selected_feature] == 1
+            ):  # going right on the branch
+                left.append(current)
+                target.append(current)
+                current = main_model_obj._tree.get_right_children(current)
+            else:  # going left on the branch
+                right.append(current)
+                target.append(current)
+                current = main_model_obj._tree.get_left_children(current)
+
+    return subproblem_value, left, right, target
 
 
 def get_left_exp_integer(
-    solver: Solver, main_grb_obj: "BendersOCT", n: int, i: int  # noqa: F821
-) -> LinExpr:
+    solver: "Solver", main_grb_obj: "BendersOCT", n: int, i: int  # noqa: F821
+) -> Any:
     """
     Get the expression for the left branch constraint in the Benders' subproblem.
 
@@ -28,8 +282,9 @@ def get_left_exp_integer(
 
     Returns
     -------
-    lhs : LinExpr
-        The left-hand side expression of the left branch constraint.
+    lhs : Any
+        The left-hand side expression of the left branch constraint. This is a
+        LinExpr object in Gurobi and CBC.
     """
     lhs = solver.quicksum(
         -1 * main_grb_obj._b[n, f]
@@ -41,8 +296,8 @@ def get_left_exp_integer(
 
 
 def get_right_exp_integer(
-    solver: Solver, main_grb_obj: "BendersOCT", n: int, i: int  # noqa: F821
-) -> LinExpr:
+    solver: "Solver", main_grb_obj: "BendersOCT", n: int, i: int  # noqa: F821
+) -> Any:
     """
     Get the expression for the right branch constraint in the Benders' subproblem.
 
@@ -59,8 +314,9 @@ def get_right_exp_integer(
 
     Returns
     -------
-    lhs : LinExpr
-        The left-hand side expression of the right branch constraint.
+    lhs : Any
+        The left-hand side expression of the right branch constraint. This is a
+        LinExpr object in Gurobi and CBC.
     """
     lhs = solver.quicksum(
         -1 * main_grb_obj._b[n, f]
@@ -73,7 +329,7 @@ def get_right_exp_integer(
 
 def get_target_exp_integer(
     main_grb_obj: "BendersOCT", n: int, i: int  # noqa: F821
-) -> LinExpr:
+) -> Any:
     """
     Get the expression for the target constraint in the Benders' subproblem.
 
@@ -88,8 +344,9 @@ def get_target_exp_integer(
 
     Returns
     -------
-    lhs : LinExpr
-        The left-hand side expression of the target constraint.
+    lhs : Any
+        The left-hand side expression of the target constraint. This is a
+        LinExpr object in Gurobi and CBC.
     """
     label_i = main_grb_obj._y[i]
     lhs = -1 * main_grb_obj._w[n, label_i]
@@ -97,13 +354,13 @@ def get_target_exp_integer(
 
 
 def get_cut_integer(
-    solver: Solver,
+    solver: "Solver",
     main_grb_obj: "BendersOCT",  # noqa: F821
-    left: List[Union[Any, int]],
-    right: List[Union[Any, int]],
-    target: List[int],
+    left: list[int],
+    right: list[int],
+    target: list[int],
     i: int,
-) -> LinExpr:
+) -> Any:
     """
     Get the Benders' cut expression for the current subproblem.
 
@@ -112,7 +369,7 @@ def get_cut_integer(
     solver : Solver
         The solver object used for solving the optimization problem.
     main_grb_obj : object
-        The main Gurobi model object.
+        The main Model object.
     left : list
         The list of nodes in the left branch of the current subproblem.
     right : list
@@ -124,8 +381,9 @@ def get_cut_integer(
 
     Returns
     -------
-    lhs : LinExpr
-        The left-hand side expression of the Benders' cut.
+    lhs : Any
+        The left-hand side expression of the Benders' cut. This is a
+        LinExpr object in Gurobi and CBC.
     """
     lhs = solver.lin_expr(0.0)
     lhs += main_grb_obj._g[i]
@@ -141,28 +399,31 @@ def get_cut_integer(
         tmp_lhs = get_target_exp_integer(main_grb_obj, n, i)
         lhs += tmp_lhs
 
-    return lhs
+    return lhs <= 0
 
 
 # helper functions for RobustTree callback
-
-
-def get_cut_expression(master, solver, X, b, w, path, xi, v, i, f_theta_indices):
+def get_cut_expression(
+    master: "RobustOCT",
+    solver: "Solver",
+    X: DataFrame,
+    path: list[int],
+    xi: dict,
+    v: bool,
+    i: int,
+    f_theta_indices: list,
+) -> Any:
     """
     Get the cut expression for the RobustOCT subproblem.
 
     Parameters
     ----------
-    master : object
+    master : RobustOCT
         The master problem object.
     solver : Solver
         The solver object used for solving the optimization problem.
     X : DataFrame
         The input data.
-    b : dict
-        The dictionary of binary decision variables representing the branching decisions.
-    w : dict
-        The dictionary of binary decision variables representing the prediction decisions.
     path : list
         The current path in the tree.
     xi : dict
@@ -176,7 +437,7 @@ def get_cut_expression(master, solver, X, b, w, path, xi, v, i, f_theta_indices)
 
     Returns
     -------
-    expr : LinExpr
+    expr : Any
         The cut expression for the current subproblem.
     """
     expr = solver.lin_expr(0)
@@ -219,25 +480,26 @@ def get_cut_expression(master, solver, X, b, w, path, xi, v, i, f_theta_indices)
 
 
 def get_all_terminal_paths(
-    master,
-    b,
-    w,
-    terminal_nodes=[],
-    path_dict={},
-    feature_path_dict={},
-    assignment_dict={},
-    cutoff_dict={},
-    curr_node=1,
-    curr_path=[1],
-    curr_feature_path=[],
-    curr_cutoff_path=[],
-):
+    master: "RobustOCT",
+    b: dict[tuple[int, str], float],
+    w: dict[tuple[int, int64], float],
+    terminal_nodes: list = [],
+    path_dict: dict = {},
+    feature_path_dict: dict = {},
+    assignment_dict: dict = {},
+    cutoff_dict: dict = {},
+    curr_node: int = 1,
+    curr_path: list = [1],
+    curr_feature_path: list = [],
+    curr_cutoff_path: list = [],
+) -> tuple[list[int], dict, dict, dict, dict]:
     """
-    Find all terminal paths in the decision tree.
+    Helper function for the Robust Benders callback.
+    Finds all terminal paths in the decision tree that lead to a classification.
 
     Parameters
     ----------
-    master : object
+    master : RobustOCT
         The master problem object.
     b : dict
         The dictionary of binary decision variables representing the branching decisions.
@@ -293,7 +555,7 @@ def get_all_terminal_paths(
     # b[n,f,theta]== 1
     curr_feature = None
     curr_theta = None
-    for f, theta in master._solver.model._data["f_theta_indices"]:
+    for f, theta in master._f_theta_indices:
         if b[curr_node, f, theta] > 0.5:
             curr_feature = f
             curr_theta = theta
@@ -367,13 +629,19 @@ def get_all_terminal_paths(
     )
 
 
-def get_nominal_path(master, b, w, i):
+def get_nominal_path(
+    master: "RobustOCT",
+    b: dict[tuple[int, str], float],
+    w: dict[tuple[int, int64], float],
+    i: int,
+) -> tuple[list[int], int]:
     """
-    Get the nominal path for a correctly classified datapoint.
+    Helper function for the Robust Benders callback.
+    Gets the decision path for a correctly classified datapoint.
 
     Parameters
     ----------
-    master : object
+    master : RobustOCT
         The master problem object.
     b : dict
         The dictionary of binary decision variables representing the branching decisions.
@@ -398,7 +666,7 @@ def get_nominal_path(master, b, w, i):
                 return path, k
 
         # braching node - find which feature to branch on
-        for f, theta in master._solver.model._data["f_theta_indices"]:
+        for f, theta in master._f_theta_indices:
             if b[curr_node, f, theta] > 0.5:
                 if master._X.at[i, f] >= theta + 1:
                     curr_node = (2 * curr_node) + 1  # go right
@@ -408,24 +676,26 @@ def get_nominal_path(master, b, w, i):
 
 
 def shortest_path_solver(
-    master,
-    i,
-    label,
-    terminal_nodes,
-    terminal_path_dict,
-    terminal_features_dict,
-    terminal_assignments_dict,
-    terminal_cutoffs_dict,
-    initial_xi,
-    initial_mins,
-    initial_maxes,
-):
+    master: "RobustOCT",
+    i: int,
+    label: int,
+    terminal_nodes: list[int],
+    terminal_path_dict: dict,
+    terminal_features_dict: dict,
+    terminal_assignments_dict: dict,
+    terminal_cutoffs_dict: dict,
+    initial_xi: dict,
+    initial_mins: dict,
+    initial_maxes: dict,
+) -> tuple[list[int], dict, float, bool]:
     """
-    Solve the shortest path problem for a given datapoint.
+    Helper function for the Robust Benders callback.
+    Finds the minimum cost perturbation to misclassify datapoint i in a given tree via
+    a shortest path problem.
 
     Parameters
     ----------
-    master : object
+    master : RobustOCT
         The master problem object.
     i : int
         The index of the current datapoint.
@@ -451,10 +721,10 @@ def shortest_path_solver(
     Returns
     -------
     tuple
-        A tuple containing the best path, best cost, feature perturbations (xi),
+        A tuple containing the best path, feature perturbations (xi), best cost,
         and label perturbation flag (v).
     """
-    best_cost = (master._solver.model._data["epsilon"] + 1) * master._tree.depth
+    best_cost = (master._epsilon + 1) * master._tree.depth
     best_path = []
     xi = copy.deepcopy(initial_xi)
     v = False
@@ -468,7 +738,7 @@ def shortest_path_solver(
         curr_mins = copy.deepcopy(initial_mins)
         curr_maxes = copy.deepcopy(initial_maxes)
         curr_path = terminal_path_dict[j]
-        curr_cost = master._solver.model._data["eta"] * int(
+        curr_cost = master._eta * int(
             curr_v
         )  # Start with cost if correctly classify point
         best_so_far = True
@@ -492,9 +762,7 @@ def shortest_path_solver(
                     delta_x = theta - master._X.at[i, f] + 1  # positive value
 
                     # cost increases by gamma per unit increase of xi
-                    curr_cost += master._solver.model._data["gammas"].loc[i][f] * (
-                        delta_x - curr_xi[f]
-                    )
+                    curr_cost += master._gammas.loc[i][f] * (delta_x - curr_xi[f])
                     curr_xi[f] = delta_x
 
                 # Update bounds
@@ -511,9 +779,7 @@ def shortest_path_solver(
                     delta_x = theta - master._X.at[i, f]  # negative value
 
                     # cost increases by gamma per unit decrease of xi
-                    curr_cost += master._solver.model._data["gammas"].loc[i][f] * (
-                        curr_xi[f] - delta_x
-                    )
+                    curr_cost += master._gammas.loc[i][f] * (curr_xi[f] - delta_x)
                     curr_xi[f] = delta_x
 
                 # Update bounds
@@ -529,4 +795,4 @@ def shortest_path_solver(
             xi = curr_xi
             v = curr_v
 
-    return best_path, best_cost, xi, v
+    return best_path, xi, best_cost, v

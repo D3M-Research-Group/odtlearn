@@ -2,7 +2,7 @@
 <img src="./img/ODTlearn-color.png" alt="ODTlearn Logo" width="500"/>
 </p>
 
-A package for tree-based statistical estimation and inference using optimal decision trees. ODTlearn provides implementations of StrongTrees [1], FairTrees [2], RobustTrees [3] for classification, and Prescriptive Trees [4] for prescription.
+A package for tree-based statistical estimation and inference using optimal decision trees. ODTlearn provides implementations of StrongTrees [1], FairTrees [2], RobustTrees [3,4] for classification, and Prescriptive Trees [5] for prescription.
 
 ![Test badge](https://github.com/D3M-Research-Group/odtlearn/actions/workflows/ci.yml/badge.svg)
 ![Documentation badge](https://github.com/D3M-Research-Group/odtlearn/actions/workflows/sphinx.yml/badge.svg)
@@ -14,6 +14,7 @@ A package for tree-based statistical estimation and inference using optimal deci
 The [package documentation](https://d3m-research-group.github.io/odtlearn/index.html) contains usage examples and method reference.
 
 ## Installation
+ODTlearn is a package for [Python](https://www.python.org/). To use ODTlearn first [download and install](https://www.python.org/downloads/) Python. ODTLearn supports Python 3.9 and later. CBC solver support is only available for Python 3.9-3.11.
 
 The latest stable version can be installed from PyPI with the command:
 
@@ -24,15 +25,29 @@ pip install odtlearn
 The current development version can be installed from source with the following command:
 
 ``` bash
-pip install git+https://github.com/D3M-Research-Group/odtlearn.git#egg=odtlearn
+pip install git+https://github.com/D3M-Research-Group/odtlearn.git
 ```
 
+This package gives you the option to either use Gurobi or Coin-OR Branch & Cut (CBC) as your base solver.
 
-### Obtain Gurobi License
+### Using Gurobi
 To use Gurobi with ODTlearn, you must have a valid Gurobi License. [Free licenses are available for academic use](https://www.gurobi.com/academia/academic-program-and-licenses/) and additional methods for obtaining a Gurobi license can be found [here](https://www.gurobi.com/solutions/licensing/).
 
-### CBC Binaries
-[Python-MIP](https://github.com/coin-or/python-mip) provides CBC binaries for 64-bit versions of Windows, Linux, and MacOS that run on Intel hardware, however we have observed that these binaries do not seem to work properly with lazy constraint generation, which is used in some of our MIO formulations. Thus, to ensure expected behavior when using ODTlearn, we strongly recommend building CBC from source. Below are the steps needed to compile CBC from source using [coinbrew](https://github.com/coin-or/coinbrew).
+Once a license is obtained, you must install the `gurobipy` package:
+```bash
+pip install gurobipy
+```
+
+### Using CBC
+Note that currently, CBC is only supported in ODTLearn for Python 3.9-3.11.
+
+First, install [Python-MIP](https://github.com/coin-or/python-mip) and [CFFI](https://cffi.readthedocs.io/en/stable/index.html):
+```bash
+pip install mip cffi
+```
+
+Python-MIP provides CBC binaries for 64-bit versions of Windows, Linux, and MacOS that run on Intel hardware, however we have observed that these binaries do not seem to work properly with lazy constraint generation, which is used in some of our MIO formulations. Thus, to ensure expected behavior when using ODTlearn, we strongly recommend building CBC from source. Below are the steps needed to compile CBC from source using [coinbrew](https://github.com/coin-or/coinbrew).
+
 
 ``` bash
 mkdir CBC
@@ -62,8 +77,9 @@ pre-commit install
 
 
 ## References
-* [1] Aghaei, S., Gómez, A., & Vayanos, P. (2021). Strong optimal classification trees. arXiv preprint arXiv:2103.15965. https://arxiv.org/abs/2103.15965.
-* [2] Jo, N., Aghaei, S., Benson, J., Gómez, A., & Vayanos, P. (2022). Learning optimal fair classification trees. arXiv preprint arXiv:2201.09932. https://arxiv.org/pdf/2201.09932.pdf
-* [3] Justin, N., Aghaei, S., Gomez, A., & Vayanos, P. (2021). Optimal Robust Classification Trees. In The AAAI-22 Workshop on Adversarial Machine Learning and Beyond. https://openreview.net/pdf?id=HbasA9ysA3
-* [4] Jo, N., Aghaei, S., Gómez, A., & Vayanos, P. (2021). Learning optimal prescriptive trees from observational data. arXiv preprint arXiv:2108.13628. https://arxiv.org/pdf/2108.13628.pdf
+* [1] Aghaei, S., Gómez, A., & Vayanos, P. (2025). Strong optimal classification trees. *Operations Research*, 73(4), 2223-2241.
+* [2] Jo, N., Aghaei, S., Benson, J., Gómez, A., & Vayanos, P. (2022). Learning optimal fair classification trees. *arXiv preprint* arXiv:2201.09932. https://arxiv.org/pdf/2201.09932.pdf
+* [3] Justin, N., Aghaei, S., Gomez, A., & Vayanos, P. (2021). Optimal Robust Classification Trees. In *The AAAI-22 Workshop on Adversarial Machine Learning and Beyond*. https://openreview.net/pdf?id=HbasA9ysA3
+* [4] Justin, N., Aghaei, S., Gómez, A., & Vayanos, P. (2023). Learning optimal classification trees robust to distribution shifts. *arXiv preprint* arXiv:2310.17772.
+* [5] Jo, N., Aghaei, S., Gómez, A., & Vayanos, P. (2021). Learning optimal prescriptive trees from observational data. *arXiv preprint* arXiv:2108.13628. https://arxiv.org/pdf/2108.13628.pdf
 

@@ -4,18 +4,20 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "odtlearn"
+version = "1.1.0"
 description = "A package for tree-based statistical estimation and inference using optimal decision trees."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = { file = "LICENSE" }
 authors = [
     { name = "Patrick Vossler" },
-    { name = "Sina Aghaei" },
     { name = "Nathan Justin" },
+    { name = "Sina Aghaei" },
     { name = "Nathanael Jo" },
 ]
 maintainers = [
     { name = "Patrick Vossler", email = "patrick.vossler18@gmail.com" },
+    { name = "Nathan Justin", email = "nathanjustin14@gmail.com" },
 ]
 keywords = [
     "Optimization",
@@ -33,21 +35,19 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Operating System :: Unix",
     "Operating System :: MacOS",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 
 dependencies = [
-    "cffi>=1.15",
-    "mip>=1.15",
     "scikit-learn>=1.2",
     "numpy>=1.23",
     "pandas>=1.5",
-    "seaborn>=0.13.2",
-    "matplotlib>=3.5.3",
 ]
-
-dynamic = ["version"]
 
 [project.optional-dependencies]
 docs = [
@@ -67,7 +67,20 @@ docs = [
     "ipykernel",
     "jupyter",
 ]
-test = ["pytest>=7.4", "gurobipy>=10.0.0"]
+test = [
+    "pytest>=7.4", 
+    "gurobipy>=11.0", 
+    "mip>=1.15; python_version < '3.12'",
+    "cffi>=1.15; python_version < '3.12'",
+    "seaborn>=0.13",
+    "matplotlib>=3.5",
+]
+
+gurobi = ["gurobipy>=11.0"]
+
+cbc = ["mip>=1.15; python_version<'3.12'", "cffi>=1.15"]
+
+visualization = ["seaborn>=0.13", "matplotlib>=3.5"]
 
 [project.urls]
 "Homepage" = "https://d3m-research-group.github.io/odtlearn/"
@@ -81,8 +94,6 @@ include = ["odtlearn*"]
 odtlearn = [
     "data/*.csv",
     "data/*.npz",
-    "data/prescriptive/test_v2_200.csv",
-    "data/prescriptive/train_v2_100.csv",
     "data/prescriptive/train_50.csv",
 ]
 

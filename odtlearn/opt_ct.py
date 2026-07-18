@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Tuple, Union
+from typing import Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -8,7 +8,6 @@ from pandas.core.series import Series
 from sklearn.utils.validation import check_is_fitted
 
 from odtlearn.opt_dt import OptimalDecisionTree
-from odtlearn.utils.TreePlotter import MPLPlotter
 
 
 class OptimalClassificationTree(OptimalDecisionTree):
@@ -96,14 +95,14 @@ class OptimalClassificationTree(OptimalDecisionTree):
 
     def _get_node_status(
         self,
-        b: Dict[Tuple[int, str_], float],
-        w: Dict[Tuple[int, int64], float],
-        p: Dict[int, float],
+        b: dict[tuple[int, str_], float],
+        w: dict[tuple[int, int64], float],
+        p: dict[int, float],
         n: Union[int, int64],
         feature_names: Optional[ndarray] = None,
     ) -> Union[
-        Tuple[bool, bool, None, int, bool, int64],
-        Tuple[bool, bool, str_, int, bool, None],
+        tuple[bool, bool, None, int, bool, int64],
+        tuple[bool, bool, str_, int, bool, None],
     ]:
         """
         This function give the status of a given node in a tree. By status we mean whether the node
@@ -328,22 +327,29 @@ class OptimalClassificationTree(OptimalDecisionTree):
                 node,
                 feature_names=column_names,
             )
+        try:
+            from odtlearn.utils.TreePlotter import MPLPlotter
 
-        exporter = MPLPlotter(
-            self._tree,
-            node_dict,
-            column_names,
-            self._tree.depth,
-            self._classes,
-            type(self).__name__,
-            label=label,
-            filled=filled,
-            rounded=rounded,
-            precision=precision,
-            fontsize=fontsize,
-            color_dict=color_dict,
-            edge_annotation=edge_annotation,
-            arrow_annotation_font_scale=arrow_annotation_font_scale,
-            debug=debug,
-        )
+            exporter = MPLPlotter(
+                self._tree,
+                node_dict,
+                column_names,
+                self._tree.depth,
+                self._classes,
+                type(self).__name__,
+                label=label,
+                filled=filled,
+                rounded=rounded,
+                precision=precision,
+                fontsize=fontsize,
+                color_dict=color_dict,
+                edge_annotation=edge_annotation,
+                arrow_annotation_font_scale=arrow_annotation_font_scale,
+                debug=debug,
+            )
+        except ModuleNotFoundError as e:
+            raise ImportError(
+                "Plotting requires the 'seaborn' package, which is not installed. "
+                "Install it with: [pip install seaborn]. "
+            ) from e
         return exporter.export(ax=ax, distance=distance)
