@@ -64,6 +64,8 @@ docs = [
     "sphinx-prompt>=1.7.0",
     "numpydoc>=1.6.0",
     "myst-parser>=2.0.0",
+    "ipykernel",
+    "jupyter",
 ]
 test = ["pytest>=7.4", "gurobipy>=10.0.0"]
 
