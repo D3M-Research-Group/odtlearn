@@ -366,3 +366,4 @@ html_scaled_image_link = False
 
 nbsphinx_execute = "auto"
 nbsphinx_allow_errors = True
+nbsphinx_timeout = 600
