@@ -4,15 +4,6 @@ odtlearn
 .. py:module:: odtlearn
 
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 1
-
-   /autoapi/odtlearn/utils/index
-
-
 Submodules
 ----------
 
@@ -32,6 +23,8 @@ Submodules
    /autoapi/odtlearn/opt_dt/index
    /autoapi/odtlearn/opt_pt/index
    /autoapi/odtlearn/robust_oct/index
+   /autoapi/odtlearn/solvers/index
+   /autoapi/odtlearn/utils/index
 
 
 Attributes
@@ -53,7 +46,75 @@ Classes
 Package Contents
 ----------------
 
+.. py:data:: name
+   :value: 'odtlearn'
+
+
+   
+   Name of the ODTLearn module.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: ODTL
+
+   
+   Top-level constants used for ODTLearn solvers.
+
+
+
+   :Attributes:
+
+       **MIN** : str
+           Minimization problem indicator, equivalent to ODTL.MINIMIZE
+
+       **MAX** : str
+           Maximization problem indicator, equivalent to ODTL.MAXIMIZE
+
+       **MINIMIZE** : str
+           Minimization problem indicator, equivalent to ODTL.MIN
+
+       **MAXIMIZE** : str
+           Maximization problem indicator, equivalent to ODTL.MAX
+
+       **BINARY** : str
+           Binary variable indicator
+
+       **CONTINUOUS** : str
+           Continuous variable indicator
+
+       **INTEGER** : str
+           Integer variable indicator
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
    .. py:attribute:: MIN
       :value: 'MIN'
@@ -88,9 +149,5 @@ Package Contents
    .. py:attribute:: INTEGER
       :value: 'I'
 
-
-
-.. py:data:: name
-   :value: 'odtlearn'
 
 

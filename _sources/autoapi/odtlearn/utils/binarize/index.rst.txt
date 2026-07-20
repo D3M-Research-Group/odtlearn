@@ -23,7 +23,7 @@ Functions
 Module Contents
 ---------------
 
-.. py:class:: Binarizer(categorical_cols: Optional[List[str]] = None, integer_cols: Optional[List[str]] = None, real_cols: Optional[List[str]] = None, n_bins: int = 4, bin_strategy: str = 'uniform')
+.. py:class:: Binarizer(categorical_cols: Optional[list[str]] = None, integer_cols: Optional[list[str]] = None, real_cols: Optional[list[str]] = None, n_bins: int = 4, bin_strategy: str = 'uniform')
 
    Bases: :py:obj:`sklearn.base.BaseEstimator`, :py:obj:`sklearn.base.TransformerMixin`
 
@@ -53,6 +53,15 @@ Module Contents
            'uniform': All bins in each feature have identical widths.
            'quantile': All bins in each feature have the same number of points.
 
+   :Attributes:
+
+       **encoders_** : dict
+           Dictionary of fitted encoders for each column type.
+
+       **column_names_** : list
+           List of column names in the transformed output.
+
+
 
 
 
@@ -80,17 +89,41 @@ Module Contents
    ... )
    >>> X_bin = binarizer.fit_transform(df)
 
-   :Attributes:
-
-       **encoders_** : dict
-           Dictionary of fitted encoders for each column type.
-
-       **column_names_** : list
-           List of column names in the transformed output.
-
-
    ..
        !! processed by numpydoc !!
+
+   .. py:attribute:: categorical_cols
+      :value: []
+
+
+
+   .. py:attribute:: integer_cols
+      :value: []
+
+
+
+   .. py:attribute:: real_cols
+      :value: []
+
+
+
+   .. py:attribute:: n_bins
+      :value: 4
+
+
+
+   .. py:attribute:: bin_strategy
+      :value: 'uniform'
+
+
+
+   .. py:attribute:: encoders_
+
+
+   .. py:attribute:: column_names_
+      :value: None
+
+
 
    .. py:method:: fit(X: pandas.core.frame.DataFrame, y: None = None) -> Binarizer
 
@@ -107,12 +140,12 @@ Module Contents
           **y** : None
               Ignored. This parameter exists only for compatibility with sklearn.
 
+
+
       :Returns:
 
           **self** : object
               Returns self.
-
-
 
 
 
@@ -139,12 +172,12 @@ Module Contents
           **X** : array-like or pandas DataFrame of shape (n_samples, n_features)
               The input samples to be binarized.
 
+
+
       :Returns:
 
           **X_bin** : pandas DataFrame
               The binarized input data.
-
-
 
 
 

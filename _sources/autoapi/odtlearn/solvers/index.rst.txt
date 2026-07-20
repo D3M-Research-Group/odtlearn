@@ -1,0 +1,19 @@
+odtlearn.solvers
+================
+
+.. py:module:: odtlearn.solvers
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/odtlearn/solvers/cbc_callbacks/index
+   /autoapi/odtlearn/solvers/cbc_solver/index
+   /autoapi/odtlearn/solvers/gurobi_callbacks/index
+   /autoapi/odtlearn/solvers/gurobi_solver/index
+   /autoapi/odtlearn/solvers/solver/index
+
+

@@ -72,17 +72,6 @@ Module Contents
        **debug** : bool, optional (default=False)
            Whether to print debug information.
 
-
-
-
-
-
-
-
-
-
-
-
    :Attributes:
 
        **classes** : list
@@ -141,8 +130,70 @@ Module Contents
                       **recurse(node, ax, max_x, max_y, depth=0)**  Recursively plots the nodes and edges of the decision tree.  
    ===============================================================  ==========
 
+
+
+
+
+
+
+
+
+
+
+
    ..
        !! processed by numpydoc !!
+
+   .. py:attribute:: classes
+
+
+   .. py:attribute:: max_depth
+
+
+   .. py:attribute:: tree
+
+
+   .. py:attribute:: node_dict
+
+
+   .. py:attribute:: column_names
+
+
+   .. py:attribute:: class_names
+
+
+   .. py:attribute:: color_options
+
+
+   .. py:attribute:: color_dict
+
+
+   .. py:attribute:: edge_annotation
+      :value: True
+
+
+
+   .. py:attribute:: arrow_annotation_font_scale
+      :value: 0.5
+
+
+
+   .. py:attribute:: debug
+      :value: False
+
+
+
+   .. py:attribute:: model_name
+
+
+   .. py:attribute:: characters
+
+
+   .. py:attribute:: bbox_args
+
+
+   .. py:attribute:: arrow_args
+
 
    .. py:method:: get_fill_color(node_id)
 

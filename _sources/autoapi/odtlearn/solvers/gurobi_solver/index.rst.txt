@@ -1,0 +1,747 @@
+odtlearn.solvers.gurobi_solver
+==============================
+
+.. py:module:: odtlearn.solvers.gurobi_solver
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   odtlearn.solvers.gurobi_solver.GurobiSolver
+
+
+Module Contents
+---------------
+
+.. py:class:: GurobiSolver(verbose)
+
+   Bases: :py:obj:`odtlearn.solvers.solver.Solver`
+
+
+   
+   A wrapper class on top of the gurobipy Model. This class contains functions for interacting
+   with the solver for setting up, optimizing, and getting optimal values of a model.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:attribute:: model
+
+
+   .. py:method:: get_var_value(objs, var_name=None)
+
+      
+      Get the value of a decision variable from a solved problem.
+
+
+      :Parameters:
+
+          **objs: dict**
+              A dictionary of the model variables
+
+          **var_name: str | None, default=None**
+              The name supplied when the decision variable was initialized.
+
+
+
+      :Returns:
+
+          A dict with the values of each variable from the solution
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_callback(callback_type)
+
+      
+      Set a callback for the solver.
+
+
+      :Parameters:
+
+          **callback_type** : str
+              Name of callback to add to the solver.
+              Possible values are currently "benders" and "robust_benders"
+
+
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: optimize()
+
+      
+      Optimize the constructed model
+
+
+
+
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_vars(*indices, lb=0.0, ub=float('inf'), obj=0.0, vtype='C', name: str = '') -> gurobipy.tupledict
+
+      
+      Create a dictionary with the decision variables with keys of the form
+      {name}[(element of indices list)] and then add the variables to the model
+
+
+      :Parameters:
+
+          **\*indices: Iterable**
+              Arbitrary list of indices to use to create the decision variables.
+
+          **lb: double, default=0.0**
+              Lower bound for new variable.
+
+          **ub: double, default=inf**
+              Upper bound for new variable.
+
+          **obj: double**
+              Objective coefficient for new variable.
+
+          **type: str, default="C"**
+              Variable type for new variable. Accepted values are "C", "B", "I"
+
+          **name: str, default=""**
+              Name used when creating dictionary storing variables.
+
+
+
+      :Returns:
+
+          Dictionary of new variable objects.
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_constr(cons_expr: gurobipy.LinExpr)
+
+      
+      Add a constraint expression to the model.
+
+
+      :Parameters:
+
+          **cons_expr: LinExpr**
+              A constraint expression to be added to the model.
+
+
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: lin_expr(arg1=0.0) -> gurobipy.LinExpr
+
+      
+      Initialize a linear expression object that the solver can read
+
+
+      :Parameters:
+
+          **arg1: double | Variable , default=0.0**
+              A constant or Variable to be used to initialize the linear expression
+
+
+
+      :Returns:
+
+          Any, solver-dependent
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_objective(expr: gurobipy.LinExpr, sense)
+
+      
+      Take the linear expression and set it as the objective for the problem.
+
+
+      :Parameters:
+
+          **expr: Any**
+              The linear expression to be used as the objective for the problem.
+
+          **sense: str or int**
+              A string specifying whether the objective should be minimized (1 or GRB.MINIMIZE)
+              or maximized (-1 or GRB.MAXIMIZE)
+
+
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: quicksum(terms: list) -> gurobipy.LinExpr
+
+      
+      Sums together a list of variables to make a linear expression
+
+
+      :Parameters:
+
+          **terms: list**
+              list of variables to be summed
+
+
+
+      :Returns:
+
+          Any, solver-dependent
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: store_data(key, value)
+
+      
+      Store data to be used in the callback action.
+      For consistency across solvers, we store the data in the model._data attribute
+      as a dictionary.
+
+
+      :Parameters:
+
+          **key: str**
+              The name under which to store the data
+
+          **value: Any**
+              The values to be stored in the dictionary.
+
+
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_gap()
+
+      
+      Get the MIP gap of the solve after optimization.
+
+
+
+
+
+      :Returns:
+
+          float
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_objective_value()
+
+      
+      Get the objective value of the solution.
+
+
+
+
+
+      :Returns:
+
+          float or None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_objective_bound()
+
+      
+      Get the best known objective bound of the solution. This is a
+      lower bound for minimization and upper bound for maximization.
+
+
+
+
+
+      :Returns:
+
+          float or None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_num_variables()
+
+      
+      Get the number of variables in the optimization model.
+
+
+
+
+
+      :Returns:
+
+          int
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_num_int_variables()
+
+      
+      Get the number of integer-valued variables in the solution.
+
+
+
+
+
+      :Returns:
+
+          int
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_num_nonzeroes()
+
+      
+      Get the number of nonzeros in the constraint matrix of the model.
+
+
+
+
+
+      :Returns:
+
+          int
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_num_soluions()
+
+      
+      Get the number of solutions found during the solve.
+
+
+
+
+
+      :Returns:
+
+          int
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_num_constraints()
+
+      
+      Get the number of constraints in the model.
+
+
+
+
+
+      :Returns:
+
+          int
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_time_limit(seconds)
+
+      
+      Set the time limit for the solver.
+
+
+      :Parameters:
+
+          **seconds** : int
+              Time limit to be set, in seconds
+
+
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_num_threads(num_threads)
+
+      
+      Set the number of threads used by the solver.
+
+
+      :Parameters:
+
+          **num_threads** : int
+              Number of threads
+
+
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: add_lazy_constraint(model: gurobipy.Model, constr: gurobipy.LinExpr)
+
+      
+      Add a lazy constraint to the model
+
+
+      :Parameters:
+
+          **model: Any**
+              The model object to add the lazy constraint to.
+
+          **constr: Any**
+              The lazy constraint to add to the model.
+
+
+
+      :Returns:
+
+          None
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_callback_solution(model: gurobipy.Model, var: gurobipy.Var)
+
+      
+      Obtain the value of a variable in a solution within a callback
+
+
+      :Parameters:
+
+          **model: Any**
+              The model object containing the callback solution.
+
+          **var: Any**
+              The variable object to get the value of.
+
+
+
+      :Returns:
+
+          The callback solution.
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_search_progress_log() -> list
+
+      
+      Get the number of solutions found during the solve.
+
+
+
+
+
+      :Returns:
+
+          List of tuples of the form (time, (lower_bound, upper_bound))
+              ..
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+

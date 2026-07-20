@@ -65,6 +65,35 @@ Module Contents
        **verbose** : bool, optional
            Whether to display verbose output during the solving process.
 
+   :Attributes:
+
+       **_obj_mode** : str
+           The objective mode used for learning the optimal tree. Must be either 'acc' or 'balance'.
+
+       **_positive_class** : int
+           The value of the positive class label.
+
+       **_fairness_bound** : float
+           The bound of the fairness constraint. Must be in the interval (0, 1].
+
+       **_protect_feat_col_labels** : list of str
+           The column labels of the protected features.
+
+       **_protect_feat_col_dtypes** : list of dtype
+           The data types of the protected feature columns.
+
+   .. rubric:: Methods
+
+
+
+   ==============================================  ==========
+   **_add_fairness_constraint(p_df, p_prime_df)**  Add the fairness constraint to the MIP problem for the given protected groups.  
+        **_extract_metadata(X, y, protect_feat)**  Extract metadata from the input data.  
+                          **_define_objective()**  Define the objective function for the MIP problem.  
+        **fit(X, y, protect_feat, legit_factor)**  Fit the fair constrained optimal classification tree on the given data.  
+                                   **predict(X)**  Predict the class labels for the given input data using the fitted model.  
+   ==============================================  ==========
+
 
 
 
@@ -95,37 +124,16 @@ Module Contents
 
 
 
-   :Attributes:
-
-       **_obj_mode** : str
-           The objective mode used for learning the optimal tree. Must be either 'acc' or 'balance'.
-
-       **_positive_class** : int
-           The value of the positive class label.
-
-       **_fairness_bound** : float
-           The bound of the fairness constraint. Must be in the interval (0, 1].
-
-       **_protect_feat_col_labels** : list of str
-           The column labels of the protected features.
-
-       **_protect_feat_col_dtypes** : list of dtype
-           The data types of the protected feature columns.
-
-   .. rubric:: Methods
-
-
-
-   ==============================================  ==========
-   **_add_fairness_constraint(p_df, p_prime_df)**  Add the fairness constraint to the MIP problem for the given protected groups.  
-        **_extract_metadata(X, y, protect_feat)**  Extract metadata from the input data.  
-                          **_define_objective()**  Define the objective function for the MIP problem.  
-        **fit(X, y, protect_feat, legit_factor)**  Fit the fair constrained optimal classification tree on the given data.  
-                                   **predict(X)**  Predict the class labels for the given input data using the fitted model.  
-   ==============================================  ==========
-
    ..
        !! processed by numpydoc !!
+
+   .. py:attribute:: obj_mode
+
+
+   .. py:attribute:: weights
+      :value: None
+
+
 
    .. py:method:: fit(X: numpy.ndarray, y: numpy.ndarray, protect_feat: numpy.ndarray, legit_factor: numpy.ndarray, weights: None = None) -> Union[FairCSPOCT, FairSPOCT, FairEOddsOCT, FairEOppOCT, FairPEOCT]
 
@@ -153,6 +161,8 @@ Module Contents
               Sample weights. If None, then samples are equally weighted when obj_mode is 'acc',
               or weights are automatically calculated when obj_mode is 'balance'.
               Must be provided when obj_mode is 'weighted'.
+
+
 
       :Returns:
 
@@ -207,8 +217,6 @@ Module Contents
       >>> model = FairConstrainedOCT(solver="cbc", positive_class=1, depth=2, fairness_bound=0.1)
       >>> model.fit(X, y, protect_feat, legit_factor)
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -223,6 +231,8 @@ Module Contents
 
           **X** : array-like of shape (n_samples, n_features)
               The input samples for which to make predictions. Each feature should be binary (0 or 1).
+
+
 
       :Returns:
 
@@ -269,8 +279,6 @@ Module Contents
       >>> y_pred = clf.predict(X_test)
       >>> print(y_pred)
       [1 0]
-
-
 
       ..
           !! processed by numpydoc !!
@@ -346,6 +354,8 @@ Module Contents
           **y** : array-like of shape (n_samples,)
               The target values or predicted values.
 
+
+
       :Returns:
 
           **sp_dict** : dict
@@ -362,8 +372,6 @@ Module Contents
 
       This method calculates the statistical parity metric, which measures the difference in prediction rates
       across different protected groups.
-
-
 
 
 
@@ -444,6 +452,8 @@ Module Contents
           **y** : array-like of shape (n_samples,)
               The target values or predicted values.
 
+
+
       :Returns:
 
           **csp_dict** : dict
@@ -461,8 +471,6 @@ Module Contents
 
       This method calculates the conditional statistical parity metric, which measures the difference in
       prediction rates across different protected groups, conditioned on the legitimate factor.
-
-
 
 
 
@@ -546,6 +554,8 @@ Module Contents
           **y_pred** : array-like of shape (n_samples,)
               The predicted values.
 
+
+
       :Returns:
 
           **eq_dict** : dict
@@ -563,8 +573,6 @@ Module Contents
 
       This method calculates the predictive equality metric, which measures the difference in
       false positive rates across different protected groups.
-
-
 
 
 
@@ -772,6 +780,8 @@ Module Contents
           **legit_factor** : array-like of shape (n_samples,)
               The legitimate factor column (e.g., prior number of criminal acts).
 
+
+
       :Returns:
 
           **self** : object
@@ -796,8 +806,6 @@ Module Contents
 
 
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -812,6 +820,8 @@ Module Contents
 
           **X** : array-like of shape (n_samples, n_features)
               The input samples for which to make predictions. Each feature should be binary (0 or 1).
+
+
 
       :Returns:
 
@@ -837,8 +847,6 @@ Module Contents
       This method uses the fair decision tree learned during the fit process to classify new samples.
       It traverses the tree for each sample in X, following the branching decisions until
       reaching a leaf node, and returns the corresponding class prediction.
-
-
 
 
 
@@ -996,6 +1004,8 @@ Module Contents
               The new predicted data to use for calculating the fairness metric. If None, the predict method
               is called on the training data to obtain the predicted values. Default is None.
 
+
+
       :Returns:
 
           None
@@ -1037,8 +1047,6 @@ Module Contents
       1      (Male, True)    0.247525
       2   (Female, False)    0.742574
       3    (Female, True)    0.257426
-
-
 
       ..
           !! processed by numpydoc !!

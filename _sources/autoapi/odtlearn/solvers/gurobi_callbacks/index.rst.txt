@@ -1,0 +1,144 @@
+odtlearn.solvers.gurobi_callbacks
+=================================
+
+.. py:module:: odtlearn.solvers.gurobi_callbacks
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   odtlearn.solvers.gurobi_callbacks.BendersCallback
+   odtlearn.solvers.gurobi_callbacks.RobustBendersCallback
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   odtlearn.solvers.gurobi_callbacks.logging_callback
+
+
+Module Contents
+---------------
+
+.. py:class:: BendersCallback(store_search_progress_log=False)
+
+   
+   This class contains a function that is called by the Gurobi solver at
+   every node through the branch-&-bound tree while we solve the model.
+
+   We are specifically interested at nodes
+   where we get an integer solution for the master problem.
+   When we get an integer solution for b and p, for every data-point we solve
+   the sub-problem which is a minimum cut and check if g[i] <= value of
+   sub-problem[i]. If this is violated we add the corresponding benders
+   constraint as lazy constraint to the master problem and proceed.
+
+   :Parameters:
+
+       **store_search_progress_log** : bool, optional (default=False)
+           A flag to denote if the search progress log should be stored.
+
+
+   .. rubric:: Methods
+
+
+
+   =============================================  ==========
+   **generate_constrs(model, depth=0, npass=0)**  Generate Benders' cuts at the current node in the branch-and-bound tree.  
+   =============================================  ==========
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:attribute:: store_search_progress_log
+      :value: False
+
+
+
+.. py:class:: RobustBendersCallback(store_search_progress_log=False)
+
+   
+   A callback class for generating Benders' cuts in the Robust Tree optimization using Gurobi.
+
+   This class contains a function that is called by the solver at every node in the
+   branch-and-bound tree while solving the model. It checks for integer solutions to
+   the master problem and generates Benders' cuts based on the subproblem solutions
+   in the Robust Tree optimization.
+
+   :Parameters:
+
+       **store_search_progress_log** : bool, optional (default=False)
+           A flag to denote if the search progress log should be stored.
+
+
+   .. rubric:: Methods
+
+
+
+   =============================================  ==========
+   **generate_constrs(model, depth=0, npass=0)**  Generate Benders' cuts at the current node in the branch-and-bound tree.  
+   =============================================  ==========
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:attribute:: store_search_progress_log
+      :value: False
+
+
+
+.. py:function:: logging_callback(model, where)
+
+   
+   Helper function to store search progress log, in the same
+   format as Python-MIP's search progress log. Restricted to
+   log at least every 0.1 seconds as to not log too frequently.
+
+
+   :Parameters:
+
+       **model** : Model
+           The optimization model.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+

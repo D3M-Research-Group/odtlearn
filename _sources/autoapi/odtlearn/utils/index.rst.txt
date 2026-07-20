@@ -14,8 +14,6 @@ Submodules
    /autoapi/odtlearn/utils/TreePlotter/index
    /autoapi/odtlearn/utils/binarize/index
    /autoapi/odtlearn/utils/callback_helpers/index
-   /autoapi/odtlearn/utils/callbacks/index
-   /autoapi/odtlearn/utils/solver/index
    /autoapi/odtlearn/utils/validation/index
 
 

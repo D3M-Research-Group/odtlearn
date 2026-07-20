@@ -52,6 +52,17 @@ Module Contents
            Whether to print verbose output during the tree learning process.
 
 
+   .. rubric:: Methods
+
+
+
+   =======================  ==========
+             **fit(X, y)**  Fit the optimal classification tree to the given training data.  
+            **predict(X)**  Make predictions using the fitted optimal classification tree.  
+   **_define_objective()**  Define the objective function for the optimization problem.  
+   =======================  ==========
+
+
 
 
 
@@ -99,17 +110,6 @@ Module Contents
 
 
 
-
-   .. rubric:: Methods
-
-
-
-   =======================  ==========
-             **fit(X, y)**  Fit the optimal classification tree to the given training data.  
-            **predict(X)**  Make predictions using the fitted optimal classification tree.  
-   **_define_objective()**  Define the objective function for the optimization problem.  
-   =======================  ==========
-
    ..
        !! processed by numpydoc !!
 
@@ -131,6 +131,8 @@ Module Contents
               Sample weights. If None, then samples are equally weighted when obj_mode is 'acc',
               or weights are automatically calculated when obj_mode is 'balance'.
               Must be provided when obj_mode is 'weighted'.
+
+
 
       :Returns:
 
@@ -164,8 +166,6 @@ Module Contents
 
 
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -181,6 +181,8 @@ Module Contents
           **X** : array-like of shape (n_samples, n_features)
               The input samples for which to make predictions. The features should
               match those used during the fit method.
+
+
 
       :Returns:
 
@@ -225,8 +227,6 @@ Module Contents
       >>> print(y_pred)
       [1 0]
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -265,6 +265,19 @@ Module Contents
 
        **verbose** : bool, default=False
            Whether to print verbose output during the tree learning process.
+
+
+   .. rubric:: Methods
+
+
+
+   =========================  ==========
+               **fit(X, y)**  Fit the optimal classification tree using Benders' decomposition to the given training data.  
+              **predict(X)**  Make predictions using the fitted optimal classification tree.  
+     **_define_variables()**  Define the decision variables used in the Benders' decomposition formulation.  
+   **_define_constraints()**  Define the constraints used in the Benders' decomposition formulation.  
+     **_define_objective()**  Define the objective function for the Benders' decomposition formulation.  
+   =========================  ==========
 
 
 
@@ -324,21 +337,13 @@ Module Contents
 
 
 
-
-   .. rubric:: Methods
-
-
-
-   =========================  ==========
-               **fit(X, y)**  Fit the optimal classification tree using Benders' decomposition to the given training data.  
-              **predict(X)**  Make predictions using the fitted optimal classification tree.  
-     **_define_variables()**  Define the decision variables used in the Benders' decomposition formulation.  
-   **_define_constraints()**  Define the constraints used in the Benders' decomposition formulation.  
-     **_define_objective()**  Define the objective function for the Benders' decomposition formulation.  
-   =========================  ==========
-
    ..
        !! processed by numpydoc !!
+
+   .. py:attribute:: weights
+      :value: None
+
+
 
    .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], y: Union[numpy.ndarray, pandas.core.series.Series], weights: Union[pandas.core.series.Series, numpy.ndarray, None] = None) -> BendersOCT
 
@@ -358,6 +363,8 @@ Module Contents
               Sample weights. If None, then samples are equally weighted when obj_mode is 'acc',
               or weights are automatically calculated when obj_mode is 'balance'.
               Must be provided when obj_mode is 'weighted'.
+
+
 
       :Returns:
 
@@ -403,8 +410,6 @@ Module Contents
       >>> clf = BendersOCT(depth=2, time_limit=60)
       >>> clf.fit(X, y)
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -420,6 +425,8 @@ Module Contents
           **X** : array-like of shape (n_samples, n_features)
               The input samples for which to make predictions. The features should
               match those used during the fit method.
+
+
 
       :Returns:
 
@@ -463,8 +470,6 @@ Module Contents
       >>> y_pred = clf.predict(X_test)
       >>> print(y_pred)
       [1 0]
-
-
 
       ..
           !! processed by numpydoc !!

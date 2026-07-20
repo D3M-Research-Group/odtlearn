@@ -42,22 +42,6 @@ Module Contents
        **verbose** : bool, default=False
            Whether to print verbose output during the tree learning process.
 
-
-
-
-
-
-
-
-
-   .. rubric:: Notes
-
-   This class extends the :mod:`OptimalDecisionTree <odtlearn.opt_dt.OptimalDecisionTree>` base
-   class to learn optimal classification trees. It formulates the problem as a mixed-integer
-   program and solves it using either the Gurobi or CBC solver.
-
-
-
    :Attributes:
 
        **b_value** : numpy.ndarray
@@ -80,6 +64,22 @@ Module Contents
    **plot_tree(*kwargs)**  Plot the fitted optimal classification tree using matplotlib.  
    ======================  ==========
 
+
+
+
+
+
+
+
+
+   .. rubric:: Notes
+
+   This class extends the :mod:`OptimalDecisionTree <odtlearn.opt_dt.OptimalDecisionTree>` base
+   class to learn optimal classification trees. It formulates the problem as a mixed-integer
+   program and solves it using either the Gurobi or CBC solver.
+
+
+
    ..
        !! processed by numpydoc !!
 
@@ -90,6 +90,8 @@ Module Contents
 
       This method prints the structure of the fitted tree, including the branching features,
       the threshold values for each branching node's test, and the predictions asserted for each leaf node.
+
+
 
 
 
@@ -108,8 +110,6 @@ Module Contents
 
       The tree is printed in a depth-first manner, with each node represented by its index,
       branching feature and threshold (for internal nodes), or prediction (for leaf nodes).
-
-
 
 
 
@@ -169,6 +169,8 @@ Module Contents
               fitted tree will be used. The feature names should be in the same order as the
               columns of the data used to fit the tree.
 
+
+
       :Returns:
 
           **ax** : matplotlib.axes.Axes
@@ -189,8 +191,6 @@ Module Contents
 
       This method visualizes the fitted tree structure using matplotlib.
       Each node in the tree is represented by a box, with arrows indicating the branching structure.
-
-
 
 
 

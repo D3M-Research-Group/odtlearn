@@ -1,0 +1,322 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ec282c9b-bed6-46b7-9fbc-36c0c04d2c39",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "    \n",
+    "from odtlearn.flow_opt import FlowOPT_IPW, FlowOPT_DM, FlowOPT_DR\n",
+    "from odtlearn.datasets import prescriptive_ex_data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "proud-winning",
+   "metadata": {},
+   "source": [
+    "# `FlowOPT` Examples"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "focused-ethiopia",
+   "metadata": {},
+   "source": [
+    "We will look at the different methods of learning optimal prescriptive trees: inverse probability weighting (IPW), direct method (DM), and doubly robust (DR)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "0c5cacfa-b128-4bdf-94ea-932896f5effe",
+   "metadata": {},
+   "source": [
+    "## Example 0: Preparing the Data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1d70bbe6-07c7-404a-90ca-636c796aabcc",
+   "metadata": {},
+   "source": [
+    "We will first load a synthetic dataset to use as our running example. In this example, we have precomputed the learned inverse propensity weights (IPW) and predicted outcomes for the direct method (DM). At least one of these values must be computed in order to use any of the prescriptive tree classifiers in ODTLearn. The advantages and disadvantages of using each type of prescriptive tree is given in the subsequent examples, and we refer to Dudik et al. (2011) and Jo et al. (2021) for more details.\n",
+    "\n",
+    "The column names in this dataset that correspond to the IPW weights and predicted outcomes for DM are:\n",
+    "- `prob_t_pred_log` is the inverse propensity weight learned through logistic regression\n",
+    "- `prob_t_pred_tree` is the inverse propensity weight learned through a decision tree\n",
+    "- `linear0` is the predicted outcome under treatment 0 learned through linear regression\n",
+    "- `linear1` is the predicted outcome under treatment 1 learned through linear regression\n",
+    "- `lasso0` is the predicted outcome under treatment 0 learned through lasso regression\n",
+    "- `lasso0` is the predicted outcome under treatment 2 learned through lasso regression"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "pointed-front",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Read data\n",
+    "train_data, test_data  = prescriptive_ex_data()\n",
+    "print(f'shape{train_data.shape}')\n",
+    "train_data = train_data.sample(frac=0.1,random_state=42).reset_index(drop=True) # Taking a small subset of the data for example purposes\n",
+    "test_data = test_data.sample(frac=0.2, random_state=42).reset_index(drop=True)\n",
+    "\n",
+    "train_data.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8e4a0a96-23c6-485f-b4ee-bbb6b3451c7a",
+   "metadata": {},
+   "source": [
+    "**Note**: In practice, users should learn IPW weights and predicted outcomes in the following manner:\n",
+    "- IPW weights can be learned using a standard machine learning method that predicts the probability of treatment assignments given covariates (e.g., logistic regression), then taking its inverse.\n",
+    "- Predicted outcomes for DM are learned by training a machine learning method for each treatment $t$:\n",
+    "    - Take the subset of training data with treatment $t$\n",
+    "    - Learn a machine learning model that can predict the outcome $y$ under treatment $t$ using that subset of training data through, e.g., lasso regression\n",
+    "    - Predict the outcome $y$ under treatment $t$ using the learned model"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "705e4112-4813-485d-8f17-69ff79f17bcb",
+   "metadata": {},
+   "source": [
+    "## Example 1: Inverse Propensity Weighting (IPW)\n",
+    "\n",
+    "Inverse Propensity Weighting (IPW) works by creating a pseudo-population where treatment assignments are randomized, allowing us to estimate the average outcome under a learned prescriptive tree.\n",
+    "\n",
+    "IPW requires learning propensities, which are the probability that each sample received its assigned treatment. This can be estimated via standard machine learning methods (e.g., logistic regression), where the covariates and assigned treatments are used to create a propensity model that predicts the probability of receiving a treatment.\n",
+    "\n",
+    "IPW is only a consistent estimator when the learned propensity model is correctly specified, and may suffer from high variance and sensitivity to small propensity scores (leading to very high inverse propensity weights)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "parental-stand",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X = train_data.iloc[:, 15:20] # Taking a subset of covariates for use with Gurobi restricted license limits\n",
+    "t = train_data[\"t\"] # treatment\n",
+    "y = train_data[\"y\"] # outcome\n",
+    "ipw = train_data[\"prob_t_pred_tree\"] # IPW weights\n",
+    "\n",
+    "opt_ipw = FlowOPT_IPW(solver=\"gurobi\", depth=2, time_limit=300)\n",
+    "\n",
+    "opt_ipw.fit(X, t, y, ipw) # pass in IPW weights in the fit function"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "cfdd2139",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "opt_ipw.print_tree()\n",
+    "fig, ax = plt.subplots(figsize=(4, 4))\n",
+    "opt_ipw.plot_tree(ax=ax, fontsize=10, color_dict={\"node\": None, \"leaves\": []})\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b143c832-f7d8-4720-91c5-7dc747728e5a",
+   "metadata": {},
+   "source": [
+    "## Example 2: Direct Method\n",
+    "\n",
+    "The Direct Method (DM) works by modeling the outcomes under each treatment directly, which allows for an estimate of the outcome of each data sample under a different treatment assignment.\n",
+    "\n",
+    "DM requires learning an outcome model for each treatment in the data. This can be estimated via standard machine learning methods (e.g., lasso regression), where the subset of individuals in the data that received one treatment assignment is used to create the outcome model under that treatment.\n",
+    "\n",
+    "DM is only a consistent estimator when the outcome models are correctly specified, and suffers from high bias as it requires extrapolating the outcome beyond the individuals that historically received that treatment."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "4740e939-261c-400c-a6e6-946f95e49d01",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X = train_data.iloc[:, 15:20] # covariates\n",
+    "t = train_data[\"t\"] # treatment\n",
+    "y = train_data[\"y\"] # outcome\n",
+    "y_hat = train_data[[\"linear0\", \"linear1\"]] # estimated outcomes\n",
+    "\n",
+    "opt_dm = FlowOPT_DM(solver=\"gurobi\", depth=2, time_limit=300)\n",
+    "\n",
+    "opt_dm.fit(X, t, y, y_hat) # pass in estimated outcomes in the fit function"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "de0dcb85-6687-4f3a-b82e-fff204b54993",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "opt_dm.print_tree()\n",
+    "fig, ax = plt.subplots(figsize=(4, 4))\n",
+    "opt_dm.plot_tree(ax=ax, fontsize=10, color_dict={\"node\": None, \"leaves\": []})\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "47ff6b5a-3856-4015-a9e8-86473e6cbb9c",
+   "metadata": {},
+   "source": [
+    "## Example 3: Doubly Robust Method\n",
+    "\n",
+    "The Doubly Robust Method (DR) combines the IPW and DM methods. The DR method uses an estimated outcome model (similar to DM), and corrects any bias from the outcome model using IPW. \n",
+    "\n",
+    "DR is consistent if *either* the propensity model OR the outcome model is correctly specified. However, it does require learning both the IPW weights and the outcome models under each treatment."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "84067aa3-5d1e-438e-a5ff-b89e79006eec",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "X = train_data.iloc[:, 15:20] # covariates\n",
+    "t = train_data[\"t\"] # treatment\n",
+    "y = train_data[\"y\"] # outcome\n",
+    "ipw = train_data[\"prob_t_pred_tree\"] # IPW weights\n",
+    "y_hat = train_data[[\"linear0\", \"linear1\"]] # estimated outcomes\n",
+    "\n",
+    "opt_dr = FlowOPT_DR(solver=\"gurobi\", depth=2, time_limit=300)\n",
+    "\n",
+    "opt_dr.fit(X, t, y, ipw, y_hat) # Pass in both IPW weights and estimated outcomes in the fit function"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a3cc0ff0-0a66-4e25-9080-6dbaf252c493",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "opt_dr.print_tree()\n",
+    "fig, ax = plt.subplots(figsize=(4, 4))\n",
+    "opt_dr.plot_tree(ax=ax, fontsize=10, color_dict={\"node\": None, \"leaves\": []})\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b4726e5c-b305-4d2e-9ff0-0bb69af557e2",
+   "metadata": {},
+   "source": [
+    "## Example 4: Comparing Performance\n",
+    "\n",
+    "It may be of interest to compare the performance of each type of estimator. We can compute summary statistics on the average outcome from each learned tree.\n",
+    "\n",
+    "In practice, DR is the typical preferred choice as it is consistent if either IPW or DR methods are consistent. IPW also remains a popular choice since it relies on just one propensity model to learn. We refer to Dudik et al. (2011) and Jo et al. (2021)  for more details."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "77c84e90-2ea3-4302-a0c3-736dd6ede176",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Read test data\n",
+    "print(f'shape{test_data.shape}')\n",
+    "test_data.columns\n",
+    "\n",
+    "test_data.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "169cebac-9e6f-4371-ab27-1ff54a0bbf58",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Predict\n",
+    "X_test = test_data.iloc[:, 15:20] # covariates\n",
+    "y_0_test = test_data[\"y0\"] # estimated outcome under treatment 0\n",
+    "y_1_test = test_data[\"y1\"] # estimated outcome under treatment 1\n",
+    "\n",
+    "predict_ipw = opt_ipw.predict(X_test)\n",
+    "predict_dm = opt_dm.predict(X_test)\n",
+    "predict_dr = opt_dr.predict(X_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "90a4d6a1-032d-4f89-99ed-7eab8433c009",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Check the outcome\n",
+    "def calculate_outcome(y0, y1, predict):\n",
+    "    total_outcome = 0\n",
+    "    for i in range(len(predict)):\n",
+    "        if predict[i] == 0:\n",
+    "            total_outcome += y0[i]\n",
+    "        else:\n",
+    "            total_outcome += y1[i]\n",
+    "    return total_outcome / len(predict)\n",
+    "\n",
+    "print(\"IPW test estimated outcome: \", calculate_outcome(y_0_test, y_1_test, predict_ipw))\n",
+    "print(\"DM test estimated outcome: \", calculate_outcome(y_0_test, y_1_test, predict_dm))\n",
+    "print(\"DR test estimated outcome: \", calculate_outcome(y_0_test, y_1_test, predict_dr))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "46cf433e-a18a-4b81-8b96-0d393614dd93",
+   "metadata": {},
+   "source": [
+    "## References\n",
+    "* Dudík, M., Langford, J., & Li, L. (2011). Doubly robust policy evaluation and learning. In Proceedings of the 28th International Conference on International Conference on Machine Learning (pp. 1097-1104).\n",
+    "* Jo, N., Aghaei, S., Gómez, A., & Vayanos, P. (2021). Learning optimal prescriptive trees from observational data. arXiv preprint arXiv:2108.13628."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "8ba58bd2-cada-40e8-8c2b-44096c6f4c30",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.13.2"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

@@ -1,26 +1,28 @@
 <!doctype html>
 <html class="no-js" lang="en" data-content_root="../">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="How to contribute to ODTlearn" href="../contributing.html" /><link rel="prev" title="Fair Optimal Classification Trees" href="FairOCT.html" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="FlowOPT Examples" href="FlowOPT.html"><link rel="prev" title="FairConstrainedOCT Examples" href="FairOCT.html">
+        <link rel="prefetch" href="../_static/img/ODTlearn-color.png" as="image">
+        <link rel="prefetch" href="../_static/img/ODTlearn-color.png" as="image">
 
-    <!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
-        <title>RobustOCT Examples - odtlearn 0.1.dev1+g202a813 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
+    <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
+        <title>RobustOCT Examples - ODTLearn documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
 
 
 <style>
   body {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
   
   }
   @media not print {
@@ -91,19 +93,6 @@
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
     </svg>
   </symbol>
-  <symbol id="svg-sun-half" viewBox="0 0 24 24">
-    <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M13 12h5" />
-      <path d="M13 15h4" />
-      <path d="M13 18h1" />
-      <path d="M13 9h4" />
-      <path d="M13 6h1" />
-    </svg>
-  </symbol>
   <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
     <title>Auto light/dark, in light mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -144,7 +133,7 @@
       <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
       <path d="M13.5 6.5l4 4" />
       <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" /
+      <path d="M17 17l-2 2l2 2" />
     </svg>
   </symbol>
   <symbol id="svg-eye" viewBox="0 0 24 24">
@@ -160,14 +149,10 @@
   </symbol>
 </svg>
 
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
-<label class="overlay sidebar-overlay" for="__navigation">
-  <div class="visually-hidden">Hide navigation sidebar</div>
-</label>
-<label class="overlay toc-overlay" for="__toc">
-  <div class="visually-hidden">Hide table of contents sidebar</div>
-</label>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
 
 <a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
 
@@ -177,17 +162,15 @@
   <header class="mobile-header">
     <div class="header-left">
       <label class="nav-overlay-icon" for="__navigation">
-        <div class="visually-hidden">Toggle site navigation sidebar</div>
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">odtlearn 0.1.dev1+g202a813 documentation</div></a>
+      <a href="../index.html"><div class="brand">ODTLearn documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
-        <button class="theme-toggle">
-          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
           <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
           <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
           <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -195,8 +178,7 @@
         </button>
       </div>
       <label class="toc-overlay-icon toc-header-icon" for="__toc">
-        <div class="visually-hidden">Toggle table of contents sidebar</div>
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
   </header>
@@ -204,13 +186,12 @@
     <div class="sidebar-container">
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
-  
   <div class="sidebar-logo-container">
     <img class="sidebar-logo only-light" src="../_static/img/ODTlearn-color.png" alt="Light Logo"/>
     <img class="sidebar-logo only-dark" src="../_static/img/ODTlearn-color.png" alt="Dark Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">odtlearn 0.1.dev1+g202a813 documentation</span>
+  <span class="sidebar-brand-text">ODTLearn documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -221,7 +202,7 @@
   <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide/index.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide/index.html">User Guide</a><input aria-label="Toggle navigation of User Guide" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/optimal_classification_trees.html">Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/fair_optimal_classification_trees.html">Fair Optimal Classification Trees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../user_guide/optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
@@ -232,18 +213,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">ODTlearn API</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of ODTlearn API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../autoapi/odtlearn/index.html">odtlearn</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of odtlearn</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../autoapi/odtlearn/utils/index.html">odtlearn.utils</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of odtlearn.utils</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/Tree/index.html">odtlearn.utils.Tree</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/TreePlotter/index.html">odtlearn.utils.TreePlotter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/binarize/index.html">odtlearn.utils.binarize</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callback_helpers/index.html">odtlearn.utils.callback_helpers</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callbacks/index.html">odtlearn.utils.callbacks</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/solver/index.html">odtlearn.utils.solver</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/validation/index.html">odtlearn.utils.validation</a></li>
-</ul>
-</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">ODTlearn API</a><input aria-label="Toggle navigation of ODTlearn API" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../autoapi/odtlearn/index.html">odtlearn</a><input aria-label="Toggle navigation of odtlearn" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/constrained_oct/index.html">odtlearn.constrained_oct</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/datasets/index.html">odtlearn.datasets</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/fair_oct/index.html">odtlearn.fair_oct</a></li>
@@ -257,6 +228,22 @@
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/opt_dt/index.html">odtlearn.opt_dt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/opt_pt/index.html">odtlearn.opt_pt</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/robust_oct/index.html">odtlearn.robust_oct</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../autoapi/odtlearn/solvers/index.html">odtlearn.solvers</a><input aria-label="Toggle navigation of odtlearn.solvers" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/solvers/cbc_callbacks/index.html">odtlearn.solvers.cbc_callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/solvers/cbc_solver/index.html">odtlearn.solvers.cbc_solver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/solvers/gurobi_callbacks/index.html">odtlearn.solvers.gurobi_callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/solvers/gurobi_solver/index.html">odtlearn.solvers.gurobi_solver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/solvers/solver/index.html">odtlearn.solvers.solver</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../autoapi/odtlearn/utils/index.html">odtlearn.utils</a><input aria-label="Toggle navigation of odtlearn.utils" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/Tree/index.html">odtlearn.utils.Tree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/TreePlotter/index.html">odtlearn.utils.TreePlotter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/binarize/index.html">odtlearn.utils.binarize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callback_helpers/index.html">odtlearn.utils.callback_helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/validation/index.html">odtlearn.utils.validation</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -264,16 +251,21 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example Notebooks</span></p>
 <ul class="current">
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Example Notebooks</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Example Notebooks</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="FairOCT.html">Fair Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairConstrainedOCT</span></code> Examples</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FlowOPT.html"><code class="docutils literal notranslate"><span class="pre">FlowOPT</span></code> Examples</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Docs</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../contributing.html">How to contribute to ODTlearn</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../development/index.html">Developer Docs</a><input aria-label="Toggle navigation of Developer Docs" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../development/contributing.html">How to contribute to ODTlearn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development/solver.html">Adding Additional Solvers to ODTLearn</a></li>
+</ul>
+</li>
 </ul>
 
 </div>
@@ -300,8 +292,7 @@
   </a>
 </div>
 <div class="theme-toggle-container theme-toggle-content">
-            <button class="theme-toggle">
-              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
               <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -309,12 +300,28 @@
             </button>
           </div>
           <label class="toc-overlay-icon toc-content-icon" for="__toc">
-            <div class="visually-hidden">Toggle table of contents sidebar</div>
-            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="RobustOCT-Examples">
+          <div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">log</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">odtlearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">robust_example</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">odtlearn.robust_oct</span><span class="w"> </span><span class="kn">import</span> <span class="n">RobustOCT</span>
+</pre></div>
+</div>
+</div>
+<section id="RobustOCT-Examples">
 <h1><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples<a class="headerlink" href="#RobustOCT-Examples" title="Link to this heading">¶</a></h1>
 <!-- <font size="3.5">We use a tailored Benders decomposition algorithm to solve this formulation:
 </font>
@@ -327,63 +334,56 @@
 <p>If costs and/or budget is not specified, then we will produce the same result as an optimal strong classification tree.</p>
 <p>As an example, say that we are given this training set:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from odtlearn.robust_oct import RobustOCT
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    X2</span>
+<span class="sd">    |               |</span>
+<span class="sd">    |               |</span>
+<span class="sd">    1    + +        |    -</span>
+<span class="sd">    |               |</span>
+<span class="sd">    |---------------|-------------</span>
+<span class="sd">    |               |</span>
+<span class="sd">    0    - - - -    |    + + +</span>
+<span class="sd">    |    - - -      |</span>
+<span class="sd">    |______0________|_______1_______X1</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span> <span class="s2">&quot;X2&quot;</span><span class="p">])</span>
 
-&quot;&quot;&quot;
-    X2
-    |               |
-    |               |
-    1    + +        |    -
-    |               |
-    |---------------|-------------
-    |               |
-    0    - - - -    |    + + +
-    |    - - -      |
-    |______0________|_______1_______X1
-&quot;&quot;&quot;
-X = np.array(
-    [
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [1, 0],
-        [1, 0],
-        [1, 0],
-        [1, 1],
-        [0, 1],
-        [0, 1],
-    ]
-)
-X = pd.DataFrame(X, columns=[&quot;X1&quot;, &quot;X2&quot;])
-
-y = np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <p>If either <code class="docutils literal notranslate"><span class="pre">costs</span></code> or <code class="docutils literal notranslate"><span class="pre">budget</span></code> is not specified, the optimal classification tree will be produced (i.e., a tree that does not account for distribution shifts).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from odtlearn.robust_oct import RobustOCT
-
-robust_classifier = RobustOCT(
-        solver=&quot;gurobi&quot;,
-        depth = 2,
-        time_limit = 100,
-    )
-robust_classifier.fit(X, y)
-predictions = robust_classifier.predict(X)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
+        <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
+        <span class="n">depth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">time_limit</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="n">robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 <br/></pre></div>
 </div>
 </div>
@@ -392,33 +392,32 @@ predictions = robust_classifier.predict(X)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
+Restricted license - for non-production use only - expires 2027-11-29
 Set parameter TimeLimit to value 100
-Set parameter NodeLimit to value 1073741824
-Set parameter SolutionLimit to value 1073741824
 Set parameter LazyConstraints to value 1
-Set parameter IntFeasTol to value 1e-06
-Set parameter Method to value 3
-Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - &#34;Ubuntu 24.04.4 LTS&#34;)
 
-CPU model: Apple M1 Pro
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+CPU model: AMD EPYC 9V74 80-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 2 physical cores, 4 logical processors, using up to 4 threads
 
-Optimize a model with 7 rows, 33 columns and 20 nonzeros
+Non-default parameters:
+TimeLimit  100
+LazyConstraints  1
+
+Optimize a model with 7 rows, 33 columns and 20 nonzeros (Max)
 Model fingerprint: 0x78ba3dea
+Model has 19 linear objective coefficients
 Variable types: 13 continuous, 20 integer (20 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
   Objective range  [2e-01, 1e+00]
   Bounds range     [1e+00, 1e+00]
   RHS range        [1e+00, 1e+00]
+
 Presolve removed 4 rows and 4 columns
-Presolve time: 0.01s
+Presolve time: 0.00s
 Presolved: 3 rows, 29 columns, 12 nonzeros
 Variable types: 13 continuous, 16 integer (16 binary)
-Root relaxation presolved: 12 rows, 29 columns, 65 nonzeros
-
 
 Root relaxation: objective 1.300000e+01, 5 iterations, 0.00 seconds (0.00 work units)
 
@@ -430,33 +429,32 @@ Root relaxation: objective 1.300000e+01, 5 iterations, 0.00 seconds (0.00 work u
      0     0   12.75000    0    -          -   12.75000      -     -    0s
      0     0   12.50000    0    6          -   12.50000      -     -    0s
 H    0     0                       7.2500000   12.50000  72.4%     -    0s
-H    0     0                      10.5000000   12.50000  19.0%     -    0s
-     0     0   12.38889    0    5   10.50000   12.38889  18.0%     -    0s
-     0     0   12.25000    0    7   10.50000   12.25000  16.7%     -    0s
-     0     0   12.25000    0    -   10.50000   12.25000  16.7%     -    0s
-*    0     0               0      12.2500000   12.25000  0.00%     -    0s
+H    0     0                       9.2500000   12.50000  35.1%     -    0s
+H    0     0                      10.2500000   12.50000  22.0%     -    0s
+H    0     0                      12.2500000   12.50000  2.04%     -    0s
+     0     0   12.50000    0    6   12.25000   12.50000  2.04%     -    0s
+     0     0     cutoff    0        12.25000   12.25000  0.00%     -    0s
 
 Cutting planes:
   Gomory: 1
-  MIR: 3
-  Lazy constraints: 44
+  MIR: 1
 
-Explored 1 nodes (32 simplex iterations) in 0.06 seconds (0.00 work units)
-Thread count was 8 (of 8 available processors)
+Explored 1 nodes (15 simplex iterations) in 0.04 seconds (0.00 work units)
+Thread count was 4 (of 4 available processors)
 
-Solution count 3: 12.25 10.5 7.25
+Solution count 4: 12.25 10.25 9.25 7.25
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 1.225000000000e+01, best bound 1.225000000000e+01, gap 0.0000%
 
-User-callback calls 170, time in user-callback 0.02 sec
+User-callback calls 164, time in user-callback 0.03 sec
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>robust_classifier.print_tree()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -482,12 +480,12 @@ leaf 0
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots(figsize=(10, 5))
-robust_classifier.plot_tree()
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">robust_classifier</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -495,67 +493,72 @@ plt.show()
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_6_0.png" src="../_images/notebooks_RobustOCT_6_0.png" />
+<img alt="../_images/notebooks_RobustOCT_7_0.png" src="../_images/notebooks_RobustOCT_7_0.png" />
 </div>
 </div>
 </section>
 <section id="Example-2:-synthetic-data-with-specified-shifts">
 <h2>Example 2: synthetic data with specified shifts<a class="headerlink" href="#Example-2:-synthetic-data-with-specified-shifts" title="Link to this heading">¶</a></h2>
-<p>We take the same synthetic data from Example 1, but now add distribution shifts with the following schema: - For 5 samples at <img class="math" src="../_images/math/ebf9e680273a1d5e209eb0e2a4b13a19620a103b.png" alt="[0,0]"/>, pay a cost of 1 to perturb <img class="math" src="../_images/math/08fe31609cd48800a8b44af61f352242fc327578.png" alt="X_1"/> and get <img class="math" src="../_images/math/89373012d8df0f30839ffc7ef5cb142d7a990cb0.png" alt="[1,0]"/> - For the 1 sample at <img class="math" src="../_images/math/6cf1b5020649f69c2f029417055708155cca1ece.png" alt="[1,1]"/>, pay a cost of 1 to perturb <img class="math" src="../_images/math/468c3ea6b761e3ae0b6853569ec76f21642a0c03.png" alt="X_2"/> to get <img class="math" src="../_images/math/89373012d8df0f30839ffc7ef5cb142d7a990cb0.png" alt="[1,0]"/> - All other perturbations are not allowed</p>
+<p>We take the same synthetic data from Example 1, but now add distribution shifts with the following schema:</p>
+<ul class="simple">
+<li><p>For 5 samples at <img class="math" src="../_images/math/ebf9e680273a1d5e209eb0e2a4b13a19620a103b.png" alt="[0,0]"/>, pay a cost of 1 to perturb <img class="math" src="../_images/math/08fe31609cd48800a8b44af61f352242fc327578.png" alt="X_1"/> and get <img class="math" src="../_images/math/89373012d8df0f30839ffc7ef5cb142d7a990cb0.png" alt="[1,0]"/></p></li>
+<li><p>For the 1 sample at <img class="math" src="../_images/math/6cf1b5020649f69c2f029417055708155cca1ece.png" alt="[1,1]"/>, pay a cost of 1 to perturb <img class="math" src="../_images/math/468c3ea6b761e3ae0b6853569ec76f21642a0c03.png" alt="X_2"/> to get <img class="math" src="../_images/math/89373012d8df0f30839ffc7ef5cb142d7a990cb0.png" alt="[1,0]"/></p></li>
+<li><p>All other perturbations are not allowed</p></li>
+</ul>
 <p>First, define these costs, which have the same shape and features as your input sample.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Note: 10 is a proxy for infinite cost, as it is over the allowed budgets we will specify
-costs = np.array([[1,10],[1,10],[1,10],[1,10],[1,10],[10,10],[10,10],
-                  [10,10],[10,10],[10,10],
-                  [10,1],
-                  [10,10],[10,10]])
-costs = pd.DataFrame(costs, columns=[&#39;X1&#39;, &#39;X2&#39;])
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: 10 is a proxy for infinite cost, as it is over the allowed budgets we will specify</span>
+<span class="n">costs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]])</span>
+<span class="n">costs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;X1&#39;</span><span class="p">,</span> <span class="s1">&#39;X2&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <!-- When the budget is 2 (corresponding to the variable &epsilon;), we don't see a change in the tree as the non-robust tree will have worst-case accuracy 11/13 and no other tree will have a better worst-case accuracy. --><p>When the budget is 2 (corresponding to the variable ε), we don’t see a change in the tree from Example 1 since for this dataset, the budget is small and thus the level of robustness is small.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Same data as Example 1
-X = np.array(
-    [
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [0, 0],
-        [1, 0],
-        [1, 0],
-        [1, 0],
-        [1, 1],
-        [0, 1],
-        [0, 1],
-    ]
-)
-X = pd.DataFrame(X, columns=[&quot;X1&quot;, &quot;X2&quot;])
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Same data as Example 1</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;X1&quot;</span><span class="p">,</span> <span class="s2">&quot;X2&quot;</span><span class="p">])</span>
 
-y = np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1])
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 <br/></pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span>robust_classifier = RobustOCT(
-    solver=&quot;gurobi&quot;,
-    depth=2,
-    time_limit=100
-)
-robust_classifier.fit(X, y, costs=costs, budget=2)
-predictions = robust_classifier.predict(X)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
+    <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">time_limit</span><span class="o">=</span><span class="mi">100</span>
+<span class="p">)</span>
+<span class="n">robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -564,33 +567,31 @@ predictions = robust_classifier.predict(X)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
 Set parameter TimeLimit to value 100
-Set parameter NodeLimit to value 1073741824
-Set parameter SolutionLimit to value 1073741824
 Set parameter LazyConstraints to value 1
-Set parameter IntFeasTol to value 1e-06
-Set parameter Method to value 3
-Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - &#34;Ubuntu 24.04.4 LTS&#34;)
 
-CPU model: Apple M1 Pro
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+CPU model: AMD EPYC 9V74 80-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 2 physical cores, 4 logical processors, using up to 4 threads
 
-Optimize a model with 7 rows, 33 columns and 20 nonzeros
+Non-default parameters:
+TimeLimit  100
+LazyConstraints  1
+
+Optimize a model with 7 rows, 33 columns and 20 nonzeros (Max)
 Model fingerprint: 0x78ba3dea
+Model has 19 linear objective coefficients
 Variable types: 13 continuous, 20 integer (20 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
   Objective range  [2e-01, 1e+00]
   Bounds range     [1e+00, 1e+00]
   RHS range        [1e+00, 1e+00]
+
 Presolve removed 4 rows and 4 columns
 Presolve time: 0.00s
 Presolved: 3 rows, 29 columns, 12 nonzeros
 Variable types: 13 continuous, 16 integer (16 binary)
-Root relaxation presolved: 12 rows, 29 columns, 65 nonzeros
-
 
 Root relaxation: objective 1.300000e+01, 5 iterations, 0.00 seconds (0.00 work units)
 
@@ -602,43 +603,40 @@ Root relaxation: objective 1.300000e+01, 5 iterations, 0.00 seconds (0.00 work u
      0     0   12.75000    0    -          -   12.75000      -     -    0s
      0     0   12.50000    0    6          -   12.50000      -     -    0s
 H    0     0                       7.2500000   12.50000  72.4%     -    0s
-H    0     0                       8.5000000   12.50000  47.1%     -    0s
-     0     0   12.38889    0    5    8.50000   12.38889  45.8%     -    0s
-     0     0   12.27513    0   11    8.50000   12.27513  44.4%     -    0s
-     0     0   12.25000    0    9    8.50000   12.25000  44.1%     -    0s
-H    0     0                       9.2500000   12.25000  32.4%     -    0s
-H    0     0                       9.5000000   12.25000  28.9%     -    0s
-     0     0   12.25000    0    6    9.50000   12.25000  28.9%     -    0s
-     0     0   12.25000    0    -    9.50000   12.25000  28.9%     -    0s
-     0     0   12.23554    0   13    9.50000   12.23554  28.8%     -    0s
-     0     0   12.22893    0   11    9.50000   12.22893  28.7%     -    0s
-H    0     0                      10.2500000   12.22893  19.3%     -    0s
-     0     0   12.21106    0   11   10.25000   12.21106  19.1%     -    0s
-     0     0   12.19909    0   11   10.25000   12.19909  19.0%     -    0s
-     0     0   12.19909    0   11   10.25000   12.19909  19.0%     -    0s
-     0     0   12.19909    0   11   10.25000   12.19909  19.0%     -    0s
-     0     2   12.19909    0   11   10.25000   12.19909  19.0%     -    0s
+H    0     0                       9.2500000   12.50000  35.1%     -    0s
+H    0     0                      10.2500000   12.50000  22.0%     -    0s
+     0     0   12.50000    0    6   10.25000   12.50000  22.0%     -    0s
+     0     0   12.25000    0    -   10.25000   12.25000  19.5%     -    0s
+     0     0   12.25000    0    6   10.25000   12.25000  19.5%     -    0s
+     0     0   12.22477    0    8   10.25000   12.22477  19.3%     -    0s
+     0     0   12.18964    0    8   10.25000   12.18964  18.9%     -    0s
+     0     0   12.18964    0    8   10.25000   12.18964  18.9%     -    0s
+     0     0   12.18964    0    8   10.25000   12.18964  18.9%     -    0s
+     0     0   12.18964    0    8   10.25000   12.18964  18.9%     -    0s
+     0     0   12.18964    0    8   10.25000   12.18964  18.9%     -    0s
+     0     2   12.18964    0    8   10.25000   12.18964  18.9%     -    0s
 
 Cutting planes:
-  MIR: 5
-  Lazy constraints: 61
+  Gomory: 1
+  MIR: 1
+  RLT: 2
 
-Explored 21 nodes (130 simplex iterations) in 0.05 seconds (0.01 work units)
-Thread count was 8 (of 8 available processors)
+Explored 45 nodes (215 simplex iterations) in 0.08 seconds (0.01 work units)
+Thread count was 4 (of 4 available processors)
 
-Solution count 5: 10.25 9.5 9.25 ... 7.25
+Solution count 3: 10.25 9.25 7.25
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 1.025000000000e+01, best bound 1.025000000000e+01, gap 0.0000%
 
-User-callback calls 257, time in user-callback 0.03 sec
+User-callback calls 297, time in user-callback 0.05 sec
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>robust_classifier.print_tree()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -664,12 +662,12 @@ leaf 0
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots(figsize=(10, 5))
-robust_classifier.plot_tree()
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">robust_classifier</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -677,7 +675,7 @@ plt.show()
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_13_0.png" src="../_images/notebooks_RobustOCT_13_0.png" />
+<img alt="../_images/notebooks_RobustOCT_14_0.png" src="../_images/notebooks_RobustOCT_14_0.png" />
 </div>
 </div>
 <!-- <font size="3.5">But when the budget is &epsilon;=5, we see a change in the tree, as we allow up to 5 points at [0,0] and [1,1] to switch to [1,0] to potentially be misclassified. With the non-robust tree, this would decrease our accuracy to 8/13 in worst-case.
@@ -686,16 +684,16 @@ plt.show()
 <font size="3.5">If we think it through, the expected tree will classify points at [0,1] as 1, and classify all else as 0, as the allowed perturbations will not change the assigned label, making the worst-case accuracy 10/13 (the maximum worst-case accuracy)
     </font> --><p>But when the budget is increased to 5 (adding more robustness), we see a change in the tree.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>robust_classifier = RobustOCT(
-    solver=&quot;gurobi&quot;,
-    depth=2,
-    time_limit=100
-)
-robust_classifier.fit(X, y, costs=costs, budget=5)
-predictions = robust_classifier.predict(X)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
+    <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">time_limit</span><span class="o">=</span><span class="mi">100</span>
+<span class="p">)</span>
+<span class="n">robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -704,33 +702,31 @@ predictions = robust_classifier.predict(X)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
 Set parameter TimeLimit to value 100
-Set parameter NodeLimit to value 1073741824
-Set parameter SolutionLimit to value 1073741824
 Set parameter LazyConstraints to value 1
-Set parameter IntFeasTol to value 1e-06
-Set parameter Method to value 3
-Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - &#34;Ubuntu 24.04.4 LTS&#34;)
 
-CPU model: Apple M1 Pro
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+CPU model: AMD EPYC 9V74 80-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 2 physical cores, 4 logical processors, using up to 4 threads
 
-Optimize a model with 7 rows, 33 columns and 20 nonzeros
+Non-default parameters:
+TimeLimit  100
+LazyConstraints  1
+
+Optimize a model with 7 rows, 33 columns and 20 nonzeros (Max)
 Model fingerprint: 0x78ba3dea
+Model has 19 linear objective coefficients
 Variable types: 13 continuous, 20 integer (20 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
   Objective range  [2e-01, 1e+00]
   Bounds range     [1e+00, 1e+00]
   RHS range        [1e+00, 1e+00]
+
 Presolve removed 4 rows and 4 columns
 Presolve time: 0.00s
 Presolved: 3 rows, 29 columns, 12 nonzeros
 Variable types: 13 continuous, 16 integer (16 binary)
-Root relaxation presolved: 12 rows, 29 columns, 65 nonzeros
-
 
 Root relaxation: objective 1.300000e+01, 5 iterations, 0.00 seconds (0.00 work units)
 
@@ -742,36 +738,35 @@ Root relaxation: objective 1.300000e+01, 5 iterations, 0.00 seconds (0.00 work u
      0     0   12.75000    0    -          -   12.75000      -     -    0s
      0     0   12.50000    0    6          -   12.50000      -     -    0s
 H    0     0                       7.2500000   12.50000  72.4%     -    0s
-H    0     0                       8.0000000   12.50000  56.2%     -    0s
-     0     0   12.38889    0    5    8.00000   12.38889  54.9%     -    0s
-     0     0   12.25000    0    9    8.00000   12.25000  53.1%     -    0s
-     0     0   12.25000    0    6    8.00000   12.25000  53.1%     -    0s
-     0     0   12.25000    0    -    8.00000   12.25000  53.1%     -    0s
-     0     0   12.25000    0    7    8.00000   12.25000  53.1%     -    0s
-     0     0   12.25000    0    7    8.00000   12.25000  53.1%     -    0s
-     0     2   12.25000    0    7    8.00000   12.25000  53.1%     -    0s
-*   10     5               3       9.5000000   11.25000  18.4%   6.2    0s
+H    0     0                       9.2500000   12.50000  35.1%     -    0s
+     0     0   12.50000    0    6    9.25000   12.50000  35.1%     -    0s
+     0     0   12.25000    0    -    9.25000   12.25000  32.4%     -    0s
+     0     0   12.25000    0    6    9.25000   12.25000  32.4%     -    0s
+     0     0   12.25000    0    6    9.25000   12.25000  32.4%     -    0s
+     0     0   12.25000    0    6    9.25000   12.25000  32.4%     -    0s
+     0     2   12.25000    0    6    9.25000   12.25000  32.4%     -    0s
+*   48     0               5       9.5000000   10.43333  9.82%   4.5    0s
 
 Cutting planes:
-  MIR: 7
-  Lazy constraints: 69
+  Gomory: 1
+  MIR: 1
 
-Explored 24 nodes (153 simplex iterations) in 0.04 seconds (0.00 work units)
-Thread count was 8 (of 8 available processors)
+Explored 54 nodes (266 simplex iterations) in 0.17 seconds (0.00 work units)
+Thread count was 4 (of 4 available processors)
 
-Solution count 3: 9.5 8 7.25
+Solution count 3: 9.5 9.25 7.25
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 9.500000000000e+00, best bound 9.500000000000e+00, gap 0.0000%
 
-User-callback calls 236, time in user-callback 0.02 sec
+User-callback calls 297, time in user-callback 0.14 sec
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>robust_classifier.print_tree()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -781,28 +776,27 @@ User-callback calls 236, time in user-callback 0.02 sec
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-Feature:  X2 , Cutoff:  0
-#########node  2
-leaf 0
-#########node  3
 Feature:  X1 , Cutoff:  0
-#########node  4
-pruned
-#########node  5
-pruned
-#########node  6
-leaf 1
-#########node  7
+#########node  2
+Feature:  X2 , Cutoff:  0
+#########node  3
 leaf 0
+#########node  4
+leaf 0
+#########node  5
+leaf 1
+#########node  6
+pruned
+#########node  7
+pruned
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots(figsize=(10, 5))
-robust_classifier.plot_tree()
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -810,47 +804,37 @@ plt.show()
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_17_0.png" src="../_images/notebooks_RobustOCT_17_0.png" />
+<img alt="../_images/notebooks_RobustOCT_18_0.png" src="../_images/notebooks_RobustOCT_18_0.png" />
 </div>
 </div>
 </section>
 <section id="Example-3:-UCI-data-example">
 <h2>Example 3: UCI data example<a class="headerlink" href="#Example-3:-UCI-data-example" title="Link to this heading">¶</a></h2>
 <p>Here, we’ll see the benefits of using robust optimization by perturbing the test set. We will use the MONK’s Problems dataset from the UCI Machine Learning Repository.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from sklearn.model_selection import train_test_split
-from odtlearn.datasets import robust_example
-</pre></div>
-</div>
-</div>
 <p>Fetch data and split to train and test</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>&quot;&quot;&quot;Fetch data and split to train and test&quot;&quot;&quot;
-data, y = robust_example()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Fetch data and split to train and test&quot;&quot;&quot;</span>
+<span class="n">data</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">robust_example</span><span class="p">()</span>
 
-X_train, X_test, y_train, y_test = train_test_split(
-    data, y, test_size=0.25, random_state=2
-)
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <p>For sake of comparison, train a classification tree that does not consider the scenario where there is a distribution shift:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>&quot;&quot;&quot;Train a non-robust tree for comparison&quot;&quot;&quot;
-from odtlearn.robust_oct import RobustOCT
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Train a non-robust tree for comparison&quot;&quot;&quot;</span>
 
-# If you define no uncertainty, you get an optimal tree without regularization that maximizes accuracy
-non_robust_classifier = RobustOCT(solver=&quot;gurobi&quot;, depth=2, time_limit=300)
-non_robust_classifier.fit(X_train, y_train)
+<span class="c1"># If you define no uncertainty, you get an optimal tree without regularization that maximizes accuracy</span>
+<span class="n">non_robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -859,33 +843,31 @@ non_robust_classifier.fit(X_train, y_train)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
 Set parameter TimeLimit to value 300
-Set parameter NodeLimit to value 1073741824
-Set parameter SolutionLimit to value 1073741824
 Set parameter LazyConstraints to value 1
-Set parameter IntFeasTol to value 1e-06
-Set parameter Method to value 3
-Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - &#34;Ubuntu 24.04.4 LTS&#34;)
 
-CPU model: Apple M1 Pro
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+CPU model: AMD EPYC 9V74 80-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 2 physical cores, 4 logical processors, using up to 4 threads
 
-Optimize a model with 7 rows, 173 columns and 47 nonzeros
+Non-default parameters:
+TimeLimit  300
+LazyConstraints  1
+
+Optimize a model with 7 rows, 173 columns and 47 nonzeros (Max)
 Model fingerprint: 0xafd32360
+Model has 159 linear objective coefficients
 Variable types: 126 continuous, 47 integer (47 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
   Objective range  [2e-01, 1e+00]
   Bounds range     [1e+00, 1e+00]
   RHS range        [1e+00, 1e+00]
+
 Presolve removed 4 rows and 4 columns
 Presolve time: 0.00s
 Presolved: 3 rows, 169 columns, 39 nonzeros
 Variable types: 126 continuous, 43 integer (43 binary)
-Root relaxation presolved: 82 rows, 169 columns, 1072 nonzeros
-
 
 Root relaxation: objective 1.260000e+02, 5 iterations, 0.00 seconds (0.00 work units)
 
@@ -898,29 +880,39 @@ Root relaxation: objective 1.260000e+02, 5 iterations, 0.00 seconds (0.00 work u
 H    0     0                      77.2500000  125.75000  62.8%     -    0s
 H    0     0                      78.0000000  125.75000  61.2%     -    0s
      0     0  125.55000    0   13   78.00000  125.55000  61.0%     -    0s
-     0     0  125.54167    0   14   78.00000  125.54167  61.0%     -    0s
-     0     2  125.53640    0   23   78.00000  125.53640  60.9%     -    0s
-*  206   151              16      81.5000000  124.91667  53.3%  30.9    0s
-*  934   451               8      82.2500000  112.02237  36.2%  26.9    1s
-* 2715   519              15      83.2500000   95.50000  14.7%  21.4    1s
+     0     0  125.43182    0   18   78.00000  125.43182  60.8%     -    0s
+     0     0  125.31818    0   22   78.00000  125.31818  60.7%     -    0s
+     0     0  125.29167    0   22   78.00000  125.29167  60.6%     -    0s
+     0     0  125.29167    0   22   78.00000  125.29167  60.6%     -    0s
+     0     2  125.29167    0   22   78.00000  125.29167  60.6%     -    0s
+*  283   205              18      78.2500000  122.25000  56.2%  25.9    1s
+H  344   244                      80.2500000  122.25000  52.3%  27.2    2s
+*  351   241              27      80.5000000  122.25000  51.9%  26.9    2s
+*  489   297              21      81.2500000  118.83333  46.3%  25.2    2s
+*  513   310              23      81.5000000  118.82895  45.8%  25.0    2s
+*  692   358              15      82.2500000  114.87500  39.7%  24.7    2s
+*  819   368              16      82.5000000  112.95000  36.9%  25.1    2s
+* 1182   461              15      83.2500000  105.94444  27.3%  22.7    2s
 
 Cutting planes:
-  MIR: 6
-  Lazy constraints: 994
+  Gomory: 3
+  MIR: 1
+  Flow cover: 39
+  RLT: 1
 
-Explored 3627 nodes (70039 simplex iterations) in 1.70 seconds (1.53 work units)
-Thread count was 8 (of 8 available processors)
+Explored 5449 nodes (101910 simplex iterations) in 4.91 seconds (4.02 work units)
+Thread count was 4 (of 4 available processors)
 
-Solution count 5: 83.25 82.25 81.5 ... 77.25
+Solution count 10: 83.25 82.5 82.25 ... 77.25
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 8.325000000000e+01, best bound 8.325000000000e+01, gap 0.0000%
 
-User-callback calls 7707, time in user-callback 0.94 sec
+User-callback calls 11562, time in user-callback 2.29 sec
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -929,10 +921,10 @@ RobustOCT(solver=gurobi,depth=2,time_limit=300,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>non_robust_classifier.print_tree()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -942,28 +934,28 @@ RobustOCT(solver=gurobi,depth=2,time_limit=300,num_threads=None,verbose=False)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-Feature:  Feat5 , Cutoff:  1
+Feature:  Feat1 , Cutoff:  2
 #########node  2
-Feature:  Feat3 , Cutoff:  2
+Feature:  Feat0 , Cutoff:  2
 #########node  3
-Feature:  Feat2 , Cutoff:  1
+Feature:  Feat3 , Cutoff:  2
 #########node  4
 leaf 0
 #########node  5
 leaf 1
 #########node  6
-leaf 1
-#########node  7
 leaf 0
+#########node  7
+leaf 1
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots(figsize=(10, 5))
-non_robust_classifier.plot_tree()
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -971,27 +963,27 @@ plt.show()
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_26_0.png" src="../_images/notebooks_RobustOCT_26_0.png" />
+<img alt="../_images/notebooks_RobustOCT_25_0.png" src="../_images/notebooks_RobustOCT_25_0.png" />
 </div>
 </div>
 <p>Train a robust tree. First, define the uncertainty. Here, we will generate a probability of certainty for each feature randomly (in practice, you would need to use some guess from domain knowledge). For simplicity, we will not change this probability by data sample <img class="math" src="../_images/math/5aa339d4daf45a810dda332e3c80a0698e526e04.png" alt="i"/>. We also define <img class="math" src="../_images/math/50d821c5e3b3d624d499af661a86eb2bfcebbfa8.png" alt="\lambda = 0.9"/>, which in practice must be tuned.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>&quot;&quot;&quot;Generate q_f values for each feature (i.e. probability of certainty for feature f)&quot;&quot;&quot;
-np.random.seed(42)
-q_f = np.random.normal(loc=0.9, scale=0.1, size=len(X_train.columns))
-# Snap q_f to range [0,1]
-q_f[q_f &lt;= 0] = np.nextafter(np.float32(0), np.float32(1))
-q_f[q_f &gt; 1] = 1.0
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Generate q_f values for each feature (i.e. probability of certainty for feature f)&quot;&quot;&quot;</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">q_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+<span class="c1"># Snap q_f to range [0,1]</span>
+<span class="n">q_f</span><span class="p">[</span><span class="n">q_f</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">q_f</span><span class="p">[</span><span class="n">q_f</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
 
-q_f
+<span class="n">q_f</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1002,20 +994,19 @@ array([0.94967142, 0.88617357, 0.96476885, 1.        , 0.87658466,
 </div>
 <p>Calibrate the <code class="docutils literal notranslate"><span class="pre">costs</span></code> and <code class="docutils literal notranslate"><span class="pre">budget</span></code> parameters for the <code class="docutils literal notranslate"><span class="pre">fit</span></code> function.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>&quot;&quot;&quot;Define budget of uncertainty&quot;&quot;&quot;
-from math import log
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Define budget of uncertainty&quot;&quot;&quot;</span>
 
-l = 0.9  # Lambda value between 0 and 1
-budget = -1 * X_train.shape[0] * log(l)
-budget
+<span class="n">l</span> <span class="o">=</span> <span class="mf">0.9</span>  <span class="c1"># Lambda value between 0 and 1</span>
+<span class="n">budget</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+<span class="n">budget</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1024,26 +1015,24 @@ budget
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>&quot;&quot;&quot;Based on q_f values, create costs of uncertainty&quot;&quot;&quot;
-from copy import deepcopy
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Based on q_f values, create costs of uncertainty&quot;&quot;&quot;</span>
+<span class="n">costs</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">costs</span> <span class="o">=</span> <span class="n">costs</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">q_f</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">q_f</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">costs</span><span class="p">[</span><span class="n">costs</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">f</span><span class="p">]]</span> <span class="o">=</span> <span class="n">budget</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># no uncertainty = &quot;infinite&quot; cost</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">costs</span><span class="p">[</span><span class="n">costs</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">f</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">q_f</span><span class="p">[</span><span class="n">f</span><span class="p">])</span>
 
-costs = deepcopy(X_train)
-costs = costs.astype(&quot;float&quot;)
-for f in range(len(q_f)):
-    if q_f[f] == 1:
-        costs[costs.columns[f]] = budget + 1  # no uncertainty = &quot;infinite&quot; cost
-    else:
-        costs[costs.columns[f]] = -1 * log(1 - q_f[f])
-
-costs
+<span class="n">costs</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -1180,15 +1169,15 @@ costs
 </div>
 <p>Train the robust tree using the costs and budget.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>robust_classifier = RobustOCT(
-    solver=&quot;gurobi&quot;,
-    depth=2,
-    time_limit=200,
-)
-robust_classifier.fit(X_train, y_train, costs=costs, budget=budget)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span> <span class="o">=</span> <span class="n">RobustOCT</span><span class="p">(</span>
+    <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span>
+    <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">time_limit</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">robust_classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">costs</span><span class="o">=</span><span class="n">costs</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1197,33 +1186,31 @@ robust_classifier.fit(X_train, y_train, costs=costs, budget=budget)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Set parameter Username
-Academic license - for non-commercial use only - expires 2024-06-27
 Set parameter TimeLimit to value 200
-Set parameter NodeLimit to value 1073741824
-Set parameter SolutionLimit to value 1073741824
 Set parameter LazyConstraints to value 1
-Set parameter IntFeasTol to value 1e-06
-Set parameter Method to value 3
-Gurobi Optimizer version 10.0.2 build v10.0.2rc0 (mac64[arm])
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - &#34;Ubuntu 24.04.4 LTS&#34;)
 
-CPU model: Apple M1 Pro
-Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+CPU model: AMD EPYC 9V74 80-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 2 physical cores, 4 logical processors, using up to 4 threads
 
-Optimize a model with 7 rows, 173 columns and 47 nonzeros
+Non-default parameters:
+TimeLimit  200
+LazyConstraints  1
+
+Optimize a model with 7 rows, 173 columns and 47 nonzeros (Max)
 Model fingerprint: 0xafd32360
+Model has 159 linear objective coefficients
 Variable types: 126 continuous, 47 integer (47 binary)
 Coefficient statistics:
   Matrix range     [1e+00, 1e+00]
   Objective range  [2e-01, 1e+00]
   Bounds range     [1e+00, 1e+00]
   RHS range        [1e+00, 1e+00]
+
 Presolve removed 4 rows and 4 columns
 Presolve time: 0.00s
 Presolved: 3 rows, 169 columns, 39 nonzeros
 Variable types: 126 continuous, 43 integer (43 binary)
-Root relaxation presolved: 82 rows, 169 columns, 1072 nonzeros
-
 
 Root relaxation: objective 1.260000e+02, 5 iterations, 0.00 seconds (0.00 work units)
 
@@ -1236,29 +1223,37 @@ Root relaxation: objective 1.260000e+02, 5 iterations, 0.00 seconds (0.00 work u
 H    0     0                      77.2500000  125.75000  62.8%     -    0s
 H    0     0                      78.0000000  125.75000  61.2%     -    0s
      0     0  125.55000    0   13   78.00000  125.55000  61.0%     -    0s
-     0     0  125.54167    0   14   78.00000  125.54167  61.0%     -    0s
-     0     2  125.53640    0   23   78.00000  125.53640  60.9%     -    0s
-*  472   333              14      78.5000000  122.24074  55.7%  29.0    1s
-* 2519   887              14      79.5000000   99.00000  24.5%  20.5    3s
-  3648   758   85.00000   20    2   79.50000   90.91667  14.4%  19.2    5s
+     0     0  125.43182    0   18   78.00000  125.43182  60.8%     -    0s
+     0     0  125.31818    0   22   78.00000  125.31818  60.7%     -    0s
+     0     0  125.29167    0   22   78.00000  125.29167  60.6%     -    0s
+     0     0  125.29167    0   20   78.00000  125.29167  60.6%     -    0s
+     0     2  125.29167    0   20   78.00000  125.29167  60.6%     -    0s
+   975   621   85.58333   12    5   78.00000  112.69697  44.5%  24.3    5s
+H 1499   721                      78.5000000  110.37500  40.6%  25.3    8s
+H 1812   720                      79.5000000  110.37500  38.8%  24.7    9s
+  1862   744  102.45000   19   17   79.50000  110.37500  38.8%  24.6   10s
+  3561   875   85.91667   35    6   79.50000   96.25000  21.1%  17.9   15s
+  5065   740   80.00000   32    4   79.50000   88.90000  11.8%  15.9   20s
+  6290   180   80.65000   31    2   79.50000   81.75000  2.83%  14.8   25s
 
 Cutting planes:
-  MIR: 6
-  Lazy constraints: 1319
+  MIR: 2
+  Flow cover: 54
+  RLT: 1
 
-Explored 5135 nodes (84698 simplex iterations) in 8.19 seconds (3.26 work units)
-Thread count was 8 (of 8 available processors)
+Explored 6743 nodes (95373 simplex iterations) in 27.26 seconds (7.34 work units)
+Thread count was 4 (of 4 available processors)
 
-Solution count 4: 79.5 78.5 78 77.25
+Solution count 5: 79.5 78.5 78 ... 77.25
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 7.950000000000e+01, best bound 7.950000000000e+01, gap 0.0000%
 
-User-callback calls 11149, time in user-callback 6.77 sec
+User-callback calls 14876, time in user-callback 22.45 sec
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1267,10 +1262,10 @@ RobustOCT(solver=gurobi,depth=2,time_limit=200,num_threads=None,verbose=False)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>robust_classifier.print_tree()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1280,28 +1275,27 @@ RobustOCT(solver=gurobi,depth=2,time_limit=200,num_threads=None,verbose=False)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 #########node  1
-Feature:  Feat3 , Cutoff:  2
-#########node  2
-leaf 0
-#########node  3
 Feature:  Feat2 , Cutoff:  1
-#########node  4
-pruned
-#########node  5
-pruned
-#########node  6
-leaf 1
-#########node  7
+#########node  2
+Feature:  Feat3 , Cutoff:  2
+#########node  3
 leaf 0
+#########node  4
+leaf 0
+#########node  5
+leaf 1
+#########node  6
+pruned
+#########node  7
+pruned
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots(figsize=(10, 5))
-robust_classifier.plot_tree()
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">robust_classifier</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1309,31 +1303,29 @@ plt.show()
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_RobustOCT_35_0.png" src="../_images/notebooks_RobustOCT_35_0.png" />
+<img alt="../_images/notebooks_RobustOCT_34_0.png" src="../_images/notebooks_RobustOCT_34_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from sklearn.metrics import accuracy_score
-
-print(
-    &quot;Non-robust training accuracy: &quot;,
-    accuracy_score(y_train, non_robust_classifier.predict(X_train)),
-)
-print(
-    &quot;Robust training accuracy:     &quot;,
-    accuracy_score(y_train, robust_classifier.predict(X_train)),
-)
-print(
-    &quot;Non-robust test accuracy:     &quot;,
-    accuracy_score(y_test, non_robust_classifier.predict(X_test)),
-)
-print(
-    &quot;Robust test accuracy:         &quot;,
-    accuracy_score(y_test, robust_classifier.predict(X_test)),
-)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Non-robust training accuracy: &quot;</span><span class="p">,</span>
+    <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Robust training accuracy:     &quot;</span><span class="p">,</span>
+    <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Non-robust test accuracy:     &quot;</span><span class="p">,</span>
+    <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Robust test accuracy:         &quot;</span><span class="p">,</span>
+    <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)),</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1344,51 +1336,51 @@ print(
 <div class="highlight"><pre>
 Non-robust training accuracy:  0.6666666666666666
 Robust training accuracy:      0.6587301587301587
-Non-robust test accuracy:      0.5813953488372093
+Non-robust test accuracy:      0.46511627906976744
 Robust test accuracy:          0.5581395348837209
 </pre></div></div>
 </div>
 <p>To measure the performance of the trained models, perturb the test data based off of our known certainties of each feature (to simulate a distribtion shift), and then see how well each tree performs against the perturbed data</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def perturb(data, q_f, seed):
-    &quot;&quot;&quot;Perturb X given q_f based off of the symmetric geometric distribution&quot;&quot;&quot;
-    new_data = deepcopy(data)
-    np.random.seed(seed)
-    # Perturbation of features
-    for f in range(len(new_data.columns)):
-        perturbations = np.random.geometric(q_f[f], size=new_data.shape[0])
-        perturbations = perturbations - 1  # Support should be 0,1,2,...
-        signs = (2 * np.random.binomial(1, 0.5, size=new_data.shape[0])) - 1
-        perturbations = perturbations * signs
-        new_data[new_data.columns[f]] = new_data[new_data.columns[f]] + perturbations
-    return new_data
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">perturb</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">q_f</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perturb X given q_f based off of the symmetric geometric distribution&quot;&quot;&quot;</span>
+    <span class="n">new_data</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="c1"># Perturbation of features</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_data</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+        <span class="n">perturbations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">geometric</span><span class="p">(</span><span class="n">q_f</span><span class="p">[</span><span class="n">f</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">new_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">perturbations</span> <span class="o">=</span> <span class="n">perturbations</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># Support should be 0,1,2,...</span>
+        <span class="n">signs</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">binomial</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">new_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">perturbations</span> <span class="o">=</span> <span class="n">perturbations</span> <span class="o">*</span> <span class="n">signs</span>
+        <span class="n">new_data</span><span class="p">[</span><span class="n">new_data</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">f</span><span class="p">]]</span> <span class="o">=</span> <span class="n">new_data</span><span class="p">[</span><span class="n">new_data</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">f</span><span class="p">]]</span> <span class="o">+</span> <span class="n">perturbations</span>
+    <span class="k">return</span> <span class="n">new_data</span>
 
 
-&quot;&quot;&quot;Obtain 1000 different perturbed test sets, and record accuracies&quot;&quot;&quot;
-non_robust_acc = []
-robust_acc = []
-for s in range(1, 1001):
-    X_test_perturbed = perturb(X_test, q_f, s)
-    non_robust_pred = non_robust_classifier.predict(X_test_perturbed)
-    robust_pred = robust_classifier.predict(X_test_perturbed)
-    non_robust_acc += [accuracy_score(y_test, non_robust_pred)]
-    robust_acc += [accuracy_score(y_test, robust_pred)]
+<span class="sd">&quot;&quot;&quot;Obtain 1000 different perturbed test sets, and record accuracies&quot;&quot;&quot;</span>
+<span class="n">non_robust_acc</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">robust_acc</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1001</span><span class="p">):</span>
+    <span class="n">X_test_perturbed</span> <span class="o">=</span> <span class="n">perturb</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">q_f</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="n">non_robust_pred</span> <span class="o">=</span> <span class="n">non_robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_perturbed</span><span class="p">)</span>
+    <span class="n">robust_pred</span> <span class="o">=</span> <span class="n">robust_classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_perturbed</span><span class="p">)</span>
+    <span class="n">non_robust_acc</span> <span class="o">+=</span> <span class="p">[</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">non_robust_pred</span><span class="p">)]</span>
+    <span class="n">robust_acc</span> <span class="o">+=</span> <span class="p">[</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">robust_pred</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;Worst-case accuracy (Non-Robust Tree): &quot;, min(non_robust_acc))
-print(&quot;Worst-case accuracy (Robust Tree):     &quot;, min(robust_acc))
-print(
-    &quot;Average accuracy (Non-Robust Tree):    &quot;, sum(non_robust_acc) / len(non_robust_acc)
-)
-print(&quot;Average accuracy (Robust Tree):        &quot;, sum(robust_acc) / len(robust_acc))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Worst-case accuracy (Non-Robust Tree): &quot;</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">non_robust_acc</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Worst-case accuracy (Robust Tree):     &quot;</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">robust_acc</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Average accuracy (Non-Robust Tree):    &quot;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">non_robust_acc</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_robust_acc</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Average accuracy (Robust Tree):        &quot;</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">robust_acc</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">robust_acc</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1397,9 +1389,9 @@ print(&quot;Average accuracy (Robust Tree):        &quot;, sum(robust_acc) / len
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Worst-case accuracy (Non-Robust Tree):  0.4418604651162791
+Worst-case accuracy (Non-Robust Tree):  0.3953488372093023
 Worst-case accuracy (Robust Tree):      0.5116279069767442
-Average accuracy (Non-Robust Tree):     0.5660930232558059
+Average accuracy (Non-Robust Tree):     0.47367441860465515
 Average accuracy (Robust Tree):         0.5584186046511533
 </pre></div></div>
 </div>
@@ -1407,9 +1399,18 @@ Average accuracy (Robust Tree):         0.5584186046511533
 <section id="References">
 <h2>References<a class="headerlink" href="#References" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Justin, N., Aghaei, S., Gómez, A., &amp; Vayanos, P. (2022). Optimal robust classification trees. <em>The AAAI-2022 Workshop on Adversarial Machine Learning and Beyond</em>. <a class="reference external" href="https://openreview.net/pdf?id=HbasA9ysA3">https://openreview.net/pdf?id=HbasA9ysA3</a></p></li>
+<li><p>Justin, N., Aghaei, S., Gómez, A., &amp; Vayanos, P. (2021). Optimal robust classification trees. <em>The AAAI-2022 Workshop on Adversarial Machine Learning and Beyond</em>. <a class="reference external" href="https://openreview.net/pdf?id=HbasA9ysA3">https://openreview.net/pdf?id=HbasA9ysA3</a></p></li>
+<li><p>Justin, N., Aghaei, S., Gómez, A., &amp; Vayanos, P. (2023). Learning optimal classification trees robust to distribution shifts. <em>arXiv preprint</em> arXiv:2310.17772.</p></li>
 <li><p>Dua, D. and Graff, C. (2019). <a class="reference external" href="http://archive.ics.uci.edu/ml">UCI Machine Learning Repository</a>. Irvine, CA: University of California, School of Information and Computer Science.</p></li>
 </ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
 </section>
 </section>
 
@@ -1418,12 +1419,12 @@ Average accuracy (Robust Tree):         0.5584186046511533
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../contributing.html">
+          <a class="next-page" href="FlowOPT.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">How to contribute to ODTlearn</div>
+                <div class="title"><code class="docutils literal notranslate"><span class="pre">FlowOPT</span></code> Examples</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -1434,7 +1435,7 @@ Average accuracy (Robust Tree):         0.5584186046511533
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Fair Optimal Classification Trees</div>
+                <div class="title"><code class="docutils literal notranslate"><span class="pre">FairConstrainedOCT</span></code> Examples</div>
                 
               </div>
             </a>
@@ -1488,10 +1489,10 @@ Average accuracy (Robust Tree):         0.5584186046511533
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=fe643644"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
+</div><script src="../_static/documentation_options.js?v=fc837d61"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=4ea706d9"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>

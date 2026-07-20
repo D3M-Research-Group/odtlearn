@@ -1,0 +1,1284 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Developer Docs" href="../development/index.html"><link rel="prev" title="RobustOCT Examples" href="RobustOCT.html">
+        <link rel="prefetch" href="../_static/img/ODTlearn-color.png" as="image">
+        <link rel="prefetch" href="../_static/img/ODTlearn-color.png" as="image">
+
+    <!-- Generated with Sphinx 9.0.4 and Furo 2025.12.19 -->
+        <title>FlowOPT Examples - ODTLearn documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">ODTLearn documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo only-light" src="../_static/img/ODTlearn-color.png" alt="Light Logo"/>
+    <img class="sidebar-logo only-dark" src="../_static/img/ODTlearn-color.png" alt="Dark Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">ODTLearn documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../user_guide/index.html">User Guide</a><input aria-label="Toggle navigation of User Guide" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/optimal_classification_trees.html">Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/fair_optimal_classification_trees.html">Fair Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/optimal_robust_classification_trees.html">Robust Optimal Classification Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/optimal_prescriptive_trees.html">Optimal Prescriptive Trees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../user_guide/adding_constraints.html">Adding side constraints to optimal classification trees</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">ODTlearn API</a><input aria-label="Toggle navigation of ODTlearn API" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../autoapi/odtlearn/index.html">odtlearn</a><input aria-label="Toggle navigation of odtlearn" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/constrained_oct/index.html">odtlearn.constrained_oct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/datasets/index.html">odtlearn.datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/fair_oct/index.html">odtlearn.fair_oct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_oct/index.html">odtlearn.flow_oct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_oct_ms/index.html">odtlearn.flow_oct_ms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_oct_ss/index.html">odtlearn.flow_oct_ss</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_opt/index.html">odtlearn.flow_opt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_opt_ms/index.html">odtlearn.flow_opt_ms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/flow_opt_ss/index.html">odtlearn.flow_opt_ss</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/opt_ct/index.html">odtlearn.opt_ct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/opt_dt/index.html">odtlearn.opt_dt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/opt_pt/index.html">odtlearn.opt_pt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autoapi/odtlearn/robust_oct/index.html">odtlearn.robust_oct</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../autoapi/odtlearn/solvers/index.html">odtlearn.solvers</a><input aria-label="Toggle navigation of odtlearn.solvers" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/solvers/cbc_callbacks/index.html">odtlearn.solvers.cbc_callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/solvers/cbc_solver/index.html">odtlearn.solvers.cbc_solver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/solvers/gurobi_callbacks/index.html">odtlearn.solvers.gurobi_callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/solvers/gurobi_solver/index.html">odtlearn.solvers.gurobi_solver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/solvers/solver/index.html">odtlearn.solvers.solver</a></li>
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../autoapi/odtlearn/utils/index.html">odtlearn.utils</a><input aria-label="Toggle navigation of odtlearn.utils" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/Tree/index.html">odtlearn.utils.Tree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/TreePlotter/index.html">odtlearn.utils.TreePlotter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/binarize/index.html">odtlearn.utils.binarize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/callback_helpers/index.html">odtlearn.utils.callback_helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../autoapi/odtlearn/utils/validation/index.html">odtlearn.utils.validation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Example Notebooks</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Example Notebooks</a><input aria-label="Toggle navigation of Example Notebooks" checked="" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="FlowOCT.html"><code class="docutils literal notranslate"><span class="pre">FlowOCT</span></code> Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FairOCT.html"><code class="docutils literal notranslate"><span class="pre">FairConstrainedOCT</span></code> Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="RobustOCT.html"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">FlowOPT</span></code> Examples</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Docs</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../development/index.html">Developer Docs</a><input aria-label="Toggle navigation of Developer Docs" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../development/contributing.html">How to contribute to ODTlearn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development/solver.html">Adding Additional Solvers to ODTLearn</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/notebooks/FlowOPT.ipynb.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">odtlearn.flow_opt</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlowOPT_IPW</span><span class="p">,</span> <span class="n">FlowOPT_DM</span><span class="p">,</span> <span class="n">FlowOPT_DR</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">odtlearn.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">prescriptive_ex_data</span>
+</pre></div>
+</div>
+</div>
+<section id="FlowOPT-Examples">
+<h1><code class="docutils literal notranslate"><span class="pre">FlowOPT</span></code> Examples<a class="headerlink" href="#FlowOPT-Examples" title="Link to this heading">¶</a></h1>
+<p>We will look at the different methods of learning optimal prescriptive trees: inverse probability weighting (IPW), direct method (DM), and doubly robust (DR)</p>
+<section id="Example-0:-Preparing-the-Data">
+<h2>Example 0: Preparing the Data<a class="headerlink" href="#Example-0:-Preparing-the-Data" title="Link to this heading">¶</a></h2>
+<p>We will first load a synthetic dataset to use as our running example. In this example, we have precomputed the learned inverse propensity weights (IPW) and predicted outcomes for the direct method (DM). At least one of these values must be computed in order to use any of the prescriptive tree classifiers in ODTLearn. The advantages and disadvantages of using each type of prescriptive tree is given in the subsequent examples, and we refer to Dudik et al. (2011) and Jo et al. (2021) for more
+details.</p>
+<p>The column names in this dataset that correspond to the IPW weights and predicted outcomes for DM are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">prob_t_pred_log</span></code> is the inverse propensity weight learned through logistic regression</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prob_t_pred_tree</span></code> is the inverse propensity weight learned through a decision tree</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">linear0</span></code> is the predicted outcome under treatment 0 learned through linear regression</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">linear1</span></code> is the predicted outcome under treatment 1 learned through linear regression</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lasso0</span></code> is the predicted outcome under treatment 0 learned through lasso regression</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lasso0</span></code> is the predicted outcome under treatment 2 learned through lasso regression</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read data</span>
+<span class="n">train_data</span><span class="p">,</span> <span class="n">test_data</span>  <span class="o">=</span> <span class="n">prescriptive_ex_data</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;shape</span><span class="si">{</span><span class="n">train_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">train_data</span> <span class="o">=</span> <span class="n">train_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Taking a small subset of the data for example purposes</span>
+<span class="n">test_data</span> <span class="o">=</span> <span class="n">test_data</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">train_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+shape(500, 31)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>V1.1</th>
+      <th>V1.2</th>
+      <th>V1.3</th>
+      <th>V1.4</th>
+      <th>V1.5</th>
+      <th>V1.6</th>
+      <th>V1.7</th>
+      <th>V1.8</th>
+      <th>V1.9</th>
+      <th>V1.10</th>
+      <th>...</th>
+      <th>y1</th>
+      <th>t</th>
+      <th>prob_t</th>
+      <th>y</th>
+      <th>prob_t_pred_log</th>
+      <th>prob_t_pred_tree</th>
+      <th>linear0</th>
+      <th>lasso0</th>
+      <th>linear1</th>
+      <th>lasso1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.601624</td>
+      <td>1</td>
+      <td>0.5</td>
+      <td>0.601624</td>
+      <td>0.466833</td>
+      <td>0.466</td>
+      <td>0.491137</td>
+      <td>0.485787</td>
+      <td>0.574565</td>
+      <td>0.539485</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.219783</td>
+      <td>1</td>
+      <td>0.5</td>
+      <td>0.219783</td>
+      <td>0.483647</td>
+      <td>0.466</td>
+      <td>0.152827</td>
+      <td>0.327543</td>
+      <td>0.219158</td>
+      <td>0.433684</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.454380</td>
+      <td>0</td>
+      <td>0.5</td>
+      <td>0.319519</td>
+      <td>0.525567</td>
+      <td>0.534</td>
+      <td>0.336105</td>
+      <td>0.401297</td>
+      <td>0.443978</td>
+      <td>0.490118</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.425231</td>
+      <td>0</td>
+      <td>0.5</td>
+      <td>0.390287</td>
+      <td>0.528118</td>
+      <td>0.534</td>
+      <td>0.391595</td>
+      <td>0.452416</td>
+      <td>0.434434</td>
+      <td>0.509328</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0.575465</td>
+      <td>0</td>
+      <td>0.5</td>
+      <td>0.663447</td>
+      <td>0.540226</td>
+      <td>0.534</td>
+      <td>0.642607</td>
+      <td>0.611545</td>
+      <td>0.585660</td>
+      <td>0.590906</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 31 columns</p>
+</div></div>
+</div>
+<p><strong>Note</strong>: In practice, users should learn IPW weights and predicted outcomes in the following manner:</p>
+<ul class="simple">
+<li><p>IPW weights can be learned using a standard machine learning method that predicts the probability of treatment assignments given covariates (e.g., logistic regression), then taking its inverse.</p></li>
+<li><p>Predicted outcomes for DM are learned by training a machine learning method for each treatment <img class="math" src="../_images/math/907a4add6d5db5b7f197f7924f1371b8ac404fe6.png" alt="t"/>:</p>
+<ul>
+<li><p>Take the subset of training data with treatment <img class="math" src="../_images/math/907a4add6d5db5b7f197f7924f1371b8ac404fe6.png" alt="t"/></p></li>
+<li><p>Learn a machine learning model that can predict the outcome <img class="math" src="../_images/math/1b5e577d6216dca3af7d87aa122a0b9b360d6cb3.png" alt="y"/> under treatment <img class="math" src="../_images/math/907a4add6d5db5b7f197f7924f1371b8ac404fe6.png" alt="t"/> using that subset of training data through, e.g., lasso regression</p></li>
+<li><p>Predict the outcome <img class="math" src="../_images/math/1b5e577d6216dca3af7d87aa122a0b9b360d6cb3.png" alt="y"/> under treatment <img class="math" src="../_images/math/907a4add6d5db5b7f197f7924f1371b8ac404fe6.png" alt="t"/> using the learned model</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="Example-1:-Inverse-Propensity-Weighting-(IPW)">
+<h2>Example 1: Inverse Propensity Weighting (IPW)<a class="headerlink" href="#Example-1:-Inverse-Propensity-Weighting-(IPW)" title="Link to this heading">¶</a></h2>
+<p>Inverse Propensity Weighting (IPW) works by creating a pseudo-population where treatment assignments are randomized, allowing us to estimate the average outcome under a learned prescriptive tree.</p>
+<p>IPW requires learning propensities, which are the probability that each sample received its assigned treatment. This can be estimated via standard machine learning methods (e.g., logistic regression), where the covariates and assigned treatments are used to create a propensity model that predicts the probability of receiving a treatment.</p>
+<p>IPW is only a consistent estimator when the learned propensity model is correctly specified, and may suffer from high variance and sensitivity to small propensity scores (leading to very high inverse propensity weights).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">15</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span> <span class="c1"># Taking a subset of covariates for use with Gurobi restricted license limits</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span> <span class="c1"># treatment</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="c1"># outcome</span>
+<span class="n">ipw</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;prob_t_pred_tree&quot;</span><span class="p">]</span> <span class="c1"># IPW weights</span>
+
+<span class="n">opt_ipw</span> <span class="o">=</span> <span class="n">FlowOPT_IPW</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="n">opt_ipw</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ipw</span><span class="p">)</span> <span class="c1"># pass in IPW weights in the fit function</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Restricted license - for non-production use only - expires 2027-11-29
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - &#34;Ubuntu 24.04.4 LTS&#34;)
+
+CPU model: AMD EPYC 9V74 80-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 2 physical cores, 4 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  300
+
+Optimize a model with 1014 rows, 736 columns and 2803 nonzeros (Max)
+Model fingerprint: 0xbf6dc368
+Model has 50 linear objective coefficients
+Variable types: 714 continuous, 22 integer (22 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [4e-01, 2e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+
+Found heuristic solution: objective -0.0000000
+Presolve removed 605 rows and 506 columns
+Presolve time: 0.00s
+Presolved: 409 rows, 230 columns, 1292 nonzeros
+Found heuristic solution: objective 27.2886911
+Variable types: 212 continuous, 18 integer (18 binary)
+
+Root relaxation: objective 4.557964e+01, 303 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   45.57964    0    2   27.28869   45.57964  67.0%     -    0s
+H    0     0                      31.4587260   45.57964  44.9%     -    0s
+     0     0   45.57964    0    4   31.45873   45.57964  44.9%     -    0s
+     0     0   45.57964    0    7   31.45873   45.57964  44.9%     -    0s
+     0     0   45.57964    0    7   31.45873   45.57964  44.9%     -    0s
+     0     0   45.57964    0    7   31.45873   45.57964  44.9%     -    0s
+     0     0   45.57964    0    7   31.45873   45.57964  44.9%     -    0s
+     0     2   45.57964    0    7   31.45873   45.57964  44.9%     -    0s
+*   12    10               4      31.9674681   43.40149  35.8%  20.3    0s
+*   13    10               5      32.9958399   43.40149  31.5%  19.0    0s
+*   27    15              10      33.5045819   41.89721  25.0%  15.8    0s
+*   64     6               9      33.7293800   37.37083  10.8%  12.8    0s
+
+Cutting planes:
+  Gomory: 1
+  MIR: 19
+  Flow cover: 4
+  RLT: 4
+  Relax-and-lift: 1
+  BQP: 1
+
+Explored 73 nodes (1334 simplex iterations) in 0.07 seconds (0.04 work units)
+Thread count was 4 (of 4 available processors)
+
+Solution count 7: 33.7294 33.5046 32.9958 ... -0
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 3.372937999418e+01, best bound 3.372937999418e+01, gap 0.0000%
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+FlowOPT_IPW(solver=gurobi,depth=2,time_limit=300,num_threads=None,verbose=False)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">opt_ipw</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">opt_ipw</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color_dict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;node&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;leaves&quot;</span><span class="p">:</span> <span class="p">[]})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+#########node  1
+branch on V2.7
+#########node  2
+branch on V2.8
+#########node  3
+branch on V2.6
+#########node  4
+leaf 0
+#########node  5
+leaf 1
+#########node  6
+leaf 0
+#########node  7
+leaf 1
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_FlowOPT_9_1.png" src="../_images/notebooks_FlowOPT_9_1.png" />
+</div>
+</div>
+</section>
+<section id="Example-2:-Direct-Method">
+<h2>Example 2: Direct Method<a class="headerlink" href="#Example-2:-Direct-Method" title="Link to this heading">¶</a></h2>
+<p>The Direct Method (DM) works by modeling the outcomes under each treatment directly, which allows for an estimate of the outcome of each data sample under a different treatment assignment.</p>
+<p>DM requires learning an outcome model for each treatment in the data. This can be estimated via standard machine learning methods (e.g., lasso regression), where the subset of individuals in the data that received one treatment assignment is used to create the outcome model under that treatment.</p>
+<p>DM is only a consistent estimator when the outcome models are correctly specified, and suffers from high bias as it requires extrapolating the outcome beyond the individuals that historically received that treatment.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">15</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span> <span class="c1"># covariates</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span> <span class="c1"># treatment</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="c1"># outcome</span>
+<span class="n">y_hat</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[[</span><span class="s2">&quot;linear0&quot;</span><span class="p">,</span> <span class="s2">&quot;linear1&quot;</span><span class="p">]]</span> <span class="c1"># estimated outcomes</span>
+
+<span class="n">opt_dm</span> <span class="o">=</span> <span class="n">FlowOPT_DM</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="n">opt_dm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span> <span class="c1"># pass in estimated outcomes in the fit function</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - &#34;Ubuntu 24.04.4 LTS&#34;)
+
+CPU model: AMD EPYC 9V74 80-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 2 physical cores, 4 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  300
+
+Optimize a model with 1414 rows, 1086 columns and 3903 nonzeros (Max)
+Model fingerprint: 0xde838f85
+Model has 700 linear objective coefficients
+Variable types: 1064 continuous, 22 integer (22 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e-01, 9e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+
+Found heuristic solution: objective 26.4357477
+Presolve removed 634 rows and 534 columns
+Presolve time: 0.01s
+Presolved: 780 rows, 552 columns, 2510 nonzeros
+Variable types: 534 continuous, 18 integer (18 binary)
+
+Root relaxation: objective 2.834794e+01, 272 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   28.34794    0    2   26.43575   28.34794  7.23%     -    0s
+H    0     0                      27.7780800   28.34794  2.05%     -    0s
+     0     0   28.34794    0    9   27.77808   28.34794  2.05%     -    0s
+H    0     0                      27.9719234   28.34794  1.34%     -    0s
+     0     0   28.34794    0    6   27.97192   28.34794  1.34%     -    0s
+     0     0   28.34794    0    6   27.97192   28.34794  1.34%     -    0s
+     0     0   28.34794    0    8   27.97192   28.34794  1.34%     -    0s
+     0     0   28.34794    0    6   27.97192   28.34794  1.34%     -    0s
+     0     0   28.34794    0    6   27.97192   28.34794  1.34%     -    0s
+     0     2   28.34794    0    6   27.97192   28.34794  1.34%     -    0s
+*   23    12               7      28.0371003   28.34794  1.11%  29.8    0s
+
+Cutting planes:
+  MIR: 20
+  Flow cover: 4
+  RLT: 2
+  Relax-and-lift: 1
+
+Explored 56 nodes (1719 simplex iterations) in 0.12 seconds (0.08 work units)
+Thread count was 4 (of 4 available processors)
+
+Solution count 4: 28.0371 27.9719 27.7781 26.4357
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.803710031053e+01, best bound 2.803710031053e+01, gap 0.0000%
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+FlowOPT_DM(solver=gurobi,depth=2,time_limit=300,num_threads=None,verbose=False)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">opt_dm</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">opt_dm</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color_dict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;node&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;leaves&quot;</span><span class="p">:</span> <span class="p">[]})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+#########node  1
+branch on V2.7
+#########node  2
+branch on V2.8
+#########node  3
+branch on V2.6
+#########node  4
+leaf 0
+#########node  5
+leaf 1
+#########node  6
+leaf 0
+#########node  7
+leaf 1
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_FlowOPT_12_1.png" src="../_images/notebooks_FlowOPT_12_1.png" />
+</div>
+</div>
+</section>
+<section id="Example-3:-Doubly-Robust-Method">
+<h2>Example 3: Doubly Robust Method<a class="headerlink" href="#Example-3:-Doubly-Robust-Method" title="Link to this heading">¶</a></h2>
+<p>The Doubly Robust Method (DR) combines the IPW and DM methods. The DR method uses an estimated outcome model (similar to DM), and corrects any bias from the outcome model using IPW.</p>
+<p>DR is consistent if <em>either</em> the propensity model OR the outcome model is correctly specified. However, it does require learning both the IPW weights and the outcome models under each treatment.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">train_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">15</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span> <span class="c1"># covariates</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span> <span class="c1"># treatment</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="c1"># outcome</span>
+<span class="n">ipw</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;prob_t_pred_tree&quot;</span><span class="p">]</span> <span class="c1"># IPW weights</span>
+<span class="n">y_hat</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[[</span><span class="s2">&quot;linear0&quot;</span><span class="p">,</span> <span class="s2">&quot;linear1&quot;</span><span class="p">]]</span> <span class="c1"># estimated outcomes</span>
+
+<span class="n">opt_dr</span> <span class="o">=</span> <span class="n">FlowOPT_DR</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="s2">&quot;gurobi&quot;</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">time_limit</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="n">opt_dr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ipw</span><span class="p">,</span> <span class="n">y_hat</span><span class="p">)</span> <span class="c1"># Pass in both IPW weights and estimated outcomes in the fit function</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Set parameter TimeLimit to value 300
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - &#34;Ubuntu 24.04.4 LTS&#34;)
+
+CPU model: AMD EPYC 9V74 80-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 2 physical cores, 4 logical processors, using up to 4 threads
+
+Non-default parameters:
+TimeLimit  300
+
+Optimize a model with 1414 rows, 1086 columns and 3903 nonzeros (Max)
+Model fingerprint: 0x2a6fcff6
+Model has 700 linear objective coefficients
+Variable types: 1064 continuous, 22 integer (22 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e-01, 9e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+
+Found heuristic solution: objective 26.2414664
+Presolve removed 634 rows and 534 columns
+Presolve time: 0.01s
+Presolved: 780 rows, 552 columns, 2510 nonzeros
+Variable types: 534 continuous, 18 integer (18 binary)
+
+Root relaxation: objective 2.869269e+01, 282 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   28.69269    0    4   26.24147   28.69269  9.34%     -    0s
+H    0     0                      27.9231182   28.69269  2.76%     -    0s
+     0     0   28.69269    0    7   27.92312   28.69269  2.76%     -    0s
+H    0     0                      28.0904572   28.69269  2.14%     -    0s
+     0     0   28.69269    0    7   28.09046   28.69269  2.14%     -    0s
+     0     0   28.69269    0    7   28.09046   28.69269  2.14%     -    0s
+     0     0   28.69269    0    7   28.09046   28.69269  2.14%     -    0s
+H    0     0                      28.1093786   28.69269  2.08%     -    0s
+     0     0   28.69269    0    6   28.10938   28.69269  2.08%     -    0s
+     0     0   28.69269    0    6   28.10938   28.69269  2.08%     -    0s
+     0     2   28.69269    0    6   28.10938   28.69269  2.08%     -    0s
+*    9     7               6      28.2406652   28.67666  1.54%  43.0    0s
+
+Cutting planes:
+  Gomory: 2
+  MIR: 3
+  Flow cover: 2
+  RLT: 4
+
+Explored 37 nodes (1415 simplex iterations) in 0.11 seconds (0.08 work units)
+Thread count was 4 (of 4 available processors)
+
+Solution count 5: 28.2407 28.1094 28.0905 ... 26.2415
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.824066517198e+01, best bound 2.824066517198e+01, gap 0.0000%
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+FlowOPT_DR(solver=gurobi,depth=2,time_limit=300,num_threads=None,verbose=False)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">opt_dr</span><span class="o">.</span><span class="n">print_tree</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">opt_dr</span><span class="o">.</span><span class="n">plot_tree</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color_dict</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;node&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;leaves&quot;</span><span class="p">:</span> <span class="p">[]})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+#########node  1
+branch on V2.7
+#########node  2
+branch on V2.9
+#########node  3
+branch on V2.6
+#########node  4
+leaf 0
+#########node  5
+leaf 1
+#########node  6
+leaf 0
+#########node  7
+leaf 1
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_FlowOPT_15_1.png" src="../_images/notebooks_FlowOPT_15_1.png" />
+</div>
+</div>
+</section>
+<section id="Example-4:-Comparing-Performance">
+<h2>Example 4: Comparing Performance<a class="headerlink" href="#Example-4:-Comparing-Performance" title="Link to this heading">¶</a></h2>
+<p>It may be of interest to compare the performance of each type of estimator. We can compute summary statistics on the average outcome from each learned tree.</p>
+<p>In practice, DR is the typical preferred choice as it is consistent if either IPW or DR methods are consistent. IPW also remains a popular choice since it relies on just one propensity model to learn. We refer to Dudik et al. (2011) and Jo et al. (2021) for more details.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read test data</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;shape</span><span class="si">{</span><span class="n">test_data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">test_data</span><span class="o">.</span><span class="n">columns</span>
+
+<span class="n">test_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+shape(20, 27)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>V1.1</th>
+      <th>V1.2</th>
+      <th>V1.3</th>
+      <th>V1.4</th>
+      <th>V1.5</th>
+      <th>V1.6</th>
+      <th>V1.7</th>
+      <th>V1.8</th>
+      <th>V1.9</th>
+      <th>V1.10</th>
+      <th>...</th>
+      <th>V2.8</th>
+      <th>V2.9</th>
+      <th>V2.10</th>
+      <th>y0</th>
+      <th>y1</th>
+      <th>t</th>
+      <th>prob_t</th>
+      <th>y</th>
+      <th>prob_t_pred_log</th>
+      <th>prob_t_pred_tree</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.530883</td>
+      <td>0.492669</td>
+      <td>0</td>
+      <td>0.5</td>
+      <td>0.530883</td>
+      <td>0.537961</td>
+      <td>0.534</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.411497</td>
+      <td>0.356187</td>
+      <td>1</td>
+      <td>0.5</td>
+      <td>0.356187</td>
+      <td>0.470692</td>
+      <td>0.466</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.517887</td>
+      <td>0.501766</td>
+      <td>0</td>
+      <td>0.5</td>
+      <td>0.517887</td>
+      <td>0.536472</td>
+      <td>0.534</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.242120</td>
+      <td>0.146275</td>
+      <td>1</td>
+      <td>0.5</td>
+      <td>0.146275</td>
+      <td>0.481979</td>
+      <td>0.466</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.649355</td>
+      <td>0.527296</td>
+      <td>0</td>
+      <td>0.5</td>
+      <td>0.649355</td>
+      <td>0.544013</td>
+      <td>0.534</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 27 columns</p>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Predict</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">test_data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">15</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span> <span class="c1"># covariates</span>
+<span class="n">y_0_test</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[</span><span class="s2">&quot;y0&quot;</span><span class="p">]</span> <span class="c1"># estimated outcome under treatment 0</span>
+<span class="n">y_1_test</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[</span><span class="s2">&quot;y1&quot;</span><span class="p">]</span> <span class="c1"># estimated outcome under treatment 1</span>
+
+<span class="n">predict_ipw</span> <span class="o">=</span> <span class="n">opt_ipw</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">predict_dm</span> <span class="o">=</span> <span class="n">opt_dm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">predict_dr</span> <span class="o">=</span> <span class="n">opt_dr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the outcome</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_outcome</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">predict</span><span class="p">):</span>
+    <span class="n">total_outcome</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">predict</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">predict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">total_outcome</span> <span class="o">+=</span> <span class="n">y0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">total_outcome</span> <span class="o">+=</span> <span class="n">y1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">total_outcome</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">predict</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;IPW test estimated outcome: &quot;</span><span class="p">,</span> <span class="n">calculate_outcome</span><span class="p">(</span><span class="n">y_0_test</span><span class="p">,</span> <span class="n">y_1_test</span><span class="p">,</span> <span class="n">predict_ipw</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DM test estimated outcome: &quot;</span><span class="p">,</span> <span class="n">calculate_outcome</span><span class="p">(</span><span class="n">y_0_test</span><span class="p">,</span> <span class="n">y_1_test</span><span class="p">,</span> <span class="n">predict_dm</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DR test estimated outcome: &quot;</span><span class="p">,</span> <span class="n">calculate_outcome</span><span class="p">(</span><span class="n">y_0_test</span><span class="p">,</span> <span class="n">y_1_test</span><span class="p">,</span> <span class="n">predict_dr</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IPW test estimated outcome:  0.5109253363383204
+DM test estimated outcome:  0.5109253363383204
+DR test estimated outcome:  0.5123693781552128
+</pre></div></div>
+</div>
+</section>
+<section id="References">
+<h2>References<a class="headerlink" href="#References" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Dudík, M., Langford, J., &amp; Li, L. (2011). Doubly robust policy evaluation and learning. In Proceedings of the 28th International Conference on International Conference on Machine Learning (pp. 1097-1104).</p></li>
+<li><p>Jo, N., Aghaei, S., Gómez, A., &amp; Vayanos, P. (2021). Learning optimal prescriptive trees from observational data. arXiv preprint arXiv:2108.13628.</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../development/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Developer Docs</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="RobustOCT.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><code class="docutils literal notranslate"><span class="pre">RobustOCT</span></code> Examples</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/D3M-Research-Group/odtlearn" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">FlowOPT</span></code> Examples</a><ul>
+<li><a class="reference internal" href="#Example-0:-Preparing-the-Data">Example 0: Preparing the Data</a></li>
+<li><a class="reference internal" href="#Example-1:-Inverse-Propensity-Weighting-(IPW)">Example 1: Inverse Propensity Weighting (IPW)</a></li>
+<li><a class="reference internal" href="#Example-2:-Direct-Method">Example 2: Direct Method</a></li>
+<li><a class="reference internal" href="#Example-3:-Doubly-Robust-Method">Example 3: Doubly Robust Method</a></li>
+<li><a class="reference internal" href="#Example-4:-Comparing-Performance">Example 4: Comparing Performance</a></li>
+<li><a class="reference internal" href="#References">References</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=fc837d61"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=4ea706d9"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>

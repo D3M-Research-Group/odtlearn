@@ -9,6 +9,9 @@ Functions
 
 .. autoapisummary::
 
+   odtlearn.utils.callback_helpers.benders_callback
+   odtlearn.utils.callback_helpers.robust_benders_callback
+   odtlearn.utils.callback_helpers.benders_subproblem
    odtlearn.utils.callback_helpers.get_left_exp_integer
    odtlearn.utils.callback_helpers.get_right_exp_integer
    odtlearn.utils.callback_helpers.get_target_exp_integer
@@ -22,7 +25,122 @@ Functions
 Module Contents
 ---------------
 
-.. py:function:: get_left_exp_integer(solver: odtlearn.utils.solver.Solver, main_grb_obj: BendersOCT, n: int, i: int) -> mip.entities.LinExpr
+.. py:function:: benders_callback(model: odtlearn.flow_oct.BendersOCT, X: pandas.DataFrame, obj, solver: odtlearn.solvers.solver.Solver) -> None
+
+   
+   The BendersOCT callback function, called at every integer solution.
+
+
+   :Parameters:
+
+       **model** : Any
+           The solver model.
+
+       **X** : pandas.DataFrame
+           The training input samples.
+
+       **obj** : Any
+           The classifier object (e.g., BendersOCT).
+
+       **solver** : Solver
+           The Solver object used.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: robust_benders_callback(model: odtlearn.robust_oct.RobustOCT, X: pandas.DataFrame, obj, solver: odtlearn.solvers.solver.Solver) -> None
+
+   
+   The RobustOCT callback function, called at every integer solution.
+
+
+   :Parameters:
+
+       **model** : Any
+           The solver model.
+
+       **X** : pandas.DataFrame
+           The training input samples.
+
+       **obj** : Any
+           The classifier object (e.g., RobustOCT).
+
+       **solver** : Solver
+           The Solver object used.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: benders_subproblem(main_model_obj: odtlearn.flow_oct.BendersOCT, b: dict[tuple[int, str], float], p: dict[int, float], w: dict[tuple[int, numpy.int64], float], i: int) -> tuple[int, list, list, list]
+
+   
+   Solve the Benders' subproblem for a given datapoint.
+
+
+   :Parameters:
+
+       **main_model_obj** : Any
+           The main model object.
+
+       **b** : dict
+           The dictionary of binary decision variables representing the branching decisions.
+
+       **p** : dict
+           The dictionary of binary decision variables representing the prediction decisions.
+
+       **w** : dict
+           The dictionary of binary decision variables representing the class assignments.
+
+       **i** : int
+           The index of the current datapoint.
+
+
+
+   :Returns:
+
+       tuple
+           A tuple containing the subproblem value, left nodes, right nodes, and target nodes.
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: get_left_exp_integer(solver: odtlearn.solvers.solver.Solver, main_grb_obj: odtlearn.flow_oct.BendersOCT, n: int, i: int) -> Any
 
    
    Get the expression for the left branch constraint in the Benders' subproblem.
@@ -42,12 +160,13 @@ Module Contents
        **i** : int
            The index of the current datapoint.
 
+
+
    :Returns:
 
-       **lhs** : LinExpr
-           The left-hand side expression of the left branch constraint.
-
-
+       **lhs** : Any
+           The left-hand side expression of the left branch constraint. This is a
+           LinExpr object in Gurobi and CBC.
 
 
 
@@ -62,7 +181,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: get_right_exp_integer(solver: odtlearn.utils.solver.Solver, main_grb_obj: BendersOCT, n: int, i: int) -> mip.entities.LinExpr
+.. py:function:: get_right_exp_integer(solver: odtlearn.solvers.solver.Solver, main_grb_obj: odtlearn.flow_oct.BendersOCT, n: int, i: int) -> Any
 
    
    Get the expression for the right branch constraint in the Benders' subproblem.
@@ -82,12 +201,13 @@ Module Contents
        **i** : int
            The index of the current datapoint.
 
+
+
    :Returns:
 
-       **lhs** : LinExpr
-           The left-hand side expression of the right branch constraint.
-
-
+       **lhs** : Any
+           The left-hand side expression of the right branch constraint. This is a
+           LinExpr object in Gurobi and CBC.
 
 
 
@@ -102,7 +222,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: get_target_exp_integer(main_grb_obj: BendersOCT, n: int, i: int) -> mip.entities.LinExpr
+.. py:function:: get_target_exp_integer(main_grb_obj: odtlearn.flow_oct.BendersOCT, n: int, i: int) -> Any
 
    
    Get the expression for the target constraint in the Benders' subproblem.
@@ -119,12 +239,13 @@ Module Contents
        **i** : int
            The index of the current datapoint.
 
+
+
    :Returns:
 
-       **lhs** : LinExpr
-           The left-hand side expression of the target constraint.
-
-
+       **lhs** : Any
+           The left-hand side expression of the target constraint. This is a
+           LinExpr object in Gurobi and CBC.
 
 
 
@@ -139,7 +260,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: get_cut_integer(solver: odtlearn.utils.solver.Solver, main_grb_obj: BendersOCT, left: List[Union[Any, int]], right: List[Union[Any, int]], target: List[int], i: int) -> mip.entities.LinExpr
+.. py:function:: get_cut_integer(solver: odtlearn.solvers.solver.Solver, main_grb_obj: odtlearn.flow_oct.BendersOCT, left: list[int], right: list[int], target: list[int], i: int) -> Any
 
    
    Get the Benders' cut expression for the current subproblem.
@@ -151,7 +272,7 @@ Module Contents
            The solver object used for solving the optimization problem.
 
        **main_grb_obj** : object
-           The main Gurobi model object.
+           The main Model object.
 
        **left** : list
            The list of nodes in the left branch of the current subproblem.
@@ -165,12 +286,13 @@ Module Contents
        **i** : int
            The index of the current datapoint.
 
+
+
    :Returns:
 
-       **lhs** : LinExpr
-           The left-hand side expression of the Benders' cut.
-
-
+       **lhs** : Any
+           The left-hand side expression of the Benders' cut. This is a
+           LinExpr object in Gurobi and CBC.
 
 
 
@@ -185,7 +307,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: get_cut_expression(master, solver, X, b, w, path, xi, v, i, f_theta_indices)
+.. py:function:: get_cut_expression(master: odtlearn.robust_oct.RobustOCT, solver: odtlearn.solvers.solver.Solver, X: pandas.DataFrame, path: list[int], xi: dict, v: bool, i: int, f_theta_indices: list) -> Any
 
    
    Get the cut expression for the RobustOCT subproblem.
@@ -193,7 +315,7 @@ Module Contents
 
    :Parameters:
 
-       **master** : object
+       **master** : RobustOCT
            The master problem object.
 
        **solver** : Solver
@@ -201,12 +323,6 @@ Module Contents
 
        **X** : DataFrame
            The input data.
-
-       **b** : dict
-           The dictionary of binary decision variables representing the branching decisions.
-
-       **w** : dict
-           The dictionary of binary decision variables representing the prediction decisions.
 
        **path** : list
            The current path in the tree.
@@ -223,12 +339,12 @@ Module Contents
        **f_theta_indices** : list
            The list of feature-threshold index pairs.
 
+
+
    :Returns:
 
-       **expr** : LinExpr
+       **expr** : Any
            The cut expression for the current subproblem.
-
-
 
 
 
@@ -243,15 +359,16 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: get_all_terminal_paths(master, b, w, terminal_nodes=[], path_dict={}, feature_path_dict={}, assignment_dict={}, cutoff_dict={}, curr_node=1, curr_path=[1], curr_feature_path=[], curr_cutoff_path=[])
+.. py:function:: get_all_terminal_paths(master: odtlearn.robust_oct.RobustOCT, b: dict[tuple[int, str], float], w: dict[tuple[int, numpy.int64], float], terminal_nodes: list = [], path_dict: dict = {}, feature_path_dict: dict = {}, assignment_dict: dict = {}, cutoff_dict: dict = {}, curr_node: int = 1, curr_path: list = [1], curr_feature_path: list = [], curr_cutoff_path: list = []) -> tuple[list[int], dict, dict, dict, dict]
 
    
-   Find all terminal paths in the decision tree.
+   Helper function for the Robust Benders callback.
+   Finds all terminal paths in the decision tree that lead to a classification.
 
 
    :Parameters:
 
-       **master** : object
+       **master** : RobustOCT
            The master problem object.
 
        **b** : dict
@@ -287,6 +404,8 @@ Module Contents
        **curr_cutoff_path** : list, optional
            The current cutoff path being traversed.
 
+
+
    :Returns:
 
        tuple
@@ -303,20 +422,19 @@ Module Contents
 
 
 
-
-
    ..
        !! processed by numpydoc !!
 
-.. py:function:: get_nominal_path(master, b, w, i)
+.. py:function:: get_nominal_path(master: odtlearn.robust_oct.RobustOCT, b: dict[tuple[int, str], float], w: dict[tuple[int, numpy.int64], float], i: int) -> tuple[list[int], int]
 
    
-   Get the nominal path for a correctly classified datapoint.
+   Helper function for the Robust Benders callback.
+   Gets the decision path for a correctly classified datapoint.
 
 
    :Parameters:
 
-       **master** : object
+       **master** : RobustOCT
            The master problem object.
 
        **b** : dict
@@ -327,6 +445,8 @@ Module Contents
 
        **i** : int
            The index of the current datapoint.
+
+
 
    :Returns:
 
@@ -343,20 +463,20 @@ Module Contents
 
 
 
-
-
    ..
        !! processed by numpydoc !!
 
-.. py:function:: shortest_path_solver(master, i, label, terminal_nodes, terminal_path_dict, terminal_features_dict, terminal_assignments_dict, terminal_cutoffs_dict, initial_xi, initial_mins, initial_maxes)
+.. py:function:: shortest_path_solver(master: odtlearn.robust_oct.RobustOCT, i: int, label: int, terminal_nodes: list[int], terminal_path_dict: dict, terminal_features_dict: dict, terminal_assignments_dict: dict, terminal_cutoffs_dict: dict, initial_xi: dict, initial_mins: dict, initial_maxes: dict) -> tuple[list[int], dict, float, bool]
 
    
-   Solve the shortest path problem for a given datapoint.
+   Helper function for the Robust Benders callback.
+   Finds the minimum cost perturbation to misclassify datapoint i in a given tree via
+   a shortest path problem.
 
 
    :Parameters:
 
-       **master** : object
+       **master** : RobustOCT
            The master problem object.
 
        **i** : int
@@ -389,13 +509,13 @@ Module Contents
        **initial_maxes** : dict
            The initial dictionary of maximum feature values.
 
+
+
    :Returns:
 
        tuple
-           A tuple containing the best path, best cost, feature perturbations (xi),
+           A tuple containing the best path, feature perturbations (xi), best cost,
            and label perturbation flag (v).
-
-
 
 
 

@@ -17,9 +17,9 @@ Decision trees are interpretable machine learning models that are routinely used
 
 **ODTlearn** is a Python package for learning various types of decision trees, which is developed based on research out of University of Southern California. ODTlearn uses Mixed-Integer-Optimization (MIO) technology for modeling a variety of decision trees including:
 
-- **StrongTrees** for learning optimal classification trees (Aghaei et al. (2021))
+- **StrongTrees** for learning optimal classification trees (Aghaei et al. (2025))
 - **FairTrees** for learning optimal classification trees that can incorporate various notions of fairness such as statistical parity, conditional statistical parity, predictive equality, equal opportunity and equalized odds (Jo et al. (2021))
-- **RobustTrees** for learning optimal classification trees that are robust against distribution shifts (Justin et al. (2021))
+- **RobustTrees** for learning optimal classification trees that are robust against distribution shifts (Justin et al. (2021, 2023))
 - **PrescriptiveTrees** for learning optimal prescriptive trees (Jo et al. (2021))
 
 ## Resources for Getting Started
@@ -72,10 +72,11 @@ print(
 ```
 
 ## References
-* Aghaei, S., Gómez, A., & Vayanos, P. (2021). Strong optimal classification trees. arXiv preprint arXiv:2103.15965. [\[arxiv\]](https://arxiv.org/abs/2103.15965)
+* Aghaei, S., Gómez, A., & Vayanos, P. (2025). Strong optimal classification trees. Operations Research, 73(4), 2223-2241. [\[link\]](https://pubsonline.informs.org/doi/abs/10.1287/opre.2021.0034)
+* Jo, N., Aghaei, S., Gómez, A., & Vayanos, P. (2021). Learning optimal prescriptive trees from observational data. arXiv preprint arXiv:2108.13628. [\[arxiv\]](https://arxiv.org/pdf/2108.13628.pdf)
 * Jo, N., Aghaei, S., Benson, J., Gómez, A., & Vayanos, P. (2022). Learning optimal fair classification trees. arXiv preprint arXiv:2201.09932. [\[arxiv\]](https://arxiv.org/abs/2201.09932)
 * Justin, N., Aghaei, S., Gomez, A., & Vayanos, P. (2021). Optimal Robust Classification Trees. In The AAAI-22 Workshop on Adversarial Machine Learning and Beyond. [\[link\]](https://openreview.net/pdf?id=HbasA9ysA3)
-* Jo, N., Aghaei, S., Gómez, A., & Vayanos, P. (2021). Learning optimal prescriptive trees from observational data. arXiv preprint arXiv:2108.13628. [\[arxiv\]](https://arxiv.org/pdf/2108.13628.pdf)
+* Justin, N., Aghaei, S., Gómez, A., & Vayanos, P. (2023). Learning optimal classification trees robust to distribution shifts. arXiv preprint arXiv:2310.17772. [\[arxiv\]](https://arxiv.org/abs/2310.17772)
 
 
 ```{toctree}
@@ -109,6 +110,6 @@ notebooks/index
 :hidden: true
 :maxdepth: 1
 
-contributing
+development/index
 ```
 

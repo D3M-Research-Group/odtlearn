@@ -82,6 +82,8 @@ Module Contents
           **budget** : float, optional
               The budget of uncertainty. Default is -1.
 
+
+
       :Returns:
 
           **self** : object
@@ -106,8 +108,6 @@ Module Contents
 
 
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -122,6 +122,8 @@ Module Contents
 
           **X** : array-like of shape (n_samples, n_features)
               The input samples for which to make predictions. Features should be integer-valued.
+
+
 
       :Returns:
 
@@ -150,8 +152,6 @@ Module Contents
 
 
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -163,6 +163,8 @@ Module Contents
 
       This method prints the structure of the fitted tree, including the branching features,
       the threshold values for each branching node's test, and the predictions asserted for each leaf node.
+
+
 
 
 
@@ -181,8 +183,6 @@ Module Contents
 
       The tree is printed in a depth-first manner, with each node represented by its index,
       branching feature and threshold (for internal nodes), or prediction (for leaf nodes).
-
-
 
 
 
@@ -241,6 +241,8 @@ Module Contents
               fitted tree will be used. The feature names should be in the same order as the
               columns of the data used to fit the tree.
 
+
+
       :Returns:
 
           matplotlib.axes.Axes
@@ -256,8 +258,6 @@ Module Contents
       .. rubric:: Notes
 
       This method uses the MPLPlotter class to visualize the robust classification tree.
-
-
 
 
 

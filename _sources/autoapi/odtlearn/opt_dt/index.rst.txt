@@ -42,27 +42,6 @@ Module Contents
        **verbose** : bool, default=False
            Whether to print verbose output from the solver.
 
-
-
-
-
-
-
-
-
-   .. rubric:: Notes
-
-   This is an abstract base class and cannot be instantiated directly.
-   Subclasses must implement the following abstract methods:
-
-   * `_define_variables()`
-   * `_define_constraints()`
-   * `_define_objective()`
-   * `fit()`
-   * `predict()`
-
-
-
    :Attributes:
 
        **solver_name** : str
@@ -108,21 +87,128 @@ Module Contents
    **predict(X)**  Make predictions using the fitted optimal decision tree.  
    ==============  ==========
 
+
+
+
+
+
+
+
+
+   .. rubric:: Notes
+
+   This is an abstract base class and cannot be instantiated directly.
+   Subclasses must implement the following abstract methods:
+
+   * `_define_variables()`
+   * `_define_constraints()`
+   * `_define_objective()`
+   * `fit()`
+   * `predict()`
+
+
+
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: fit()
+   .. py:attribute:: solver_name
+
+
+   .. py:method:: fit(X: Union[numpy.ndarray, pandas.core.frame.DataFrame], y: Union[numpy.ndarray, pandas.core.series.Series]) -> OptimalDecisionTree
       :abstractmethod:
 
 
+      
+      Fit the optimal decision tree to the given training data.
 
-   .. py:method:: predict()
+
+      :Parameters:
+
+          **X** : array-like of shape (n_samples, n_features)
+              The training input samples.
+
+          **y** : array-like of shape (n_samples,)
+              The target values (class labels) for the training samples.
+
+
+
+      :Returns:
+
+          **self** : OptimalDecisionTree
+              Returns self.
+
+
+
+
+      :Raises:
+
+          ValueError
+              If X contains invalid values, or if X and y have inconsistent numbers of samples.
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: predict(X: Union[numpy.ndarray, pandas.core.frame.DataFrame]) -> numpy.ndarray
       :abstractmethod:
 
+
+      
+      Make predictions using the fitted optimal decision tree.
+
+
+      :Parameters:
+
+          **X** : array-like of shape (n_samples, n_features)
+              The input samples for which to make predictions. The features should
+              match those used during the fit method.
+
+
+
+      :Returns:
+
+          **y_pred** : ndarray of shape (n_samples,)
+              The predicted class labels for each sample in X.
+
+
+
+
+      :Raises:
+
+          NotFittedError
+              If the model has not been fitted yet.
+
+          ValueError
+              If the input X has a different number of features than the training data.
+
+
+
+
+      .. rubric:: Notes
+
+      This method uses the decision tree learned during the fit process to label
+      new samples. It traverses the tree for each sample in X, following the branching
+      decisions until reaching a leaf node, and returns the corresponding label.
+
+      The input X should have the same feature set as the training data used in fit().
+      If categorical variables were one-hot encoded for training, the same encoding
+      should be applied to X before calling predict().
+
+
+
+      ..
+          !! processed by numpydoc !!
 
 
    .. py:property:: optim_gap
       :type: float
+
 
       
       The optimality gap considering the cost of the best solution found.
@@ -149,6 +235,7 @@ Module Contents
    .. py:property:: objective_value
       :type: float
 
+
       
       Objective function value of the solution found or None if the model was not optimized.
 
@@ -173,6 +260,7 @@ Module Contents
 
    .. py:property:: objective_bound
       :type: float
+
 
       
       A valid estimate computed for the optimal solution cost.
@@ -200,6 +288,7 @@ Module Contents
    .. py:property:: num_decision_vars
       :type: int
 
+
       
       Number of decision variables in the model.
 
@@ -224,6 +313,7 @@ Module Contents
 
    .. py:property:: num_integer_vars
       :type: int
+
 
       
       Number of integer variables in the model.
@@ -250,6 +340,7 @@ Module Contents
    .. py:property:: num_non_zero
       :type: int
 
+
       
       Number of non-zeros in the constraint matrix.
 
@@ -274,6 +365,7 @@ Module Contents
 
    .. py:property:: num_solutions
       :type: int
+
 
       
       Number of solutions found during the optimization.
@@ -300,6 +392,7 @@ Module Contents
    .. py:property:: num_constraints
       :type: int
 
+
       
       Number of constraints in the model.
 
@@ -323,7 +416,6 @@ Module Contents
 
 
    .. py:property:: search_progress_log
-      :type: mip.ProgressLog
 
       
       Log of bound improvements during the optimization.
@@ -350,9 +442,9 @@ Module Contents
    .. py:property:: store_search_progress_log
       :type: bool
 
+
       
-      Boolean for whether the search progress log should be stored or not.
-      As in python-mip this is disabled by default.
+      Boolean for whether a search progress log should be stored or not.
       Enable storing the search progress log to analyze bound improvements over time.
 
 
@@ -422,6 +514,8 @@ Module Contents
 
 
 
+
+
       :Raises:
 
           NotFittedError
@@ -437,8 +531,6 @@ Module Contents
 
       The search progress log must be enabled prior to fitting by setting
       `store_search_progress_log` to True.
-
-
 
 
 

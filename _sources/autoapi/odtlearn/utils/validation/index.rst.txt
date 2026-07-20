@@ -35,6 +35,8 @@ Module Contents
        **ipw** : array-like of shape (n_samples,)
            The inverse probability weights to be checked.
 
+
+
    :Returns:
 
        **ipw** : ndarray of shape (n_samples,)
@@ -66,8 +68,6 @@ Module Contents
    >>> print(validated_ipw)
    [0.5 0.7 0.3]
 
-
-
    ..
        !! processed by numpydoc !!
 
@@ -87,6 +87,8 @@ Module Contents
 
        **y_hat** : array-like of shape (n_samples, n_treatments)
            The counterfactual predictions to be checked.
+
+
 
    :Returns:
 
@@ -122,8 +124,6 @@ Module Contents
     [0.3 0.4]
     [0.5 0.6]]
 
-
-
    ..
        !! processed by numpydoc !!
 
@@ -140,6 +140,8 @@ Module Contents
 
        **y** : array-like of shape (n_samples,)
            The target values to be checked.
+
+
 
    :Returns:
 
@@ -169,8 +171,6 @@ Module Contents
    >>> print(validated_y)
    [0. 1. 0.]
 
-
-
    ..
        !! processed by numpydoc !!
 
@@ -187,6 +187,8 @@ Module Contents
 
        **new_data** : array-like or pandas.DataFrame
            The new data to be checked.
+
+
 
    :Returns:
 
@@ -224,8 +226,6 @@ Module Contents
    >>> print(result)
    True
 
-
-
    ..
        !! processed by numpydoc !!
 
@@ -239,6 +239,8 @@ Module Contents
 
        **df** : pandas.DataFrame or array-like
            The data to be checked.
+
+
 
 
 
@@ -272,8 +274,6 @@ Module Contents
    >>> check_binary(df)  # This will raise a ValueError
    ValueError: Found columns (['C']) that contain values other than 0 or 1.
 
-
-
    ..
        !! processed by numpydoc !!
 
@@ -287,6 +287,8 @@ Module Contents
 
        **df** : pandas.DataFrame or array-like
            The data to be checked.
+
+
 
 
 
@@ -312,8 +314,6 @@ Module Contents
    >>> check_integer(df)  # This will raise a ValueError
    ValueError: Found non-integer values.
 
-
-
    ..
        !! processed by numpydoc !!
 
@@ -336,6 +336,8 @@ Module Contents
 
        **G_label** : str
            A label for G to be used in error messages.
+
+
 
    :Returns:
 
@@ -372,8 +374,6 @@ Module Contents
       A  B
    0  5  7
    1  6  8
-
-
 
    ..
        !! processed by numpydoc !!

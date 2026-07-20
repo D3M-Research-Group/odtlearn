@@ -89,6 +89,8 @@ Module Contents
        |______0________|_______1_______X1
 
 
+
+
    :Returns:
 
        X: numpy array of covariates from training set
@@ -96,8 +98,6 @@ Module Contents
 
        y: numpy array of responses from training set
            ..
-
-
 
 
 
@@ -139,6 +139,8 @@ Module Contents
    - All other points certain
 
 
+
+
    :Returns:
 
        X: numpy array of covariates from training set
@@ -149,8 +151,6 @@ Module Contents
 
        costs: numpy array of costs for each observation in the training set
            ..
-
-
 
 
 
@@ -187,6 +187,8 @@ Module Contents
        |______0________|_______1_______X1
 
 
+
+
    :Returns:
 
        X: numpy array of covariates from training set
@@ -194,8 +196,6 @@ Module Contents
 
        y: numpy array of responses from training set
            ..
-
-
 
 
 
@@ -235,6 +235,8 @@ Module Contents
        |___________0_________|__________1_____________X1
 
 
+
+
    :Returns:
 
        X: numpy array of covariates from training set
@@ -248,8 +250,6 @@ Module Contents
 
        legit_factor: numpy array of the legitimate factor feature
            ..
-
-
 
 
 

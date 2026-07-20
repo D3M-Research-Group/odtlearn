@@ -41,6 +41,33 @@ Module Contents
        **verbose** : bool
            Whether to print verbose output during the tree learning process.
 
+   :Attributes:
+
+       **_b** : dict
+           A dictionary of binary decision variables representing the branching decisions at each node.
+
+       **_p** : dict
+           A dictionary of binary decision variables representing the prediction decisions at each node.
+
+       **_w** : dict
+           A dictionary of continuous decision variables representing the treatment weights at each node.
+
+       **_z** : dict
+           A dictionary of continuous decision variables representing the flow of each datapoint to each node.
+
+   .. rubric:: Methods
+
+
+
+   =================================  ==========
+         **_tree_struc_variables()**  Defines the decision variables related to the tree structure.  
+               **_flow_variables()**  Defines the decision variables related to the flow of datapoints.  
+             **_define_variables()**  Defines all the decision variables used in the optimization problem.  
+   **_tree_structure_constraints()**  Defines the constraints related to the tree structure.  
+             **_flow_constraints()**  Defines the constraints related to the flow of datapoints.  
+           **_define_constraints()**  Defines all the constraints used in the optimization problem.  
+   =================================  ==========
+
 
 
 
@@ -83,33 +110,6 @@ Module Contents
    and visualize the learned tree.
 
 
-
-   :Attributes:
-
-       **_b** : dict
-           A dictionary of binary decision variables representing the branching decisions at each node.
-
-       **_p** : dict
-           A dictionary of binary decision variables representing the prediction decisions at each node.
-
-       **_w** : dict
-           A dictionary of continuous decision variables representing the treatment weights at each node.
-
-       **_z** : dict
-           A dictionary of continuous decision variables representing the flow of each datapoint to each node.
-
-   .. rubric:: Methods
-
-
-
-   =================================  ==========
-         **_tree_struc_variables()**  Defines the decision variables related to the tree structure.  
-               **_flow_variables()**  Defines the decision variables related to the flow of datapoints.  
-             **_define_variables()**  Defines all the decision variables used in the optimization problem.  
-   **_tree_structure_constraints()**  Defines the constraints related to the tree structure.  
-             **_flow_constraints()**  Defines the constraints related to the flow of datapoints.  
-           **_define_constraints()**  Defines all the constraints used in the optimization problem.  
-   =================================  ==========
 
    ..
        !! processed by numpydoc !!

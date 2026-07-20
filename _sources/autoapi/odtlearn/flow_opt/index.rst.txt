@@ -43,6 +43,20 @@ Module Contents
        **verbose** : bool, default=False
            Whether to print verbose output during the tree learning process.
 
+   :Attributes:
+
+       **_ipw** : :class:`numpy.ndarray`
+           The inverse probability weights for each datapoint.
+
+   .. rubric:: Methods
+
+
+
+   =======================  ==========
+     **fit(X, y, t, ipw)**  Fit the optimal prescriptive tree using the provided data and inverse probability weights.  
+   **_define_objective()**  Define the objective function for the optimization problem.  
+   =======================  ==========
+
 
 
 
@@ -97,20 +111,6 @@ Module Contents
 
 
 
-   :Attributes:
-
-       **_ipw** : :class:`numpy.ndarray`
-           The inverse probability weights for each datapoint.
-
-   .. rubric:: Methods
-
-
-
-   =======================  ==========
-     **fit(X, y, t, ipw)**  Fit the optimal prescriptive tree using the provided data and inverse probability weights.  
-   **_define_objective()**  Define the objective function for the optimization problem.  
-   =======================  ==========
-
    ..
        !! processed by numpydoc !!
 
@@ -133,6 +133,8 @@ Module Contents
 
           **ipw** : array-like of shape (n_samples,)
               The inverse propensity weights. An array of floats in the range (0, 1].
+
+
 
       :Returns:
 
@@ -171,8 +173,6 @@ Module Contents
       >>> opt = FlowOPT_IPW(depth=2, time_limit=60)
       >>> opt.fit(X, t, y, ipw)
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -187,6 +187,8 @@ Module Contents
 
           **X** : array-like of shape (n_samples, n_features)
               The input samples for which to make predictions. Each feature should be binary (0 or 1).
+
+
 
       :Returns:
 
@@ -229,8 +231,6 @@ Module Contents
       >>> print(t_pred)
       [1 0]
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -262,6 +262,17 @@ Module Contents
 
        **verbose** : bool, default=False
            Whether to print verbose output during the tree learning process.
+
+
+   .. rubric:: Methods
+
+
+
+   =======================  ==========
+   **fit(X, t, y, y_hat)**  Fit the optimal prescriptive tree using the provided data and counterfactual predictions.  
+            **predict(X)**  Make treatment recommendations for the given input samples.  
+   **_define_objective()**  Define the objective function for the optimization problem.  
+   =======================  ==========
 
 
 
@@ -305,17 +316,6 @@ Module Contents
 
 
 
-
-   .. rubric:: Methods
-
-
-
-   =======================  ==========
-   **fit(X, t, y, y_hat)**  Fit the optimal prescriptive tree using the provided data and counterfactual predictions.  
-            **predict(X)**  Make treatment recommendations for the given input samples.  
-   **_define_objective()**  Define the objective function for the optimization problem.  
-   =======================  ==========
-
    ..
        !! processed by numpydoc !!
 
@@ -339,6 +339,8 @@ Module Contents
           **y_hat** : array-like of shape (n_samples, n_treatments)
               The counterfactual predictions. A 2D array where each row represents a sample and each column
               represents the predicted outcome for a specific treatment.
+
+
 
       :Returns:
 
@@ -377,8 +379,6 @@ Module Contents
       >>> opt = FlowOPT_DM(depth=2, time_limit=60)
       >>> opt.fit(X, t, y, y_hat)
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -393,6 +393,8 @@ Module Contents
 
           **X** : array-like of shape (n_samples, n_features)
               The input samples for which to make predictions. Each feature should be binary (0 or 1).
+
+
 
       :Returns:
 
@@ -435,8 +437,6 @@ Module Contents
       >>> print(t_pred)
       [1 0]
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -468,6 +468,17 @@ Module Contents
 
        **verbose** : bool, default=False
            Whether to print verbose output during the tree learning process.
+
+
+   .. rubric:: Methods
+
+
+
+   ============================  ==========
+   **fit(X, t, y, ipw, y_hat)**  Fit the optimal prescriptive tree using the provided data, inverse propensity weights, and counterfactual predictions.  
+                 **predict(X)**  Make treatment recommendations for the given input samples.  
+        **_define_objective()**  Define the objective function for the optimization problem.  
+   ============================  ==========
 
 
 
@@ -512,17 +523,6 @@ Module Contents
 
 
 
-
-   .. rubric:: Methods
-
-
-
-   ============================  ==========
-   **fit(X, t, y, ipw, y_hat)**  Fit the optimal prescriptive tree using the provided data, inverse propensity weights, and counterfactual predictions.  
-                 **predict(X)**  Make treatment recommendations for the given input samples.  
-        **_define_objective()**  Define the objective function for the optimization problem.  
-   ============================  ==========
-
    ..
        !! processed by numpydoc !!
 
@@ -549,6 +549,8 @@ Module Contents
           **y_hat** : array-like of shape (n_samples, n_treatments)
               The counterfactual predictions. A 2D array where each row represents a sample and each column
               represents the predicted outcome for a specific treatment.
+
+
 
       :Returns:
 
@@ -589,8 +591,6 @@ Module Contents
       >>> opt = FlowOPT_DR(depth=2, time_limit=60)
       >>> opt.fit(X, t, y, ipw, y_hat)
 
-
-
       ..
           !! processed by numpydoc !!
 
@@ -605,6 +605,8 @@ Module Contents
 
           **X** : array-like of shape (n_samples, n_features)
               The input samples for which to make predictions. Each feature should be binary (0 or 1).
+
+
 
       :Returns:
 
@@ -647,8 +649,6 @@ Module Contents
       >>> t_pred = opt.predict(X_test)
       >>> print(t_pred)
       [1 0]
-
-
 
       ..
           !! processed by numpydoc !!
