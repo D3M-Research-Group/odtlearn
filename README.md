@@ -6,6 +6,8 @@ A package for tree-based statistical estimation and inference using optimal deci
 
 ![Test badge](https://github.com/D3M-Research-Group/odtlearn/actions/workflows/ci.yml/badge.svg)
 ![Documentation badge](https://github.com/D3M-Research-Group/odtlearn/actions/workflows/sphinx.yml/badge.svg)
+![Publish to PyPI](https://github.com/D3M-Research-Group/odtlearn/actions/workflows/actions/workflows/pypi.yml/badge.svg)
+[![PyPI version](https://badge.fury.io/py/odtlearn.svg)](https://badge.fury.io/py/odtlearn)
 ![License badge](https://img.shields.io/github/license/D3M-Research-Group/odtlearn)
 
 

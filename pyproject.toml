@@ -3,8 +3,8 @@ requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "odtlearn"
-version = "1.1.0"
+name = "odtlearn-publish-test"
+version = "0.0.1"
 description = "A package for tree-based statistical estimation and inference using optimal decision trees."
 readme = "README.md"
 requires-python = ">=3.9"
