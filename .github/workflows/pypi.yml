@@ -2,7 +2,6 @@ name: Publish to PyPI
 
 on:
   workflow_dispatch:
-  
   release:
     types: [published]
 
@@ -57,10 +56,7 @@ jobs:
           if version in releases:
             raise SystemExit(f"Version {version} already exists on PyPI.")
           EOF
-      - name: Publish to TestPyPI
+
+      - name: Publish to PyPI
+        if: github.event_name == 'release'
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-    
-    # - name: Publish to PyPI
-    #   uses: pypa/gh-action-pypi-publish@release/v1
