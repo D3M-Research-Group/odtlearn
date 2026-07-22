@@ -1,0 +1,62 @@
+name: Publish to PyPI
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build
+
+      - name: Build package
+        run: python -m build
+
+      - name: Check distributions
+        run: |
+          python -m pip install twine
+          twine check dist/*
+
+      - name: Verify version is not already on PyPI
+        run: |
+          python - <<'EOF'
+          import tomllib
+          import urllib.request
+          import json
+          import sys
+
+          with open("pyproject.toml", "rb") as f:
+            version = tomllib.load(f)["project"]["version"]
+
+          url = "https://pypi.org/pypi/odtlearn/json"
+
+          try:
+            releases = json.load(urllib.request.urlopen(url))["releases"]
+          except Exception:
+            sys.exit(0)
+
+          if version in releases:
+            raise SystemExit(f"Version {version} already exists on PyPI.")
+          EOF
+
+      - name: Publish to PyPI
+        if: github.event_name == 'release'
+        uses: pypa/gh-action-pypi-publish@release/v1
