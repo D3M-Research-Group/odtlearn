@@ -128,7 +128,6 @@ class BertsimasDunnOCT(OptimalClassificationTree):
         self._classes = unique_labels(y)
 
         self._create_main_problem()
-        self._solver.model.write("oct.lp")
         self._solver.optimize()
 
         self.L_value = self._solver.get_var_value(self._L, "L")
@@ -360,25 +359,6 @@ class BertsimasDunnOCT(OptimalClassificationTree):
         for t in self._tree.Nodes:
             if t != 1:
                 self._solver.add_constr(self._d[t] <= self._d[self._tree.get_parent(t)])
-
-        # Constraints for enforcing that pruned nodes send samples to the right
-        # THIS IS NOT IN THE ORIGINAL PAPER - but the OCT formulation will not work without it
-        # for t in self._tree.Leaves:
-        #     self._solver.add_constrs((self._l[t] <= self._d[m]) for m in self._tree.get_left_ancestors(t))
-
-        # # Constraint 14 for leaves (not in paper)
-        # for t in self._tree.Leaves:
-        #     m = self._tree.get_parent(t)
-        #     if self._tree.get_left_children(m) == t:
-        #         self._solver.add_constr(self._l[t] <= self._d[m])
-
-        # Pruning constraint missing from paper
-        # for t in self._tree.Leaves:
-        #     for m in self._tree.get_ancestors(t):
-        #         self._solver.add_constrs(
-        #             self._z[i,t] <= self._d[m]
-        #             for i in self._datapoints
-        #         )
 
     def _define_objective(self):
         obj = self._solver.lin_expr()
