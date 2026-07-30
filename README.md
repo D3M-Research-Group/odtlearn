@@ -1,11 +1,12 @@
 <p align="center">
-<img src="./img/ODTlearn-color.png" alt="ODTlearn Logo" width="500"/>
+<img src="https://raw.githubusercontent.com/D3M-Research-Group/odtlearn/main/img/ODTlearn-color.png" alt="ODTlearn Logo" width="500"/>
 </p>
 
 A package for tree-based statistical estimation and inference using optimal decision trees. ODTlearn provides implementations of StrongTrees [1], FairTrees [2], RobustTrees [3,4] for classification, and Prescriptive Trees [5] for prescription.
 
 ![Test badge](https://github.com/D3M-Research-Group/odtlearn/actions/workflows/ci.yml/badge.svg)
 ![Documentation badge](https://github.com/D3M-Research-Group/odtlearn/actions/workflows/sphinx.yml/badge.svg)
+[![PyPI version](https://badge.fury.io/py/odtlearn.svg)](https://badge.fury.io/py/odtlearn)
 ![License badge](https://img.shields.io/github/license/D3M-Research-Group/odtlearn)
 
 
