@@ -34,7 +34,7 @@ class _Tree:
 
     def get_parent(self, n):
         if (n in self.Nodes) or (n in self.Leaves):
-            return np.floor(n / 2)
+            return n // 2
         else:
             raise IndexError("Node index not found in tree")
 
@@ -49,3 +49,23 @@ class _Tree:
 
         else:
             raise IndexError("Node index not found in tree")
+
+    def get_left_ancestors(self, n: Union[int, int64]) -> list[Union[Any, int]]:
+        left_ancestors = []
+        current = n
+        while current != 1:
+            current_par = self.get_parent(current)
+            if self.get_left_children(current_par) == current:
+                left_ancestors.append(current_par)
+            current = current_par
+        return left_ancestors
+
+    def get_right_ancestors(self, n: Union[int, int64]) -> list[Union[Any, int]]:
+        right_ancestors = []
+        current = n
+        while current != 1:
+            current_par = self.get_parent(current)
+            if self.get_right_children(current_par) == current:
+                right_ancestors.append(current_par)
+            current = current_par
+        return right_ancestors
